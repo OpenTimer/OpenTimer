@@ -1,0 +1,52 @@
+#ifndef OT_TIMER_GATE_HPP_
+#define OT_TIMER_GATE_HPP_
+
+#include <ot/liberty/celllib.hpp>
+
+namespace ot {
+
+// Forward declaration
+class Pin;
+class Arc;
+class Test;
+
+// ------------------------------------------------------------------------------------------------
+
+// Class: Gate
+class Gate {
+
+  friend class Timer;
+
+  public:
+    
+    Gate(const std::string&, SplitView<Cell>);
+
+    inline const std::string& name() const;
+
+  private:
+
+    std::string _name;
+
+    SplitView<Cell> _cell;
+    
+    std::vector<Pin*> _pins;
+    std::vector<Arc*> _arcs;
+    std::vector<Test*> _tests;
+    
+    void _repower(SplitView<Cell>);
+}; 
+
+// Function: name
+inline const std::string& Gate::name() const {
+  return _name;
+}
+
+};  // end of namespace ot. -----------------------------------------------------------------------
+
+#endif
+
+
+
+
+
+

@@ -1,0 +1,237 @@
+# CMake setup
+cmake_minimum_required (VERSION 3.6)
+MESSAGE(STATUS "CMAKE_ROOT: " ${CMAKE_ROOT})
+
+# Project name
+project(OpenTimer)
+
+# Turn on the verbose
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+# CXX target properties
+set(CMAKE_C_COMPILER "gcc")
+set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -O2")
+
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
+message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+
+# The version number
+set(OT_VERSION_MAJOR "2")
+set(OT_VERSION_MINOR "0")
+set(OT_VERSION_PATCH "0")
+set(OT_VERSION "${OT_VERSION_MAJOR}.${OT_VERSION_MINOR}.${OT_VERSION_PATCH} (alpha)")
+set(OT_HOME ${PROJECT_SOURCE_DIR})
+set(OT_BENCHMARK_DIR ${PROJECT_SOURCE_DIR}/benchmark)
+set(OT_UNITTEST_DIR ${PROJECT_SOURCE_DIR}/unittest)
+set(OT_LICENSE ${PROJECT_SOURCE_DIR}/LICENSE)
+message(STATUS "OT_VERSION: ${OT_VERSION}")
+message(STATUS "OT_HOME: ${OT_HOME}")
+message(STATUS "OT_BENCHMARK_DIR: ${OT_BENCHMARK_DIR}")
+message(STATUS "OT_UNITTEST_DIR: ${OT_UNITTEST_DIR}")
+message(STATUS "OT_LICENSE: ${OT_LICENSE}")
+
+# Set static library output path
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+message(STATUS "CMAKE_ARCHIVE_OUTPUT_DIRECTORY: ${PROJECT_SOURCE_DIR}/lib")
+
+# configure a header file to pass some of the CMake settins
+configure_file(
+  "${PROJECT_SOURCE_DIR}/ot/config.hpp.in"
+  "${PROJECT_SOURCE_DIR}/ot/config.hpp"
+)
+
+# add the binayr tree to the search path for include files so we can find TutorialConfig.h
+include_directories(${PROJECT_SOURCE_DIR})
+
+# Add OpenTimer library
+add_library(OpenTimer 
+  ot/policy.hpp
+  ot/config.hpp
+  ot/exception.hpp
+  ot/traits.hpp
+  ot/headerdef.hpp 
+  ot/utility/os.hpp ot/utility/os.cpp
+  ot/utility/lambda.hpp
+  ot/utility/singleton.hpp
+  ot/utility/utility.hpp
+  ot/utility/logger.hpp
+  ot/utility/index.hpp
+  ot/utility/tokenizer.hpp ot/utility/tokenizer.cpp
+  ot/utility/scope_guard.hpp
+  ot/utility/CLI11.hpp
+  ot/utility/iterator.hpp
+  ot/static/logger.hpp
+  ot/static/thread.hpp
+  ot/taskflow/taskflow.hpp
+  ot/spef/spef.cpp ot/spef/spef.hpp
+  ot/verilog/verilog.cpp ot/verilog/verilog.hpp
+  ot/liberty/lut.cpp ot/liberty/lut.hpp
+  ot/liberty/timing.cpp ot/liberty/timing.hpp
+  ot/liberty/cellpin.cpp ot/liberty/cellpin.hpp
+  ot/liberty/cell.cpp ot/liberty/cell.hpp
+  ot/liberty/celllib.cpp ot/liberty/celllib.hpp
+  ot/tau/tau15.hpp ot/tau/tau15.cpp
+  ot/unit/unit.cpp ot/unit/unit.hpp
+  ot/timer/cppr.cpp ot/timer/cppr.hpp
+  ot/timer/test.hpp ot/timer/test.cpp
+  ot/timer/timer.hpp ot/timer/timer.cpp 
+  ot/timer/sfxt.cpp ot/timer/sfxt.hpp
+  ot/timer/net.hpp ot/timer/net.cpp
+  ot/timer/pin.hpp ot/timer/pin.cpp
+  ot/timer/arc.hpp ot/timer/arc.cpp
+  ot/timer/gate.hpp ot/timer/gate.cpp
+  ot/timer/clock.hpp ot/timer/clock.cpp
+  ot/timer/endpoint.hpp ot/timer/endpoint.cpp
+  ot/timer/path.hpp ot/timer/path.cpp
+  ot/timer/verilog.cpp
+  ot/timer/celllib.cpp
+  ot/timer/spef.cpp
+  ot/timer/sdc.cpp
+  ot/timer/dump.cpp
+  ot/timer/unit.cpp
+  ot/sdc/mask.hpp
+  ot/sdc/sdc.hpp ot/sdc/sdc.cpp
+  ot/sdc/tokenize.hpp ot/sdc/tokenize.cpp
+  ot/sdc/object.cpp ot/sdc/object.hpp
+  ot/shell/shell.hpp ot/shell/shell.cpp
+  ot/shell/dump.cpp 
+  ot/shell/builder.cpp 
+  ot/shell/action.cpp
+  ot/shell/misc.cpp
+  ot/shell/obselete.cpp
+  ot/shell/prompt.hpp
+)
+
+# Find program
+find_program(PYTHON_EXECUTABLE python)
+message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+
+# Find package
+#set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package(Threads REQUIRED)
+
+###################################################################################################
+# Executables
+###################################################################################################
+message(STATUS "Building executables ...")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+list(APPEND OT_EXE_LINKER_FLAGS "")
+list(APPEND OT_EXE_LINKER_FLAGS OpenTimer)
+list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
+list(APPEND OT_EXE_LINKER_FLAGS stdc++fs)
+message(STATUS "OT_EXE_LINKER_FLAGS: ${OT_EXE_LINKER_FLAGS}")
+
+# tau15
+set(OT_TAU15 ${PROJECT_SOURCE_DIR}/bin/ot-tau15)
+add_executable(ot-tau15 main/tau15/tau15.cpp)
+target_link_libraries(ot-tau15 ${OT_EXE_LINKER_FLAGS})
+message(STATUS "TAU15 executable: ${OT_TAU15}")
+
+# utility
+set(OT_UTILITY ${PROJECT_SOURCE_DIR}/bin/ot-utility)
+add_executable(ot-utility main/utility/utility.cpp)
+target_link_libraries(ot-utility ${OT_EXE_LINKER_FLAGS})
+message(STATUS "Utility executable: ${OT_UTILITY}")
+
+# shell
+set(OT_SHELL ${PROJECT_SOURCE_DIR}/bin/ot-shell)
+add_executable(ot-shell main/shell/shell.cpp)
+target_link_libraries(ot-shell ${OT_EXE_LINKER_FLAGS})
+message(STATUS "OpenTimer shell: ${OT_SHELL}")
+
+###################################################################################################
+# Test
+###################################################################################################
+
+# Test 
+enable_testing()
+
+# Unittest
+message(STATUS "Building unit tests ...")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/unittest)
+
+add_executable(utility unittest/utility.cpp)
+target_link_libraries(utility OpenTimer)
+
+add_executable(unit unittest/unit.cpp)
+target_link_libraries(unit OpenTimer)
+
+add_executable(sdc unittest/sdc.cpp)
+target_link_libraries(sdc OpenTimer)
+
+add_test(unittest.utility ${OT_UNITTEST_DIR}/utility -d yes)
+add_test(unittest.sdc ${OT_UNITTEST_DIR}/sdc -d yes)
+add_test(unittest.unit ${OT_UNITTEST_DIR}/unit -d yes)
+
+# Integration test for shell
+message(STATUS "Building Shell integration tests ...")
+set(OT_SHELL_CHECKER ${PROJECT_SOURCE_DIR}/inttest/shell.py)
+add_test(inttest.shell.c3_slack ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c3_slack)
+add_test(inttest.shell.c17 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c17)
+add_test(inttest.shell.c17_slack ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c17_slack)
+add_test(inttest.shell.c432 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c432)
+add_test(inttest.shell.c499 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c499)
+add_test(inttest.shell.c880 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c880)
+add_test(inttest.shell.c1355 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c1355)
+add_test(inttest.shell.c1908 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c1908)
+add_test(inttest.shell.c2670 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c2670)
+add_test(inttest.shell.c3540 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c3540)
+add_test(inttest.shell.c5315 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c5315)
+add_test(inttest.shell.c6288 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c6288)
+add_test(inttest.shell.c7552 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c7552)
+add_test(inttest.shell.c7552_slack ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} c7552_slack)
+add_test(inttest.shell.simple ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} simple)
+add_test(inttest.shell.s27 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s27)
+add_test(inttest.shell.s344 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s344)
+add_test(inttest.shell.s349 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s349)
+add_test(inttest.shell.s386 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s386)
+add_test(inttest.shell.s400 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s400)
+add_test(inttest.shell.s510 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s510)
+add_test(inttest.shell.s526 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s526)
+add_test(inttest.shell.s1196 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s1196)
+add_test(inttest.shell.s1494 ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} s1494)
+add_test(inttest.shell.ac97_ctrl ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} ac97_ctrl)
+add_test(inttest.shell.aes_core ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} aes_core)
+add_test(inttest.shell.des_perf ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} des_perf)
+add_test(inttest.shell.vga_lcd ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} vga_lcd)
+
+# Integration test on tau15 benchmark (generated by IBM Einstimer)
+message(STATUS "Building TAU15 integration tests ...")
+set(OT_TAU15_CHECKER ${PROJECT_SOURCE_DIR}/inttest/tau15.py)
+add_test(inttest.tau15.c3_slack ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c3_slack)
+add_test(inttest.tau15.c17 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c17)
+add_test(inttest.tau15.c17_slack ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c17_slack)
+add_test(inttest.tau15.c432 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c432)
+add_test(inttest.tau15.c499 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c499)
+add_test(inttest.tau15.c880 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c880)
+add_test(inttest.tau15.c1355 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c1355)
+add_test(inttest.tau15.c1908 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c1908)
+add_test(inttest.tau15.c2670 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c2670)
+add_test(inttest.tau15.c3540 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c3540)
+add_test(inttest.tau15.c5315 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c5315)
+add_test(inttest.tau15.c6288 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c6288)
+add_test(inttest.tau15.c7552 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c7552)
+add_test(inttest.tau15.c7552_slack ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} c7552_slack)
+add_test(inttest.tau15.simple ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} simple)
+add_test(inttest.tau15.s27 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s27)
+add_test(inttest.tau15.s344 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s344)
+add_test(inttest.tau15.s349 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s349)
+add_test(inttest.tau15.s386 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s386)
+add_test(inttest.tau15.s400 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s400)
+add_test(inttest.tau15.s510 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s510)
+add_test(inttest.tau15.s526 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s526)
+add_test(inttest.tau15.s1196 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s1196)
+add_test(inttest.tau15.s1494 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s1494)
+add_test(inttest.tau15.ac97_ctrl ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} ac97_ctrl)
+add_test(inttest.tau15.aes_core ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} aes_core)
+add_test(inttest.tau15.des_perf ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} des_perf)
+add_test(inttest.tau15.vga_lcd ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} vga_lcd)
+
+

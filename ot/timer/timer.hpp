@@ -1,0 +1,370 @@
+#ifndef OT_TIMER_TIMER_HPP_
+#define OT_TIMER_TIMER_HPP_
+
+#include <ot/timer/gate.hpp>
+#include <ot/timer/pin.hpp>
+#include <ot/timer/arc.hpp>
+#include <ot/timer/net.hpp>
+#include <ot/timer/test.hpp>
+#include <ot/timer/clock.hpp>
+#include <ot/timer/endpoint.hpp>
+#include <ot/timer/path.hpp>
+#include <ot/timer/sfxt.hpp>
+#include <ot/timer/cppr.hpp>
+#include <ot/static/logger.hpp>
+#include <ot/spef/spef.hpp>
+#include <ot/verilog/verilog.hpp>
+#include <ot/sdc/sdc.hpp>
+#include <ot/tau/tau15.hpp>
+
+namespace ot {
+
+// Class: Timer
+class Timer {
+
+  friend class Shell;
+  
+  constexpr static int FULL_TIMING  = 0x01;
+  constexpr static int TNS_UPDATED  = 0x02;
+  constexpr static int WNS_UPDATED  = 0x04;
+  constexpr static int EPTS_UPDATED = 0x08;
+
+  public:
+    
+    // Builder
+    Timer& num_threads(unsigned);
+    Timer& time_unit(TimeUnit);
+    Timer& voltage_unit(VoltageUnit);
+    Timer& current_unit(CurrentUnit);
+    Timer& resistance_unit(ResistanceUnit);
+    Timer& capacitance_unit(CapacitanceUnit);
+    Timer& power_unit(PowerUnit);
+    Timer& celllib(std::filesystem::path, Split);
+    Timer& verilog(std::filesystem::path);
+    Timer& spef(std::filesystem::path);
+    Timer& sdc(std::filesystem::path);
+    Timer& timing(std::filesystem::path);
+    Timer& insert_net(std::string);
+    Timer& insert_gate(std::string, std::string);
+    Timer& repower_gate(std::string, std::string);
+    Timer& remove_net(std::string);
+    Timer& remove_gate(std::string);
+    Timer& disconnect_pin(std::string);
+    Timer& connect_pin(std::string, std::string);
+    Timer& insert_primary_input(std::string);
+    Timer& insert_primary_output(std::string);
+    Timer& at(std::string, Split, Tran, std::optional<float>);
+    Timer& rat(std::string, Split, Tran, std::optional<float>);
+    Timer& slew(std::string, Split, Tran, std::optional<float>);
+    Timer& load(std::string, Split, Tran, std::optional<float>);
+    Timer& clock(std::string, float);
+    Timer& cppr(bool);
+
+    // Action.
+    void update_timing();
+
+    std::optional<float> at(const std::string&, Split, Tran);
+    std::optional<float> rat(const std::string&, Split, Tran);
+    std::optional<float> slew(const std::string&, Split, Tran);
+    std::optional<float> slack(const std::string&, Split, Tran);
+    std::optional<float> load(const std::string&, Split, Tran);
+    std::optional<float> tns();
+    std::optional<float> wns();
+    
+    std::vector<Path> worst_paths(size_t);
+    std::vector<Path> worst_paths(Split, size_t);
+    std::vector<Path> worst_paths(Tran, size_t);
+    std::vector<Path> worst_paths(Split, Tran, size_t);
+
+    // Dump / accessors
+    std::string dump_graph() const;
+    std::string dump_lineage() const;
+    std::string dump_cell(const std::string&, Split) const;
+    std::string dump_celllib(Split) const;
+    std::string dump_net_load() const;
+    std::string dump_pin_cap() const;
+    std::string dump_slack() const;
+    std::string dump_timer() const;
+
+    inline auto time_unit() const;
+    inline auto voltage_unit() const;
+    inline auto current_unit() const;
+    inline auto resistance_unit() const;
+    inline auto capacitance_unit() const;
+    inline auto power_unit() const;
+    inline auto num_primary_inputs() const;
+    inline auto num_primary_outputs() const;
+    inline auto num_pins() const;
+    inline auto num_nets() const;
+    inline auto num_arcs() const;
+    inline auto num_gates() const;
+    inline auto num_tests() const;
+
+  private:
+
+    mutable std::shared_mutex _mutex;
+
+    tf::Taskflow _taskflow {std::thread::hardware_concurrency()};
+
+    int _state {0};
+    
+    // Unit field
+    std::optional<TimeUnit> _time_unit;
+    std::optional<VoltageUnit> _voltage_unit;
+    std::optional<CurrentUnit> _current_unit;
+    std::optional<ResistanceUnit> _resistance_unit;
+    std::optional<CapacitanceUnit> _capacitance_unit;
+    std::optional<PowerUnit> _power_unit;
+    std::optional<tf::Taskflow::Task> _lineage;
+    std::optional<Clock> _clocks;
+    std::optional<CpprAnalysis> _cppr_analysis;
+
+    std::array<Celllib, MAX_SPLIT> _celllib;
+
+    std::unordered_map<std::string, PrimaryInput> _pis;
+    std::unordered_map<std::string, PrimaryOutput> _pos; 
+    std::unordered_map<std::string, Pin> _pins;
+    std::unordered_map<std::string, Net> _nets;
+    std::unordered_map<std::string, Gate> _gates;
+
+    std::list<Test> _tests;
+    std::list<Arc> _arcs;
+    std::list<Pin*> _frontiers;
+
+    std::array<std::array<std::vector<Endpoint>, MAX_TRAN>, MAX_SPLIT> _endpoints;
+    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _wns;
+    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _tns;
+
+    std::forward_list<Pin*> _fprop_cands;
+    std::forward_list<Pin*> _bprop_cands;
+
+    IndexGenerator<size_t> _pin_idx_gen {0u};
+    IndexGenerator<size_t> _arc_idx_gen {0u};
+
+    std::vector<Pin*> _idx2pin;
+    std::vector<Arc*> _idx2arc;
+
+    std::vector<Endpoint> _worst_endpoints(size_t);
+    std::vector<Endpoint> _worst_endpoints(Split, size_t);
+    std::vector<Endpoint> _worst_endpoints(Tran, size_t);
+    std::vector<Endpoint> _worst_endpoints(Split, Tran, size_t);
+
+    Path _worst_path(const SfxtCache&) const;
+    Path _worst_path(const Endpoint&) const;
+    
+    std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
+
+    bool _build_fprop_cands(Pin&);
+    bool _build_bprop_cands(Pin&);
+
+    void _update_timing();
+    void _update_wns();
+    void _update_tns();
+    void _update_endpoints();
+    void _fprop_rc_timing(Pin&);
+    void _fprop_slew(Pin&);
+    void _fprop_delay(Pin&);
+    void _fprop_at(Pin&);
+    void _fprop_test(Pin&);
+    void _bprop_rat(Pin&);
+    void _build_fprop_tasks();
+    void _clear_fprop_tasks();
+    void _build_bprop_tasks();
+    void _clear_bprop_tasks();
+    void _spef(spef::Spef&);;
+    void _verilog(vlog::Module&);
+    void _timing(tau15::Timing&);
+    void _sdc(sdc::SDC&);
+    void _sdc(sdc::SetInputDelay&);
+    void _sdc(sdc::SetInputTransition&);
+    void _sdc(sdc::SetOutputDelay&);
+    void _sdc(sdc::SetLoad&);
+    void _sdc(sdc::CreateClock&);
+    void _add_to_lineage(const tf::Taskflow::Task&);
+    void _connect_pin(Pin&, Net&);
+    void _disconnect_pin(Pin&);
+    void _insert_frontier(Pin&);
+    void _remove_frontier(Pin&);
+    void _clear_frontiers();
+    void _insert_primary_output(const std::string&);
+    void _insert_primary_input(const std::string&);
+    void _insert_gate(const std::string&, const std::string&);
+    void _repower_gate(const std::string&, const std::string&);
+    void _remove_gate(Gate&);
+    void _remove_net(Net&);
+    void _remove_pin(Pin&);
+    void _remove_arc(Arc&);
+    void _remove_test(Test&);
+    void _at(const std::string&, Split, Tran, std::optional<float>);
+    void _at(PrimaryInput&, Split, Tran, std::optional<float>);
+    void _slew(const std::string&, Split, Tran, std::optional<float>);
+    void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
+    void _rat(const std::string&, Split, Tran, std::optional<float>);
+    void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
+    void _load(const std::string&, Split, Tran, std::optional<float>);
+    void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
+    void _clock(const std::string&, Pin&, float);
+    void _cppr(bool);
+    void _spfa(SfxtCache&, std::queue<size_t>&) const;
+    void _recover_prefix(Path&, const SfxtCache&, size_t) const;
+    void _recover_suffix(Path&, const SfxtCache&, size_t) const;
+    void _enable_full_timing_update();
+    void _to_time_unit(const TimeUnit&);
+    void _to_capacitance_unit(const CapacitanceUnit&);
+    void _to_voltage_unit(const VoltageUnit&);
+    void _to_current_unit(const CurrentUnit&);
+    void _to_resistance_unit(const ResistanceUnit&);
+    void _to_power_unit(const PowerUnit&);
+    void _rebase_unit(Celllib&);
+    void _rebase_unit(spef::Spef&);
+
+    template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
+    void _insert_frontier(T&&...);
+
+    SfxtCache _sfxt_cache(const Endpoint&) const;
+    SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
+    SfxtCache _sfxt_cache(const Test&, Split, Tran) const;
+    CpprCache _cppr_cache(const Test&, Split, Tran) const;
+
+    Net& _insert_net(const std::string&);
+    Pin& _insert_pin(const std::string&);
+    Arc& _insert_arc(Pin&, Pin&, Net&);
+    Arc& _insert_arc(Pin&, Pin&, Test&);
+    Arc& _insert_arc(Pin&, Pin&, SplitView<Timing>);
+    Test& _insert_test(Arc&);
+
+    SplitView<Cell> _cell_split_view(const std::string&);
+
+    std::optional<float> _at(const std::string&, Split, Tran);
+    std::optional<float> _rat(const std::string&, Split, Tran);
+    std::optional<float> _slew(const std::string&, Split, Tran);
+    std::optional<float> _slack(const std::string&, Split, Tran);
+    std::optional<float> _load(const std::string&, Split, Tran);
+    std::optional<float> _cppr_credit(const Test&, Split, Tran) const;
+    std::optional<float> _cppr_credit(const CpprCache&, Pin&, Split, Tran) const;
+    std::optional<float> _cppr_offset(const CpprCache&, Pin&, Split, Tran) const;
+    std::optional<float> _sfxt_offset(const SfxtCache&, size_t) const;
+
+    size_t _max_pin_name_size() const;
+    size_t _max_net_name_size() const;
+
+    inline auto _encode_pin(Pin&, Tran) const;
+    inline auto _decode_pin(size_t) const;
+    
+    constexpr auto _has_state(int) const;
+    constexpr auto _insert_state(int);
+    constexpr auto _remove_state(int = 0);
+};
+
+// Procedure: _insert_frontier
+template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>*>
+void Timer::_insert_frontier(T&&... pins) {
+  (_insert_frontier(pins), ...);
+}
+    
+// Function: time_unit
+inline auto Timer::time_unit() const {
+  std::shared_lock lock(_mutex);
+  return _time_unit;
+}
+
+// Function: voltage_unit
+inline auto Timer::voltage_unit() const {
+  std::shared_lock lock(_mutex);
+  return _voltage_unit;
+}
+
+// Function: current_unit
+inline auto Timer::current_unit() const {
+  std::shared_lock lock(_mutex);
+  return _current_unit;
+}
+
+// Function: resistance_unit
+inline auto Timer::resistance_unit() const {
+  std::shared_lock lock(_mutex);
+  return _resistance_unit;
+}
+
+// Function: capacitance_unit
+inline auto Timer::capacitance_unit() const {
+  std::shared_lock lock(_mutex);
+  return _capacitance_unit;
+}
+
+// Function: power_unit
+inline auto Timer::power_unit() const {
+  std::shared_lock lock(_mutex);
+  return _power_unit;
+}
+
+// Function: num_primary_inputs
+inline auto Timer::num_primary_inputs() const {
+  return _pis.size();
+}
+
+// Function: num_primary_outputs
+inline auto Timer::num_primary_outputs() const {
+  return _pos.size();
+}
+
+// Function: num_pins
+inline auto Timer::num_pins() const {
+  return _pins.size();
+}
+
+// Function: num_nets
+inline auto Timer::num_nets() const {
+  return _nets.size();
+}
+
+// Function: num_arcs
+inline auto Timer::num_arcs() const {
+  return _arcs.size();
+}
+
+// Function: num_gates
+inline auto Timer::num_gates() const {
+  return _gates.size();
+}
+
+// Function: num_tests
+inline auto Timer::num_tests() const {
+  return _tests.size();
+}
+
+// Function: _encode_pin
+inline auto Timer::_encode_pin(Pin& pin, Tran rf) const {
+  return rf == RISE ? pin._idx : pin._idx + _idx2pin.size();
+}
+
+// Function: _decode_pin
+inline auto Timer::_decode_pin(size_t idx) const {
+  return std::make_tuple(_idx2pin[idx%_idx2pin.size()], idx<_idx2pin.size() ? RISE : FALL);
+}
+
+// Function: _has_state
+constexpr auto Timer::_has_state(int s) const {
+  return _state & s;
+}
+
+// Procedure: _insert_state
+constexpr auto Timer::_insert_state(int s) {
+  _state |= s;
+}
+  
+// Procedure: _remove_state
+constexpr auto Timer::_remove_state(int s) {
+  if(s == 0) _state = 0;
+  else {
+    _state &= ~s;
+  }
+}
+
+};  // end of namespace ot ------------------------------------------------------------------------
+
+#endif
+
+
+
+
