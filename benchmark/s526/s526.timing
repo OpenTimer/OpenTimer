@@ -1,0 +1,23 @@
+clock blif_clk_net 1 50
+at G1 0 0 0 0
+slew G1 5 5 5 5
+at G2 0 0 0 0
+slew G2 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+at G0 0 0 0 0
+slew G0 5 5 5 5
+rat G198 2.1 2.1 2.2 2.2
+load G198 4.0
+rat G213 2.1 2.1 2.2 2.2
+load G213 4.0
+rat G148 2.1 2.1 2.2 2.2
+load G148 4.0
+rat G214 2.1 2.1 2.2 2.2
+load G214 4.0
+rat G199 2.1 2.1 2.2 2.2
+load G199 4.0
+rat G147 2.1 2.1 2.2 2.2
+load G147 4.0

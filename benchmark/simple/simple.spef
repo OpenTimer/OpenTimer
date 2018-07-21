@@ -1,0 +1,97 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "simple"
+*DATE "Tue Sep 25 11:51:50 2012"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET inp1 5.4
+*CONN
+*P inp1 I
+*I u1:a I
+*CAP
+1 inp1 1.2
+2 inp1:1 1.3
+3 inp1:2 1.4
+4 u1:a 1.5
+*RES
+1 inp1 inp1:1 3.4
+2 inp1:1 inp1:2 3.5
+3 inp1:2 u1:a 3.6
+*END
+
+*D_NET inp2 2.0
+*CONN
+*P inp2 I
+*I u1:b I
+*CAP
+1 inp2 0.2
+2 inp2:1 0.5
+3 inp2:2 0.4
+4 u1:b 0.9
+*RES
+1 inp2 inp2:1 1.4
+2 inp2:1 inp2:2 1.5
+3 inp2:2 u1:b 1.6
+*END
+
+*D_NET out 0.7
+*CONN
+*I u3:o O
+*P out O
+*CAP
+1 u3:o 0.2
+2 out 0.5
+*RES
+1 u3:o out 1.4
+*END
+
+*D_NET n1 1.0
+*CONN
+*I u1:o O
+*I u4:a I
+*CAP
+1 u1:o 0.2
+1 n1:1 0.3
+2 u4:a 0.5
+*RES
+1 u1:o n1:1 1.1
+2 n1:1 u4:a 1.0
+*END
+
+*D_NET n2 1.2
+*CONN
+*I u4:o O
+*I f1:d I
+*CAP
+1 u4:o 0.7
+2 f1:d 0.5
+*RES
+1 u4:o f1:d 2.1
+*END
+
+*D_NET n3 23.4
+*CONN
+*I f1:q O
+*I u2:a I
+*I u4:b I
+*CAP
+1 n3:1 6.7
+2 n3:2 7.8
+3 n3:3 8.9
+*RES
+1 f1:q n3:3 1.2
+2 n3:3 n3:1 2.3
+3 n3:1 u2:a 3.4
+4 n3:3 n3:2 4.5
+5 n3:2 u4:b 5.6
+*END
+

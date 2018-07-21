@@ -1,0 +1,59 @@
+clock blif_clk_net 1 50
+at v4 0 0 0 0
+slew v4 5 5 5 5
+at v3 0 0 0 0
+slew v3 5 5 5 5
+at CLR 0 0 0 0
+slew CLR 5 5 5 5
+at v5 0 0 0 0
+slew v5 5 5 5 5
+at v1 0 0 0 0
+slew v1 5 5 5 5
+at v0 0 0 0 0
+slew v0 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at v2 0 0 0 0
+slew v2 5 5 5 5
+at v6 0 0 0 0
+slew v6 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+rat v13_D_7 2.1 2.1 2.2 2.2
+load v13_D_7 4.0
+rat v13_D_15 2.1 2.1 2.2 2.2
+load v13_D_15 4.0
+rat v13_D_11 2.1 2.1 2.2 2.2
+load v13_D_11 4.0
+rat v13_D_23 2.1 2.1 2.2 2.2
+load v13_D_23 4.0
+rat v13_D_17 2.1 2.1 2.2 2.2
+load v13_D_17 4.0
+rat v13_D_9 2.1 2.1 2.2 2.2
+load v13_D_9 4.0
+rat v13_D_22 2.1 2.1 2.2 2.2
+load v13_D_22 4.0
+rat v13_D_20 2.1 2.1 2.2 2.2
+load v13_D_20 4.0
+rat v13_D_19 2.1 2.1 2.2 2.2
+load v13_D_19 4.0
+rat v13_D_12 2.1 2.1 2.2 2.2
+load v13_D_12 4.0
+rat v13_D_18 2.1 2.1 2.2 2.2
+load v13_D_18 4.0
+rat v13_D_8 2.1 2.1 2.2 2.2
+load v13_D_8 4.0
+rat v13_D_21 2.1 2.1 2.2 2.2
+load v13_D_21 4.0
+rat v13_D_6 2.1 2.1 2.2 2.2
+load v13_D_6 4.0
+rat v13_D_13 2.1 2.1 2.2 2.2
+load v13_D_13 4.0
+rat v13_D_10 2.1 2.1 2.2 2.2
+load v13_D_10 4.0
+rat v13_D_24 2.1 2.1 2.2 2.2
+load v13_D_24 4.0
+rat v13_D_14 2.1 2.1 2.2 2.2
+load v13_D_14 4.0
+rat v13_D_16 2.1 2.1 2.2 2.2
+load v13_D_16 4.0

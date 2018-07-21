@@ -1,0 +1,72 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "changes"
+*DATE "Tue Dec 02 18:59:51 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET n30gat 5.2605
+*CONN
+*I TAUGATE_1:Z O
+*I inst_52:A1 I
+*I inst_60:A2 I
+*I inst_132:A1 I
+*I inst_66:A1 I
+*CAP
+1 TAUGATE_1:Z 0.2611
+2 n30gat:1 0.4098
+3 n30gat:2 0.5009
+4 n30gat:3 0.2843
+5 inst_60:A2 0.2878
+6 n30gat:4 0.4685
+7 n30gat:5 0.3070
+8 n30gat:6 0.3583
+9 inst_52:A1 0.1395
+10 n30gat:7 0.4644
+11 n30gat:8 0.4559
+12 n30gat:9 0.4050
+13 n30gat:10 0.0154
+14 inst_132:A1 0.1670
+15 n30gat:11 0.2909
+16 n30gat:12 0.3706
+17 inst_66:A1 0.0740
+*RES
+2 TAUGATE_1:Z n30gat:1 0.1659
+3 n30gat:1 n30gat:2 0.2742
+4 n30gat:2 n30gat:3 0.3494
+5 n30gat:3 inst_60:A2 0.1485
+6 n30gat:3 n30gat:4 0.0646
+7 n30gat:4 n30gat:5 0.0794
+8 n30gat:5 n30gat:6 0.2161
+9 n30gat:6 inst_52:A1 0.1614
+10 n30gat:4 n30gat:7 0.1555
+11 n30gat:7 n30gat:8 0.2440
+12 n30gat:8 n30gat:9 0.0332
+13 n30gat:9 n30gat:10 0.0406
+14 n30gat:10 inst_132:A1 0.2732
+15 n30gat:3 n30gat:11 0.4871
+16 n30gat:11 n30gat:12 0.4951
+17 n30gat:12 inst_66:A1 0.4125
+*END
+
+*D_NET TAUNET_1 0.8718
+*CONN
+*P n30gat I
+*I TAUGATE_1:A I
+*CAP
+1 n30gat 0.1285
+2 TAUNET_1:1 0.2926
+3 TAUGATE_1:A 0.4507
+*RES
+2 n30gat TAUNET_1:1 0.3356
+3 TAUNET_1:1 TAUGATE_1:A 0.3995
+*END
+

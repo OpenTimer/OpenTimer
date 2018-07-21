@@ -1,0 +1,761 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "s27"
+*DATE "Tue Nov 25 16:55:03 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET G1 0.9267
+*CONN
+*P G1 I
+*I inst_10:A I
+*CAP
+1 G1 0.0012
+2 inst_10:A 0.0166
+3 G1:1 0.0126
+4 G1:2 0.2013
+5 G1:3 0.2013
+6 G1:4 0.2487
+7 G1:5 0.2450
+*RES
+2 G1 G1:1 0.0010
+3 inst_10:A G1:5 0.0050
+4 G1:2 G1:1 0.0050
+5 G1:2 G1:3 0.0268
+6 G1:4 G1:3 0.0050
+7 G1:4 G1:5 0.0210
+*END
+
+*D_NET net_5 0.2079
+*CONN
+*I inst_8:ZN O
+*I inst_0:A2 I
+*CAP
+1 inst_8:ZN 0.0632
+2 inst_0:A2 0.0166
+3 net_5:1 0.0715
+4 net_5:2 0.0283
+5 net_5:3 0.0283
+*RES
+2 inst_8:ZN net_5:1 0.0062
+3 inst_0:A2 net_5:3 0.0050
+4 net_5:2 net_5:1 0.0050
+5 net_5:3 net_5:2 0.0020
+*END
+
+*D_NET net_15 0.1214
+*CONN
+*I inst_11:ZN O
+*I inst_6:A2 I
+*CAP
+1 inst_11:ZN 0.0607
+2 inst_6:A2 0.0607
+*RES
+2 inst_11:ZN inst_6:A2 0.0083
+*END
+
+*D_NET net_27 0.5578
+*CONN
+*I inst_28:Z O
+*I inst_14:CK I
+*CAP
+1 inst_28:Z 0.2440
+2 net_27:1 0.0406
+3 inst_14:CK 0.2732
+*RES
+2 inst_28:Z net_27:1 0.0073
+3 net_27:1 inst_14:CK 0.1308
+*END
+
+*D_NET G17 0.9358
+*CONN
+*I inst_12:ZN O
+*P G17 O
+*CAP
+1 G17 0.0086
+2 inst_12:ZN 0.0166
+3 G17:1 0.2029
+4 G17:2 0.2029
+5 G17:3 0.2288
+6 G17:4 0.2348
+7 G17:5 0.0211
+8 G17:6 0.0200
+*RES
+2 G17:1 inst_12:ZN 0.0050
+3 G17:1 G17:2 0.0175
+4 G17:3 G17:2 0.0050
+5 G17:3 G17:4 0.0244
+6 G17:4 G17:5 0.0010
+7 G17:6 G17 0.0010
+8 G17:6 G17:5 0.0050
+*END
+
+*D_NET reset_net 0.9538
+*CONN
+*P reset_net I
+*I inst_13:A I
+*CAP
+1 reset_net 0.0010
+2 inst_13:A 0.0166
+3 reset_net:1 0.0121
+4 reset_net:2 0.0507
+5 reset_net:3 0.0507
+6 reset_net:4 0.0152
+7 reset_net:5 0.1618
+8 reset_net:6 0.1618
+9 reset_net:7 0.2419
+10 reset_net:8 0.2419
+*RES
+2 reset_net reset_net:1 0.0010
+3 inst_13:A reset_net:8 0.0050
+4 reset_net:2 reset_net:1 0.0050
+5 reset_net:2 reset_net:3 0.0045
+6 reset_net:4 reset_net:3 0.0050
+7 reset_net:5 reset_net:4 0.0050
+8 reset_net:5 reset_net:6 0.0170
+9 reset_net:7 reset_net:6 0.0050
+10 reset_net:7 reset_net:8 0.0205
+*END
+
+*D_NET net_14 0.2726
+*CONN
+*I inst_3:ZN O
+*I inst_1:A1 I
+*CAP
+1 inst_3:ZN 0.0166
+2 inst_1:A1 0.0076
+3 net_14:1 0.0246
+4 net_14:2 0.0246
+5 net_14:3 0.0762
+6 net_14:4 0.0762
+7 net_14:5 0.0155
+8 net_14:6 0.0155
+9 net_14:7 0.0159
+*RES
+2 net_14:1 inst_3:ZN 0.0050
+3 net_14:2 net_14:1 0.0015
+4 net_14:3 net_14:2 0.0050
+5 net_14:3 net_14:4 0.0068
+6 net_14:5 net_14:4 0.0050
+7 net_14:6 net_14:5 0.0010
+8 net_14:7 inst_1:A1 0.0010
+9 net_14:7 net_14:6 0.0050
+*END
+
+*D_NET G3 0.8146
+*CONN
+*P G3 I
+*I inst_1:A2 I
+*CAP
+1 G3 0.0013
+2 inst_1:A2 0.0166
+3 G3:1 0.0127
+4 G3:2 0.0159
+5 G3:3 0.0056
+6 G3:4 0.1670
+7 G3:5 0.1735
+8 G3:6 0.2110
+9 G3:7 0.2110
+*RES
+2 inst_1:A2 G3:7 0.0050
+3 G3:1 G3 0.0010
+4 G3:2 G3:1 0.0050
+5 G3:3 G3:2 0.0010
+6 G3:3 G3:4 0.0010
+7 G3:5 G3:4 0.0183
+8 G3:6 G3:5 0.0050
+9 G3:6 G3:7 0.0180
+*END
+
+*D_NET net_26 1.8161
+*CONN
+*I inst_27:Z O
+*I inst_28:A I
+*CAP
+1 inst_27:Z 0.2909
+2 net_26:1 0.0740
+3 net_26:2 0.4871
+4 net_26:3 0.4951
+5 net_26:4 0.4125
+6 inst_28:A 0.0565
+*RES
+2 inst_27:Z net_26:1 0.1285
+3 net_26:1 net_26:2 0.0292
+4 net_26:2 net_26:3 0.2926
+5 net_26:3 net_26:4 0.4507
+6 net_26:4 inst_28:A 0.3356
+*END
+
+*D_NET clk_net 0.8670
+*CONN
+*P clk_net I
+*I inst_18:A I
+*CAP
+1 clk_net 0.0716
+2 clk_net:1 0.1922
+3 clk_net:2 0.2805
+4 clk_net:3 0.1322
+5 inst_18:A 0.1905
+*RES
+2 clk_net clk_net:1 0.4017
+3 clk_net:1 clk_net:2 0.4680
+4 clk_net:2 clk_net:3 0.2976
+5 clk_net:3 inst_18:A 0.2331
+*END
+
+*D_NET net_13 0.2191
+*CONN
+*I inst_6:ZN O
+*I inst_16:D I
+*CAP
+1 inst_6:ZN 0.0166
+2 inst_16:D 0.0143
+3 net_13:1 0.0226
+4 net_13:2 0.0152
+5 net_13:3 0.0199
+6 net_13:4 0.0199
+7 net_13:5 0.0553
+8 net_13:6 0.0553
+*RES
+2 inst_6:ZN net_13:6 0.0050
+3 inst_16:D net_13:1 0.0021
+4 net_13:2 net_13:1 0.0050
+5 net_13:3 net_13:2 0.0050
+6 net_13:3 net_13:4 0.0014
+7 net_13:5 net_13:4 0.0050
+8 net_13:5 net_13:6 0.0035
+*END
+
+*D_NET G2 0.9333
+*CONN
+*P G2 I
+*I inst_5:A1 I
+*CAP
+1 G2 0.0012
+2 inst_5:A1 0.0166
+3 G2:1 0.0126
+4 G2:2 0.2205
+5 G2:3 0.2205
+6 G2:4 0.2328
+7 G2:5 0.2290
+*RES
+2 G2 G2:1 0.0010
+3 inst_5:A1 G2:5 0.0050
+4 G2:2 G2:1 0.0050
+5 G2:3 G2:2 0.0315
+6 G2:4 G2:3 0.0050
+7 G2:4 G2:5 0.0215
+*END
+
+*D_NET net_19 2.7698
+*CONN
+*I inst_20:Z O
+*I inst_15:CK I
+*I inst_21:A I
+*CAP
+1 inst_20:Z 0.1808
+2 net_19:1 0.3990
+3 inst_21:A 0.4035
+4 net_19:2 0.3591
+5 net_19:3 0.2780
+6 net_19:4 0.2022
+7 net_19:5 0.1593
+8 net_19:6 0.4382
+9 inst_15:CK 0.3498
+*RES
+2 inst_20:Z net_19:1 0.0219
+3 net_19:1 inst_21:A 0.0830
+4 net_19:1 net_19:2 0.4055
+5 net_19:2 net_19:3 0.4519
+6 net_19:3 net_19:4 0.4658
+7 net_19:4 net_19:5 0.3690
+8 net_19:5 net_19:6 0.4019
+9 net_19:6 inst_15:CK 0.0632
+*END
+
+*D_NET net_3 0.0415
+*CONN
+*I inst_14:QN O
+*I inst_7:A2 I
+*CAP
+1 inst_7:A2 0.0010
+2 inst_14:QN 0.0010
+3 net_3:1 0.0198
+4 net_3:2 0.0198
+*RES
+2 inst_14:QN net_3:2 0.0050
+3 net_3:1 inst_7:A2 0.0050
+4 net_3:2 net_3:1 0.0014
+*END
+
+*D_NET net_22 1.7532
+*CONN
+*I inst_23:Z O
+*I inst_24:A I
+*CAP
+1 inst_23:Z 0.1267
+2 net_22:1 0.2434
+3 net_22:2 0.3726
+4 net_22:3 0.2980
+5 net_22:4 0.2454
+6 inst_24:A 0.4670
+*RES
+2 inst_23:Z net_22:1 0.1921
+3 net_22:1 net_22:2 0.1376
+4 net_22:2 net_22:3 0.4443
+5 net_22:3 net_22:4 0.1288
+6 net_22:4 inst_24:A 0.3022
+*END
+
+*D_NET net_16 0.7880
+*CONN
+*I inst_0:ZN O
+*I inst_12:A I
+*I inst_15:D I
+*I inst_6:A1 I
+*CAP
+1 inst_12:A 0.0447
+2 inst_0:ZN 0.0166
+3 inst_15:D 0.0143
+4 inst_6:A1 0.0656
+5 net_16:1 0.0444
+6 net_16:2 0.0612
+7 net_16:3 0.1142
+8 net_16:4 0.1142
+9 net_16:5 0.0260
+10 net_16:6 0.0260
+11 net_16:7 0.0152
+12 net_16:8 0.0226
+13 net_16:9 0.0152
+14 net_16:10 0.0612
+15 net_16:11 0.0612
+16 net_16:12 0.0426
+17 net_16:13 0.0426
+*RES
+2 inst_15:D net_16:8 0.0021
+3 inst_6:A1 net_16:2 0.0072
+4 inst_6:A1 net_16:3 0.0050
+5 net_16:1 inst_12:A 0.0052
+6 net_16:2 net_16:1 0.0010
+7 net_16:4 net_16:3 0.0090
+8 net_16:4 net_16:5 0.0050
+9 net_16:6 net_16:5 0.0020
+10 net_16:6 net_16:7 0.0050
+11 net_16:7 net_16:8 0.0050
+12 net_16:9 inst_0:ZN 0.0050
+13 net_16:10 net_16:9 0.0050
+14 net_16:11 net_16:10 0.0054
+15 net_16:12 net_16:11 0.0050
+16 net_16:12 net_16:13 0.0030
+17 net_16:13 inst_12:A 0.0050
+*END
+
+*D_NET net_6 0.2078
+*CONN
+*I inst_4:ZN O
+*I inst_2:A1 I
+*CAP
+1 inst_4:ZN 0.0203
+2 inst_2:A1 0.0076
+3 net_6:1 0.0159
+4 net_6:2 0.0677
+5 net_6:3 0.0677
+6 net_6:4 0.0286
+*RES
+2 inst_4:ZN net_6:4 0.0041
+3 net_6:1 inst_2:A1 0.0010
+4 net_6:2 net_6:1 0.0050
+5 net_6:2 net_6:3 0.0055
+6 net_6:4 net_6:3 0.0050
+*END
+
+*D_NET net_24 1.8873
+*CONN
+*I inst_25:Z O
+*I inst_16:CK I
+*CAP
+1 inst_25:Z 0.0668
+2 net_24:1 0.4131
+3 net_24:2 0.4004
+4 net_24:3 0.4814
+5 net_24:4 0.1341
+6 inst_16:CK 0.3915
+*RES
+2 inst_25:Z net_24:1 0.0282
+3 net_24:1 net_24:2 0.3089
+4 net_24:2 net_24:3 0.0253
+5 net_24:3 net_24:4 0.3105
+6 net_24:4 inst_16:CK 0.1881
+*END
+
+*D_NET net_11 0.1753
+*CONN
+*I inst_2:ZN O
+*I inst_0:A1 I
+*CAP
+1 inst_2:ZN 0.0166
+2 inst_0:A1 0.0388
+3 net_11:1 0.0364
+4 net_11:2 0.0364
+5 net_11:3 0.0471
+*RES
+2 net_11:1 inst_2:ZN 0.0050
+3 net_11:1 net_11:2 0.0045
+4 net_11:3 inst_0:A1 0.0052
+5 net_11:3 net_11:2 0.0050
+*END
+
+*D_NET net_1 0.1746
+*CONN
+*I inst_16:QN O
+*I inst_8:A I
+*CAP
+1 inst_8:A 0.0074
+2 inst_16:QN 0.0166
+3 net_1:1 0.0157
+4 net_1:2 0.0152
+5 net_1:3 0.0435
+6 net_1:4 0.0435
+7 net_1:5 0.0164
+8 net_1:6 0.0164
+*RES
+2 inst_16:QN net_1:6 0.0050
+3 net_1:1 inst_8:A 0.0010
+4 net_1:2 net_1:1 0.0050
+5 net_1:3 net_1:2 0.0050
+6 net_1:4 net_1:3 0.0034
+7 net_1:5 net_1:4 0.0050
+8 net_1:5 net_1:6 0.0010
+*END
+
+*D_NET net_23 1.1787
+*CONN
+*I inst_24:Z O
+*I inst_25:A I
+*CAP
+1 inst_24:Z 0.1659
+2 net_23:1 0.3494
+3 net_23:2 0.1485
+4 net_23:3 0.3039
+5 inst_25:A 0.2110
+*RES
+2 inst_24:Z net_23:1 0.4685
+3 net_23:1 net_23:2 0.3070
+4 net_23:2 net_23:3 0.3583
+5 net_23:3 inst_25:A 0.1395
+*END
+
+*D_NET net_18 1.4119
+*CONN
+*I inst_19:Z O
+*I inst_20:A I
+*CAP
+1 inst_19:Z 0.0794
+2 net_18:1 0.1614
+3 net_18:2 0.3312
+4 net_18:3 0.3755
+5 inst_20:A 0.4644
+*RES
+2 inst_19:Z net_18:1 0.4559
+3 net_18:1 net_18:2 0.4050
+4 net_18:2 net_18:3 0.0154
+5 net_18:3 inst_20:A 0.1670
+*END
+
+*D_NET net_12 0.7695
+*CONN
+*I inst_13:ZN O
+*I inst_14:RN I
+*I inst_15:RN I
+*I inst_16:RN I
+*CAP
+1 inst_13:ZN 0.0166
+2 inst_14:RN 0.0072
+3 inst_15:RN 0.0166
+4 inst_16:RN 0.0166
+5 net_12:1 0.1059
+6 net_12:2 0.0239
+7 net_12:3 0.0325
+8 net_12:4 0.0302
+9 net_12:5 0.1854
+10 net_12:6 0.0384
+11 net_12:7 0.0152
+12 net_12:8 0.0155
+13 net_12:9 0.0957
+14 net_12:10 0.0152
+15 net_12:11 0.1546
+*RES
+2 net_12:1 inst_15:RN 0.0050
+3 net_12:1 net_12:9 0.0065
+4 net_12:2 net_12:1 0.0015
+5 net_12:2 net_12:3 0.0010
+6 net_12:4 net_12:3 0.0020
+7 net_12:5 net_12:4 0.0050
+8 net_12:5 net_12:6 0.0014
+9 net_12:6 net_12:7 0.0050
+10 net_12:7 net_12:8 0.0050
+11 net_12:8 inst_14:RN 0.0010
+12 net_12:9 inst_16:RN 0.0050
+13 net_12:10 inst_13:ZN 0.0050
+14 net_12:11 net_12:5 0.0088
+15 net_12:11 net_12:10 0.0050
+*END
+
+*D_NET net_2 0.2418
+*CONN
+*I inst_15:QN O
+*I inst_3:A1 I
+*I inst_4:A1 I
+*CAP
+1 inst_3:A1 0.0076
+2 inst_4:A1 0.0166
+3 inst_15:QN 0.0166
+4 net_2:1 0.0159
+5 net_2:2 0.0830
+6 net_2:3 0.0709
+7 net_2:4 0.0312
+*RES
+2 net_2:1 inst_3:A1 0.0010
+3 net_2:2 net_2:1 0.0050
+4 net_2:2 net_2:3 0.0075
+5 net_2:3 inst_4:A1 0.0050
+6 net_2:4 inst_15:QN 0.0050
+7 net_2:4 net_2:2 0.0014
+*END
+
+*D_NET net_10 0.3307
+*CONN
+*I inst_5:ZN O
+*I inst_14:D I
+*CAP
+1 inst_5:ZN 0.0166
+2 inst_14:D 0.0143
+3 net_10:1 0.0178
+4 net_10:2 0.0178
+5 net_10:3 0.1132
+6 net_10:4 0.1132
+7 net_10:5 0.0152
+8 net_10:6 0.0226
+*RES
+2 inst_14:D net_10:6 0.0021
+3 net_10:1 inst_5:ZN 0.0050
+4 net_10:2 net_10:1 0.0010
+5 net_10:3 net_10:2 0.0050
+6 net_10:4 net_10:3 0.0109
+7 net_10:5 net_10:4 0.0050
+8 net_10:6 net_10:5 0.0050
+*END
+
+*D_NET net_8 0.2779
+*CONN
+*I inst_1:ZN O
+*I inst_0:A3 I
+*CAP
+1 inst_1:ZN 0.0166
+2 inst_0:A3 0.0166
+3 net_8:1 0.0819
+4 net_8:2 0.0819
+5 net_8:3 0.0328
+6 net_8:4 0.0328
+7 net_8:5 0.0152
+*RES
+2 inst_0:A3 net_8:5 0.0050
+3 net_8:1 inst_1:ZN 0.0050
+4 net_8:1 net_8:2 0.0070
+5 net_8:3 net_8:2 0.0050
+6 net_8:4 net_8:3 0.0034
+7 net_8:5 net_8:4 0.0050
+*END
+
+*D_NET net_9 0.1603
+*CONN
+*I inst_9:ZN O
+*I inst_5:A2 I
+*I inst_2:A2 I
+*CAP
+1 inst_9:ZN 0.0201
+2 inst_5:A2 0.0076
+3 inst_2:A2 0.0166
+4 net_9:1 0.0370
+5 net_9:2 0.0393
+6 net_9:3 0.0209
+7 net_9:4 0.0187
+*RES
+2 inst_9:ZN inst_5:A2 0.0010
+3 inst_2:A2 net_9:4 0.0050
+4 net_9:1 inst_9:ZN 0.0050
+5 net_9:1 net_9:2 0.0045
+6 net_9:3 net_9:2 0.0010
+7 net_9:3 net_9:4 0.0010
+*END
+
+*D_NET net_25 1.9602
+*CONN
+*I inst_26:Z O
+*I inst_27:A I
+*CAP
+1 inst_26:Z 0.3845
+2 net_25:1 0.3056
+3 net_25:2 0.3464
+4 net_25:3 0.0305
+5 net_25:4 0.2383
+6 net_25:5 0.4020
+7 inst_27:A 0.2529
+*RES
+2 inst_26:Z net_25:1 0.2665
+3 net_25:1 net_25:2 0.4354
+4 net_25:2 net_25:3 0.1977
+5 net_25:3 net_25:4 0.0788
+6 net_25:4 net_25:5 0.3276
+7 net_25:5 inst_27:A 0.3833
+*END
+
+*D_NET net_21 1.3358
+*CONN
+*I inst_22:Z O
+*I inst_23:A I
+*CAP
+1 inst_22:Z 0.3943
+2 net_21:1 0.1955
+3 net_21:2 0.1868
+4 net_21:3 0.4889
+5 inst_23:A 0.0703
+*RES
+2 inst_22:Z net_21:1 0.3298
+3 net_21:1 net_21:2 0.4131
+4 net_21:2 net_21:3 0.3310
+5 net_21:3 inst_23:A 0.2621
+*END
+
+*D_NET net_7 0.0143
+*CONN
+*I inst_7:ZN O
+*I inst_9:A I
+*CAP
+1 inst_7:ZN 0.0072
+2 inst_9:A 0.0072
+*RES
+2 inst_7:ZN inst_9:A 0.0010
+*END
+
+*D_NET net_20 2.0111
+*CONN
+*I inst_21:Z O
+*I inst_22:A I
+*CAP
+1 inst_21:Z 0.4700
+2 net_20:1 0.3545
+3 net_20:2 0.1033
+4 net_20:3 0.4316
+5 net_20:4 0.1782
+6 inst_22:A 0.4734
+*RES
+2 inst_21:Z net_20:1 0.0376
+3 net_20:1 net_20:2 0.0972
+4 net_20:2 net_20:3 0.3594
+5 net_20:3 net_20:4 0.0525
+6 net_20:4 inst_22:A 0.3248
+*END
+
+*D_NET G0 1.4243
+*CONN
+*P G0 I
+*I inst_11:A I
+*I inst_3:A2 I
+*I inst_4:A2 I
+*CAP
+1 G0 0.0010
+2 inst_11:A 0.0166
+3 inst_3:A2 0.0166
+4 inst_4:A2 0.0166
+5 G0:1 0.2027
+6 G0:2 0.1308
+7 G0:3 0.1308
+8 G0:4 0.0403
+9 G0:5 0.0697
+10 G0:6 0.0393
+11 G0:7 0.0619
+12 G0:8 0.0596
+13 G0:9 0.0121
+14 G0:10 0.0387
+15 G0:11 0.0387
+16 G0:12 0.0152
+17 G0:13 0.1674
+18 G0:14 0.1674
+19 G0:15 0.1989
+*RES
+2 G0 G0:9 0.0010
+3 G0:1 inst_11:A 0.0050
+4 G0:1 G0:15 0.0205
+5 G0:1 G0:2 0.0050
+6 G0:2 G0:3 0.0136
+7 G0:3 G0:4 0.0050
+8 G0:5 inst_4:A2 0.0050
+9 G0:5 G0:4 0.0030
+10 G0:6 G0:5 0.0035
+11 G0:6 G0:7 0.0010
+12 G0:8 inst_3:A2 0.0050
+13 G0:8 G0:7 0.0040
+14 G0:10 G0:9 0.0050
+15 G0:10 G0:11 0.0045
+16 G0:12 G0:11 0.0050
+17 G0:13 G0:12 0.0050
+18 G0:13 G0:14 0.0176
+19 G0:15 G0:14 0.0050
+*END
+
+*D_NET net_4 0.5504
+*CONN
+*I inst_10:ZN O
+*I inst_7:A1 I
+*CAP
+1 inst_10:ZN 0.0166
+2 inst_7:A1 0.0166
+3 net_4:1 0.0152
+4 net_4:2 0.2434
+5 net_4:3 0.2434
+6 net_4:4 0.0152
+*RES
+2 inst_7:A1 net_4:4 0.0050
+3 net_4:1 inst_10:ZN 0.0050
+4 net_4:2 net_4:1 0.0050
+5 net_4:2 net_4:3 0.0170
+6 net_4:4 net_4:3 0.0050
+*END
+
+*D_NET net_17 2.3340
+*CONN
+*I inst_18:Z O
+*I inst_19:A I
+*I inst_26:A I
+*CAP
+1 inst_18:Z 0.1592
+2 net_17:1 0.2761
+3 net_17:2 0.3643
+4 net_17:3 0.2288
+5 net_17:4 0.0666
+6 inst_19:A 0.3854
+7 net_17:5 0.4921
+8 net_17:6 0.1648
+9 net_17:7 0.1855
+10 inst_26:A 0.0112
+*RES
+2 inst_18:Z net_17:1 0.3580
+3 net_17:1 net_17:2 0.3774
+4 net_17:2 net_17:3 0.2731
+5 net_17:3 net_17:4 0.1525
+6 net_17:4 inst_19:A 0.0518
+7 net_17:3 net_17:5 0.3530
+8 net_17:5 net_17:6 0.1128
+9 net_17:6 net_17:7 0.2239
+10 net_17:7 inst_26:A 0.0917
+*END
+

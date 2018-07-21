@@ -1,0 +1,23 @@
+clock blif_clk_net 1 50
+at TEST 0 0 0 0
+slew TEST 5 5 5 5
+at FM 0 0 0 0
+slew FM 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at CLR 0 0 0 0
+slew CLR 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+rat YLW1 2.1 2.1 2.2 2.2
+load YLW1 4.0
+rat RED2 2.1 2.1 2.2 2.2
+load RED2 4.0
+rat GRN1 2.1 2.1 2.2 2.2
+load GRN1 4.0
+rat RED1 2.1 2.1 2.2 2.2
+load RED1 4.0
+rat YLW2 2.1 2.1 2.2 2.2
+load YLW2 4.0
+rat GRN2 2.1 2.1 2.2 2.2
+load GRN2 4.0

@@ -1,0 +1,172 @@
+at n201gat 0 0 0 0
+slew n201gat 5 5 5 5
+at n189gat 0 0 0 0
+slew n189gat 5 5 5 5
+at n17gat 0 0 0 0
+slew n17gat 5 5 5 5
+at n72gat 0 0 0 0
+slew n72gat 5 5 5 5
+at n152gat 0 0 0 0
+slew n152gat 5 5 5 5
+at n255gat 0 0 0 0
+slew n255gat 5 5 5 5
+at n159gat 0 0 0 0
+slew n159gat 5 5 5 5
+at n85gat 0 0 0 0
+slew n85gat 5 5 5 5
+at n267gat 0 0 0 0
+slew n267gat 5 5 5 5
+at n87gat 0 0 0 0
+slew n87gat 5 5 5 5
+at n116gat 0 0 0 0
+slew n116gat 5 5 5 5
+at n74gat 0 0 0 0
+slew n74gat 5 5 5 5
+at n55gat 0 0 0 0
+slew n55gat 5 5 5 5
+at n90gat 0 0 0 0
+slew n90gat 5 5 5 5
+at n210gat 0 0 0 0
+slew n210gat 5 5 5 5
+at n96gat 0 0 0 0
+slew n96gat 5 5 5 5
+at n228gat 0 0 0 0
+slew n228gat 5 5 5 5
+at n260gat 0 0 0 0
+slew n260gat 5 5 5 5
+at n143gat 0 0 0 0
+slew n143gat 5 5 5 5
+at n80gat 0 0 0 0
+slew n80gat 5 5 5 5
+at n207gat 0 0 0 0
+slew n207gat 5 5 5 5
+at n153gat 0 0 0 0
+slew n153gat 5 5 5 5
+at n268gat 0 0 0 0
+slew n268gat 5 5 5 5
+at n171gat 0 0 0 0
+slew n171gat 5 5 5 5
+at n1gat 0 0 0 0
+slew n1gat 5 5 5 5
+at n135gat 0 0 0 0
+slew n135gat 5 5 5 5
+at n111gat 0 0 0 0
+slew n111gat 5 5 5 5
+at n237gat 0 0 0 0
+slew n237gat 5 5 5 5
+at n183gat 0 0 0 0
+slew n183gat 5 5 5 5
+at n130gat 0 0 0 0
+slew n130gat 5 5 5 5
+at n29gat 0 0 0 0
+slew n29gat 5 5 5 5
+at n261gat 0 0 0 0
+slew n261gat 5 5 5 5
+at n101gat 0 0 0 0
+slew n101gat 5 5 5 5
+at n59gat 0 0 0 0
+slew n59gat 5 5 5 5
+at n138gat 0 0 0 0
+slew n138gat 5 5 5 5
+at n149gat 0 0 0 0
+slew n149gat 5 5 5 5
+at n195gat 0 0 0 0
+slew n195gat 5 5 5 5
+at n86gat 0 0 0 0
+slew n86gat 5 5 5 5
+at n177gat 0 0 0 0
+slew n177gat 5 5 5 5
+at n219gat 0 0 0 0
+slew n219gat 5 5 5 5
+at n42gat 0 0 0 0
+slew n42gat 5 5 5 5
+at n121gat 0 0 0 0
+slew n121gat 5 5 5 5
+at n146gat 0 0 0 0
+slew n146gat 5 5 5 5
+at n91gat 0 0 0 0
+slew n91gat 5 5 5 5
+at n26gat 0 0 0 0
+slew n26gat 5 5 5 5
+at n156gat 0 0 0 0
+slew n156gat 5 5 5 5
+at n68gat 0 0 0 0
+slew n68gat 5 5 5 5
+at n13gat 0 0 0 0
+slew n13gat 5 5 5 5
+at n246gat 0 0 0 0
+slew n246gat 5 5 5 5
+at n8gat 0 0 0 0
+slew n8gat 5 5 5 5
+at n75gat 0 0 0 0
+slew n75gat 5 5 5 5
+at n73gat 0 0 0 0
+slew n73gat 5 5 5 5
+at n36gat 0 0 0 0
+slew n36gat 5 5 5 5
+at n88gat 0 0 0 0
+slew n88gat 5 5 5 5
+at n126gat 0 0 0 0
+slew n126gat 5 5 5 5
+at n106gat 0 0 0 0
+slew n106gat 5 5 5 5
+at n165gat 0 0 0 0
+slew n165gat 5 5 5 5
+at n259gat 0 0 0 0
+slew n259gat 5 5 5 5
+at n89gat 0 0 0 0
+slew n89gat 5 5 5 5
+at n51gat 0 0 0 0
+slew n51gat 5 5 5 5
+rat n420gat 9 9 11 11
+load n420gat 4.0
+rat n389gat 9 9 11 11
+load n389gat 4.0
+rat n879gat 9 9 11 11
+load n879gat 4.0
+rat n865gat 9 9 11 11
+load n865gat 4.0
+rat n850gat 9 9 11 11
+load n850gat 4.0
+rat n446gat 9 9 11 11
+load n446gat 4.0
+rat n767gat 9 9 11 11
+load n767gat 4.0
+rat n390gat 9 9 11 11
+load n390gat 4.0
+rat n874gat 9 9 11 11
+load n874gat 4.0
+rat n864gat 9 9 11 11
+load n864gat 4.0
+rat n768gat 9 9 11 11
+load n768gat 4.0
+rat n421gat 9 9 11 11
+load n421gat 4.0
+rat n863gat 9 9 11 11
+load n863gat 4.0
+rat n419gat 9 9 11 11
+load n419gat 4.0
+rat n388gat 9 9 11 11
+load n388gat 4.0
+rat n449gat 9 9 11 11
+load n449gat 4.0
+rat n450gat 9 9 11 11
+load n450gat 4.0
+rat n880gat 9 9 11 11
+load n880gat 4.0
+rat n423gat 9 9 11 11
+load n423gat 4.0
+rat n866gat 9 9 11 11
+load n866gat 4.0
+rat n447gat 9 9 11 11
+load n447gat 4.0
+rat n391gat 9 9 11 11
+load n391gat 4.0
+rat n448gat 9 9 11 11
+load n448gat 4.0
+rat n878gat 9 9 11 11
+load n878gat 4.0
+rat n418gat 9 9 11 11
+load n418gat 4.0
+rat n422gat 9 9 11 11
+load n422gat 4.0

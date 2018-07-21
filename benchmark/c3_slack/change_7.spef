@@ -1,0 +1,108 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "changes"
+*DATE "Tue Dec 02 18:59:25 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET nx1 1.7439
+*CONN
+*P nx1 I
+*I inst_0:A1 I
+*CAP
+1 nx1 0.2611
+2 nx1:1 0.4098
+3 nx1:2 0.5009
+4 nx1:3 0.2843
+5 inst_0:A1 0.2878
+*RES
+2 nx1 nx1:1 0.1659
+3 nx1:1 nx1:2 0.2742
+4 nx1:2 nx1:3 0.3494
+5 nx1:3 inst_0:A1 0.1485
+*END
+
+*D_NET nx33 1.3760
+*CONN
+*P nx3 I
+*P nx33 O
+*CAP
+1 nx3 0.2110
+2 nx33:1 0.3070
+3 nx33:2 0.3583
+4 nx33:3 0.1395
+5 nx33:4 0.0646
+6 nx33:5 0.0794
+7 nx33 0.2161
+*RES
+2 nx3 nx33:1 0.1614
+3 nx33:1 nx33:2 0.3312
+4 nx33:2 nx33:3 0.3755
+5 nx33:3 nx33:4 0.4644
+6 nx33:4 nx33:5 0.4559
+7 nx33:5 nx33 0.4050
+*END
+
+*D_NET nx12 0.4849
+*CONN
+*I inst_0:ZN O
+*P nx12 O
+*CAP
+1 inst_0:ZN 0.1670
+2 nx12:1 0.2440
+3 nx12:2 0.0332
+4 nx12 0.0406
+*RES
+2 inst_0:ZN nx12:1 0.2732
+3 nx12:1 nx12:2 0.0073
+4 nx12:2 nx12 0.1308
+*END
+
+*D_NET nx2 1.8161
+*CONN
+*P nx2 I
+*I inst_0:A2 I
+*CAP
+1 nx2 0.2909
+2 nx2:1 0.0740
+3 nx2:2 0.4871
+4 nx2:3 0.4951
+5 nx2:4 0.4125
+6 inst_0:A2 0.0565
+*RES
+2 nx2 nx2:1 0.1285
+3 nx2:1 nx2:2 0.0292
+4 nx2:2 nx2:3 0.2926
+5 nx2:3 nx2:4 0.4507
+6 nx2:4 inst_0:A2 0.3356
+*END
+
+*D_NET nx44 1.9602
+*CONN
+*P nx4 I
+*P nx44 O
+*CAP
+1 nx4 0.3845
+2 nx44:1 0.3056
+3 nx44:2 0.3464
+4 nx44:3 0.0305
+5 nx44:4 0.2383
+6 nx44:5 0.4020
+7 nx44 0.2529
+*RES
+2 nx4 nx44:1 0.2665
+3 nx44:1 nx44:2 0.4354
+4 nx44:2 nx44:3 0.1977
+5 nx44:3 nx44:4 0.0788
+6 nx44:4 nx44:5 0.3276
+7 nx44:5 nx44 0.3833
+*END
+

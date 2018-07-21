@@ -1,0 +1,61 @@
+clock blif_clk_net 1 50
+at G1 0 0 0 0
+slew G1 5 5 5 5
+at G11 0 0 0 0
+slew G11 5 5 5 5
+at G8 0 0 0 0
+slew G8 5 5 5 5
+at G5 0 0 0 0
+slew G5 5 5 5 5
+at G9 0 0 0 0
+slew G9 5 5 5 5
+at G3 0 0 0 0
+slew G3 5 5 5 5
+at G13 0 0 0 0
+slew G13 5 5 5 5
+at G4 0 0 0 0
+slew G4 5 5 5 5
+at G12 0 0 0 0
+slew G12 5 5 5 5
+at G2 0 0 0 0
+slew G2 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at G7 0 0 0 0
+slew G7 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+at G10 0 0 0 0
+slew G10 5 5 5 5
+at G0 0 0 0 0
+slew G0 5 5 5 5
+at G6 0 0 0 0
+slew G6 5 5 5 5
+rat G549 2.1 2.1 2.2 2.2
+load G549 4.0
+rat G542 2.1 2.1 2.2 2.2
+load G542 4.0
+rat G530 2.1 2.1 2.2 2.2
+load G530 4.0
+rat G552 2.1 2.1 2.2 2.2
+load G552 4.0
+rat G45 2.1 2.1 2.2 2.2
+load G45 4.0
+rat G547 2.1 2.1 2.2 2.2
+load G547 4.0
+rat G548 2.1 2.1 2.2 2.2
+load G548 4.0
+rat G537 2.1 2.1 2.2 2.2
+load G537 4.0
+rat G551 2.1 2.1 2.2 2.2
+load G551 4.0
+rat G532 2.1 2.1 2.2 2.2
+load G532 4.0
+rat G539 2.1 2.1 2.2 2.2
+load G539 4.0
+rat G546 2.1 2.1 2.2 2.2
+load G546 4.0
+rat G535 2.1 2.1 2.2 2.2
+load G535 4.0
+rat G550 2.1 2.1 2.2 2.2
+load G550 4.0

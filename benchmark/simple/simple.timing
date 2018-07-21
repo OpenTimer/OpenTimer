@@ -1,0 +1,9 @@
+clock tau2015_clk 50 50
+at tau2015_clk 0 25 0 25
+at inp1 0 0 5 5
+at inp2 0 0 1 1
+slew inp1 10 15 20 25
+slew inp2 30 30 40 40
+slew tau2015_clk 10 15 10 15
+load out 4
+rat out 10 10 20 20

@@ -1,0 +1,5375 @@
+repower_gate inst_205 INV_X4
+insert_gate TAUGATE_1 BUF_X16
+insert_net TAUNET_1
+disconnect_pin inst_51:ZN
+connect_pin inst_51:ZN TAUNET_1
+connect_pin TAUGATE_1:A TAUNET_1
+connect_pin TAUGATE_1:Z net_74
+read_spef change_1.spef
+repower_gate inst_77 OR2_X2
+repower_gate inst_162 NAND2_X4
+repower_gate inst_63 XNOR2_X2
+insert_gate TAUGATE_2 BUF_X1
+insert_net TAUNET_2
+disconnect_pin inst_17:Z
+connect_pin inst_17:Z TAUNET_2
+connect_pin TAUGATE_2:A TAUNET_2
+connect_pin TAUGATE_2:Z net_100
+insert_gate TAUGATE_3 BUF_X1
+insert_net TAUNET_3
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_3
+connect_pin TAUGATE_3:A TAUNET_3
+connect_pin TAUGATE_3:Z net_144
+insert_gate TAUGATE_4 BUF_X4
+insert_net TAUNET_4
+disconnect_pin inst_63:ZN
+connect_pin inst_63:ZN TAUNET_4
+connect_pin TAUGATE_4:A TAUNET_4
+connect_pin TAUGATE_4:Z net_177
+read_spef change_2.spef
+repower_gate inst_5 XOR2_X2
+repower_gate inst_32 XNOR2_X2
+repower_gate inst_81 NOR4_X4
+repower_gate inst_61 XNOR2_X2
+repower_gate inst_177 NAND2_X2
+repower_gate inst_62 XNOR2_X2
+repower_gate inst_165 NAND2_X2
+repower_gate inst_108 NOR2_X4
+repower_gate inst_90 NOR3_X4
+repower_gate inst_42 XNOR2_X2
+insert_gate TAUGATE_5 BUF_X4
+insert_net TAUNET_5
+disconnect_pin inst_165:ZN
+connect_pin inst_165:ZN TAUNET_5
+connect_pin TAUGATE_5:A TAUNET_5
+connect_pin TAUGATE_5:Z net_135
+insert_gate TAUGATE_6 BUF_X4
+insert_net TAUNET_6
+disconnect_pin inst_209:ZN
+connect_pin inst_209:ZN TAUNET_6
+connect_pin TAUGATE_6:A TAUNET_6
+connect_pin TAUGATE_6:Z net_196
+insert_gate TAUGATE_7 BUF_X8
+insert_net TAUNET_7
+disconnect_pin inst_127:ZN
+connect_pin inst_127:ZN TAUNET_7
+connect_pin TAUGATE_7:A TAUNET_7
+connect_pin TAUGATE_7:Z net_185
+insert_gate TAUGATE_8 BUF_X8
+insert_net TAUNET_8
+disconnect_pin inst_205:ZN
+connect_pin inst_205:ZN TAUNET_8
+connect_pin TAUGATE_8:A TAUNET_8
+connect_pin TAUGATE_8:Z net_170
+insert_gate TAUGATE_9 BUF_X8
+insert_net TAUNET_9
+disconnect_pin inst_178:ZN
+connect_pin inst_178:ZN TAUNET_9
+connect_pin TAUGATE_9:A TAUNET_9
+connect_pin TAUGATE_9:Z net_150
+read_spef change_3.spef
+repower_gate inst_201 INV_X16
+repower_gate inst_9 XOR2_X2
+repower_gate inst_181 NAND2_X4
+repower_gate inst_32 XNOR2_X1
+repower_gate inst_12 XOR2_X2
+repower_gate inst_3 XOR2_X2
+repower_gate inst_47 XNOR2_X2
+repower_gate inst_129 NOR2_X2
+repower_gate inst_0 XOR2_X2
+repower_gate inst_208 AND4_X2
+repower_gate inst_191 INV_X32
+repower_gate inst_211 AND3_X1
+repower_gate inst_26 XOR2_X2
+repower_gate inst_187 INV_X32
+repower_gate TAUGATE_2 BUF_X32
+repower_gate inst_30 XNOR2_X2
+repower_gate inst_104 NOR2_X4
+repower_gate inst_98 NOR2_X4
+repower_gate inst_189 INV_X16
+repower_gate inst_102 NOR2_X4
+insert_gate TAUGATE_10 BUF_X32
+insert_net TAUNET_10
+disconnect_pin inst_83:ZN
+connect_pin inst_83:ZN TAUNET_10
+connect_pin TAUGATE_10:A TAUNET_10
+connect_pin TAUGATE_10:Z net_183
+insert_gate TAUGATE_11 BUF_X32
+insert_net TAUNET_11
+disconnect_pin n143
+connect_pin n143 TAUNET_11
+connect_pin TAUGATE_11:A TAUNET_11
+connect_pin TAUGATE_11:Z n143
+insert_gate TAUGATE_12 BUF_X1
+insert_net TAUNET_12
+disconnect_pin inst_18:Z
+connect_pin inst_18:Z TAUNET_12
+connect_pin TAUGATE_12:A TAUNET_12
+connect_pin TAUGATE_12:Z n21
+insert_gate TAUGATE_13 BUF_X8
+insert_net TAUNET_13
+disconnect_pin inst_151:ZN
+connect_pin inst_151:ZN TAUNET_13
+connect_pin TAUGATE_13:A TAUNET_13
+connect_pin TAUGATE_13:Z net_182
+insert_gate TAUGATE_14 BUF_X16
+insert_net TAUNET_14
+disconnect_pin inst_169:ZN
+connect_pin inst_169:ZN TAUNET_14
+connect_pin TAUGATE_14:A TAUNET_14
+connect_pin TAUGATE_14:Z net_97
+insert_gate TAUGATE_15 BUF_X2
+insert_net TAUNET_15
+disconnect_pin inst_93:ZN
+connect_pin inst_93:ZN TAUNET_15
+connect_pin TAUGATE_15:A TAUNET_15
+connect_pin TAUGATE_15:Z net_156
+insert_gate TAUGATE_16 BUF_X16
+insert_net TAUNET_16
+disconnect_pin inst_187:ZN
+connect_pin inst_187:ZN TAUNET_16
+connect_pin TAUGATE_16:A TAUNET_16
+connect_pin TAUGATE_16:Z net_0
+insert_gate TAUGATE_17 BUF_X32
+insert_net TAUNET_17
+disconnect_pin inst_200:ZN
+connect_pin inst_200:ZN TAUNET_17
+connect_pin TAUGATE_17:A TAUNET_17
+connect_pin TAUGATE_17:Z net_98
+insert_gate TAUGATE_18 BUF_X32
+insert_net TAUNET_18
+disconnect_pin inst_106:ZN
+connect_pin inst_106:ZN TAUNET_18
+connect_pin TAUGATE_18:A TAUNET_18
+connect_pin TAUGATE_18:Z net_70
+insert_gate TAUGATE_19 BUF_X1
+insert_net TAUNET_19
+disconnect_pin inst_9:Z
+connect_pin inst_9:Z TAUNET_19
+connect_pin TAUGATE_19:A TAUNET_19
+connect_pin TAUGATE_19:Z net_17
+insert_gate TAUGATE_20 BUF_X1
+insert_net TAUNET_20
+disconnect_pin inst_153:ZN
+connect_pin inst_153:ZN TAUNET_20
+connect_pin TAUGATE_20:A TAUNET_20
+connect_pin TAUGATE_20:Z net_3
+insert_gate TAUGATE_21 BUF_X2
+insert_net TAUNET_21
+disconnect_pin inst_165:ZN
+connect_pin inst_165:ZN TAUNET_21
+connect_pin TAUGATE_21:A TAUNET_21
+connect_pin TAUGATE_21:Z TAUNET_5
+insert_gate TAUGATE_22 BUF_X4
+insert_net TAUNET_22
+disconnect_pin inst_130:ZN
+connect_pin inst_130:ZN TAUNET_22
+connect_pin TAUGATE_22:A TAUNET_22
+connect_pin TAUGATE_22:Z n63
+insert_gate TAUGATE_23 BUF_X4
+insert_net TAUNET_23
+disconnect_pin inst_208:ZN
+connect_pin inst_208:ZN TAUNET_23
+connect_pin TAUGATE_23:A TAUNET_23
+connect_pin TAUGATE_23:Z net_191
+insert_gate TAUGATE_24 BUF_X4
+insert_net TAUNET_24
+disconnect_pin inst_111:ZN
+connect_pin inst_111:ZN TAUNET_24
+connect_pin TAUGATE_24:A TAUNET_24
+connect_pin TAUGATE_24:Z net_90
+insert_gate TAUGATE_25 BUF_X8
+insert_net TAUNET_25
+disconnect_pin inst_108:ZN
+connect_pin inst_108:ZN TAUNET_25
+connect_pin TAUGATE_25:A TAUNET_25
+connect_pin TAUGATE_25:Z net_78
+insert_gate TAUGATE_26 BUF_X8
+insert_net TAUNET_26
+disconnect_pin inst_116:ZN
+connect_pin inst_116:ZN TAUNET_26
+connect_pin TAUGATE_26:A TAUNET_26
+connect_pin TAUGATE_26:Z net_113
+insert_gate TAUGATE_27 BUF_X16
+insert_net TAUNET_27
+disconnect_pin inst_140:ZN
+connect_pin inst_140:ZN TAUNET_27
+connect_pin TAUGATE_27:A TAUNET_27
+connect_pin TAUGATE_27:Z net_175
+insert_gate TAUGATE_28 BUF_X16
+insert_net TAUNET_28
+disconnect_pin inst_181:ZN
+connect_pin inst_181:ZN TAUNET_28
+connect_pin TAUGATE_28:A TAUNET_28
+connect_pin TAUGATE_28:Z net_166
+insert_gate TAUGATE_29 BUF_X16
+insert_net TAUNET_29
+disconnect_pin inst_17:Z
+connect_pin inst_17:Z TAUNET_29
+connect_pin TAUGATE_29:A TAUNET_29
+connect_pin TAUGATE_29:Z TAUNET_2
+insert_gate TAUGATE_30 BUF_X32
+insert_net TAUNET_30
+disconnect_pin inst_210:ZN
+connect_pin inst_210:ZN TAUNET_30
+connect_pin TAUGATE_30:A TAUNET_30
+connect_pin TAUGATE_30:Z net_121
+insert_gate TAUGATE_31 BUF_X32
+insert_net TAUNET_31
+disconnect_pin inst_157:ZN
+connect_pin inst_157:ZN TAUNET_31
+connect_pin TAUGATE_31:A TAUNET_31
+connect_pin TAUGATE_31:Z net_18
+insert_gate TAUGATE_32 BUF_X16
+insert_net TAUNET_32
+disconnect_pin inst_176:ZN
+connect_pin inst_176:ZN TAUNET_32
+connect_pin TAUGATE_32:A TAUNET_32
+connect_pin TAUGATE_32:Z net_148
+insert_gate TAUGATE_33 BUF_X32
+insert_net TAUNET_33
+disconnect_pin inst_57:ZN
+connect_pin inst_57:ZN TAUNET_33
+connect_pin TAUGATE_33:A TAUNET_33
+connect_pin TAUGATE_33:Z n42
+insert_gate TAUGATE_34 BUF_X4
+insert_net TAUNET_34
+disconnect_pin inst_53:ZN
+connect_pin inst_53:ZN TAUNET_34
+connect_pin TAUGATE_34:A TAUNET_34
+connect_pin TAUGATE_34:Z net_77
+insert_gate TAUGATE_35 BUF_X2
+insert_net TAUNET_35
+disconnect_pin inst_100:ZN
+connect_pin inst_100:ZN TAUNET_35
+connect_pin TAUGATE_35:A TAUNET_35
+connect_pin TAUGATE_35:Z net_31
+insert_gate TAUGATE_36 BUF_X2
+insert_net TAUNET_36
+disconnect_pin TAUGATE_3:Z
+connect_pin TAUGATE_3:Z TAUNET_36
+connect_pin TAUGATE_36:A TAUNET_36
+connect_pin TAUGATE_36:Z net_144
+insert_gate TAUGATE_37 BUF_X1
+insert_net TAUNET_37
+disconnect_pin inst_199:ZN
+connect_pin inst_199:ZN TAUNET_37
+connect_pin TAUGATE_37:A TAUNET_37
+connect_pin TAUGATE_37:Z net_96
+insert_gate TAUGATE_38 BUF_X1
+insert_net TAUNET_38
+disconnect_pin inst_155:ZN
+connect_pin inst_155:ZN TAUNET_38
+connect_pin TAUGATE_38:A TAUNET_38
+connect_pin TAUGATE_38:Z net_9
+insert_gate TAUGATE_39 BUF_X1
+insert_net TAUNET_39
+disconnect_pin n137
+connect_pin n137 TAUNET_39
+connect_pin TAUGATE_39:A TAUNET_39
+connect_pin TAUGATE_39:Z n137
+insert_gate TAUGATE_40 BUF_X1
+insert_net TAUNET_40
+disconnect_pin n110
+connect_pin n110 TAUNET_40
+connect_pin TAUGATE_40:A TAUNET_40
+connect_pin TAUGATE_40:Z n110
+insert_gate TAUGATE_41 BUF_X16
+insert_net TAUNET_41
+disconnect_pin inst_163:ZN
+connect_pin inst_163:ZN TAUNET_41
+connect_pin TAUGATE_41:A TAUNET_41
+connect_pin TAUGATE_41:Z net_73
+insert_gate TAUGATE_42 BUF_X32
+insert_net TAUNET_42
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_42
+connect_pin TAUGATE_42:A TAUNET_42
+connect_pin TAUGATE_42:Z TAUNET_3
+insert_gate TAUGATE_43 BUF_X2
+insert_net TAUNET_43
+disconnect_pin inst_184:ZN
+connect_pin inst_184:ZN TAUNET_43
+connect_pin TAUGATE_43:A TAUNET_43
+connect_pin TAUGATE_43:Z net_180
+insert_gate TAUGATE_44 BUF_X16
+insert_net TAUNET_44
+disconnect_pin inst_79:ZN
+connect_pin inst_79:ZN TAUNET_44
+connect_pin TAUGATE_44:A TAUNET_44
+connect_pin TAUGATE_44:Z net_134
+insert_gate TAUGATE_45 BUF_X2
+insert_net TAUNET_45
+disconnect_pin inst_104:ZN
+connect_pin inst_104:ZN TAUNET_45
+connect_pin TAUGATE_45:A TAUNET_45
+connect_pin TAUGATE_45:Z net_64
+insert_gate TAUGATE_46 BUF_X1
+insert_net TAUNET_46
+disconnect_pin inst_96:ZN
+connect_pin inst_96:ZN TAUNET_46
+connect_pin TAUGATE_46:A TAUNET_46
+connect_pin TAUGATE_46:Z net_167
+insert_gate TAUGATE_47 BUF_X2
+insert_net TAUNET_47
+disconnect_pin inst_15:Z
+connect_pin inst_15:Z TAUNET_47
+connect_pin TAUGATE_47:A TAUNET_47
+connect_pin TAUGATE_47:Z net_82
+insert_gate TAUGATE_48 BUF_X16
+insert_net TAUNET_48
+disconnect_pin inst_101:ZN
+connect_pin inst_101:ZN TAUNET_48
+connect_pin TAUGATE_48:A TAUNET_48
+connect_pin TAUGATE_48:Z net_32
+insert_gate TAUGATE_49 BUF_X2
+insert_net TAUNET_49
+disconnect_pin inst_39:ZN
+connect_pin inst_39:ZN TAUNET_49
+connect_pin TAUGATE_49:A TAUNET_49
+connect_pin TAUGATE_49:Z net_40
+insert_gate TAUGATE_50 BUF_X8
+insert_net TAUNET_50
+disconnect_pin inst_143:ZN
+connect_pin inst_143:ZN TAUNET_50
+connect_pin TAUGATE_50:A TAUNET_50
+connect_pin TAUGATE_50:Z net_25
+insert_gate TAUGATE_51 BUF_X32
+insert_net TAUNET_51
+disconnect_pin inst_27:Z
+connect_pin inst_27:Z TAUNET_51
+connect_pin TAUGATE_51:A TAUNET_51
+connect_pin TAUGATE_51:Z net_176
+insert_gate TAUGATE_52 BUF_X8
+insert_net TAUNET_52
+disconnect_pin inst_146:ZN
+connect_pin inst_146:ZN TAUNET_52
+connect_pin TAUGATE_52:A TAUNET_52
+connect_pin TAUGATE_52:Z net_122
+insert_gate TAUGATE_53 BUF_X4
+insert_net TAUNET_53
+disconnect_pin n140
+connect_pin n140 TAUNET_53
+connect_pin TAUGATE_53:A TAUNET_53
+connect_pin TAUGATE_53:Z n140
+insert_gate TAUGATE_54 BUF_X32
+insert_net TAUNET_54
+disconnect_pin inst_102:ZN
+connect_pin inst_102:ZN TAUNET_54
+connect_pin TAUGATE_54:A TAUNET_54
+connect_pin TAUGATE_54:Z net_52
+insert_gate TAUGATE_55 BUF_X32
+insert_net TAUNET_55
+disconnect_pin inst_65:ZN
+connect_pin inst_65:ZN TAUNET_55
+connect_pin TAUGATE_55:A TAUNET_55
+connect_pin TAUGATE_55:Z n69
+insert_gate TAUGATE_56 BUF_X4
+insert_net TAUNET_56
+disconnect_pin inst_206:ZN
+connect_pin inst_206:ZN TAUNET_56
+connect_pin TAUGATE_56:A TAUNET_56
+connect_pin TAUGATE_56:Z net_112
+insert_gate TAUGATE_57 BUF_X4
+insert_net TAUNET_57
+disconnect_pin n217
+connect_pin n217 TAUNET_57
+connect_pin TAUGATE_57:A TAUNET_57
+connect_pin TAUGATE_57:Z n217
+insert_gate TAUGATE_58 BUF_X8
+insert_net TAUNET_58
+disconnect_pin inst_85:ZN
+connect_pin inst_85:ZN TAUNET_58
+connect_pin TAUGATE_58:A TAUNET_58
+connect_pin TAUGATE_58:Z net_26
+insert_gate TAUGATE_59 BUF_X32
+insert_net TAUNET_59
+disconnect_pin inst_214:ZN
+connect_pin inst_214:ZN TAUNET_59
+connect_pin TAUGATE_59:A TAUNET_59
+connect_pin TAUGATE_59:Z net_57
+read_spef change_4.spef
+repower_gate inst_186 INV_X8
+repower_gate inst_10 XOR2_X2
+repower_gate inst_76 OR2_X1
+repower_gate inst_123 NOR2_X4
+repower_gate inst_98 NOR2_X1
+repower_gate inst_96 NOR3_X2
+repower_gate inst_208 AND4_X1
+repower_gate TAUGATE_8 BUF_X32
+repower_gate TAUGATE_31 BUF_X16
+repower_gate inst_17 XOR2_X2
+repower_gate inst_104 NOR2_X1
+repower_gate inst_87 NOR3_X2
+repower_gate TAUGATE_33 BUF_X4
+repower_gate inst_188 INV_X4
+repower_gate inst_203 INV_X32
+repower_gate TAUGATE_53 BUF_X8
+repower_gate inst_142 NAND3_X2
+repower_gate inst_5 XOR2_X1
+repower_gate TAUGATE_41 BUF_X1
+repower_gate inst_86 NOR3_X4
+repower_gate inst_15 XOR2_X2
+repower_gate inst_99 NOR2_X2
+repower_gate TAUGATE_48 BUF_X4
+repower_gate TAUGATE_2 BUF_X4
+repower_gate inst_185 NAND2_X2
+repower_gate inst_90 NOR3_X1
+repower_gate TAUGATE_9 BUF_X1
+repower_gate inst_37 XNOR2_X2
+repower_gate inst_192 INV_X2
+repower_gate inst_8 XOR2_X2
+repower_gate inst_175 NAND2_X4
+repower_gate inst_144 NAND3_X2
+repower_gate inst_141 NAND3_X4
+repower_gate inst_196 INV_X8
+repower_gate inst_71 XNOR2_X2
+repower_gate TAUGATE_47 BUF_X16
+repower_gate TAUGATE_10 BUF_X2
+repower_gate TAUGATE_37 BUF_X8
+repower_gate TAUGATE_54 BUF_X2
+repower_gate inst_34 XNOR2_X2
+repower_gate inst_20 XOR2_X2
+repower_gate inst_64 XNOR2_X2
+repower_gate inst_198 INV_X4
+repower_gate inst_49 XNOR2_X2
+repower_gate inst_60 XNOR2_X2
+repower_gate inst_162 NAND2_X1
+repower_gate inst_195 INV_X2
+repower_gate inst_172 NAND2_X4
+repower_gate inst_73 OR3_X4
+repower_gate inst_78 OR2_X2
+repower_gate inst_205 INV_X2
+repower_gate TAUGATE_57 BUF_X8
+repower_gate inst_61 XNOR2_X1
+repower_gate TAUGATE_20 BUF_X8
+repower_gate inst_147 NAND3_X2
+repower_gate inst_213 AND2_X2
+repower_gate inst_209 AND4_X2
+repower_gate TAUGATE_45 BUF_X32
+repower_gate inst_111 NOR2_X2
+repower_gate inst_135 NOR2_X4
+repower_gate inst_107 NOR2_X2
+repower_gate inst_133 NOR2_X4
+repower_gate inst_46 XNOR2_X2
+repower_gate inst_19 XOR2_X2
+repower_gate inst_137 NAND4_X4
+repower_gate inst_32 XNOR2_X2
+repower_gate inst_156 NAND2_X2
+repower_gate inst_109 NOR2_X4
+repower_gate TAUGATE_39 BUF_X32
+repower_gate inst_136 NAND4_X2
+repower_gate inst_129 NOR2_X1
+repower_gate TAUGATE_19 BUF_X32
+repower_gate inst_190 INV_X2
+repower_gate inst_100 NOR2_X4
+repower_gate inst_113 NOR2_X2
+repower_gate inst_120 NOR2_X4
+repower_gate inst_116 NOR2_X2
+repower_gate inst_170 NAND2_X2
+repower_gate inst_187 INV_X4
+repower_gate inst_53 XNOR2_X2
+repower_gate inst_38 XNOR2_X2
+repower_gate inst_50 XNOR2_X2
+repower_gate inst_154 NAND2_X2
+repower_gate inst_171 NAND2_X4
+repower_gate inst_45 XNOR2_X2
+repower_gate inst_13 XOR2_X2
+repower_gate inst_51 XNOR2_X2
+repower_gate TAUGATE_14 BUF_X2
+repower_gate inst_219 AND2_X1
+repower_gate inst_1 XOR2_X2
+repower_gate inst_16 XOR2_X2
+repower_gate inst_180 NAND2_X4
+repower_gate TAUGATE_43 BUF_X32
+repower_gate inst_39 XNOR2_X2
+repower_gate inst_173 NAND2_X2
+repower_gate TAUGATE_26 BUF_X4
+repower_gate inst_145 NAND3_X4
+repower_gate inst_211 AND3_X4
+repower_gate inst_128 NOR2_X2
+repower_gate inst_9 XOR2_X1
+repower_gate inst_80 OR2_X2
+repower_gate inst_134 NOR2_X2
+repower_gate inst_149 NAND3_X4
+repower_gate inst_89 NOR3_X4
+repower_gate inst_74 OR3_X4
+repower_gate inst_114 NOR2_X4
+repower_gate inst_132 NOR2_X2
+repower_gate inst_164 NAND2_X4
+repower_gate inst_138 NAND4_X2
+repower_gate inst_161 NAND2_X2
+repower_gate inst_146 NAND3_X4
+repower_gate inst_25 XOR2_X2
+repower_gate inst_103 NOR2_X4
+repower_gate TAUGATE_29 BUF_X32
+repower_gate TAUGATE_18 BUF_X1
+repower_gate TAUGATE_15 BUF_X16
+repower_gate inst_150 NAND3_X4
+repower_gate inst_176 NAND2_X4
+repower_gate inst_153 NAND2_X2
+repower_gate TAUGATE_16 BUF_X4
+repower_gate inst_155 NAND2_X4
+repower_gate inst_148 NAND3_X2
+repower_gate inst_189 INV_X1
+repower_gate inst_102 NOR2_X1
+repower_gate inst_26 XOR2_X1
+repower_gate TAUGATE_22 BUF_X8
+repower_gate TAUGATE_23 BUF_X1
+repower_gate inst_183 NAND2_X4
+repower_gate inst_184 NAND2_X2
+repower_gate inst_84 NOR3_X2
+repower_gate inst_220 AND2_X1
+repower_gate inst_57 XNOR2_X2
+repower_gate inst_119 NOR2_X4
+repower_gate inst_139 NAND4_X2
+repower_gate inst_105 NOR2_X2
+repower_gate inst_33 XNOR2_X2
+repower_gate inst_21 XOR2_X2
+repower_gate inst_63 XNOR2_X1
+repower_gate inst_118 NOR2_X2
+repower_gate inst_82 NOR4_X2
+repower_gate inst_204 INV_X4
+repower_gate inst_52 XNOR2_X2
+repower_gate inst_48 XNOR2_X2
+repower_gate TAUGATE_21 BUF_X1
+repower_gate inst_72 XNOR2_X2
+repower_gate inst_65 XNOR2_X2
+repower_gate inst_121 NOR2_X2
+repower_gate TAUGATE_25 BUF_X4
+repower_gate inst_167 NAND2_X2
+repower_gate inst_194 INV_X32
+repower_gate inst_122 NOR2_X4
+repower_gate inst_210 AND3_X2
+repower_gate TAUGATE_12 BUF_X4
+repower_gate inst_221 AND2_X2
+repower_gate inst_182 NAND2_X4
+repower_gate inst_217 AND2_X1
+repower_gate inst_168 NAND2_X2
+repower_gate inst_108 NOR2_X2
+repower_gate inst_47 XNOR2_X1
+repower_gate inst_214 AND2_X1
+repower_gate inst_215 AND2_X1
+repower_gate inst_174 NAND2_X2
+repower_gate TAUGATE_4 BUF_X32
+repower_gate inst_115 NOR2_X2
+repower_gate inst_31 XNOR2_X2
+repower_gate inst_178 NAND2_X2
+repower_gate inst_70 XNOR2_X2
+repower_gate inst_79 OR2_X2
+repower_gate TAUGATE_24 BUF_X32
+repower_gate TAUGATE_7 BUF_X2
+repower_gate inst_218 AND2_X2
+repower_gate inst_62 XNOR2_X1
+repower_gate inst_23 XOR2_X2
+repower_gate inst_166 NAND2_X2
+repower_gate inst_40 XNOR2_X2
+repower_gate inst_56 XNOR2_X2
+repower_gate inst_112 NOR2_X2
+repower_gate inst_216 AND2_X1
+repower_gate TAUGATE_1 BUF_X8
+repower_gate TAUGATE_49 BUF_X32
+repower_gate inst_3 XOR2_X1
+repower_gate inst_11 XOR2_X2
+repower_gate inst_91 NOR3_X2
+repower_gate TAUGATE_35 BUF_X8
+repower_gate inst_93 NOR3_X4
+repower_gate inst_125 NOR2_X4
+repower_gate inst_95 NOR3_X2
+repower_gate inst_27 XOR2_X2
+repower_gate TAUGATE_58 BUF_X1
+repower_gate TAUGATE_56 BUF_X1
+repower_gate TAUGATE_51 BUF_X4
+repower_gate inst_88 NOR3_X4
+repower_gate inst_28 XNOR2_X2
+repower_gate inst_165 NAND2_X1
+repower_gate inst_181 NAND2_X2
+repower_gate inst_151 NAND3_X2
+repower_gate inst_66 XNOR2_X2
+repower_gate inst_29 XNOR2_X2
+repower_gate inst_12 XOR2_X1
+repower_gate inst_130 NOR2_X4
+repower_gate TAUGATE_52 BUF_X32
+repower_gate inst_6 XOR2_X2
+repower_gate inst_7 XOR2_X2
+repower_gate inst_55 XNOR2_X2
+repower_gate TAUGATE_5 BUF_X16
+repower_gate TAUGATE_34 BUF_X1
+repower_gate inst_24 XOR2_X2
+repower_gate inst_207 AND4_X4
+repower_gate inst_4 XOR2_X2
+repower_gate inst_69 XNOR2_X2
+repower_gate inst_43 XNOR2_X2
+repower_gate inst_83 NOR4_X4
+repower_gate TAUGATE_32 BUF_X32
+repower_gate inst_75 OR2_X2
+repower_gate inst_35 XNOR2_X2
+repower_gate inst_152 NAND2_X4
+repower_gate TAUGATE_42 BUF_X2
+repower_gate TAUGATE_28 BUF_X2
+repower_gate TAUGATE_55 BUF_X16
+repower_gate inst_127 NOR2_X2
+repower_gate inst_106 NOR2_X4
+repower_gate TAUGATE_46 BUF_X8
+repower_gate inst_131 NOR2_X2
+repower_gate inst_110 NOR2_X2
+repower_gate inst_36 XNOR2_X2
+repower_gate TAUGATE_11 BUF_X4
+repower_gate TAUGATE_6 BUF_X1
+repower_gate TAUGATE_27 BUF_X4
+repower_gate inst_177 NAND2_X1
+repower_gate inst_18 XOR2_X2
+repower_gate TAUGATE_3 BUF_X2
+repower_gate TAUGATE_40 BUF_X32
+repower_gate inst_160 NAND2_X2
+repower_gate inst_200 INV_X2
+repower_gate inst_44 XNOR2_X2
+repower_gate inst_212 AND3_X2
+repower_gate inst_202 INV_X2
+repower_gate TAUGATE_36 BUF_X1
+repower_gate inst_59 XNOR2_X2
+repower_gate inst_158 NAND2_X4
+repower_gate inst_143 NAND3_X2
+repower_gate inst_54 XNOR2_X2
+repower_gate inst_193 INV_X16
+repower_gate inst_68 XNOR2_X2
+repower_gate inst_14 XOR2_X2
+repower_gate inst_169 NAND2_X2
+repower_gate inst_97 NOR2_X2
+repower_gate inst_92 NOR3_X4
+repower_gate TAUGATE_44 BUF_X1
+repower_gate inst_117 NOR2_X4
+repower_gate inst_197 INV_X4
+repower_gate inst_0 XOR2_X1
+repower_gate inst_206 AND4_X2
+repower_gate inst_41 XNOR2_X2
+repower_gate inst_179 NAND2_X2
+repower_gate inst_163 NAND2_X2
+repower_gate inst_201 INV_X4
+repower_gate inst_101 NOR2_X4
+repower_gate TAUGATE_30 BUF_X1
+repower_gate inst_81 NOR4_X2
+repower_gate inst_2 XOR2_X2
+repower_gate TAUGATE_59 BUF_X8
+repower_gate inst_140 NAND4_X4
+repower_gate TAUGATE_50 BUF_X2
+repower_gate inst_191 INV_X8
+repower_gate inst_159 NAND2_X2
+repower_gate inst_22 XOR2_X2
+repower_gate inst_67 XNOR2_X2
+repower_gate inst_42 XNOR2_X1
+repower_gate inst_124 NOR2_X2
+repower_gate TAUGATE_13 BUF_X1
+repower_gate inst_157 NAND2_X4
+repower_gate inst_85 NOR3_X4
+repower_gate inst_94 NOR3_X4
+repower_gate inst_30 XNOR2_X1
+repower_gate inst_199 INV_X4
+repower_gate inst_77 OR2_X4
+repower_gate TAUGATE_38 BUF_X32
+repower_gate TAUGATE_17 BUF_X1
+repower_gate inst_126 NOR2_X4
+insert_gate TAUGATE_60 BUF_X2
+insert_net TAUNET_60
+disconnect_pin inst_62:ZN
+connect_pin inst_62:ZN TAUNET_60
+connect_pin TAUGATE_60:A TAUNET_60
+connect_pin TAUGATE_60:Z n30
+insert_gate TAUGATE_61 BUF_X32
+insert_net TAUNET_61
+disconnect_pin TAUGATE_51:Z
+connect_pin TAUGATE_51:Z TAUNET_61
+connect_pin TAUGATE_61:A TAUNET_61
+connect_pin TAUGATE_61:Z net_176
+insert_gate TAUGATE_62 BUF_X4
+insert_net TAUNET_62
+disconnect_pin inst_219:ZN
+connect_pin inst_219:ZN TAUNET_62
+connect_pin TAUGATE_62:A TAUNET_62
+connect_pin TAUGATE_62:Z net_109
+insert_gate TAUGATE_63 BUF_X32
+insert_net TAUNET_63
+disconnect_pin inst_166:ZN
+connect_pin inst_166:ZN TAUNET_63
+connect_pin TAUGATE_63:A TAUNET_63
+connect_pin TAUGATE_63:Z net_88
+insert_gate TAUGATE_64 BUF_X32
+insert_net TAUNET_64
+disconnect_pin inst_207:ZN
+connect_pin inst_207:ZN TAUNET_64
+connect_pin TAUGATE_64:A TAUNET_64
+connect_pin TAUGATE_64:Z net_115
+insert_gate TAUGATE_65 BUF_X2
+insert_net TAUNET_65
+disconnect_pin inst_70:ZN
+connect_pin inst_70:ZN TAUNET_65
+connect_pin TAUGATE_65:A TAUNET_65
+connect_pin TAUGATE_65:Z net_192
+insert_gate TAUGATE_66 BUF_X32
+insert_net TAUNET_66
+disconnect_pin n134
+connect_pin n134 TAUNET_66
+connect_pin TAUGATE_66:A TAUNET_66
+connect_pin TAUGATE_66:Z n134
+insert_gate TAUGATE_67 BUF_X8
+insert_net TAUNET_67
+disconnect_pin TAUGATE_58:Z
+connect_pin TAUGATE_58:Z TAUNET_67
+connect_pin TAUGATE_67:A TAUNET_67
+connect_pin TAUGATE_67:Z net_26
+insert_gate TAUGATE_68 BUF_X8
+insert_net TAUNET_68
+disconnect_pin inst_206:ZN
+connect_pin inst_206:ZN TAUNET_68
+connect_pin TAUGATE_68:A TAUNET_68
+connect_pin TAUGATE_68:Z TAUNET_56
+insert_gate TAUGATE_69 BUF_X16
+insert_net TAUNET_69
+disconnect_pin inst_184:ZN
+connect_pin inst_184:ZN TAUNET_69
+connect_pin TAUGATE_69:A TAUNET_69
+connect_pin TAUGATE_69:Z TAUNET_43
+insert_gate TAUGATE_70 BUF_X32
+insert_net TAUNET_70
+disconnect_pin n146
+connect_pin n146 TAUNET_70
+connect_pin TAUGATE_70:A TAUNET_70
+connect_pin TAUGATE_70:Z n146
+insert_gate TAUGATE_71 BUF_X4
+insert_net TAUNET_71
+disconnect_pin inst_9:Z
+connect_pin inst_9:Z TAUNET_71
+connect_pin TAUGATE_71:A TAUNET_71
+connect_pin TAUGATE_71:Z TAUNET_19
+insert_gate TAUGATE_72 BUF_X32
+insert_net TAUNET_72
+disconnect_pin inst_145:ZN
+connect_pin inst_145:ZN TAUNET_72
+connect_pin TAUGATE_72:A TAUNET_72
+connect_pin TAUGATE_72:Z net_120
+insert_gate TAUGATE_73 BUF_X32
+insert_net TAUNET_73
+disconnect_pin inst_180:ZN
+connect_pin inst_180:ZN TAUNET_73
+connect_pin TAUGATE_73:A TAUNET_73
+connect_pin TAUGATE_73:Z net_160
+insert_gate TAUGATE_74 BUF_X8
+insert_net TAUNET_74
+disconnect_pin inst_103:ZN
+connect_pin inst_103:ZN TAUNET_74
+connect_pin TAUGATE_74:A TAUNET_74
+connect_pin TAUGATE_74:Z net_60
+insert_gate TAUGATE_75 BUF_X32
+insert_net TAUNET_75
+disconnect_pin TAUGATE_30:Z
+connect_pin TAUGATE_30:Z TAUNET_75
+connect_pin TAUGATE_75:A TAUNET_75
+connect_pin TAUGATE_75:Z net_121
+insert_gate TAUGATE_76 BUF_X8
+insert_net TAUNET_76
+disconnect_pin inst_210:ZN
+connect_pin inst_210:ZN TAUNET_76
+connect_pin TAUGATE_76:A TAUNET_76
+connect_pin TAUGATE_76:Z TAUNET_30
+insert_gate TAUGATE_77 BUF_X8
+insert_net TAUNET_77
+disconnect_pin inst_104:ZN
+connect_pin inst_104:ZN TAUNET_77
+connect_pin TAUGATE_77:A TAUNET_77
+connect_pin TAUGATE_77:Z TAUNET_45
+insert_gate TAUGATE_78 BUF_X2
+insert_net TAUNET_78
+disconnect_pin n217
+connect_pin n217 TAUNET_78
+connect_pin TAUGATE_78:A TAUNET_78
+connect_pin TAUGATE_78:Z TAUNET_57
+insert_gate TAUGATE_79 BUF_X8
+insert_net TAUNET_79
+disconnect_pin TAUGATE_37:Z
+connect_pin TAUGATE_37:Z TAUNET_79
+connect_pin TAUGATE_79:A TAUNET_79
+connect_pin TAUGATE_79:Z net_96
+insert_gate TAUGATE_80 BUF_X32
+insert_net TAUNET_80
+disconnect_pin TAUGATE_52:Z
+connect_pin TAUGATE_52:Z TAUNET_80
+connect_pin TAUGATE_80:A TAUNET_80
+connect_pin TAUGATE_80:Z net_122
+insert_gate TAUGATE_81 BUF_X1
+insert_net TAUNET_81
+disconnect_pin inst_208:ZN
+connect_pin inst_208:ZN TAUNET_81
+connect_pin TAUGATE_81:A TAUNET_81
+connect_pin TAUGATE_81:Z TAUNET_23
+insert_gate TAUGATE_82 BUF_X32
+insert_net TAUNET_82
+disconnect_pin inst_53:ZN
+connect_pin inst_53:ZN TAUNET_82
+connect_pin TAUGATE_82:A TAUNET_82
+connect_pin TAUGATE_82:Z TAUNET_34
+insert_gate TAUGATE_83 BUF_X32
+insert_net TAUNET_83
+disconnect_pin inst_215:ZN
+connect_pin inst_215:ZN TAUNET_83
+connect_pin TAUGATE_83:A TAUNET_83
+connect_pin TAUGATE_83:Z net_62
+insert_gate TAUGATE_84 BUF_X1
+insert_net TAUNET_84
+disconnect_pin inst_108:ZN
+connect_pin inst_108:ZN TAUNET_84
+connect_pin TAUGATE_84:A TAUNET_84
+connect_pin TAUGATE_84:Z TAUNET_25
+insert_gate TAUGATE_85 BUF_X16
+insert_net TAUNET_85
+disconnect_pin n234
+connect_pin n234 TAUNET_85
+connect_pin TAUGATE_85:A TAUNET_85
+connect_pin TAUGATE_85:Z n234
+insert_gate TAUGATE_86 BUF_X2
+insert_net TAUNET_86
+disconnect_pin inst_214:ZN
+connect_pin inst_214:ZN TAUNET_86
+connect_pin TAUGATE_86:A TAUNET_86
+connect_pin TAUGATE_86:Z TAUNET_59
+insert_gate TAUGATE_87 BUF_X8
+insert_net TAUNET_87
+disconnect_pin inst_117:ZN
+connect_pin inst_117:ZN TAUNET_87
+connect_pin TAUGATE_87:A TAUNET_87
+connect_pin TAUGATE_87:Z net_92
+insert_gate TAUGATE_88 BUF_X4
+insert_net TAUNET_88
+disconnect_pin inst_175:ZN
+connect_pin inst_175:ZN TAUNET_88
+connect_pin TAUGATE_88:A TAUNET_88
+connect_pin TAUGATE_88:Z net_147
+insert_gate TAUGATE_89 BUF_X4
+insert_net TAUNET_89
+disconnect_pin inst_168:ZN
+connect_pin inst_168:ZN TAUNET_89
+connect_pin TAUGATE_89:A TAUNET_89
+connect_pin TAUGATE_89:Z net_91
+insert_gate TAUGATE_90 BUF_X1
+insert_net TAUNET_90
+disconnect_pin inst_59:ZN
+connect_pin inst_59:ZN TAUNET_90
+connect_pin TAUGATE_90:A TAUNET_90
+connect_pin TAUGATE_90:Z n36
+insert_gate TAUGATE_91 BUF_X8
+insert_net TAUNET_91
+disconnect_pin inst_192:ZN
+connect_pin inst_192:ZN TAUNET_91
+connect_pin TAUGATE_91:A TAUNET_91
+connect_pin TAUGATE_91:Z net_67
+insert_gate TAUGATE_92 BUF_X1
+insert_net TAUNET_92
+disconnect_pin inst_161:ZN
+connect_pin inst_161:ZN TAUNET_92
+connect_pin TAUGATE_92:A TAUNET_92
+connect_pin TAUGATE_92:Z net_79
+insert_gate TAUGATE_93 BUF_X2
+insert_net TAUNET_93
+disconnect_pin inst_151:ZN
+connect_pin inst_151:ZN TAUNET_93
+connect_pin TAUGATE_93:A TAUNET_93
+connect_pin TAUGATE_93:Z TAUNET_13
+insert_gate TAUGATE_94 BUF_X1
+insert_net TAUNET_94
+disconnect_pin TAUGATE_16:Z
+connect_pin TAUGATE_16:Z TAUNET_94
+connect_pin TAUGATE_94:A TAUNET_94
+connect_pin TAUGATE_94:Z net_0
+insert_gate TAUGATE_95 BUF_X8
+insert_net TAUNET_95
+disconnect_pin inst_94:ZN
+connect_pin inst_94:ZN TAUNET_95
+connect_pin TAUGATE_95:A TAUNET_95
+connect_pin TAUGATE_95:Z net_154
+insert_gate TAUGATE_96 BUF_X16
+insert_net TAUNET_96
+disconnect_pin inst_163:ZN
+connect_pin inst_163:ZN TAUNET_96
+connect_pin TAUGATE_96:A TAUNET_96
+connect_pin TAUGATE_96:Z TAUNET_41
+insert_gate TAUGATE_97 BUF_X1
+insert_net TAUNET_97
+disconnect_pin inst_61:ZN
+connect_pin inst_61:ZN TAUNET_97
+connect_pin TAUGATE_97:A TAUNET_97
+connect_pin TAUGATE_97:Z n48
+insert_gate TAUGATE_98 BUF_X32
+insert_net TAUNET_98
+disconnect_pin TAUGATE_28:Z
+connect_pin TAUGATE_28:Z TAUNET_98
+connect_pin TAUGATE_98:A TAUNET_98
+connect_pin TAUGATE_98:Z net_166
+insert_gate TAUGATE_99 BUF_X1
+insert_net TAUNET_99
+disconnect_pin inst_55:ZN
+connect_pin inst_55:ZN TAUNET_99
+connect_pin TAUGATE_99:A TAUNET_99
+connect_pin TAUGATE_99:Z net_86
+insert_gate TAUGATE_100 BUF_X1
+insert_net TAUNET_100
+disconnect_pin inst_56:ZN
+connect_pin inst_56:ZN TAUNET_100
+connect_pin TAUGATE_100:A TAUNET_100
+connect_pin TAUGATE_100:Z n27
+insert_gate TAUGATE_101 BUF_X1
+insert_net TAUNET_101
+disconnect_pin inst_191:ZN
+connect_pin inst_191:ZN TAUNET_101
+connect_pin TAUGATE_101:A TAUNET_101
+connect_pin TAUGATE_101:Z net_116
+insert_gate TAUGATE_102 BUF_X1
+insert_net TAUNET_102
+disconnect_pin inst_18:Z
+connect_pin inst_18:Z TAUNET_102
+connect_pin TAUGATE_102:A TAUNET_102
+connect_pin TAUGATE_102:Z TAUNET_12
+insert_gate TAUGATE_103 BUF_X4
+insert_net TAUNET_103
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_103
+connect_pin TAUGATE_103:A TAUNET_103
+connect_pin TAUGATE_103:Z TAUNET_42
+insert_gate TAUGATE_104 BUF_X16
+insert_net TAUNET_104
+disconnect_pin inst_144:ZN
+connect_pin inst_144:ZN TAUNET_104
+connect_pin TAUGATE_104:A TAUNET_104
+connect_pin TAUGATE_104:Z net_138
+insert_gate TAUGATE_105 BUF_X4
+insert_net TAUNET_105
+disconnect_pin inst_138:ZN
+connect_pin inst_138:ZN TAUNET_105
+connect_pin TAUGATE_105:A TAUNET_105
+connect_pin TAUGATE_105:Z net_149
+insert_gate TAUGATE_106 BUF_X32
+insert_net TAUNET_106
+disconnect_pin n122
+connect_pin n122 TAUNET_106
+connect_pin TAUGATE_106:A TAUNET_106
+connect_pin TAUGATE_106:Z n122
+insert_gate TAUGATE_107 BUF_X4
+insert_net TAUNET_107
+disconnect_pin inst_99:ZN
+connect_pin inst_99:ZN TAUNET_107
+connect_pin TAUGATE_107:A TAUNET_107
+connect_pin TAUGATE_107:Z net_194
+insert_gate TAUGATE_108 BUF_X8
+insert_net TAUNET_108
+disconnect_pin inst_190:ZN
+connect_pin inst_190:ZN TAUNET_108
+connect_pin TAUGATE_108:A TAUNET_108
+connect_pin TAUGATE_108:Z net_28
+insert_gate TAUGATE_109 BUF_X32
+insert_net TAUNET_109
+disconnect_pin inst_31:ZN
+connect_pin inst_31:ZN TAUNET_109
+connect_pin TAUGATE_109:A TAUNET_109
+connect_pin TAUGATE_109:Z net_34
+insert_gate TAUGATE_110 BUF_X16
+insert_net TAUNET_110
+disconnect_pin inst_8:Z
+connect_pin inst_8:Z TAUNET_110
+connect_pin TAUGATE_110:A TAUNET_110
+connect_pin TAUGATE_110:Z net_16
+insert_gate TAUGATE_111 BUF_X32
+insert_net TAUNET_111
+disconnect_pin inst_220:ZN
+connect_pin inst_220:ZN TAUNET_111
+connect_pin TAUGATE_111:A TAUNET_111
+connect_pin TAUGATE_111:Z net_158
+insert_gate TAUGATE_112 BUF_X32
+insert_net TAUNET_112
+disconnect_pin TAUGATE_3:Z
+connect_pin TAUGATE_3:Z TAUNET_112
+connect_pin TAUGATE_112:A TAUNET_112
+connect_pin TAUGATE_112:Z TAUNET_36
+insert_gate TAUGATE_113 BUF_X32
+insert_net TAUNET_113
+disconnect_pin TAUGATE_40:Z
+connect_pin TAUGATE_40:Z TAUNET_113
+connect_pin TAUGATE_113:A TAUNET_113
+connect_pin TAUGATE_113:Z n110
+insert_gate TAUGATE_114 BUF_X8
+insert_net TAUNET_114
+disconnect_pin TAUGATE_32:Z
+connect_pin TAUGATE_32:Z TAUNET_114
+connect_pin TAUGATE_114:A TAUNET_114
+connect_pin TAUGATE_114:Z net_148
+insert_gate TAUGATE_115 BUF_X16
+insert_net TAUNET_115
+disconnect_pin inst_164:ZN
+connect_pin inst_164:ZN TAUNET_115
+connect_pin TAUGATE_115:A TAUNET_115
+connect_pin TAUGATE_115:Z net_89
+insert_gate TAUGATE_116 BUF_X1
+insert_net TAUNET_116
+disconnect_pin inst_101:ZN
+connect_pin inst_101:ZN TAUNET_116
+connect_pin TAUGATE_116:A TAUNET_116
+connect_pin TAUGATE_116:Z TAUNET_48
+insert_gate TAUGATE_117 BUF_X1
+insert_net TAUNET_117
+disconnect_pin inst_147:ZN
+connect_pin inst_147:ZN TAUNET_117
+connect_pin TAUGATE_117:A TAUNET_117
+connect_pin TAUGATE_117:Z net_168
+insert_gate TAUGATE_118 BUF_X32
+insert_net TAUNET_118
+disconnect_pin n475
+connect_pin n475 TAUNET_118
+connect_pin TAUGATE_118:A TAUNET_118
+connect_pin TAUGATE_118:Z n475
+insert_gate TAUGATE_119 BUF_X1
+insert_net TAUNET_119
+disconnect_pin inst_194:ZN
+connect_pin inst_194:ZN TAUNET_119
+connect_pin TAUGATE_119:A TAUNET_119
+connect_pin TAUGATE_119:Z net_85
+insert_gate TAUGATE_120 BUF_X16
+insert_net TAUNET_120
+disconnect_pin inst_77:ZN
+connect_pin inst_77:ZN TAUNET_120
+connect_pin TAUGATE_120:A TAUNET_120
+connect_pin TAUGATE_120:Z net_108
+insert_gate TAUGATE_121 BUF_X8
+insert_net TAUNET_121
+disconnect_pin inst_121:ZN
+connect_pin inst_121:ZN TAUNET_121
+connect_pin TAUGATE_121:A TAUNET_121
+connect_pin TAUGATE_121:Z net_146
+insert_gate TAUGATE_122 BUF_X2
+insert_net TAUNET_122
+disconnect_pin inst_17:Z
+connect_pin inst_17:Z TAUNET_122
+connect_pin TAUGATE_122:A TAUNET_122
+connect_pin TAUGATE_122:Z TAUNET_29
+insert_gate TAUGATE_123 BUF_X1
+insert_net TAUNET_123
+disconnect_pin TAUGATE_7:Z
+connect_pin TAUGATE_7:Z TAUNET_123
+connect_pin TAUGATE_123:A TAUNET_123
+connect_pin TAUGATE_123:Z net_185
+insert_gate TAUGATE_124 BUF_X1
+insert_net TAUNET_124
+disconnect_pin inst_201:ZN
+connect_pin inst_201:ZN TAUNET_124
+connect_pin TAUGATE_124:A TAUNET_124
+connect_pin TAUGATE_124:Z net_99
+insert_gate TAUGATE_125 BUF_X32
+insert_net TAUNET_125
+disconnect_pin inst_169:ZN
+connect_pin inst_169:ZN TAUNET_125
+connect_pin TAUGATE_125:A TAUNET_125
+connect_pin TAUGATE_125:Z TAUNET_14
+insert_gate TAUGATE_126 BUF_X16
+insert_net TAUNET_126
+disconnect_pin inst_150:ZN
+connect_pin inst_150:ZN TAUNET_126
+connect_pin TAUGATE_126:A TAUNET_126
+connect_pin TAUGATE_126:Z net_181
+insert_gate TAUGATE_127 BUF_X2
+insert_net TAUNET_127
+disconnect_pin inst_167:ZN
+connect_pin inst_167:ZN TAUNET_127
+connect_pin TAUGATE_127:A TAUNET_127
+connect_pin TAUGATE_127:Z net_130
+insert_gate TAUGATE_128 BUF_X32
+insert_net TAUNET_128
+disconnect_pin inst_196:ZN
+connect_pin inst_196:ZN TAUNET_128
+connect_pin TAUGATE_128:A TAUNET_128
+connect_pin TAUGATE_128:Z net_133
+insert_gate TAUGATE_129 BUF_X1
+insert_net TAUNET_129
+disconnect_pin inst_141:ZN
+connect_pin inst_141:ZN TAUNET_129
+connect_pin TAUGATE_129:A TAUNET_129
+connect_pin TAUGATE_129:Z net_23
+insert_gate TAUGATE_130 BUF_X1
+insert_net TAUNET_130
+disconnect_pin inst_129:ZN
+connect_pin inst_129:ZN TAUNET_130
+connect_pin TAUGATE_130:A TAUNET_130
+connect_pin TAUGATE_130:Z n60
+insert_gate TAUGATE_131 BUF_X8
+insert_net TAUNET_131
+disconnect_pin TAUGATE_27:Z
+connect_pin TAUGATE_27:Z TAUNET_131
+connect_pin TAUGATE_131:A TAUNET_131
+connect_pin TAUGATE_131:Z net_175
+insert_gate TAUGATE_132 BUF_X16
+insert_net TAUNET_132
+disconnect_pin inst_200:ZN
+connect_pin inst_200:ZN TAUNET_132
+connect_pin TAUGATE_132:A TAUNET_132
+connect_pin TAUGATE_132:Z TAUNET_17
+insert_gate TAUGATE_133 BUF_X2
+insert_net TAUNET_133
+disconnect_pin inst_84:ZN
+connect_pin inst_84:ZN TAUNET_133
+connect_pin TAUGATE_133:A TAUNET_133
+connect_pin TAUGATE_133:Z net_19
+insert_gate TAUGATE_134 BUF_X2
+insert_net TAUNET_134
+disconnect_pin inst_216:ZN
+connect_pin inst_216:ZN TAUNET_134
+connect_pin TAUGATE_134:A TAUNET_134
+connect_pin TAUGATE_134:Z net_68
+insert_gate TAUGATE_135 BUF_X4
+insert_net TAUNET_135
+disconnect_pin inst_139:ZN
+connect_pin inst_139:ZN TAUNET_135
+connect_pin TAUGATE_135:A TAUNET_135
+connect_pin TAUGATE_135:Z net_164
+insert_gate TAUGATE_136 BUF_X8
+insert_net TAUNET_136
+disconnect_pin inst_47:ZN
+connect_pin inst_47:ZN TAUNET_136
+connect_pin TAUGATE_136:A TAUNET_136
+connect_pin TAUGATE_136:Z net_65
+insert_gate TAUGATE_137 BUF_X32
+insert_net TAUNET_137
+disconnect_pin inst_28:ZN
+connect_pin inst_28:ZN TAUNET_137
+connect_pin TAUGATE_137:A TAUNET_137
+connect_pin TAUGATE_137:Z net_4
+insert_gate TAUGATE_138 BUF_X32
+insert_net TAUNET_138
+disconnect_pin inst_64:ZN
+connect_pin inst_64:ZN TAUNET_138
+connect_pin TAUGATE_138:A TAUNET_138
+connect_pin TAUGATE_138:Z n72
+insert_gate TAUGATE_139 BUF_X8
+insert_net TAUNET_139
+disconnect_pin inst_5:Z
+connect_pin inst_5:Z TAUNET_139
+connect_pin TAUGATE_139:A TAUNET_139
+connect_pin TAUGATE_139:Z net_12
+insert_gate TAUGATE_140 BUF_X4
+insert_net TAUNET_140
+disconnect_pin inst_119:ZN
+connect_pin inst_119:ZN TAUNET_140
+connect_pin TAUGATE_140:A TAUNET_140
+connect_pin TAUGATE_140:Z net_152
+insert_gate TAUGATE_141 BUF_X16
+insert_net TAUNET_141
+disconnect_pin inst_14:Z
+connect_pin inst_14:Z TAUNET_141
+connect_pin TAUGATE_141:A TAUNET_141
+connect_pin TAUGATE_141:Z net_80
+insert_gate TAUGATE_142 BUF_X8
+insert_net TAUNET_142
+disconnect_pin inst_132:ZN
+connect_pin inst_132:ZN TAUNET_142
+connect_pin TAUGATE_142:A TAUNET_142
+connect_pin TAUGATE_142:Z n66
+insert_gate TAUGATE_143 BUF_X8
+insert_net TAUNET_143
+disconnect_pin inst_15:Z
+connect_pin inst_15:Z TAUNET_143
+connect_pin TAUGATE_143:A TAUNET_143
+connect_pin TAUGATE_143:Z TAUNET_47
+insert_gate TAUGATE_144 BUF_X16
+insert_net TAUNET_144
+disconnect_pin inst_172:ZN
+connect_pin inst_172:ZN TAUNET_144
+connect_pin TAUGATE_144:A TAUNET_144
+connect_pin TAUGATE_144:Z net_126
+insert_gate TAUGATE_145 BUF_X1
+insert_net TAUNET_145
+disconnect_pin n237
+connect_pin n237 TAUNET_145
+connect_pin TAUGATE_145:A TAUNET_145
+connect_pin TAUGATE_145:Z n237
+insert_gate TAUGATE_146 BUF_X4
+insert_net TAUNET_146
+disconnect_pin inst_133:ZN
+connect_pin inst_133:ZN TAUNET_146
+connect_pin TAUGATE_146:A TAUNET_146
+connect_pin TAUGATE_146:Z n51
+insert_gate TAUGATE_147 BUF_X16
+insert_net TAUNET_147
+disconnect_pin inst_86:ZN
+connect_pin inst_86:ZN TAUNET_147
+connect_pin TAUGATE_147:A TAUNET_147
+connect_pin TAUGATE_147:Z net_56
+insert_gate TAUGATE_148 BUF_X16
+insert_net TAUNET_148
+disconnect_pin TAUGATE_14:Z
+connect_pin TAUGATE_14:Z TAUNET_148
+connect_pin TAUGATE_148:A TAUNET_148
+connect_pin TAUGATE_148:Z net_97
+insert_gate TAUGATE_149 BUF_X16
+insert_net TAUNET_149
+disconnect_pin inst_41:ZN
+connect_pin inst_41:ZN TAUNET_149
+connect_pin TAUGATE_149:A TAUNET_149
+connect_pin TAUGATE_149:Z net_48
+insert_gate TAUGATE_150 BUF_X1
+insert_net TAUNET_150
+disconnect_pin TAUGATE_43:Z
+connect_pin TAUGATE_43:Z TAUNET_150
+connect_pin TAUGATE_150:A TAUNET_150
+connect_pin TAUGATE_150:Z net_180
+insert_gate TAUGATE_151 BUF_X8
+insert_net TAUNET_151
+disconnect_pin TAUGATE_21:Z
+connect_pin TAUGATE_21:Z TAUNET_151
+connect_pin TAUGATE_151:A TAUNET_151
+connect_pin TAUGATE_151:Z TAUNET_5
+insert_gate TAUGATE_152 BUF_X16
+insert_net TAUNET_152
+disconnect_pin n128
+connect_pin n128 TAUNET_152
+connect_pin TAUGATE_152:A TAUNET_152
+connect_pin TAUGATE_152:Z n128
+insert_gate TAUGATE_153 BUF_X4
+insert_net TAUNET_153
+disconnect_pin inst_181:ZN
+connect_pin inst_181:ZN TAUNET_153
+connect_pin TAUGATE_153:A TAUNET_153
+connect_pin TAUGATE_153:Z TAUNET_28
+insert_gate TAUGATE_154 BUF_X16
+insert_net TAUNET_154
+disconnect_pin inst_102:ZN
+connect_pin inst_102:ZN TAUNET_154
+connect_pin TAUGATE_154:A TAUNET_154
+connect_pin TAUGATE_154:Z TAUNET_54
+insert_gate TAUGATE_155 BUF_X32
+insert_net TAUNET_155
+disconnect_pin TAUGATE_34:Z
+connect_pin TAUGATE_34:Z TAUNET_155
+connect_pin TAUGATE_155:A TAUNET_155
+connect_pin TAUGATE_155:Z net_77
+insert_gate TAUGATE_156 BUF_X8
+insert_net TAUNET_156
+disconnect_pin n101
+connect_pin n101 TAUNET_156
+connect_pin TAUGATE_156:A TAUNET_156
+connect_pin TAUGATE_156:Z n101
+insert_gate TAUGATE_157 BUF_X8
+insert_net TAUNET_157
+disconnect_pin inst_38:ZN
+connect_pin inst_38:ZN TAUNET_157
+connect_pin TAUGATE_157:A TAUNET_157
+connect_pin TAUGATE_157:Z net_59
+insert_gate TAUGATE_158 BUF_X2
+insert_net TAUNET_158
+disconnect_pin inst_218:ZN
+connect_pin inst_218:ZN TAUNET_158
+connect_pin TAUGATE_158:A TAUNET_158
+connect_pin TAUGATE_158:Z net_107
+insert_gate TAUGATE_159 BUF_X16
+insert_net TAUNET_159
+disconnect_pin inst_178:ZN
+connect_pin inst_178:ZN TAUNET_159
+connect_pin TAUGATE_159:A TAUNET_159
+connect_pin TAUGATE_159:Z TAUNET_9
+insert_gate TAUGATE_160 BUF_X8
+insert_net TAUNET_160
+disconnect_pin TAUGATE_39:Z
+connect_pin TAUGATE_39:Z TAUNET_160
+connect_pin TAUGATE_160:A TAUNET_160
+connect_pin TAUGATE_160:Z n137
+insert_gate TAUGATE_161 BUF_X8
+insert_net TAUNET_161
+disconnect_pin inst_111:ZN
+connect_pin inst_111:ZN TAUNET_161
+connect_pin TAUGATE_161:A TAUNET_161
+connect_pin TAUGATE_161:Z TAUNET_24
+insert_gate TAUGATE_162 BUF_X4
+insert_net TAUNET_162
+disconnect_pin inst_176:ZN
+connect_pin inst_176:ZN TAUNET_162
+connect_pin TAUGATE_162:A TAUNET_162
+connect_pin TAUGATE_162:Z TAUNET_32
+insert_gate TAUGATE_163 BUF_X8
+insert_net TAUNET_163
+disconnect_pin inst_158:ZN
+connect_pin inst_158:ZN TAUNET_163
+connect_pin TAUGATE_163:A TAUNET_163
+connect_pin TAUGATE_163:Z net_20
+insert_gate TAUGATE_164 BUF_X32
+insert_net TAUNET_164
+disconnect_pin inst_217:ZN
+connect_pin inst_217:ZN TAUNET_164
+connect_pin TAUGATE_164:A TAUNET_164
+connect_pin TAUGATE_164:Z net_106
+insert_gate TAUGATE_165 BUF_X32
+insert_net TAUNET_165
+disconnect_pin inst_131:ZN
+connect_pin inst_131:ZN TAUNET_165
+connect_pin TAUGATE_165:A TAUNET_165
+connect_pin TAUGATE_165:Z n54
+insert_gate TAUGATE_166 BUF_X32
+insert_net TAUNET_166
+disconnect_pin TAUGATE_44:Z
+connect_pin TAUGATE_44:Z TAUNET_166
+connect_pin TAUGATE_166:A TAUNET_166
+connect_pin TAUGATE_166:Z net_134
+insert_gate TAUGATE_167 BUF_X1
+insert_net TAUNET_167
+disconnect_pin TAUGATE_23:Z
+connect_pin TAUGATE_23:Z TAUNET_167
+connect_pin TAUGATE_167:A TAUNET_167
+connect_pin TAUGATE_167:Z net_191
+insert_gate TAUGATE_168 BUF_X8
+insert_net TAUNET_168
+disconnect_pin TAUGATE_15:Z
+connect_pin TAUGATE_15:Z TAUNET_168
+connect_pin TAUGATE_168:A TAUNET_168
+connect_pin TAUGATE_168:Z net_156
+insert_gate TAUGATE_169 BUF_X2
+insert_net TAUNET_169
+disconnect_pin inst_6:Z
+connect_pin inst_6:Z TAUNET_169
+connect_pin TAUGATE_169:A TAUNET_169
+connect_pin TAUGATE_169:Z net_13
+insert_gate TAUGATE_170 BUF_X1
+insert_net TAUNET_170
+disconnect_pin inst_57:ZN
+connect_pin inst_57:ZN TAUNET_170
+connect_pin TAUGATE_170:A TAUNET_170
+connect_pin TAUGATE_170:Z TAUNET_33
+insert_gate TAUGATE_171 BUF_X4
+insert_net TAUNET_171
+disconnect_pin inst_65:ZN
+connect_pin inst_65:ZN TAUNET_171
+connect_pin TAUGATE_171:A TAUNET_171
+connect_pin TAUGATE_171:Z TAUNET_55
+insert_gate TAUGATE_172 BUF_X8
+insert_net TAUNET_172
+disconnect_pin inst_199:ZN
+connect_pin inst_199:ZN TAUNET_172
+connect_pin TAUGATE_172:A TAUNET_172
+connect_pin TAUGATE_172:Z TAUNET_37
+insert_gate TAUGATE_173 BUF_X2
+insert_net TAUNET_173
+disconnect_pin TAUGATE_18:Z
+connect_pin TAUGATE_18:Z TAUNET_173
+connect_pin TAUGATE_173:A TAUNET_173
+connect_pin TAUGATE_173:Z net_70
+insert_gate TAUGATE_174 BUF_X8
+insert_net TAUNET_174
+disconnect_pin inst_52:ZN
+connect_pin inst_52:ZN TAUNET_174
+connect_pin TAUGATE_174:A TAUNET_174
+connect_pin TAUGATE_174:Z net_71
+insert_gate TAUGATE_175 BUF_X32
+insert_net TAUNET_175
+disconnect_pin inst_11:Z
+connect_pin inst_11:Z TAUNET_175
+connect_pin TAUGATE_175:A TAUNET_175
+connect_pin TAUGATE_175:Z net_39
+insert_gate TAUGATE_176 BUF_X32
+insert_net TAUNET_176
+disconnect_pin inst_137:ZN
+connect_pin inst_137:ZN TAUNET_176
+connect_pin TAUGATE_176:A TAUNET_176
+connect_pin TAUGATE_176:Z net_117
+insert_gate TAUGATE_177 BUF_X4
+insert_net TAUNET_177
+disconnect_pin TAUGATE_53:Z
+connect_pin TAUGATE_53:Z TAUNET_177
+connect_pin TAUGATE_177:A TAUNET_177
+connect_pin TAUGATE_177:Z n140
+insert_gate TAUGATE_178 BUF_X8
+insert_net TAUNET_178
+disconnect_pin inst_183:ZN
+connect_pin inst_183:ZN TAUNET_178
+connect_pin TAUGATE_178:A TAUNET_178
+connect_pin TAUGATE_178:Z net_173
+insert_gate TAUGATE_179 BUF_X16
+insert_net TAUNET_179
+disconnect_pin inst_79:ZN
+connect_pin inst_79:ZN TAUNET_179
+connect_pin TAUGATE_179:A TAUNET_179
+connect_pin TAUGATE_179:Z TAUNET_44
+insert_gate TAUGATE_180 BUF_X4
+insert_net TAUNET_180
+disconnect_pin inst_205:ZN
+connect_pin inst_205:ZN TAUNET_180
+connect_pin TAUGATE_180:A TAUNET_180
+connect_pin TAUGATE_180:Z TAUNET_8
+insert_gate TAUGATE_181 BUF_X4
+insert_net TAUNET_181
+disconnect_pin inst_155:ZN
+connect_pin inst_155:ZN TAUNET_181
+connect_pin TAUGATE_181:A TAUNET_181
+connect_pin TAUGATE_181:Z TAUNET_38
+insert_gate TAUGATE_182 BUF_X16
+insert_net TAUNET_182
+disconnect_pin inst_126:ZN
+connect_pin inst_126:ZN TAUNET_182
+connect_pin TAUGATE_182:A TAUNET_182
+connect_pin TAUGATE_182:Z net_171
+insert_gate TAUGATE_183 BUF_X16
+insert_net TAUNET_183
+disconnect_pin TAUGATE_4:Z
+connect_pin TAUGATE_4:Z TAUNET_183
+connect_pin TAUGATE_183:A TAUNET_183
+connect_pin TAUGATE_183:Z net_177
+insert_gate TAUGATE_184 BUF_X32
+insert_net TAUNET_184
+disconnect_pin inst_110:ZN
+connect_pin inst_110:ZN TAUNET_184
+connect_pin TAUGATE_184:A TAUNET_184
+connect_pin TAUGATE_184:Z net_142
+insert_gate TAUGATE_185 BUF_X8
+insert_net TAUNET_185
+disconnect_pin inst_148:ZN
+connect_pin inst_148:ZN TAUNET_185
+connect_pin TAUGATE_185:A TAUNET_185
+connect_pin TAUGATE_185:Z net_178
+insert_gate TAUGATE_186 BUF_X4
+insert_net TAUNET_186
+disconnect_pin inst_71:ZN
+connect_pin inst_71:ZN TAUNET_186
+connect_pin TAUGATE_186:A TAUNET_186
+connect_pin TAUGATE_186:Z net_193
+insert_gate TAUGATE_187 BUF_X1
+insert_net TAUNET_187
+disconnect_pin inst_95:ZN
+connect_pin inst_95:ZN TAUNET_187
+connect_pin TAUGATE_187:A TAUNET_187
+connect_pin TAUGATE_187:Z net_169
+insert_gate TAUGATE_188 BUF_X2
+insert_net TAUNET_188
+disconnect_pin inst_109:ZN
+connect_pin inst_109:ZN TAUNET_188
+connect_pin TAUGATE_188:A TAUNET_188
+connect_pin TAUGATE_188:Z net_114
+insert_gate TAUGATE_189 BUF_X32
+insert_net TAUNET_189
+disconnect_pin inst_152:ZN
+connect_pin inst_152:ZN TAUNET_189
+connect_pin TAUGATE_189:A TAUNET_189
+connect_pin TAUGATE_189:Z net_2
+insert_gate TAUGATE_190 BUF_X32
+insert_net TAUNET_190
+disconnect_pin inst_195:ZN
+connect_pin inst_195:ZN TAUNET_190
+connect_pin TAUGATE_190:A TAUNET_190
+connect_pin TAUGATE_190:Z net_93
+insert_gate TAUGATE_191 BUF_X8
+insert_net TAUNET_191
+disconnect_pin inst_82:ZN
+connect_pin inst_82:ZN TAUNET_191
+connect_pin TAUGATE_191:A TAUNET_191
+connect_pin TAUGATE_191:Z net_161
+insert_gate TAUGATE_192 BUF_X4
+insert_net TAUNET_192
+disconnect_pin inst_93:ZN
+connect_pin inst_93:ZN TAUNET_192
+connect_pin TAUGATE_192:A TAUNET_192
+connect_pin TAUGATE_192:Z TAUNET_15
+insert_gate TAUGATE_193 BUF_X1
+insert_net TAUNET_193
+disconnect_pin inst_60:ZN
+connect_pin inst_60:ZN TAUNET_193
+connect_pin TAUGATE_193:A TAUNET_193
+connect_pin TAUGATE_193:Z n33
+insert_gate TAUGATE_194 BUF_X16
+insert_net TAUNET_194
+disconnect_pin inst_114:ZN
+connect_pin inst_114:ZN TAUNET_194
+connect_pin TAUGATE_194:A TAUNET_194
+connect_pin TAUGATE_194:Z net_118
+insert_gate TAUGATE_195 BUF_X8
+insert_net TAUNET_195
+disconnect_pin inst_2:Z
+connect_pin inst_2:Z TAUNET_195
+connect_pin TAUGATE_195:A TAUNET_195
+connect_pin TAUGATE_195:Z net_7
+insert_gate TAUGATE_196 BUF_X2
+insert_net TAUNET_196
+disconnect_pin inst_125:ZN
+connect_pin inst_125:ZN TAUNET_196
+connect_pin TAUGATE_196:A TAUNET_196
+connect_pin TAUGATE_196:Z net_162
+insert_gate TAUGATE_197 BUF_X1
+insert_net TAUNET_197
+disconnect_pin inst_135:ZN
+connect_pin inst_135:ZN TAUNET_197
+connect_pin TAUGATE_197:A TAUNET_197
+connect_pin TAUGATE_197:Z n75
+insert_gate TAUGATE_198 BUF_X16
+insert_net TAUNET_198
+disconnect_pin TAUGATE_56:Z
+connect_pin TAUGATE_56:Z TAUNET_198
+connect_pin TAUGATE_198:A TAUNET_198
+connect_pin TAUGATE_198:Z net_112
+insert_gate TAUGATE_199 BUF_X1
+insert_net TAUNET_199
+disconnect_pin inst_67:ZN
+connect_pin inst_67:ZN TAUNET_199
+connect_pin TAUGATE_199:A TAUNET_199
+connect_pin TAUGATE_199:Z net_188
+insert_gate TAUGATE_200 BUF_X8
+insert_net TAUNET_200
+disconnect_pin n107
+connect_pin n107 TAUNET_200
+connect_pin TAUGATE_200:A TAUNET_200
+connect_pin TAUGATE_200:Z n107
+insert_gate TAUGATE_201 BUF_X16
+insert_net TAUNET_201
+disconnect_pin n131
+connect_pin n131 TAUNET_201
+connect_pin TAUGATE_201:A TAUNET_201
+connect_pin TAUGATE_201:Z n131
+insert_gate TAUGATE_202 BUF_X1
+insert_net TAUNET_202
+disconnect_pin inst_12:Z
+connect_pin inst_12:Z TAUNET_202
+connect_pin TAUGATE_202:A TAUNET_202
+connect_pin TAUGATE_202:Z net_43
+insert_gate TAUGATE_203 BUF_X4
+insert_net TAUNET_203
+disconnect_pin n113
+connect_pin n113 TAUNET_203
+connect_pin TAUGATE_203:A TAUNET_203
+connect_pin TAUGATE_203:Z n113
+insert_gate TAUGATE_204 BUF_X16
+insert_net TAUNET_204
+disconnect_pin inst_159:ZN
+connect_pin inst_159:ZN TAUNET_204
+connect_pin TAUGATE_204:A TAUNET_204
+connect_pin TAUGATE_204:Z net_101
+insert_gate TAUGATE_205 BUF_X16
+insert_net TAUNET_205
+disconnect_pin TAUGATE_29:Z
+connect_pin TAUGATE_29:Z TAUNET_205
+connect_pin TAUGATE_205:A TAUNET_205
+connect_pin TAUGATE_205:Z TAUNET_2
+insert_gate TAUGATE_206 BUF_X2
+insert_net TAUNET_206
+disconnect_pin inst_124:ZN
+connect_pin inst_124:ZN TAUNET_206
+connect_pin TAUGATE_206:A TAUNET_206
+connect_pin TAUGATE_206:Z net_163
+insert_gate TAUGATE_207 BUF_X32
+insert_net TAUNET_207
+disconnect_pin TAUGATE_45:Z
+connect_pin TAUGATE_45:Z TAUNET_207
+connect_pin TAUGATE_207:A TAUNET_207
+connect_pin TAUGATE_207:Z net_64
+insert_gate TAUGATE_208 BUF_X1
+insert_net TAUNET_208
+disconnect_pin inst_81:ZN
+connect_pin inst_81:ZN TAUNET_208
+connect_pin TAUGATE_208:A TAUNET_208
+connect_pin TAUGATE_208:Z net_136
+insert_gate TAUGATE_209 BUF_X2
+insert_net TAUNET_209
+disconnect_pin inst_1:Z
+connect_pin inst_1:Z TAUNET_209
+connect_pin TAUGATE_209:A TAUNET_209
+connect_pin TAUGATE_209:Z net_6
+insert_gate TAUGATE_210 BUF_X32
+insert_net TAUNET_210
+disconnect_pin inst_153:ZN
+connect_pin inst_153:ZN TAUNET_210
+connect_pin TAUGATE_210:A TAUNET_210
+connect_pin TAUGATE_210:Z TAUNET_20
+insert_gate TAUGATE_211 BUF_X2
+insert_net TAUNET_211
+disconnect_pin inst_26:Z
+connect_pin inst_26:Z TAUNET_211
+connect_pin TAUGATE_211:A TAUNET_211
+connect_pin TAUGATE_211:Z n6
+insert_gate TAUGATE_212 BUF_X1
+insert_net TAUNET_212
+disconnect_pin inst_120:ZN
+connect_pin inst_120:ZN TAUNET_212
+connect_pin TAUGATE_212:A TAUNET_212
+connect_pin TAUGATE_212:Z net_145
+insert_gate TAUGATE_213 BUF_X16
+insert_net TAUNET_213
+disconnect_pin inst_0:Z
+connect_pin inst_0:Z TAUNET_213
+connect_pin TAUGATE_213:A TAUNET_213
+connect_pin TAUGATE_213:Z net_5
+insert_gate TAUGATE_214 BUF_X4
+insert_net TAUNET_214
+disconnect_pin inst_149:ZN
+connect_pin inst_149:ZN TAUNET_214
+connect_pin TAUGATE_214:A TAUNET_214
+connect_pin TAUGATE_214:Z net_179
+insert_gate TAUGATE_215 BUF_X1
+insert_net TAUNET_215
+disconnect_pin TAUGATE_6:Z
+connect_pin TAUGATE_6:Z TAUNET_215
+connect_pin TAUGATE_215:A TAUNET_215
+connect_pin TAUGATE_215:Z net_196
+insert_gate TAUGATE_216 BUF_X32
+insert_net TAUNET_216
+disconnect_pin inst_106:ZN
+connect_pin inst_106:ZN TAUNET_216
+connect_pin TAUGATE_216:A TAUNET_216
+connect_pin TAUGATE_216:Z TAUNET_18
+insert_gate TAUGATE_217 BUF_X8
+insert_net TAUNET_217
+disconnect_pin inst_92:ZN
+connect_pin inst_92:ZN TAUNET_217
+connect_pin TAUGATE_217:A TAUNET_217
+connect_pin TAUGATE_217:Z net_139
+insert_gate TAUGATE_218 BUF_X2
+insert_net TAUNET_218
+disconnect_pin TAUGATE_49:Z
+connect_pin TAUGATE_49:Z TAUNET_218
+connect_pin TAUGATE_218:A TAUNET_218
+connect_pin TAUGATE_218:Z net_40
+insert_gate TAUGATE_219 BUF_X32
+insert_net TAUNET_219
+disconnect_pin TAUGATE_55:Z
+connect_pin TAUGATE_55:Z TAUNET_219
+connect_pin TAUGATE_219:A TAUNET_219
+connect_pin TAUGATE_219:Z n69
+insert_gate TAUGATE_220 BUF_X16
+insert_net TAUNET_220
+disconnect_pin n227
+connect_pin n227 TAUNET_220
+connect_pin TAUGATE_220:A TAUNET_220
+connect_pin TAUGATE_220:Z n227
+insert_gate TAUGATE_221 BUF_X2
+insert_net TAUNET_221
+disconnect_pin inst_34:ZN
+connect_pin inst_34:ZN TAUNET_221
+connect_pin TAUGATE_221:A TAUNET_221
+connect_pin TAUGATE_221:Z net_41
+insert_gate TAUGATE_222 BUF_X1
+insert_net TAUNET_222
+disconnect_pin n140
+connect_pin n140 TAUNET_222
+connect_pin TAUGATE_222:A TAUNET_222
+connect_pin TAUGATE_222:Z TAUNET_53
+insert_gate TAUGATE_223 BUF_X8
+insert_net TAUNET_223
+disconnect_pin inst_143:ZN
+connect_pin inst_143:ZN TAUNET_223
+connect_pin TAUGATE_223:A TAUNET_223
+connect_pin TAUGATE_223:Z TAUNET_50
+insert_gate TAUGATE_224 BUF_X32
+insert_net TAUNET_224
+disconnect_pin TAUGATE_50:Z
+connect_pin TAUGATE_50:Z TAUNET_224
+connect_pin TAUGATE_224:A TAUNET_224
+connect_pin TAUGATE_224:Z net_25
+insert_gate TAUGATE_225 BUF_X8
+insert_net TAUNET_225
+disconnect_pin TAUGATE_35:Z
+connect_pin TAUGATE_35:Z TAUNET_225
+connect_pin TAUGATE_225:A TAUNET_225
+connect_pin TAUGATE_225:Z net_31
+insert_gate TAUGATE_226 BUF_X8
+insert_net TAUNET_226
+disconnect_pin inst_171:ZN
+connect_pin inst_171:ZN TAUNET_226
+connect_pin TAUGATE_226:A TAUNET_226
+connect_pin TAUGATE_226:Z net_124
+insert_gate TAUGATE_227 BUF_X16
+insert_net TAUNET_227
+disconnect_pin TAUGATE_36:Z
+connect_pin TAUGATE_36:Z TAUNET_227
+connect_pin TAUGATE_227:A TAUNET_227
+connect_pin TAUGATE_227:Z net_144
+insert_gate TAUGATE_228 BUF_X8
+insert_net TAUNET_228
+disconnect_pin inst_182:ZN
+connect_pin inst_182:ZN TAUNET_228
+connect_pin TAUGATE_228:A TAUNET_228
+connect_pin TAUGATE_228:Z net_165
+insert_gate TAUGATE_229 BUF_X1
+insert_net TAUNET_229
+disconnect_pin TAUGATE_9:Z
+connect_pin TAUGATE_9:Z TAUNET_229
+connect_pin TAUGATE_229:A TAUNET_229
+connect_pin TAUGATE_229:Z net_150
+insert_gate TAUGATE_230 BUF_X8
+insert_net TAUNET_230
+disconnect_pin inst_179:ZN
+connect_pin inst_179:ZN TAUNET_230
+connect_pin TAUGATE_230:A TAUNET_230
+connect_pin TAUGATE_230:Z net_157
+insert_gate TAUGATE_231 BUF_X32
+insert_net TAUNET_231
+disconnect_pin inst_221:ZN
+connect_pin inst_221:ZN TAUNET_231
+connect_pin TAUGATE_231:A TAUNET_231
+connect_pin TAUGATE_231:Z net_159
+insert_gate TAUGATE_232 BUF_X1
+insert_net TAUNET_232
+disconnect_pin inst_154:ZN
+connect_pin inst_154:ZN TAUNET_232
+connect_pin TAUGATE_232:A TAUNET_232
+connect_pin TAUGATE_232:Z net_24
+insert_gate TAUGATE_233 BUF_X2
+insert_net TAUNET_233
+disconnect_pin inst_85:ZN
+connect_pin inst_85:ZN TAUNET_233
+connect_pin TAUGATE_233:A TAUNET_233
+connect_pin TAUGATE_233:Z TAUNET_58
+insert_gate TAUGATE_234 BUF_X16
+insert_net TAUNET_234
+disconnect_pin inst_212:ZN
+connect_pin inst_212:ZN TAUNET_234
+connect_pin TAUGATE_234:A TAUNET_234
+connect_pin TAUGATE_234:Z net_174
+insert_gate TAUGATE_235 BUF_X2
+insert_net TAUNET_235
+disconnect_pin inst_80:ZN
+connect_pin inst_80:ZN TAUNET_235
+connect_pin TAUGATE_235:A TAUNET_235
+connect_pin TAUGATE_235:Z net_123
+insert_gate TAUGATE_236 BUF_X4
+insert_net TAUNET_236
+disconnect_pin inst_186:ZN
+connect_pin inst_186:ZN TAUNET_236
+connect_pin TAUGATE_236:A TAUNET_236
+connect_pin TAUGATE_236:Z net_172
+insert_gate TAUGATE_237 BUF_X2
+insert_net TAUNET_237
+disconnect_pin n900
+connect_pin n900 TAUNET_237
+connect_pin TAUGATE_237:A TAUNET_237
+connect_pin TAUGATE_237:Z n900
+insert_gate TAUGATE_238 BUF_X16
+insert_net TAUNET_238
+disconnect_pin inst_68:ZN
+connect_pin inst_68:ZN TAUNET_238
+connect_pin TAUGATE_238:A TAUNET_238
+connect_pin TAUGATE_238:Z net_189
+insert_gate TAUGATE_239 BUF_X2
+insert_net TAUNET_239
+disconnect_pin inst_170:ZN
+connect_pin inst_170:ZN TAUNET_239
+connect_pin TAUGATE_239:A TAUNET_239
+connect_pin TAUGATE_239:Z net_103
+insert_gate TAUGATE_240 BUF_X1
+insert_net TAUNET_240
+disconnect_pin n143
+connect_pin n143 TAUNET_240
+connect_pin TAUGATE_240:A TAUNET_240
+connect_pin TAUGATE_240:Z TAUNET_11
+insert_gate TAUGATE_241 BUF_X1
+insert_net TAUNET_241
+disconnect_pin n953
+connect_pin n953 TAUNET_241
+connect_pin TAUGATE_241:A TAUNET_241
+connect_pin TAUGATE_241:Z n953
+insert_gate TAUGATE_242 BUF_X32
+insert_net TAUNET_242
+disconnect_pin TAUGATE_2:Z
+connect_pin TAUGATE_2:Z TAUNET_242
+connect_pin TAUGATE_242:A TAUNET_242
+connect_pin TAUGATE_242:Z net_100
+insert_gate TAUGATE_243 BUF_X1
+insert_net TAUNET_243
+disconnect_pin inst_16:Z
+connect_pin inst_16:Z TAUNET_243
+connect_pin TAUGATE_243:A TAUNET_243
+connect_pin TAUGATE_243:Z net_83
+insert_gate TAUGATE_244 BUF_X2
+insert_net TAUNET_244
+disconnect_pin TAUGATE_59:Z
+connect_pin TAUGATE_59:Z TAUNET_244
+connect_pin TAUGATE_244:A TAUNET_244
+connect_pin TAUGATE_244:Z net_57
+insert_gate TAUGATE_245 BUF_X4
+insert_net TAUNET_245
+disconnect_pin inst_115:ZN
+connect_pin inst_115:ZN TAUNET_245
+connect_pin TAUGATE_245:A TAUNET_245
+connect_pin TAUGATE_245:Z net_95
+insert_gate TAUGATE_246 BUF_X32
+insert_net TAUNET_246
+disconnect_pin inst_63:ZN
+connect_pin inst_63:ZN TAUNET_246
+connect_pin TAUGATE_246:A TAUNET_246
+connect_pin TAUGATE_246:Z TAUNET_4
+insert_gate TAUGATE_247 BUF_X8
+insert_net TAUNET_247
+disconnect_pin inst_69:ZN
+connect_pin inst_69:ZN TAUNET_247
+connect_pin TAUGATE_247:A TAUNET_247
+connect_pin TAUGATE_247:Z net_190
+insert_gate TAUGATE_248 BUF_X32
+insert_net TAUNET_248
+disconnect_pin inst_118:ZN
+connect_pin inst_118:ZN TAUNET_248
+connect_pin TAUGATE_248:A TAUNET_248
+connect_pin TAUGATE_248:Z net_111
+insert_gate TAUGATE_249 BUF_X1
+insert_net TAUNET_249
+disconnect_pin inst_13:Z
+connect_pin inst_13:Z TAUNET_249
+connect_pin TAUGATE_249:A TAUNET_249
+connect_pin TAUGATE_249:Z net_45
+insert_gate TAUGATE_250 BUF_X1
+insert_net TAUNET_250
+disconnect_pin TAUGATE_24:Z
+connect_pin TAUGATE_24:Z TAUNET_250
+connect_pin TAUGATE_250:A TAUNET_250
+connect_pin TAUGATE_250:Z net_90
+insert_gate TAUGATE_251 BUF_X1
+insert_net TAUNET_251
+disconnect_pin inst_90:ZN
+connect_pin inst_90:ZN TAUNET_251
+connect_pin TAUGATE_251:A TAUNET_251
+connect_pin TAUGATE_251:Z net_155
+insert_gate TAUGATE_252 BUF_X2
+insert_net TAUNET_252
+disconnect_pin n221
+connect_pin n221 TAUNET_252
+connect_pin TAUGATE_252:A TAUNET_252
+connect_pin TAUGATE_252:Z n221
+insert_gate TAUGATE_253 BUF_X16
+insert_net TAUNET_253
+disconnect_pin inst_27:Z
+connect_pin inst_27:Z TAUNET_253
+connect_pin TAUGATE_253:A TAUNET_253
+connect_pin TAUGATE_253:Z TAUNET_51
+insert_gate TAUGATE_254 BUF_X4
+insert_net TAUNET_254
+disconnect_pin inst_88:ZN
+connect_pin inst_88:ZN TAUNET_254
+connect_pin TAUGATE_254:A TAUNET_254
+connect_pin TAUGATE_254:Z net_76
+insert_gate TAUGATE_255 BUF_X4
+insert_net TAUNET_255
+disconnect_pin inst_96:ZN
+connect_pin inst_96:ZN TAUNET_255
+connect_pin TAUGATE_255:A TAUNET_255
+connect_pin TAUGATE_255:Z TAUNET_46
+insert_gate TAUGATE_256 BUF_X16
+insert_net TAUNET_256
+disconnect_pin inst_213:ZN
+connect_pin inst_213:ZN TAUNET_256
+connect_pin TAUGATE_256:A TAUNET_256
+connect_pin TAUGATE_256:Z net_51
+insert_gate TAUGATE_257 BUF_X2
+insert_net TAUNET_257
+disconnect_pin inst_35:ZN
+connect_pin inst_35:ZN TAUNET_257
+connect_pin TAUGATE_257:A TAUNET_257
+connect_pin TAUGATE_257:Z net_37
+insert_gate TAUGATE_258 BUF_X16
+insert_net TAUNET_258
+disconnect_pin inst_203:ZN
+connect_pin inst_203:ZN TAUNET_258
+connect_pin TAUGATE_258:A TAUNET_258
+connect_pin TAUGATE_258:Z net_137
+insert_gate TAUGATE_259 BUF_X16
+insert_net TAUNET_259
+disconnect_pin TAUGATE_41:Z
+connect_pin TAUGATE_41:Z TAUNET_259
+connect_pin TAUGATE_259:A TAUNET_259
+connect_pin TAUGATE_259:Z net_73
+insert_gate TAUGATE_260 BUF_X4
+insert_net TAUNET_260
+disconnect_pin TAUGATE_20:Z
+connect_pin TAUGATE_20:Z TAUNET_260
+connect_pin TAUGATE_260:A TAUNET_260
+connect_pin TAUGATE_260:Z net_3
+insert_gate TAUGATE_261 BUF_X32
+insert_net TAUNET_261
+disconnect_pin inst_91:ZN
+connect_pin inst_91:ZN TAUNET_261
+connect_pin TAUGATE_261:A TAUNET_261
+connect_pin TAUGATE_261:Z net_153
+insert_gate TAUGATE_262 BUF_X8
+insert_net TAUNET_262
+disconnect_pin TAUGATE_48:Z
+connect_pin TAUGATE_48:Z TAUNET_262
+connect_pin TAUGATE_262:A TAUNET_262
+connect_pin TAUGATE_262:Z net_32
+insert_gate TAUGATE_263 BUF_X16
+insert_net TAUNET_263
+disconnect_pin inst_25:Z
+connect_pin inst_25:Z TAUNET_263
+connect_pin TAUGATE_263:A TAUNET_263
+connect_pin TAUGATE_263:Z n9
+insert_gate TAUGATE_264 BUF_X4
+insert_net TAUNET_264
+disconnect_pin TAUGATE_12:Z
+connect_pin TAUGATE_12:Z TAUNET_264
+connect_pin TAUGATE_264:A TAUNET_264
+connect_pin TAUGATE_264:Z n21
+insert_gate TAUGATE_265 BUF_X2
+insert_net TAUNET_265
+disconnect_pin inst_87:ZN
+connect_pin inst_87:ZN TAUNET_265
+connect_pin TAUGATE_265:A TAUNET_265
+connect_pin TAUGATE_265:Z net_72
+insert_gate TAUGATE_266 BUF_X4
+insert_net TAUNET_266
+disconnect_pin TAUGATE_5:Z
+connect_pin TAUGATE_5:Z TAUNET_266
+connect_pin TAUGATE_266:A TAUNET_266
+connect_pin TAUGATE_266:Z net_135
+insert_gate TAUGATE_267 BUF_X32
+insert_net TAUNET_267
+disconnect_pin inst_20:Z
+connect_pin inst_20:Z TAUNET_267
+connect_pin TAUGATE_267:A TAUNET_267
+connect_pin TAUGATE_267:Z n15
+insert_gate TAUGATE_268 BUF_X16
+insert_net TAUNET_268
+disconnect_pin TAUGATE_1:Z
+connect_pin TAUGATE_1:Z TAUNET_268
+connect_pin TAUGATE_268:A TAUNET_268
+connect_pin TAUGATE_268:Z net_74
+insert_gate TAUGATE_269 BUF_X2
+insert_net TAUNET_269
+disconnect_pin inst_116:ZN
+connect_pin inst_116:ZN TAUNET_269
+connect_pin TAUGATE_269:A TAUNET_269
+connect_pin TAUGATE_269:Z TAUNET_26
+insert_gate TAUGATE_270 BUF_X1
+insert_net TAUNET_270
+disconnect_pin inst_142:ZN
+connect_pin inst_142:ZN TAUNET_270
+connect_pin TAUGATE_270:A TAUNET_270
+connect_pin TAUGATE_270:Z net_30
+insert_gate TAUGATE_271 BUF_X16
+insert_net TAUNET_271
+disconnect_pin TAUGATE_8:Z
+connect_pin TAUGATE_8:Z TAUNET_271
+connect_pin TAUGATE_271:A TAUNET_271
+connect_pin TAUGATE_271:Z net_170
+insert_gate TAUGATE_272 BUF_X16
+insert_net TAUNET_272
+disconnect_pin inst_189:ZN
+connect_pin inst_189:ZN TAUNET_272
+connect_pin TAUGATE_272:A TAUNET_272
+connect_pin TAUGATE_272:Z net_1
+insert_gate TAUGATE_273 BUF_X4
+insert_net TAUNET_273
+disconnect_pin inst_98:ZN
+connect_pin inst_98:ZN TAUNET_273
+connect_pin TAUGATE_273:A TAUNET_273
+connect_pin TAUGATE_273:Z net_11
+insert_gate TAUGATE_274 BUF_X16
+insert_net TAUNET_274
+disconnect_pin inst_198:ZN
+connect_pin inst_198:ZN TAUNET_274
+connect_pin TAUGATE_274:A TAUNET_274
+connect_pin TAUGATE_274:Z net_105
+insert_gate TAUGATE_275 BUF_X8
+insert_net TAUNET_275
+disconnect_pin TAUGATE_17:Z
+connect_pin TAUGATE_17:Z TAUNET_275
+connect_pin TAUGATE_275:A TAUNET_275
+connect_pin TAUGATE_275:Z net_98
+insert_gate TAUGATE_276 BUF_X1
+insert_net TAUNET_276
+disconnect_pin n898
+connect_pin n898 TAUNET_276
+connect_pin TAUGATE_276:A TAUNET_276
+connect_pin TAUGATE_276:Z n898
+insert_gate TAUGATE_277 BUF_X8
+insert_net TAUNET_277
+disconnect_pin inst_36:ZN
+connect_pin inst_36:ZN TAUNET_277
+connect_pin TAUGATE_277:A TAUNET_277
+connect_pin TAUGATE_277:Z net_44
+insert_gate TAUGATE_278 BUF_X2
+insert_net TAUNET_278
+disconnect_pin inst_19:Z
+connect_pin inst_19:Z TAUNET_278
+connect_pin TAUGATE_278:A TAUNET_278
+connect_pin TAUGATE_278:Z n18
+insert_gate TAUGATE_279 BUF_X32
+insert_net TAUNET_279
+disconnect_pin inst_74:ZN
+connect_pin inst_74:ZN TAUNET_279
+connect_pin TAUGATE_279:A TAUNET_279
+connect_pin TAUGATE_279:Z net_131
+insert_gate TAUGATE_280 BUF_X16
+insert_net TAUNET_280
+disconnect_pin inst_100:ZN
+connect_pin inst_100:ZN TAUNET_280
+connect_pin TAUGATE_280:A TAUNET_280
+connect_pin TAUGATE_280:Z TAUNET_35
+insert_gate TAUGATE_281 BUF_X32
+insert_net TAUNET_281
+disconnect_pin n478
+connect_pin n478 TAUNET_281
+connect_pin TAUGATE_281:A TAUNET_281
+connect_pin TAUGATE_281:Z n478
+insert_gate TAUGATE_282 BUF_X1
+insert_net TAUNET_282
+disconnect_pin inst_10:Z
+connect_pin inst_10:Z TAUNET_282
+connect_pin TAUGATE_282:A TAUNET_282
+connect_pin TAUGATE_282:Z net_46
+insert_gate TAUGATE_283 BUF_X32
+insert_net TAUNET_283
+disconnect_pin TAUGATE_22:Z
+connect_pin TAUGATE_22:Z TAUNET_283
+connect_pin TAUGATE_283:A TAUNET_283
+connect_pin TAUGATE_283:Z n63
+insert_gate TAUGATE_284 BUF_X1
+insert_net TAUNET_284
+disconnect_pin inst_54:ZN
+connect_pin inst_54:ZN TAUNET_284
+connect_pin TAUGATE_284:A TAUNET_284
+connect_pin TAUGATE_284:Z net_81
+insert_gate TAUGATE_285 BUF_X4
+insert_net TAUNET_285
+disconnect_pin inst_50:ZN
+connect_pin inst_50:ZN TAUNET_285
+connect_pin TAUGATE_285:A TAUNET_285
+connect_pin TAUGATE_285:Z net_55
+insert_gate TAUGATE_286 BUF_X1
+insert_net TAUNET_286
+disconnect_pin inst_140:ZN
+connect_pin inst_140:ZN TAUNET_286
+connect_pin TAUGATE_286:A TAUNET_286
+connect_pin TAUGATE_286:Z TAUNET_27
+insert_gate TAUGATE_287 BUF_X2
+insert_net TAUNET_287
+disconnect_pin inst_105:ZN
+connect_pin inst_105:ZN TAUNET_287
+connect_pin TAUGATE_287:A TAUNET_287
+connect_pin TAUGATE_287:Z net_66
+insert_gate TAUGATE_288 BUF_X16
+insert_net TAUNET_288
+disconnect_pin inst_89:ZN
+connect_pin inst_89:ZN TAUNET_288
+connect_pin TAUGATE_288:A TAUNET_288
+connect_pin TAUGATE_288:Z net_119
+insert_gate TAUGATE_289 BUF_X4
+insert_net TAUNET_289
+disconnect_pin inst_29:ZN
+connect_pin inst_29:ZN TAUNET_289
+connect_pin TAUGATE_289:A TAUNET_289
+connect_pin TAUGATE_289:Z net_42
+insert_gate TAUGATE_290 BUF_X32
+insert_net TAUNET_290
+disconnect_pin inst_58:ZN
+connect_pin inst_58:ZN TAUNET_290
+connect_pin TAUGATE_290:A TAUNET_290
+connect_pin TAUGATE_290:Z n39
+insert_gate TAUGATE_291 BUF_X8
+insert_net TAUNET_291
+disconnect_pin inst_78:ZN
+connect_pin inst_78:ZN TAUNET_291
+connect_pin TAUGATE_291:A TAUNET_291
+connect_pin TAUGATE_291:Z net_127
+insert_gate TAUGATE_292 BUF_X8
+insert_net TAUNET_292
+disconnect_pin inst_136:ZN
+connect_pin inst_136:ZN TAUNET_292
+connect_pin TAUGATE_292:A TAUNET_292
+connect_pin TAUGATE_292:Z net_102
+insert_gate TAUGATE_293 BUF_X32
+insert_net TAUNET_293
+disconnect_pin TAUGATE_19:Z
+connect_pin TAUGATE_19:Z TAUNET_293
+connect_pin TAUGATE_293:A TAUNET_293
+connect_pin TAUGATE_293:Z net_17
+insert_gate TAUGATE_294 BUF_X8
+insert_net TAUNET_294
+disconnect_pin n137
+connect_pin n137 TAUNET_294
+connect_pin TAUGATE_294:A TAUNET_294
+connect_pin TAUGATE_294:Z TAUNET_39
+insert_gate TAUGATE_295 BUF_X1
+insert_net TAUNET_295
+disconnect_pin inst_127:ZN
+connect_pin inst_127:ZN TAUNET_295
+connect_pin TAUGATE_295:A TAUNET_295
+connect_pin TAUGATE_295:Z TAUNET_7
+insert_gate TAUGATE_296 BUF_X2
+insert_net TAUNET_296
+disconnect_pin inst_162:ZN
+connect_pin inst_162:ZN TAUNET_296
+connect_pin TAUGATE_296:A TAUNET_296
+connect_pin TAUGATE_296:Z net_29
+insert_gate TAUGATE_297 BUF_X2
+insert_net TAUNET_297
+disconnect_pin TAUGATE_38:Z
+connect_pin TAUGATE_38:Z TAUNET_297
+connect_pin TAUGATE_297:A TAUNET_297
+connect_pin TAUGATE_297:Z net_9
+insert_gate TAUGATE_298 BUF_X8
+insert_net TAUNET_298
+disconnect_pin inst_24:Z
+connect_pin inst_24:Z TAUNET_298
+connect_pin TAUGATE_298:A TAUNET_298
+connect_pin TAUGATE_298:Z n12
+insert_gate TAUGATE_299 BUF_X32
+insert_net TAUNET_299
+disconnect_pin inst_66:ZN
+connect_pin inst_66:ZN TAUNET_299
+connect_pin TAUGATE_299:A TAUNET_299
+connect_pin TAUGATE_299:Z net_187
+insert_gate TAUGATE_300 BUF_X1
+insert_net TAUNET_300
+disconnect_pin n210
+connect_pin n210 TAUNET_300
+connect_pin TAUGATE_300:A TAUNET_300
+connect_pin TAUGATE_300:Z n210
+insert_gate TAUGATE_301 BUF_X8
+insert_net TAUNET_301
+disconnect_pin TAUGATE_57:Z
+connect_pin TAUGATE_57:Z TAUNET_301
+connect_pin TAUGATE_301:A TAUNET_301
+connect_pin TAUGATE_301:Z n217
+insert_gate TAUGATE_302 BUF_X1
+insert_net TAUNET_302
+disconnect_pin TAUGATE_46:Z
+connect_pin TAUGATE_46:Z TAUNET_302
+connect_pin TAUGATE_302:A TAUNET_302
+connect_pin TAUGATE_302:Z net_167
+insert_gate TAUGATE_303 BUF_X1
+insert_net TAUNET_303
+disconnect_pin inst_165:ZN
+connect_pin inst_165:ZN TAUNET_303
+connect_pin TAUGATE_303:A TAUNET_303
+connect_pin TAUGATE_303:Z TAUNET_21
+insert_gate TAUGATE_304 BUF_X4
+insert_net TAUNET_304
+disconnect_pin inst_49:ZN
+connect_pin inst_49:ZN TAUNET_304
+connect_pin TAUGATE_304:A TAUNET_304
+connect_pin TAUGATE_304:Z net_69
+insert_gate TAUGATE_305 BUF_X1
+insert_net TAUNET_305
+disconnect_pin n125
+connect_pin n125 TAUNET_305
+connect_pin TAUGATE_305:A TAUNET_305
+connect_pin TAUGATE_305:Z n125
+insert_gate TAUGATE_306 BUF_X4
+insert_net TAUNET_306
+disconnect_pin inst_209:ZN
+connect_pin inst_209:ZN TAUNET_306
+connect_pin TAUGATE_306:A TAUNET_306
+connect_pin TAUGATE_306:Z TAUNET_6
+insert_gate TAUGATE_307 BUF_X32
+insert_net TAUNET_307
+disconnect_pin inst_157:ZN
+connect_pin inst_157:ZN TAUNET_307
+connect_pin TAUGATE_307:A TAUNET_307
+connect_pin TAUGATE_307:Z TAUNET_31
+insert_gate TAUGATE_308 BUF_X4
+insert_net TAUNET_308
+disconnect_pin inst_44:ZN
+connect_pin inst_44:ZN TAUNET_308
+connect_pin TAUGATE_308:A TAUNET_308
+connect_pin TAUGATE_308:Z net_61
+insert_gate TAUGATE_309 BUF_X4
+insert_net TAUNET_309
+disconnect_pin inst_7:Z
+connect_pin inst_7:Z TAUNET_309
+connect_pin TAUGATE_309:A TAUNET_309
+connect_pin TAUGATE_309:Z net_15
+insert_gate TAUGATE_310 BUF_X4
+insert_net TAUNET_310
+disconnect_pin inst_211:ZN
+connect_pin inst_211:ZN TAUNET_310
+connect_pin TAUGATE_310:A TAUNET_310
+connect_pin TAUGATE_310:Z net_129
+insert_gate TAUGATE_311 BUF_X8
+insert_net TAUNET_311
+disconnect_pin TAUGATE_33:Z
+connect_pin TAUGATE_33:Z TAUNET_311
+connect_pin TAUGATE_311:A TAUNET_311
+connect_pin TAUGATE_311:Z n42
+insert_gate TAUGATE_312 BUF_X2
+insert_net TAUNET_312
+disconnect_pin inst_48:ZN
+connect_pin inst_48:ZN TAUNET_312
+connect_pin TAUGATE_312:A TAUNET_312
+connect_pin TAUGATE_312:Z net_63
+insert_gate TAUGATE_313 BUF_X4
+insert_net TAUNET_313
+disconnect_pin TAUGATE_47:Z
+connect_pin TAUGATE_47:Z TAUNET_313
+connect_pin TAUGATE_313:A TAUNET_313
+connect_pin TAUGATE_313:Z net_82
+insert_gate TAUGATE_314 BUF_X16
+insert_net TAUNET_314
+disconnect_pin TAUGATE_26:Z
+connect_pin TAUGATE_26:Z TAUNET_314
+connect_pin TAUGATE_314:A TAUNET_314
+connect_pin TAUGATE_314:Z net_113
+insert_gate TAUGATE_315 BUF_X4
+insert_net TAUNET_315
+disconnect_pin TAUGATE_11:Z
+connect_pin TAUGATE_11:Z TAUNET_315
+connect_pin TAUGATE_315:A TAUNET_315
+connect_pin TAUGATE_315:Z n143
+insert_gate TAUGATE_316 BUF_X1
+insert_net TAUNET_316
+disconnect_pin inst_72:ZN
+connect_pin inst_72:ZN TAUNET_316
+connect_pin TAUGATE_316:A TAUNET_316
+connect_pin TAUGATE_316:Z net_195
+insert_gate TAUGATE_317 BUF_X4
+insert_net TAUNET_317
+disconnect_pin n119
+connect_pin n119 TAUNET_317
+connect_pin TAUGATE_317:A TAUNET_317
+connect_pin TAUGATE_317:Z n119
+insert_gate TAUGATE_318 BUF_X32
+insert_net TAUNET_318
+disconnect_pin inst_21:Z
+connect_pin inst_21:Z TAUNET_318
+connect_pin TAUGATE_318:A TAUNET_318
+connect_pin TAUGATE_318:Z n45
+insert_gate TAUGATE_319 BUF_X1
+insert_net TAUNET_319
+disconnect_pin inst_46:ZN
+connect_pin inst_46:ZN TAUNET_319
+connect_pin TAUGATE_319:A TAUNET_319
+connect_pin TAUGATE_319:Z net_58
+insert_gate TAUGATE_320 BUF_X8
+insert_net TAUNET_320
+disconnect_pin n104
+connect_pin n104 TAUNET_320
+connect_pin TAUGATE_320:A TAUNET_320
+connect_pin TAUGATE_320:Z n104
+insert_gate TAUGATE_321 BUF_X16
+insert_net TAUNET_321
+disconnect_pin inst_40:ZN
+connect_pin inst_40:ZN TAUNET_321
+connect_pin TAUGATE_321:A TAUNET_321
+connect_pin TAUGATE_321:Z net_47
+insert_gate TAUGATE_322 BUF_X8
+insert_net TAUNET_322
+disconnect_pin inst_113:ZN
+connect_pin inst_113:ZN TAUNET_322
+connect_pin TAUGATE_322:A TAUNET_322
+connect_pin TAUGATE_322:Z net_94
+insert_gate TAUGATE_323 BUF_X8
+insert_net TAUNET_323
+disconnect_pin inst_23:Z
+connect_pin inst_23:Z TAUNET_323
+connect_pin TAUGATE_323:A TAUNET_323
+connect_pin TAUGATE_323:Z n24
+insert_gate TAUGATE_324 BUF_X2
+insert_net TAUNET_324
+disconnect_pin TAUGATE_10:Z
+connect_pin TAUGATE_10:Z TAUNET_324
+connect_pin TAUGATE_324:A TAUNET_324
+connect_pin TAUGATE_324:Z net_183
+insert_gate TAUGATE_325 BUF_X16
+insert_net TAUNET_325
+disconnect_pin inst_173:ZN
+connect_pin inst_173:ZN TAUNET_325
+connect_pin TAUGATE_325:A TAUNET_325
+connect_pin TAUGATE_325:Z net_132
+insert_gate TAUGATE_326 BUF_X16
+insert_net TAUNET_326
+disconnect_pin inst_177:ZN
+connect_pin inst_177:ZN TAUNET_326
+connect_pin TAUGATE_326:A TAUNET_326
+connect_pin TAUGATE_326:Z net_151
+insert_gate TAUGATE_327 BUF_X2
+insert_net TAUNET_327
+disconnect_pin inst_97:ZN
+connect_pin inst_97:ZN TAUNET_327
+connect_pin TAUGATE_327:A TAUNET_327
+connect_pin TAUGATE_327:Z net_8
+insert_gate TAUGATE_328 BUF_X8
+insert_net TAUNET_328
+disconnect_pin inst_73:ZN
+connect_pin inst_73:ZN TAUNET_328
+connect_pin TAUGATE_328:A TAUNET_328
+connect_pin TAUGATE_328:Z net_125
+insert_gate TAUGATE_329 BUF_X16
+insert_net TAUNET_329
+disconnect_pin inst_112:ZN
+connect_pin inst_112:ZN TAUNET_329
+connect_pin TAUGATE_329:A TAUNET_329
+connect_pin TAUGATE_329:Z net_84
+insert_gate TAUGATE_330 BUF_X4
+insert_net TAUNET_330
+disconnect_pin inst_42:ZN
+connect_pin inst_42:ZN TAUNET_330
+connect_pin TAUGATE_330:A TAUNET_330
+connect_pin TAUGATE_330:Z net_53
+insert_gate TAUGATE_331 BUF_X16
+insert_net TAUNET_331
+disconnect_pin n110
+connect_pin n110 TAUNET_331
+connect_pin TAUGATE_331:A TAUNET_331
+connect_pin TAUGATE_331:Z TAUNET_40
+insert_gate TAUGATE_332 BUF_X8
+insert_net TAUNET_332
+disconnect_pin inst_45:ZN
+connect_pin inst_45:ZN TAUNET_332
+connect_pin TAUGATE_332:A TAUNET_332
+connect_pin TAUGATE_332:Z net_54
+insert_gate TAUGATE_333 BUF_X32
+insert_net TAUNET_333
+disconnect_pin TAUGATE_31:Z
+connect_pin TAUGATE_31:Z TAUNET_333
+connect_pin TAUGATE_333:A TAUNET_333
+connect_pin TAUGATE_333:Z net_18
+insert_gate TAUGATE_334 BUF_X8
+insert_net TAUNET_334
+disconnect_pin inst_32:ZN
+connect_pin inst_32:ZN TAUNET_334
+connect_pin TAUGATE_334:A TAUNET_334
+connect_pin TAUGATE_334:Z net_35
+insert_gate TAUGATE_335 BUF_X8
+insert_net TAUNET_335
+disconnect_pin inst_107:ZN
+connect_pin inst_107:ZN TAUNET_335
+connect_pin TAUGATE_335:A TAUNET_335
+connect_pin TAUGATE_335:Z net_75
+insert_gate TAUGATE_336 BUF_X4
+insert_net TAUNET_336
+disconnect_pin inst_185:ZN
+connect_pin inst_185:ZN TAUNET_336
+connect_pin TAUGATE_336:A TAUNET_336
+connect_pin TAUGATE_336:Z net_184
+insert_gate TAUGATE_337 BUF_X32
+insert_net TAUNET_337
+disconnect_pin n952
+connect_pin n952 TAUNET_337
+connect_pin TAUGATE_337:A TAUNET_337
+connect_pin TAUGATE_337:Z n952
+insert_gate TAUGATE_338 BUF_X8
+insert_net TAUNET_338
+disconnect_pin inst_122:ZN
+connect_pin inst_122:ZN TAUNET_338
+connect_pin TAUGATE_338:A TAUNET_338
+connect_pin TAUGATE_338:Z net_141
+insert_gate TAUGATE_339 BUF_X32
+insert_net TAUNET_339
+disconnect_pin inst_193:ZN
+connect_pin inst_193:ZN TAUNET_339
+connect_pin TAUGATE_339:A TAUNET_339
+connect_pin TAUGATE_339:Z net_87
+insert_gate TAUGATE_340 BUF_X1
+insert_net TAUNET_340
+disconnect_pin inst_188:ZN
+connect_pin inst_188:ZN TAUNET_340
+connect_pin TAUGATE_340:A TAUNET_340
+connect_pin TAUGATE_340:Z net_14
+insert_gate TAUGATE_341 BUF_X1
+insert_net TAUNET_341
+disconnect_pin inst_197:ZN
+connect_pin inst_197:ZN TAUNET_341
+connect_pin TAUGATE_341:A TAUNET_341
+connect_pin TAUGATE_341:Z net_143
+insert_gate TAUGATE_342 BUF_X16
+insert_net TAUNET_342
+disconnect_pin inst_76:ZN
+connect_pin inst_76:ZN TAUNET_342
+connect_pin TAUGATE_342:A TAUNET_342
+connect_pin TAUGATE_342:Z net_110
+insert_gate TAUGATE_343 BUF_X32
+insert_net TAUNET_343
+disconnect_pin inst_160:ZN
+connect_pin inst_160:ZN TAUNET_343
+connect_pin TAUGATE_343:A TAUNET_343
+connect_pin TAUGATE_343:Z net_22
+insert_gate TAUGATE_344 BUF_X1
+insert_net TAUNET_344
+disconnect_pin inst_202:ZN
+connect_pin inst_202:ZN TAUNET_344
+connect_pin TAUGATE_344:A TAUNET_344
+connect_pin TAUGATE_344:Z net_104
+insert_gate TAUGATE_345 BUF_X32
+insert_net TAUNET_345
+disconnect_pin inst_204:ZN
+connect_pin inst_204:ZN TAUNET_345
+connect_pin TAUGATE_345:A TAUNET_345
+connect_pin TAUGATE_345:Z net_140
+insert_gate TAUGATE_346 BUF_X32
+insert_net TAUNET_346
+disconnect_pin TAUGATE_54:Z
+connect_pin TAUGATE_54:Z TAUNET_346
+connect_pin TAUGATE_346:A TAUNET_346
+connect_pin TAUGATE_346:Z net_52
+insert_gate TAUGATE_347 BUF_X1
+insert_net TAUNET_347
+disconnect_pin inst_39:ZN
+connect_pin inst_39:ZN TAUNET_347
+connect_pin TAUGATE_347:A TAUNET_347
+connect_pin TAUGATE_347:Z TAUNET_49
+insert_gate TAUGATE_348 BUF_X1
+insert_net TAUNET_348
+disconnect_pin inst_187:ZN
+connect_pin inst_187:ZN TAUNET_348
+connect_pin TAUGATE_348:A TAUNET_348
+connect_pin TAUGATE_348:Z TAUNET_16
+insert_gate TAUGATE_349 BUF_X16
+insert_net TAUNET_349
+disconnect_pin inst_30:ZN
+connect_pin inst_30:ZN TAUNET_349
+connect_pin TAUGATE_349:A TAUNET_349
+connect_pin TAUGATE_349:Z net_33
+insert_gate TAUGATE_350 BUF_X2
+insert_net TAUNET_350
+disconnect_pin TAUGATE_42:Z
+connect_pin TAUGATE_42:Z TAUNET_350
+connect_pin TAUGATE_350:A TAUNET_350
+connect_pin TAUGATE_350:Z TAUNET_3
+insert_gate TAUGATE_351 BUF_X16
+insert_net TAUNET_351
+disconnect_pin inst_130:ZN
+connect_pin inst_130:ZN TAUNET_351
+connect_pin TAUGATE_351:A TAUNET_351
+connect_pin TAUGATE_351:Z TAUNET_22
+insert_gate TAUGATE_352 BUF_X32
+insert_net TAUNET_352
+disconnect_pin inst_33:ZN
+connect_pin inst_33:ZN TAUNET_352
+connect_pin TAUGATE_352:A TAUNET_352
+connect_pin TAUGATE_352:Z net_36
+insert_gate TAUGATE_353 BUF_X2
+insert_net TAUNET_353
+disconnect_pin inst_174:ZN
+connect_pin inst_174:ZN TAUNET_353
+connect_pin TAUGATE_353:A TAUNET_353
+connect_pin TAUGATE_353:Z net_128
+insert_gate TAUGATE_354 BUF_X8
+insert_net TAUNET_354
+disconnect_pin inst_128:ZN
+connect_pin inst_128:ZN TAUNET_354
+connect_pin TAUGATE_354:A TAUNET_354
+connect_pin TAUGATE_354:Z net_186
+insert_gate TAUGATE_355 BUF_X32
+insert_net TAUNET_355
+disconnect_pin inst_37:ZN
+connect_pin inst_37:ZN TAUNET_355
+connect_pin TAUGATE_355:A TAUNET_355
+connect_pin TAUGATE_355:Z net_38
+insert_gate TAUGATE_356 BUF_X4
+insert_net TAUNET_356
+disconnect_pin n472
+connect_pin n472 TAUNET_356
+connect_pin TAUGATE_356:A TAUNET_356
+connect_pin TAUGATE_356:Z n472
+insert_gate TAUGATE_357 BUF_X1
+insert_net TAUNET_357
+disconnect_pin TAUGATE_13:Z
+connect_pin TAUGATE_13:Z TAUNET_357
+connect_pin TAUGATE_357:A TAUNET_357
+connect_pin TAUGATE_357:Z net_182
+insert_gate TAUGATE_358 BUF_X8
+insert_net TAUNET_358
+disconnect_pin inst_156:ZN
+connect_pin inst_156:ZN TAUNET_358
+connect_pin TAUGATE_358:A TAUNET_358
+connect_pin TAUGATE_358:Z net_27
+insert_gate TAUGATE_359 BUF_X32
+insert_net TAUNET_359
+disconnect_pin inst_51:ZN
+connect_pin inst_51:ZN TAUNET_359
+connect_pin TAUGATE_359:A TAUNET_359
+connect_pin TAUGATE_359:Z TAUNET_1
+insert_gate TAUGATE_360 BUF_X1
+insert_net TAUNET_360
+disconnect_pin n902
+connect_pin n902 TAUNET_360
+connect_pin TAUGATE_360:A TAUNET_360
+connect_pin TAUGATE_360:Z n902
+insert_gate TAUGATE_361 BUF_X32
+insert_net TAUNET_361
+disconnect_pin inst_75:ZN
+connect_pin inst_75:ZN TAUNET_361
+connect_pin TAUGATE_361:A TAUNET_361
+connect_pin TAUGATE_361:Z net_21
+insert_gate TAUGATE_362 BUF_X1
+insert_net TAUNET_362
+disconnect_pin TAUGATE_25:Z
+connect_pin TAUGATE_25:Z TAUNET_362
+connect_pin TAUGATE_362:A TAUNET_362
+connect_pin TAUGATE_362:Z net_78
+insert_gate TAUGATE_363 BUF_X32
+insert_net TAUNET_363
+disconnect_pin n469
+connect_pin n469 TAUNET_363
+connect_pin TAUGATE_363:A TAUNET_363
+connect_pin TAUGATE_363:Z n469
+insert_gate TAUGATE_364 BUF_X1
+insert_net TAUNET_364
+disconnect_pin inst_146:ZN
+connect_pin inst_146:ZN TAUNET_364
+connect_pin TAUGATE_364:A TAUNET_364
+connect_pin TAUGATE_364:Z TAUNET_52
+insert_gate TAUGATE_365 BUF_X16
+insert_net TAUNET_365
+disconnect_pin inst_3:Z
+connect_pin inst_3:Z TAUNET_365
+connect_pin TAUGATE_365:A TAUNET_365
+connect_pin TAUGATE_365:Z net_10
+insert_gate TAUGATE_366 BUF_X2
+insert_net TAUNET_366
+disconnect_pin inst_4:Z
+connect_pin inst_4:Z TAUNET_366
+connect_pin TAUGATE_366:A TAUNET_366
+connect_pin TAUGATE_366:Z net_50
+insert_gate TAUGATE_367 BUF_X1
+insert_net TAUNET_367
+disconnect_pin inst_22:Z
+connect_pin inst_22:Z TAUNET_367
+connect_pin TAUGATE_367:A TAUNET_367
+connect_pin TAUGATE_367:Z n3
+insert_gate TAUGATE_368 BUF_X4
+insert_net TAUNET_368
+disconnect_pin n116
+connect_pin n116 TAUNET_368
+connect_pin TAUGATE_368:A TAUNET_368
+connect_pin TAUGATE_368:Z n116
+insert_gate TAUGATE_369 BUF_X16
+insert_net TAUNET_369
+disconnect_pin inst_43:ZN
+connect_pin inst_43:ZN TAUNET_369
+connect_pin TAUGATE_369:A TAUNET_369
+connect_pin TAUGATE_369:Z net_49
+insert_gate TAUGATE_370 BUF_X1
+insert_net TAUNET_370
+disconnect_pin n224
+connect_pin n224 TAUNET_370
+connect_pin TAUGATE_370:A TAUNET_370
+connect_pin TAUGATE_370:Z n224
+insert_gate TAUGATE_371 BUF_X8
+insert_net TAUNET_371
+disconnect_pin n214
+connect_pin n214 TAUNET_371
+connect_pin TAUGATE_371:A TAUNET_371
+connect_pin TAUGATE_371:Z n214
+insert_gate TAUGATE_372 BUF_X2
+insert_net TAUNET_372
+disconnect_pin inst_134:ZN
+connect_pin inst_134:ZN TAUNET_372
+connect_pin TAUGATE_372:A TAUNET_372
+connect_pin TAUGATE_372:Z n57
+read_spef change_5.spef
+disconnect_pin TAUGATE_51:A
+disconnect_pin TAUGATE_51:Z
+disconnect_pin TAUGATE_253:Z
+connect_pin TAUGATE_253:Z TAUNET_61
+remove_net TAUNET_51
+remove_gate TAUGATE_51
+disconnect_pin TAUGATE_150:A
+disconnect_pin TAUGATE_150:Z
+disconnect_pin TAUGATE_43:Z
+connect_pin TAUGATE_43:Z net_180
+remove_net TAUNET_150
+remove_gate TAUGATE_150
+disconnect_pin TAUGATE_79:A
+disconnect_pin TAUGATE_79:Z
+disconnect_pin TAUGATE_37:Z
+connect_pin TAUGATE_37:Z net_96
+remove_net TAUNET_79
+remove_gate TAUGATE_79
+disconnect_pin TAUGATE_227:A
+disconnect_pin TAUGATE_227:Z
+disconnect_pin TAUGATE_36:Z
+connect_pin TAUGATE_36:Z net_144
+remove_net TAUNET_227
+remove_gate TAUGATE_227
+disconnect_pin TAUGATE_263:A
+disconnect_pin TAUGATE_263:Z
+disconnect_pin inst_25:Z
+connect_pin inst_25:Z n9
+remove_net TAUNET_263
+remove_gate TAUGATE_263
+read_spef change_6.spef
+disconnect_pin TAUGATE_91:A
+disconnect_pin TAUGATE_91:Z
+disconnect_pin inst_192:ZN
+connect_pin inst_192:ZN net_67
+remove_net TAUNET_91
+remove_gate TAUGATE_91
+disconnect_pin TAUGATE_229:A
+disconnect_pin TAUGATE_229:Z
+disconnect_pin TAUGATE_9:Z
+connect_pin TAUGATE_9:Z net_150
+remove_net TAUNET_229
+remove_gate TAUGATE_229
+disconnect_pin TAUGATE_135:A
+disconnect_pin TAUGATE_135:Z
+disconnect_pin inst_139:ZN
+connect_pin inst_139:ZN net_164
+remove_net TAUNET_135
+remove_gate TAUGATE_135
+disconnect_pin TAUGATE_310:A
+disconnect_pin TAUGATE_310:Z
+disconnect_pin inst_211:ZN
+connect_pin inst_211:ZN net_129
+remove_net TAUNET_310
+remove_gate TAUGATE_310
+disconnect_pin TAUGATE_332:A
+disconnect_pin TAUGATE_332:Z
+disconnect_pin inst_45:ZN
+connect_pin inst_45:ZN net_54
+remove_net TAUNET_332
+remove_gate TAUGATE_332
+disconnect_pin TAUGATE_314:A
+disconnect_pin TAUGATE_314:Z
+disconnect_pin TAUGATE_26:Z
+connect_pin TAUGATE_26:Z net_113
+remove_net TAUNET_314
+remove_gate TAUGATE_314
+disconnect_pin TAUGATE_99:A
+disconnect_pin TAUGATE_99:Z
+disconnect_pin inst_55:ZN
+connect_pin inst_55:ZN net_86
+remove_net TAUNET_99
+remove_gate TAUGATE_99
+disconnect_pin TAUGATE_120:A
+disconnect_pin TAUGATE_120:Z
+disconnect_pin inst_77:ZN
+connect_pin inst_77:ZN net_108
+remove_net TAUNET_120
+remove_gate TAUGATE_120
+disconnect_pin TAUGATE_46:A
+disconnect_pin TAUGATE_46:Z
+disconnect_pin TAUGATE_255:Z
+connect_pin TAUGATE_255:Z TAUNET_302
+remove_net TAUNET_46
+remove_gate TAUGATE_46
+disconnect_pin TAUGATE_118:A
+disconnect_pin TAUGATE_118:Z
+disconnect_pin n475
+connect_pin n475 n475
+remove_net TAUNET_118
+remove_gate TAUGATE_118
+disconnect_pin TAUGATE_300:A
+disconnect_pin TAUGATE_300:Z
+disconnect_pin n210
+connect_pin n210 n210
+remove_net TAUNET_300
+remove_gate TAUGATE_300
+disconnect_pin TAUGATE_56:A
+disconnect_pin TAUGATE_56:Z
+disconnect_pin TAUGATE_68:Z
+connect_pin TAUGATE_68:Z TAUNET_198
+remove_net TAUNET_56
+remove_gate TAUGATE_56
+disconnect_pin TAUGATE_163:A
+disconnect_pin TAUGATE_163:Z
+disconnect_pin inst_158:ZN
+connect_pin inst_158:ZN net_20
+remove_net TAUNET_163
+remove_gate TAUGATE_163
+disconnect_pin TAUGATE_254:A
+disconnect_pin TAUGATE_254:Z
+disconnect_pin inst_88:ZN
+connect_pin inst_88:ZN net_76
+remove_net TAUNET_254
+remove_gate TAUGATE_254
+disconnect_pin TAUGATE_7:A
+disconnect_pin TAUGATE_7:Z
+disconnect_pin TAUGATE_295:Z
+connect_pin TAUGATE_295:Z TAUNET_123
+remove_net TAUNET_7
+remove_gate TAUGATE_7
+disconnect_pin TAUGATE_311:A
+disconnect_pin TAUGATE_311:Z
+disconnect_pin TAUGATE_33:Z
+connect_pin TAUGATE_33:Z n42
+remove_net TAUNET_311
+remove_gate TAUGATE_311
+disconnect_pin TAUGATE_107:A
+disconnect_pin TAUGATE_107:Z
+disconnect_pin inst_99:ZN
+connect_pin inst_99:ZN net_194
+remove_net TAUNET_107
+remove_gate TAUGATE_107
+disconnect_pin TAUGATE_113:A
+disconnect_pin TAUGATE_113:Z
+disconnect_pin TAUGATE_40:Z
+connect_pin TAUGATE_40:Z n110
+remove_net TAUNET_113
+remove_gate TAUGATE_113
+disconnect_pin TAUGATE_138:A
+disconnect_pin TAUGATE_138:Z
+disconnect_pin inst_64:ZN
+connect_pin inst_64:ZN n72
+remove_net TAUNET_138
+remove_gate TAUGATE_138
+disconnect_pin TAUGATE_19:A
+disconnect_pin TAUGATE_19:Z
+disconnect_pin TAUGATE_71:Z
+connect_pin TAUGATE_71:Z TAUNET_293
+remove_net TAUNET_19
+remove_gate TAUGATE_19
+disconnect_pin TAUGATE_115:A
+disconnect_pin TAUGATE_115:Z
+disconnect_pin inst_164:ZN
+connect_pin inst_164:ZN net_89
+remove_net TAUNET_115
+remove_gate TAUGATE_115
+disconnect_pin TAUGATE_348:A
+disconnect_pin TAUGATE_348:Z
+disconnect_pin inst_187:ZN
+connect_pin inst_187:ZN TAUNET_16
+remove_net TAUNET_348
+remove_gate TAUGATE_348
+disconnect_pin TAUGATE_174:A
+disconnect_pin TAUGATE_174:Z
+disconnect_pin inst_52:ZN
+connect_pin inst_52:ZN net_71
+remove_net TAUNET_174
+remove_gate TAUGATE_174
+disconnect_pin TAUGATE_343:A
+disconnect_pin TAUGATE_343:Z
+disconnect_pin inst_160:ZN
+connect_pin inst_160:ZN net_22
+remove_net TAUNET_343
+remove_gate TAUGATE_343
+disconnect_pin TAUGATE_183:A
+disconnect_pin TAUGATE_183:Z
+disconnect_pin TAUGATE_4:Z
+connect_pin TAUGATE_4:Z net_177
+remove_net TAUNET_183
+remove_gate TAUGATE_183
+disconnect_pin TAUGATE_41:A
+disconnect_pin TAUGATE_41:Z
+disconnect_pin TAUGATE_96:Z
+connect_pin TAUGATE_96:Z TAUNET_259
+remove_net TAUNET_41
+remove_gate TAUGATE_41
+disconnect_pin TAUGATE_323:A
+disconnect_pin TAUGATE_323:Z
+disconnect_pin inst_23:Z
+connect_pin inst_23:Z n24
+remove_net TAUNET_323
+remove_gate TAUGATE_323
+disconnect_pin TAUGATE_50:A
+disconnect_pin TAUGATE_50:Z
+disconnect_pin TAUGATE_223:Z
+connect_pin TAUGATE_223:Z TAUNET_224
+remove_net TAUNET_50
+remove_gate TAUGATE_50
+disconnect_pin TAUGATE_334:A
+disconnect_pin TAUGATE_334:Z
+disconnect_pin inst_32:ZN
+connect_pin inst_32:ZN net_35
+remove_net TAUNET_334
+remove_gate TAUGATE_334
+disconnect_pin TAUGATE_12:A
+disconnect_pin TAUGATE_12:Z
+disconnect_pin TAUGATE_102:Z
+connect_pin TAUGATE_102:Z TAUNET_264
+remove_net TAUNET_12
+remove_gate TAUGATE_12
+disconnect_pin TAUGATE_315:A
+disconnect_pin TAUGATE_315:Z
+disconnect_pin TAUGATE_11:Z
+connect_pin TAUGATE_11:Z n143
+remove_net TAUNET_315
+remove_gate TAUGATE_315
+disconnect_pin TAUGATE_306:A
+disconnect_pin TAUGATE_306:Z
+disconnect_pin inst_209:ZN
+connect_pin inst_209:ZN TAUNET_6
+remove_net TAUNET_306
+remove_gate TAUGATE_306
+disconnect_pin TAUGATE_345:A
+disconnect_pin TAUGATE_345:Z
+disconnect_pin inst_204:ZN
+connect_pin inst_204:ZN net_140
+remove_net TAUNET_345
+remove_gate TAUGATE_345
+disconnect_pin TAUGATE_285:A
+disconnect_pin TAUGATE_285:Z
+disconnect_pin inst_50:ZN
+connect_pin inst_50:ZN net_55
+remove_net TAUNET_285
+remove_gate TAUGATE_285
+disconnect_pin inst_194:A
+disconnect_pin inst_194:ZN
+disconnect_pin TAUGATE_141:Z
+connect_pin TAUGATE_141:Z TAUNET_119
+disconnect_pin inst_164:A2
+connect_pin inst_164:A2 TAUNET_119
+disconnect_pin inst_78:A2
+connect_pin inst_78:A2 TAUNET_119
+remove_net net_80
+remove_gate inst_194
+disconnect_pin TAUGATE_355:A
+disconnect_pin TAUGATE_355:Z
+disconnect_pin inst_37:ZN
+connect_pin inst_37:ZN net_38
+remove_net TAUNET_355
+remove_gate TAUGATE_355
+disconnect_pin TAUGATE_257:A
+disconnect_pin TAUGATE_257:Z
+disconnect_pin inst_35:ZN
+connect_pin inst_35:ZN net_37
+remove_net TAUNET_257
+remove_gate TAUGATE_257
+disconnect_pin TAUGATE_364:A
+disconnect_pin TAUGATE_364:Z
+disconnect_pin inst_146:ZN
+connect_pin inst_146:ZN TAUNET_52
+remove_net TAUNET_364
+remove_gate TAUGATE_364
+disconnect_pin TAUGATE_330:A
+disconnect_pin TAUGATE_330:Z
+disconnect_pin inst_42:ZN
+connect_pin inst_42:ZN net_53
+remove_net TAUNET_330
+remove_gate TAUGATE_330
+disconnect_pin TAUGATE_176:A
+disconnect_pin TAUGATE_176:Z
+disconnect_pin inst_137:ZN
+connect_pin inst_137:ZN net_117
+remove_net TAUNET_176
+remove_gate TAUGATE_176
+disconnect_pin TAUGATE_152:A
+disconnect_pin TAUGATE_152:Z
+disconnect_pin n128
+connect_pin n128 n128
+remove_net TAUNET_152
+remove_gate TAUGATE_152
+disconnect_pin TAUGATE_211:A
+disconnect_pin TAUGATE_211:Z
+disconnect_pin inst_26:Z
+connect_pin inst_26:Z n6
+remove_net TAUNET_211
+remove_gate TAUGATE_211
+disconnect_pin TAUGATE_295:A
+disconnect_pin TAUGATE_295:Z
+disconnect_pin inst_127:ZN
+connect_pin inst_127:ZN TAUNET_123
+remove_net TAUNET_295
+remove_gate TAUGATE_295
+disconnect_pin TAUGATE_178:A
+disconnect_pin TAUGATE_178:Z
+disconnect_pin inst_183:ZN
+connect_pin inst_183:ZN net_173
+remove_net TAUNET_178
+remove_gate TAUGATE_178
+disconnect_pin TAUGATE_275:A
+disconnect_pin TAUGATE_275:Z
+disconnect_pin TAUGATE_17:Z
+connect_pin TAUGATE_17:Z net_98
+remove_net TAUNET_275
+remove_gate TAUGATE_275
+disconnect_pin inst_205:A
+disconnect_pin inst_205:ZN
+disconnect_pin TAUGATE_187:Z
+connect_pin TAUGATE_187:Z TAUNET_180
+disconnect_pin inst_184:A1
+connect_pin inst_184:A1 TAUNET_180
+remove_net net_169
+remove_gate inst_205
+disconnect_pin TAUGATE_82:A
+disconnect_pin TAUGATE_82:Z
+disconnect_pin inst_53:ZN
+connect_pin inst_53:ZN TAUNET_34
+remove_net TAUNET_82
+remove_gate TAUGATE_82
+disconnect_pin TAUGATE_201:A
+disconnect_pin TAUGATE_201:Z
+disconnect_pin n131
+connect_pin n131 n131
+remove_net TAUNET_201
+remove_gate TAUGATE_201
+disconnect_pin TAUGATE_87:A
+disconnect_pin TAUGATE_87:Z
+disconnect_pin inst_117:ZN
+connect_pin inst_117:ZN net_92
+remove_net TAUNET_87
+remove_gate TAUGATE_87
+disconnect_pin TAUGATE_270:A
+disconnect_pin TAUGATE_270:Z
+disconnect_pin inst_142:ZN
+connect_pin inst_142:ZN net_30
+remove_net TAUNET_270
+remove_gate TAUGATE_270
+disconnect_pin TAUGATE_66:A
+disconnect_pin TAUGATE_66:Z
+disconnect_pin n134
+connect_pin n134 n134
+remove_net TAUNET_66
+remove_gate TAUGATE_66
+disconnect_pin TAUGATE_24:A
+disconnect_pin TAUGATE_24:Z
+disconnect_pin TAUGATE_161:Z
+connect_pin TAUGATE_161:Z TAUNET_250
+remove_net TAUNET_24
+remove_gate TAUGATE_24
+disconnect_pin TAUGATE_288:A
+disconnect_pin TAUGATE_288:Z
+disconnect_pin inst_89:ZN
+connect_pin inst_89:ZN net_119
+remove_net TAUNET_288
+remove_gate TAUGATE_288
+disconnect_pin TAUGATE_15:A
+disconnect_pin TAUGATE_15:Z
+disconnect_pin TAUGATE_192:Z
+connect_pin TAUGATE_192:Z TAUNET_168
+remove_net TAUNET_15
+remove_gate TAUGATE_15
+disconnect_pin TAUGATE_67:A
+disconnect_pin TAUGATE_67:Z
+disconnect_pin TAUGATE_58:Z
+connect_pin TAUGATE_58:Z net_26
+remove_net TAUNET_67
+remove_gate TAUGATE_67
+disconnect_pin TAUGATE_98:A
+disconnect_pin TAUGATE_98:Z
+disconnect_pin TAUGATE_28:Z
+connect_pin TAUGATE_28:Z net_166
+remove_net TAUNET_98
+remove_gate TAUGATE_98
+disconnect_pin inst_203:A
+disconnect_pin inst_203:ZN
+disconnect_pin TAUGATE_208:Z
+connect_pin TAUGATE_208:Z TAUNET_258
+disconnect_pin inst_94:A3
+connect_pin inst_94:A3 TAUNET_258
+remove_net net_136
+remove_gate inst_203
+disconnect_pin inst_198:A
+disconnect_pin inst_198:ZN
+disconnect_pin TAUGATE_89:Z
+connect_pin TAUGATE_89:Z TAUNET_274
+disconnect_pin inst_89:A1
+connect_pin inst_89:A1 TAUNET_274
+disconnect_pin inst_117:A2
+connect_pin inst_117:A2 TAUNET_274
+remove_net net_91
+remove_gate inst_198
+disconnect_pin TAUGATE_294:A
+disconnect_pin TAUGATE_294:Z
+disconnect_pin n137
+connect_pin n137 TAUNET_39
+remove_net TAUNET_294
+remove_gate TAUGATE_294
+disconnect_pin inst_192:A
+disconnect_pin inst_192:ZN
+disconnect_pin TAUGATE_136:Z
+connect_pin TAUGATE_136:Z net_67
+disconnect_pin inst_52:B
+connect_pin inst_52:B net_67
+disconnect_pin inst_105:A2
+connect_pin inst_105:A2 net_67
+remove_net net_65
+remove_gate inst_192
+disconnect_pin TAUGATE_317:A
+disconnect_pin TAUGATE_317:Z
+disconnect_pin n119
+connect_pin n119 n119
+remove_net TAUNET_317
+remove_gate TAUGATE_317
+disconnect_pin inst_199:A
+disconnect_pin inst_199:ZN
+disconnect_pin TAUGATE_245:Z
+connect_pin TAUGATE_245:Z TAUNET_172
+disconnect_pin inst_176:A2
+connect_pin inst_176:A2 TAUNET_172
+remove_net net_95
+remove_gate inst_199
+disconnect_pin TAUGATE_231:A
+disconnect_pin TAUGATE_231:Z
+disconnect_pin inst_221:ZN
+connect_pin inst_221:ZN net_159
+remove_net TAUNET_231
+remove_gate TAUGATE_231
+disconnect_pin TAUGATE_76:A
+disconnect_pin TAUGATE_76:Z
+disconnect_pin inst_210:ZN
+connect_pin inst_210:ZN TAUNET_30
+remove_net TAUNET_76
+remove_gate TAUGATE_76
+disconnect_pin TAUGATE_188:A
+disconnect_pin TAUGATE_188:Z
+disconnect_pin inst_109:ZN
+connect_pin inst_109:ZN net_114
+remove_net TAUNET_188
+remove_gate TAUGATE_188
+disconnect_pin TAUGATE_59:A
+disconnect_pin TAUGATE_59:Z
+disconnect_pin TAUGATE_86:Z
+connect_pin TAUGATE_86:Z TAUNET_244
+remove_net TAUNET_59
+remove_gate TAUGATE_59
+disconnect_pin TAUGATE_281:A
+disconnect_pin TAUGATE_281:Z
+disconnect_pin n478
+connect_pin n478 n478
+remove_net TAUNET_281
+remove_gate TAUGATE_281
+disconnect_pin TAUGATE_246:A
+disconnect_pin TAUGATE_246:Z
+disconnect_pin inst_63:ZN
+connect_pin inst_63:ZN TAUNET_4
+remove_net TAUNET_246
+remove_gate TAUGATE_246
+disconnect_pin TAUGATE_147:A
+disconnect_pin TAUGATE_147:Z
+disconnect_pin inst_86:ZN
+connect_pin inst_86:ZN net_56
+remove_net TAUNET_147
+remove_gate TAUGATE_147
+disconnect_pin TAUGATE_128:A
+disconnect_pin TAUGATE_128:Z
+disconnect_pin inst_196:ZN
+connect_pin inst_196:ZN net_133
+remove_net TAUNET_128
+remove_gate TAUGATE_128
+disconnect_pin TAUGATE_149:A
+disconnect_pin TAUGATE_149:Z
+disconnect_pin inst_41:ZN
+connect_pin inst_41:ZN net_48
+remove_net TAUNET_149
+remove_gate TAUGATE_149
+disconnect_pin TAUGATE_337:A
+disconnect_pin TAUGATE_337:Z
+disconnect_pin n952
+connect_pin n952 n952
+remove_net TAUNET_337
+remove_gate TAUGATE_337
+disconnect_pin TAUGATE_208:A
+disconnect_pin TAUGATE_208:Z
+disconnect_pin inst_81:ZN
+connect_pin inst_81:ZN TAUNET_258
+remove_net TAUNET_208
+remove_gate TAUGATE_208
+disconnect_pin TAUGATE_70:A
+disconnect_pin TAUGATE_70:Z
+disconnect_pin n146
+connect_pin n146 n146
+remove_net TAUNET_70
+remove_gate TAUGATE_70
+disconnect_pin TAUGATE_272:A
+disconnect_pin TAUGATE_272:Z
+disconnect_pin inst_189:ZN
+connect_pin inst_189:ZN net_1
+remove_net TAUNET_272
+remove_gate TAUGATE_272
+disconnect_pin TAUGATE_102:A
+disconnect_pin TAUGATE_102:Z
+disconnect_pin inst_18:Z
+connect_pin inst_18:Z TAUNET_264
+remove_net TAUNET_102
+remove_gate TAUGATE_102
+disconnect_pin TAUGATE_134:A
+disconnect_pin TAUGATE_134:Z
+disconnect_pin inst_216:ZN
+connect_pin inst_216:ZN net_68
+remove_net TAUNET_134
+remove_gate TAUGATE_134
+disconnect_pin TAUGATE_86:A
+disconnect_pin TAUGATE_86:Z
+disconnect_pin inst_214:ZN
+connect_pin inst_214:ZN TAUNET_244
+remove_net TAUNET_86
+remove_gate TAUGATE_86
+disconnect_pin TAUGATE_48:A
+disconnect_pin TAUGATE_48:Z
+disconnect_pin TAUGATE_116:Z
+connect_pin TAUGATE_116:Z TAUNET_262
+remove_net TAUNET_48
+remove_gate TAUGATE_48
+disconnect_pin TAUGATE_194:A
+disconnect_pin TAUGATE_194:Z
+disconnect_pin inst_114:ZN
+connect_pin inst_114:ZN net_118
+remove_net TAUNET_194
+remove_gate TAUGATE_194
+disconnect_pin TAUGATE_111:A
+disconnect_pin TAUGATE_111:Z
+disconnect_pin inst_220:ZN
+connect_pin inst_220:ZN net_158
+remove_net TAUNET_111
+remove_gate TAUGATE_111
+disconnect_pin TAUGATE_125:A
+disconnect_pin TAUGATE_125:Z
+disconnect_pin inst_169:ZN
+connect_pin inst_169:ZN TAUNET_14
+remove_net TAUNET_125
+remove_gate TAUGATE_125
+disconnect_pin TAUGATE_2:A
+disconnect_pin TAUGATE_2:Z
+disconnect_pin TAUGATE_205:Z
+connect_pin TAUGATE_205:Z TAUNET_242
+remove_net TAUNET_2
+remove_gate TAUGATE_2
+disconnect_pin TAUGATE_215:A
+disconnect_pin TAUGATE_215:Z
+disconnect_pin TAUGATE_6:Z
+connect_pin TAUGATE_6:Z net_196
+remove_net TAUNET_215
+remove_gate TAUGATE_215
+disconnect_pin TAUGATE_173:A
+disconnect_pin TAUGATE_173:Z
+disconnect_pin TAUGATE_18:Z
+connect_pin TAUGATE_18:Z net_70
+remove_net TAUNET_173
+remove_gate TAUGATE_173
+disconnect_pin TAUGATE_74:A
+disconnect_pin TAUGATE_74:Z
+disconnect_pin inst_103:ZN
+connect_pin inst_103:ZN net_60
+remove_net TAUNET_74
+remove_gate TAUGATE_74
+disconnect_pin TAUGATE_220:A
+disconnect_pin TAUGATE_220:Z
+disconnect_pin n227
+connect_pin n227 n227
+remove_net TAUNET_220
+remove_gate TAUGATE_220
+disconnect_pin TAUGATE_131:A
+disconnect_pin TAUGATE_131:Z
+disconnect_pin TAUGATE_27:Z
+connect_pin TAUGATE_27:Z net_175
+remove_net TAUNET_131
+remove_gate TAUGATE_131
+disconnect_pin TAUGATE_167:A
+disconnect_pin TAUGATE_167:Z
+disconnect_pin TAUGATE_23:Z
+connect_pin TAUGATE_23:Z net_191
+remove_net TAUNET_167
+remove_gate TAUGATE_167
+disconnect_pin TAUGATE_248:A
+disconnect_pin TAUGATE_248:Z
+disconnect_pin inst_118:ZN
+connect_pin inst_118:ZN net_111
+remove_net TAUNET_248
+remove_gate TAUGATE_248
+disconnect_pin TAUGATE_207:A
+disconnect_pin TAUGATE_207:Z
+disconnect_pin TAUGATE_45:Z
+connect_pin TAUGATE_45:Z net_64
+remove_net TAUNET_207
+remove_gate TAUGATE_207
+disconnect_pin TAUGATE_185:A
+disconnect_pin TAUGATE_185:Z
+disconnect_pin inst_148:ZN
+connect_pin inst_148:ZN net_178
+remove_net TAUNET_185
+remove_gate TAUGATE_185
+disconnect_pin TAUGATE_292:A
+disconnect_pin TAUGATE_292:Z
+disconnect_pin inst_136:ZN
+connect_pin inst_136:ZN net_102
+remove_net TAUNET_292
+remove_gate TAUGATE_292
+disconnect_pin inst_189:A
+disconnect_pin inst_189:ZN
+disconnect_pin TAUGATE_371:Z
+connect_pin TAUGATE_371:Z net_1
+disconnect_pin inst_159:A1
+connect_pin inst_159:A1 net_1
+remove_net n214
+remove_gate inst_189
+disconnect_pin TAUGATE_3:A
+disconnect_pin TAUGATE_3:Z
+disconnect_pin TAUGATE_350:Z
+connect_pin TAUGATE_350:Z TAUNET_112
+remove_net TAUNET_3
+remove_gate TAUGATE_3
+disconnect_pin TAUGATE_21:A
+disconnect_pin TAUGATE_21:Z
+disconnect_pin TAUGATE_303:Z
+connect_pin TAUGATE_303:Z TAUNET_151
+remove_net TAUNET_21
+remove_gate TAUGATE_21
+disconnect_pin TAUGATE_320:A
+disconnect_pin TAUGATE_320:Z
+disconnect_pin n104
+connect_pin n104 n104
+remove_net TAUNET_320
+remove_gate TAUGATE_320
+disconnect_pin inst_197:A
+disconnect_pin inst_197:ZN
+disconnect_pin TAUGATE_63:Z
+connect_pin TAUGATE_63:Z TAUNET_341
+disconnect_pin inst_114:A1
+connect_pin inst_114:A1 TAUNET_341
+remove_net net_88
+remove_gate inst_197
+disconnect_pin TAUGATE_144:A
+disconnect_pin TAUGATE_144:Z
+disconnect_pin inst_172:ZN
+connect_pin inst_172:ZN net_126
+remove_net TAUNET_144
+remove_gate TAUGATE_144
+disconnect_pin TAUGATE_336:A
+disconnect_pin TAUGATE_336:Z
+disconnect_pin inst_185:ZN
+connect_pin inst_185:ZN net_184
+remove_net TAUNET_336
+remove_gate TAUGATE_336
+disconnect_pin TAUGATE_10:A
+disconnect_pin TAUGATE_10:Z
+disconnect_pin inst_83:ZN
+connect_pin inst_83:ZN TAUNET_324
+remove_net TAUNET_10
+remove_gate TAUGATE_10
+disconnect_pin TAUGATE_312:A
+disconnect_pin TAUGATE_312:Z
+disconnect_pin inst_48:ZN
+connect_pin inst_48:ZN net_63
+remove_net TAUNET_312
+remove_gate TAUGATE_312
+disconnect_pin TAUGATE_25:A
+disconnect_pin TAUGATE_25:Z
+disconnect_pin TAUGATE_84:Z
+connect_pin TAUGATE_84:Z TAUNET_362
+remove_net TAUNET_25
+remove_gate TAUGATE_25
+disconnect_pin TAUGATE_301:A
+disconnect_pin TAUGATE_301:Z
+disconnect_pin TAUGATE_57:Z
+connect_pin TAUGATE_57:Z n217
+remove_net TAUNET_301
+remove_gate TAUGATE_301
+disconnect_pin TAUGATE_110:A
+disconnect_pin TAUGATE_110:Z
+disconnect_pin inst_8:Z
+connect_pin inst_8:Z net_16
+remove_net TAUNET_110
+remove_gate TAUGATE_110
+disconnect_pin TAUGATE_344:A
+disconnect_pin TAUGATE_344:Z
+disconnect_pin inst_202:ZN
+connect_pin inst_202:ZN net_104
+remove_net TAUNET_344
+remove_gate TAUGATE_344
+disconnect_pin TAUGATE_189:A
+disconnect_pin TAUGATE_189:Z
+disconnect_pin inst_152:ZN
+connect_pin inst_152:ZN net_2
+remove_net TAUNET_189
+remove_gate TAUGATE_189
+disconnect_pin TAUGATE_31:A
+disconnect_pin TAUGATE_31:Z
+disconnect_pin TAUGATE_307:Z
+connect_pin TAUGATE_307:Z TAUNET_333
+remove_net TAUNET_31
+remove_gate TAUGATE_31
+disconnect_pin TAUGATE_339:A
+disconnect_pin TAUGATE_339:Z
+disconnect_pin inst_193:ZN
+connect_pin inst_193:ZN net_87
+remove_net TAUNET_339
+remove_gate TAUGATE_339
+disconnect_pin TAUGATE_303:A
+disconnect_pin TAUGATE_303:Z
+disconnect_pin inst_165:ZN
+connect_pin inst_165:ZN TAUNET_151
+remove_net TAUNET_303
+remove_gate TAUGATE_303
+disconnect_pin TAUGATE_71:A
+disconnect_pin TAUGATE_71:Z
+disconnect_pin inst_9:Z
+connect_pin inst_9:Z TAUNET_293
+remove_net TAUNET_71
+remove_gate TAUGATE_71
+disconnect_pin TAUGATE_170:A
+disconnect_pin TAUGATE_170:Z
+disconnect_pin inst_57:ZN
+connect_pin inst_57:ZN TAUNET_33
+remove_net TAUNET_170
+remove_gate TAUGATE_170
+disconnect_pin TAUGATE_226:A
+disconnect_pin TAUGATE_226:Z
+disconnect_pin inst_171:ZN
+connect_pin inst_171:ZN net_124
+remove_net TAUNET_226
+remove_gate TAUGATE_226
+disconnect_pin TAUGATE_6:A
+disconnect_pin TAUGATE_6:Z
+disconnect_pin inst_209:ZN
+connect_pin inst_209:ZN net_196
+remove_net TAUNET_6
+remove_gate TAUGATE_6
+disconnect_pin TAUGATE_210:A
+disconnect_pin TAUGATE_210:Z
+disconnect_pin inst_153:ZN
+connect_pin inst_153:ZN TAUNET_20
+remove_net TAUNET_210
+remove_gate TAUGATE_210
+disconnect_pin TAUGATE_325:A
+disconnect_pin TAUGATE_325:Z
+disconnect_pin inst_173:ZN
+connect_pin inst_173:ZN net_132
+remove_net TAUNET_325
+remove_gate TAUGATE_325
+disconnect_pin TAUGATE_256:A
+disconnect_pin TAUGATE_256:Z
+disconnect_pin inst_213:ZN
+connect_pin inst_213:ZN net_51
+remove_net TAUNET_256
+remove_gate TAUGATE_256
+disconnect_pin TAUGATE_53:A
+disconnect_pin TAUGATE_53:Z
+disconnect_pin TAUGATE_222:Z
+connect_pin TAUGATE_222:Z TAUNET_177
+remove_net TAUNET_53
+remove_gate TAUGATE_53
+disconnect_pin TAUGATE_357:A
+disconnect_pin TAUGATE_357:Z
+disconnect_pin TAUGATE_13:Z
+connect_pin TAUGATE_13:Z net_182
+remove_net TAUNET_357
+remove_gate TAUGATE_357
+disconnect_pin TAUGATE_244:A
+disconnect_pin TAUGATE_244:Z
+disconnect_pin inst_214:ZN
+connect_pin inst_214:ZN net_57
+remove_net TAUNET_244
+remove_gate TAUGATE_244
+disconnect_pin TAUGATE_371:A
+disconnect_pin TAUGATE_371:Z
+disconnect_pin n214
+connect_pin n214 net_1
+remove_net TAUNET_371
+remove_gate TAUGATE_371
+disconnect_pin inst_195:A
+disconnect_pin inst_195:ZN
+disconnect_pin inst_109:ZN
+connect_pin inst_109:ZN TAUNET_190
+disconnect_pin inst_207:A3
+connect_pin inst_207:A3 TAUNET_190
+disconnect_pin inst_138:A3
+connect_pin inst_138:A3 TAUNET_190
+disconnect_pin inst_218:A1
+connect_pin inst_218:A1 TAUNET_190
+remove_net net_114
+remove_gate inst_195
+disconnect_pin TAUGATE_222:A
+disconnect_pin TAUGATE_222:Z
+disconnect_pin n140
+connect_pin n140 TAUNET_177
+remove_net TAUNET_222
+remove_gate TAUGATE_222
+disconnect_pin TAUGATE_349:A
+disconnect_pin TAUGATE_349:Z
+disconnect_pin inst_30:ZN
+connect_pin inst_30:ZN net_33
+remove_net TAUNET_349
+remove_gate TAUGATE_349
+disconnect_pin TAUGATE_142:A
+disconnect_pin TAUGATE_142:Z
+disconnect_pin inst_132:ZN
+connect_pin inst_132:ZN n66
+remove_net TAUNET_142
+remove_gate TAUGATE_142
+disconnect_pin TAUGATE_216:A
+disconnect_pin TAUGATE_216:Z
+disconnect_pin inst_106:ZN
+connect_pin inst_106:ZN TAUNET_18
+remove_net TAUNET_216
+remove_gate TAUGATE_216
+disconnect_pin TAUGATE_218:A
+disconnect_pin TAUGATE_218:Z
+disconnect_pin TAUGATE_49:Z
+connect_pin TAUGATE_49:Z net_40
+remove_net TAUNET_218
+remove_gate TAUGATE_218
+disconnect_pin TAUGATE_155:A
+disconnect_pin TAUGATE_155:Z
+disconnect_pin TAUGATE_34:Z
+connect_pin TAUGATE_34:Z net_77
+remove_net TAUNET_155
+remove_gate TAUGATE_155
+disconnect_pin TAUGATE_153:A
+disconnect_pin TAUGATE_153:Z
+disconnect_pin inst_181:ZN
+connect_pin inst_181:ZN TAUNET_28
+remove_net TAUNET_153
+remove_gate TAUGATE_153
+disconnect_pin TAUGATE_96:A
+disconnect_pin TAUGATE_96:Z
+disconnect_pin inst_163:ZN
+connect_pin inst_163:ZN TAUNET_259
+remove_net TAUNET_96
+remove_gate TAUGATE_96
+disconnect_pin TAUGATE_184:A
+disconnect_pin TAUGATE_184:Z
+disconnect_pin inst_110:ZN
+connect_pin inst_110:ZN net_142
+remove_net TAUNET_184
+remove_gate TAUGATE_184
+disconnect_pin TAUGATE_335:A
+disconnect_pin TAUGATE_335:Z
+disconnect_pin inst_107:ZN
+connect_pin inst_107:ZN net_75
+remove_net TAUNET_335
+remove_gate TAUGATE_335
+disconnect_pin TAUGATE_159:A
+disconnect_pin TAUGATE_159:Z
+disconnect_pin inst_178:ZN
+connect_pin inst_178:ZN TAUNET_9
+remove_net TAUNET_159
+remove_gate TAUGATE_159
+disconnect_pin TAUGATE_166:A
+disconnect_pin TAUGATE_166:Z
+disconnect_pin TAUGATE_44:Z
+connect_pin TAUGATE_44:Z net_134
+remove_net TAUNET_166
+remove_gate TAUGATE_166
+disconnect_pin TAUGATE_64:A
+disconnect_pin TAUGATE_64:Z
+disconnect_pin inst_207:ZN
+connect_pin inst_207:ZN net_115
+remove_net TAUNET_64
+remove_gate TAUGATE_64
+disconnect_pin TAUGATE_171:A
+disconnect_pin TAUGATE_171:Z
+disconnect_pin inst_65:ZN
+connect_pin inst_65:ZN TAUNET_55
+remove_net TAUNET_171
+remove_gate TAUGATE_171
+disconnect_pin TAUGATE_238:A
+disconnect_pin TAUGATE_238:Z
+disconnect_pin inst_68:ZN
+connect_pin inst_68:ZN net_189
+remove_net TAUNET_238
+remove_gate TAUGATE_238
+disconnect_pin TAUGATE_241:A
+disconnect_pin TAUGATE_241:Z
+disconnect_pin n953
+connect_pin n953 n953
+remove_net TAUNET_241
+remove_gate TAUGATE_241
+disconnect_pin TAUGATE_26:A
+disconnect_pin TAUGATE_26:Z
+disconnect_pin TAUGATE_269:Z
+connect_pin TAUGATE_269:Z net_113
+remove_net TAUNET_26
+remove_gate TAUGATE_26
+disconnect_pin TAUGATE_233:A
+disconnect_pin TAUGATE_233:Z
+disconnect_pin inst_85:ZN
+connect_pin inst_85:ZN TAUNET_58
+remove_net TAUNET_233
+remove_gate TAUGATE_233
+disconnect_pin TAUGATE_296:A
+disconnect_pin TAUGATE_296:Z
+disconnect_pin inst_162:ZN
+connect_pin inst_162:ZN net_29
+remove_net TAUNET_296
+remove_gate TAUGATE_296
+disconnect_pin TAUGATE_202:A
+disconnect_pin TAUGATE_202:Z
+disconnect_pin inst_12:Z
+connect_pin inst_12:Z net_43
+remove_net TAUNET_202
+remove_gate TAUGATE_202
+disconnect_pin TAUGATE_313:A
+disconnect_pin TAUGATE_313:Z
+disconnect_pin TAUGATE_47:Z
+connect_pin TAUGATE_47:Z net_82
+remove_net TAUNET_313
+remove_gate TAUGATE_313
+disconnect_pin TAUGATE_5:A
+disconnect_pin TAUGATE_5:Z
+disconnect_pin TAUGATE_151:Z
+connect_pin TAUGATE_151:Z TAUNET_266
+remove_net TAUNET_5
+remove_gate TAUGATE_5
+disconnect_pin TAUGATE_260:A
+disconnect_pin TAUGATE_260:Z
+disconnect_pin TAUGATE_20:Z
+connect_pin TAUGATE_20:Z net_3
+remove_net TAUNET_260
+remove_gate TAUGATE_260
+disconnect_pin TAUGATE_85:A
+disconnect_pin TAUGATE_85:Z
+disconnect_pin n234
+connect_pin n234 n234
+remove_net TAUNET_85
+remove_gate TAUGATE_85
+disconnect_pin TAUGATE_139:A
+disconnect_pin TAUGATE_139:Z
+disconnect_pin inst_5:Z
+connect_pin inst_5:Z net_12
+remove_net TAUNET_139
+remove_gate TAUGATE_139
+disconnect_pin TAUGATE_103:A
+disconnect_pin TAUGATE_103:Z
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_42
+remove_net TAUNET_103
+remove_gate TAUGATE_103
+disconnect_pin TAUGATE_370:A
+disconnect_pin TAUGATE_370:Z
+disconnect_pin n224
+connect_pin n224 n224
+remove_net TAUNET_370
+remove_gate TAUGATE_370
+disconnect_pin TAUGATE_368:A
+disconnect_pin TAUGATE_368:Z
+disconnect_pin n116
+connect_pin n116 n116
+remove_net TAUNET_368
+remove_gate TAUGATE_368
+disconnect_pin TAUGATE_284:A
+disconnect_pin TAUGATE_284:Z
+disconnect_pin inst_54:ZN
+connect_pin inst_54:ZN net_81
+remove_net TAUNET_284
+remove_gate TAUGATE_284
+disconnect_pin TAUGATE_62:A
+disconnect_pin TAUGATE_62:Z
+disconnect_pin inst_219:ZN
+connect_pin inst_219:ZN net_109
+remove_net TAUNET_62
+remove_gate TAUGATE_62
+disconnect_pin TAUGATE_161:A
+disconnect_pin TAUGATE_161:Z
+disconnect_pin inst_111:ZN
+connect_pin inst_111:ZN TAUNET_250
+remove_net TAUNET_161
+remove_gate TAUGATE_161
+disconnect_pin TAUGATE_133:A
+disconnect_pin TAUGATE_133:Z
+disconnect_pin inst_84:ZN
+connect_pin inst_84:ZN net_19
+remove_net TAUNET_133
+remove_gate TAUGATE_133
+disconnect_pin TAUGATE_331:A
+disconnect_pin TAUGATE_331:Z
+disconnect_pin n110
+connect_pin n110 TAUNET_40
+remove_net TAUNET_331
+remove_gate TAUGATE_331
+disconnect_pin TAUGATE_206:A
+disconnect_pin TAUGATE_206:Z
+disconnect_pin inst_124:ZN
+connect_pin inst_124:ZN net_163
+remove_net TAUNET_206
+remove_gate TAUGATE_206
+disconnect_pin TAUGATE_179:A
+disconnect_pin TAUGATE_179:Z
+disconnect_pin inst_79:ZN
+connect_pin inst_79:ZN TAUNET_44
+remove_net TAUNET_179
+remove_gate TAUGATE_179
+disconnect_pin TAUGATE_329:A
+disconnect_pin TAUGATE_329:Z
+disconnect_pin inst_112:ZN
+connect_pin inst_112:ZN net_84
+remove_net TAUNET_329
+remove_gate TAUGATE_329
+disconnect_pin TAUGATE_237:A
+disconnect_pin TAUGATE_237:Z
+disconnect_pin n900
+connect_pin n900 n900
+remove_net TAUNET_237
+remove_gate TAUGATE_237
+disconnect_pin TAUGATE_225:A
+disconnect_pin TAUGATE_225:Z
+disconnect_pin TAUGATE_35:Z
+connect_pin TAUGATE_35:Z net_31
+remove_net TAUNET_225
+remove_gate TAUGATE_225
+disconnect_pin TAUGATE_89:A
+disconnect_pin TAUGATE_89:Z
+disconnect_pin inst_168:ZN
+connect_pin inst_168:ZN TAUNET_274
+remove_net TAUNET_89
+remove_gate TAUGATE_89
+disconnect_pin TAUGATE_114:A
+disconnect_pin TAUGATE_114:Z
+disconnect_pin TAUGATE_32:Z
+connect_pin TAUGATE_32:Z net_148
+remove_net TAUNET_114
+remove_gate TAUGATE_114
+disconnect_pin TAUGATE_16:A
+disconnect_pin TAUGATE_16:Z
+disconnect_pin inst_187:ZN
+connect_pin inst_187:ZN TAUNET_94
+remove_net TAUNET_16
+remove_gate TAUGATE_16
+disconnect_pin TAUGATE_280:A
+disconnect_pin TAUGATE_280:Z
+disconnect_pin inst_100:ZN
+connect_pin inst_100:ZN TAUNET_35
+remove_net TAUNET_280
+remove_gate TAUGATE_280
+disconnect_pin TAUGATE_100:A
+disconnect_pin TAUGATE_100:Z
+disconnect_pin inst_56:ZN
+connect_pin inst_56:ZN n27
+remove_net TAUNET_100
+remove_gate TAUGATE_100
+disconnect_pin TAUGATE_273:A
+disconnect_pin TAUGATE_273:Z
+disconnect_pin inst_98:ZN
+connect_pin inst_98:ZN net_11
+remove_net TAUNET_273
+remove_gate TAUGATE_273
+disconnect_pin TAUGATE_193:A
+disconnect_pin TAUGATE_193:Z
+disconnect_pin inst_60:ZN
+connect_pin inst_60:ZN n33
+remove_net TAUNET_193
+remove_gate TAUGATE_193
+disconnect_pin TAUGATE_28:A
+disconnect_pin TAUGATE_28:Z
+disconnect_pin inst_181:ZN
+connect_pin inst_181:ZN net_166
+remove_net TAUNET_28
+remove_gate TAUGATE_28
+disconnect_pin TAUGATE_158:A
+disconnect_pin TAUGATE_158:Z
+disconnect_pin inst_218:ZN
+connect_pin inst_218:ZN net_107
+remove_net TAUNET_158
+remove_gate TAUGATE_158
+disconnect_pin TAUGATE_44:A
+disconnect_pin TAUGATE_44:Z
+disconnect_pin inst_79:ZN
+connect_pin inst_79:ZN net_134
+remove_net TAUNET_44
+remove_gate TAUGATE_44
+disconnect_pin TAUGATE_264:A
+disconnect_pin TAUGATE_264:Z
+disconnect_pin inst_18:Z
+connect_pin inst_18:Z n21
+remove_net TAUNET_264
+remove_gate TAUGATE_264
+disconnect_pin TAUGATE_212:A
+disconnect_pin TAUGATE_212:Z
+disconnect_pin inst_120:ZN
+connect_pin inst_120:ZN net_145
+remove_net TAUNET_212
+remove_gate TAUGATE_212
+disconnect_pin TAUGATE_9:A
+disconnect_pin TAUGATE_9:Z
+disconnect_pin inst_178:ZN
+connect_pin inst_178:ZN net_150
+remove_net TAUNET_9
+remove_gate TAUGATE_9
+disconnect_pin TAUGATE_20:A
+disconnect_pin TAUGATE_20:Z
+disconnect_pin inst_153:ZN
+connect_pin inst_153:ZN net_3
+remove_net TAUNET_20
+remove_gate TAUGATE_20
+disconnect_pin TAUGATE_45:A
+disconnect_pin TAUGATE_45:Z
+disconnect_pin TAUGATE_77:Z
+connect_pin TAUGATE_77:Z net_64
+remove_net TAUNET_45
+remove_gate TAUGATE_45
+disconnect_pin TAUGATE_324:A
+disconnect_pin TAUGATE_324:Z
+disconnect_pin inst_83:ZN
+connect_pin inst_83:ZN net_183
+remove_net TAUNET_324
+remove_gate TAUGATE_324
+disconnect_pin TAUGATE_81:A
+disconnect_pin TAUGATE_81:Z
+disconnect_pin inst_208:ZN
+connect_pin inst_208:ZN TAUNET_23
+remove_net TAUNET_81
+remove_gate TAUGATE_81
+disconnect_pin TAUGATE_302:A
+disconnect_pin TAUGATE_302:Z
+disconnect_pin TAUGATE_255:Z
+connect_pin TAUGATE_255:Z net_167
+remove_net TAUNET_302
+remove_gate TAUGATE_302
+disconnect_pin TAUGATE_40:A
+disconnect_pin TAUGATE_40:Z
+disconnect_pin n110
+connect_pin n110 n110
+remove_net TAUNET_40
+remove_gate TAUGATE_40
+disconnect_pin TAUGATE_205:A
+disconnect_pin TAUGATE_205:Z
+disconnect_pin TAUGATE_29:Z
+connect_pin TAUGATE_29:Z TAUNET_242
+remove_net TAUNET_205
+remove_gate TAUGATE_205
+disconnect_pin TAUGATE_305:A
+disconnect_pin TAUGATE_305:Z
+disconnect_pin n125
+connect_pin n125 n125
+remove_net TAUNET_305
+remove_gate TAUGATE_305
+disconnect_pin TAUGATE_239:A
+disconnect_pin TAUGATE_239:Z
+disconnect_pin inst_170:ZN
+connect_pin inst_170:ZN net_103
+remove_net TAUNET_239
+remove_gate TAUGATE_239
+disconnect_pin TAUGATE_203:A
+disconnect_pin TAUGATE_203:Z
+disconnect_pin n113
+connect_pin n113 n113
+remove_net TAUNET_203
+remove_gate TAUGATE_203
+disconnect_pin TAUGATE_106:A
+disconnect_pin TAUGATE_106:Z
+disconnect_pin n122
+connect_pin n122 n122
+remove_net TAUNET_106
+remove_gate TAUGATE_106
+disconnect_pin TAUGATE_278:A
+disconnect_pin TAUGATE_278:Z
+disconnect_pin inst_19:Z
+connect_pin inst_19:Z n18
+remove_net TAUNET_278
+remove_gate TAUGATE_278
+disconnect_pin TAUGATE_341:A
+disconnect_pin TAUGATE_341:Z
+disconnect_pin TAUGATE_63:Z
+connect_pin TAUGATE_63:Z net_143
+disconnect_pin inst_114:A1
+connect_pin inst_114:A1 net_143
+remove_net TAUNET_341
+remove_gate TAUGATE_341
+disconnect_pin TAUGATE_195:A
+disconnect_pin TAUGATE_195:Z
+disconnect_pin inst_2:Z
+connect_pin inst_2:Z net_7
+remove_net TAUNET_195
+remove_gate TAUGATE_195
+disconnect_pin TAUGATE_88:A
+disconnect_pin TAUGATE_88:Z
+disconnect_pin inst_175:ZN
+connect_pin inst_175:ZN net_147
+remove_net TAUNET_88
+remove_gate TAUGATE_88
+disconnect_pin TAUGATE_160:A
+disconnect_pin TAUGATE_160:Z
+disconnect_pin TAUGATE_39:Z
+connect_pin TAUGATE_39:Z n137
+remove_net TAUNET_160
+remove_gate TAUGATE_160
+disconnect_pin TAUGATE_326:A
+disconnect_pin TAUGATE_326:Z
+disconnect_pin inst_177:ZN
+connect_pin inst_177:ZN net_151
+remove_net TAUNET_326
+remove_gate TAUGATE_326
+disconnect_pin TAUGATE_277:A
+disconnect_pin TAUGATE_277:Z
+disconnect_pin inst_36:ZN
+connect_pin inst_36:ZN net_44
+remove_net TAUNET_277
+remove_gate TAUGATE_277
+disconnect_pin TAUGATE_17:A
+disconnect_pin TAUGATE_17:Z
+disconnect_pin TAUGATE_132:Z
+connect_pin TAUGATE_132:Z net_98
+remove_net TAUNET_17
+remove_gate TAUGATE_17
+disconnect_pin TAUGATE_267:A
+disconnect_pin TAUGATE_267:Z
+disconnect_pin inst_20:Z
+connect_pin inst_20:Z n15
+remove_net TAUNET_267
+remove_gate TAUGATE_267
+disconnect_pin TAUGATE_154:A
+disconnect_pin TAUGATE_154:Z
+disconnect_pin inst_102:ZN
+connect_pin inst_102:ZN TAUNET_54
+remove_net TAUNET_154
+remove_gate TAUGATE_154
+disconnect_pin TAUGATE_265:A
+disconnect_pin TAUGATE_265:Z
+disconnect_pin inst_87:ZN
+connect_pin inst_87:ZN net_72
+remove_net TAUNET_265
+remove_gate TAUGATE_265
+disconnect_pin TAUGATE_351:A
+disconnect_pin TAUGATE_351:Z
+disconnect_pin inst_130:ZN
+connect_pin inst_130:ZN TAUNET_22
+remove_net TAUNET_351
+remove_gate TAUGATE_351
+disconnect_pin TAUGATE_366:A
+disconnect_pin TAUGATE_366:Z
+disconnect_pin inst_4:Z
+connect_pin inst_4:Z net_50
+remove_net TAUNET_366
+remove_gate TAUGATE_366
+disconnect_pin TAUGATE_362:A
+disconnect_pin TAUGATE_362:Z
+disconnect_pin TAUGATE_84:Z
+connect_pin TAUGATE_84:Z net_78
+remove_net TAUNET_362
+remove_gate TAUGATE_362
+disconnect_pin TAUGATE_109:A
+disconnect_pin TAUGATE_109:Z
+disconnect_pin inst_31:ZN
+connect_pin inst_31:ZN net_34
+remove_net TAUNET_109
+remove_gate TAUGATE_109
+disconnect_pin TAUGATE_49:A
+disconnect_pin TAUGATE_49:Z
+disconnect_pin TAUGATE_347:Z
+connect_pin TAUGATE_347:Z net_40
+remove_net TAUNET_49
+remove_gate TAUGATE_49
+disconnect_pin TAUGATE_279:A
+disconnect_pin TAUGATE_279:Z
+disconnect_pin inst_74:ZN
+connect_pin inst_74:ZN net_131
+remove_net TAUNET_279
+remove_gate TAUGATE_279
+disconnect_pin TAUGATE_35:A
+disconnect_pin TAUGATE_35:Z
+disconnect_pin inst_100:ZN
+connect_pin inst_100:ZN net_31
+remove_net TAUNET_35
+remove_gate TAUGATE_35
+disconnect_pin TAUGATE_219:A
+disconnect_pin TAUGATE_219:Z
+disconnect_pin TAUGATE_55:Z
+connect_pin TAUGATE_55:Z n69
+remove_net TAUNET_219
+remove_gate TAUGATE_219
+disconnect_pin inst_201:A
+disconnect_pin inst_201:ZN
+disconnect_pin TAUGATE_269:Z
+connect_pin TAUGATE_269:Z TAUNET_124
+disconnect_pin inst_207:A4
+connect_pin inst_207:A4 TAUNET_124
+disconnect_pin inst_206:A4
+connect_pin inst_206:A4 TAUNET_124
+disconnect_pin inst_137:A4
+connect_pin inst_137:A4 TAUNET_124
+remove_net net_113
+remove_gate inst_201
+disconnect_pin TAUGATE_43:A
+disconnect_pin TAUGATE_43:Z
+disconnect_pin TAUGATE_69:Z
+connect_pin TAUGATE_69:Z net_180
+remove_net TAUNET_43
+remove_gate TAUGATE_43
+disconnect_pin TAUGATE_63:A
+disconnect_pin TAUGATE_63:Z
+disconnect_pin inst_166:ZN
+connect_pin inst_166:ZN net_143
+remove_net TAUNET_63
+remove_gate TAUGATE_63
+disconnect_pin TAUGATE_287:A
+disconnect_pin TAUGATE_287:Z
+disconnect_pin inst_105:ZN
+connect_pin inst_105:ZN net_66
+remove_net TAUNET_287
+remove_gate TAUGATE_287
+disconnect_pin TAUGATE_78:A
+disconnect_pin TAUGATE_78:Z
+disconnect_pin n217
+connect_pin n217 TAUNET_57
+remove_net TAUNET_78
+remove_gate TAUGATE_78
+disconnect_pin TAUGATE_73:A
+disconnect_pin TAUGATE_73:Z
+disconnect_pin inst_180:ZN
+connect_pin inst_180:ZN net_160
+remove_net TAUNET_73
+remove_gate TAUGATE_73
+disconnect_pin inst_186:A
+disconnect_pin inst_186:ZN
+disconnect_pin n953
+connect_pin n953 TAUNET_236
+disconnect_pin inst_160:A1
+connect_pin inst_160:A1 TAUNET_236
+disconnect_pin inst_84:A3
+connect_pin inst_84:A3 TAUNET_236
+disconnect_pin inst_142:A3
+connect_pin inst_142:A3 TAUNET_236
+disconnect_pin inst_126:A1
+connect_pin inst_126:A1 TAUNET_236
+disconnect_pin inst_158:A1
+connect_pin inst_158:A1 TAUNET_236
+disconnect_pin inst_85:A3
+connect_pin inst_85:A3 TAUNET_236
+disconnect_pin inst_94:A2
+connect_pin inst_94:A2 TAUNET_236
+remove_net n953
+remove_gate inst_186
+disconnect_pin TAUGATE_168:A
+disconnect_pin TAUGATE_168:Z
+disconnect_pin TAUGATE_192:Z
+connect_pin TAUGATE_192:Z net_156
+remove_net TAUNET_168
+remove_gate TAUGATE_168
+disconnect_pin TAUGATE_269:A
+disconnect_pin TAUGATE_269:Z
+disconnect_pin inst_116:ZN
+connect_pin inst_116:ZN TAUNET_124
+remove_net TAUNET_269
+remove_gate TAUGATE_269
+disconnect_pin TAUGATE_27:A
+disconnect_pin TAUGATE_27:Z
+disconnect_pin TAUGATE_286:Z
+connect_pin TAUGATE_286:Z net_175
+remove_net TAUNET_27
+remove_gate TAUGATE_27
+disconnect_pin TAUGATE_232:A
+disconnect_pin TAUGATE_232:Z
+disconnect_pin inst_154:ZN
+connect_pin inst_154:ZN net_24
+remove_net TAUNET_232
+remove_gate TAUGATE_232
+disconnect_pin TAUGATE_291:A
+disconnect_pin TAUGATE_291:Z
+disconnect_pin inst_78:ZN
+connect_pin inst_78:ZN net_127
+remove_net TAUNET_291
+remove_gate TAUGATE_291
+disconnect_pin TAUGATE_353:A
+disconnect_pin TAUGATE_353:Z
+disconnect_pin inst_174:ZN
+connect_pin inst_174:ZN net_128
+remove_net TAUNET_353
+remove_gate TAUGATE_353
+disconnect_pin TAUGATE_199:A
+disconnect_pin TAUGATE_199:Z
+disconnect_pin inst_67:ZN
+connect_pin inst_67:ZN net_188
+remove_net TAUNET_199
+remove_gate TAUGATE_199
+disconnect_pin TAUGATE_126:A
+disconnect_pin TAUGATE_126:Z
+disconnect_pin inst_150:ZN
+connect_pin inst_150:ZN net_181
+remove_net TAUNET_126
+remove_gate TAUGATE_126
+disconnect_pin TAUGATE_209:A
+disconnect_pin TAUGATE_209:Z
+disconnect_pin inst_1:Z
+connect_pin inst_1:Z net_6
+remove_net TAUNET_209
+remove_gate TAUGATE_209
+disconnect_pin TAUGATE_169:A
+disconnect_pin TAUGATE_169:Z
+disconnect_pin inst_6:Z
+connect_pin inst_6:Z net_13
+remove_net TAUNET_169
+remove_gate TAUGATE_169
+disconnect_pin TAUGATE_90:A
+disconnect_pin TAUGATE_90:Z
+disconnect_pin inst_59:ZN
+connect_pin inst_59:ZN n36
+remove_net TAUNET_90
+remove_gate TAUGATE_90
+disconnect_pin TAUGATE_137:A
+disconnect_pin TAUGATE_137:Z
+disconnect_pin inst_28:ZN
+connect_pin inst_28:ZN net_4
+remove_net TAUNET_137
+remove_gate TAUGATE_137
+disconnect_pin TAUGATE_358:A
+disconnect_pin TAUGATE_358:Z
+disconnect_pin inst_156:ZN
+connect_pin inst_156:ZN net_27
+remove_net TAUNET_358
+remove_gate TAUGATE_358
+disconnect_pin TAUGATE_282:A
+disconnect_pin TAUGATE_282:Z
+disconnect_pin inst_10:Z
+connect_pin inst_10:Z net_46
+remove_net TAUNET_282
+remove_gate TAUGATE_282
+disconnect_pin TAUGATE_234:A
+disconnect_pin TAUGATE_234:Z
+disconnect_pin inst_212:ZN
+connect_pin inst_212:ZN net_174
+remove_net TAUNET_234
+remove_gate TAUGATE_234
+disconnect_pin TAUGATE_177:A
+disconnect_pin TAUGATE_177:Z
+disconnect_pin n140
+connect_pin n140 n140
+remove_net TAUNET_177
+remove_gate TAUGATE_177
+disconnect_pin TAUGATE_245:A
+disconnect_pin TAUGATE_245:Z
+disconnect_pin inst_115:ZN
+connect_pin inst_115:ZN TAUNET_172
+remove_net TAUNET_245
+remove_gate TAUGATE_245
+disconnect_pin TAUGATE_38:A
+disconnect_pin TAUGATE_38:Z
+disconnect_pin TAUGATE_181:Z
+connect_pin TAUGATE_181:Z TAUNET_297
+remove_net TAUNET_38
+remove_gate TAUGATE_38
+disconnect_pin TAUGATE_69:A
+disconnect_pin TAUGATE_69:Z
+disconnect_pin inst_184:ZN
+connect_pin inst_184:ZN net_180
+remove_net TAUNET_69
+remove_gate TAUGATE_69
+disconnect_pin TAUGATE_127:A
+disconnect_pin TAUGATE_127:Z
+disconnect_pin inst_167:ZN
+connect_pin inst_167:ZN net_130
+remove_net TAUNET_127
+remove_gate TAUGATE_127
+disconnect_pin TAUGATE_235:A
+disconnect_pin TAUGATE_235:Z
+disconnect_pin inst_80:ZN
+connect_pin inst_80:ZN net_123
+remove_net TAUNET_235
+remove_gate TAUGATE_235
+disconnect_pin TAUGATE_136:A
+disconnect_pin TAUGATE_136:Z
+disconnect_pin inst_47:ZN
+connect_pin inst_47:ZN net_67
+remove_net TAUNET_136
+remove_gate TAUGATE_136
+disconnect_pin TAUGATE_251:A
+disconnect_pin TAUGATE_251:Z
+disconnect_pin inst_90:ZN
+connect_pin inst_90:ZN net_155
+remove_net TAUNET_251
+remove_gate TAUGATE_251
+disconnect_pin TAUGATE_8:A
+disconnect_pin TAUGATE_8:Z
+disconnect_pin TAUGATE_180:Z
+connect_pin TAUGATE_180:Z TAUNET_271
+remove_net TAUNET_8
+remove_gate TAUGATE_8
+disconnect_pin TAUGATE_236:A
+disconnect_pin TAUGATE_236:Z
+disconnect_pin n953
+connect_pin n953 net_172
+disconnect_pin inst_160:A1
+connect_pin inst_160:A1 net_172
+disconnect_pin inst_84:A3
+connect_pin inst_84:A3 net_172
+disconnect_pin inst_142:A3
+connect_pin inst_142:A3 net_172
+disconnect_pin inst_126:A1
+connect_pin inst_126:A1 net_172
+disconnect_pin inst_158:A1
+connect_pin inst_158:A1 net_172
+disconnect_pin inst_85:A3
+connect_pin inst_85:A3 net_172
+disconnect_pin inst_94:A2
+connect_pin inst_94:A2 net_172
+remove_net TAUNET_236
+remove_gate TAUGATE_236
+disconnect_pin TAUGATE_68:A
+disconnect_pin TAUGATE_68:Z
+disconnect_pin inst_206:ZN
+connect_pin inst_206:ZN TAUNET_198
+remove_net TAUNET_68
+remove_gate TAUGATE_68
+disconnect_pin TAUGATE_249:A
+disconnect_pin TAUGATE_249:Z
+disconnect_pin inst_13:Z
+connect_pin inst_13:Z net_45
+remove_net TAUNET_249
+remove_gate TAUGATE_249
+disconnect_pin TAUGATE_318:A
+disconnect_pin TAUGATE_318:Z
+disconnect_pin inst_21:Z
+connect_pin inst_21:Z n45
+remove_net TAUNET_318
+remove_gate TAUGATE_318
+disconnect_pin TAUGATE_356:A
+disconnect_pin TAUGATE_356:Z
+disconnect_pin n472
+connect_pin n472 n472
+remove_net TAUNET_356
+remove_gate TAUGATE_356
+disconnect_pin TAUGATE_52:A
+disconnect_pin TAUGATE_52:Z
+disconnect_pin inst_146:ZN
+connect_pin inst_146:ZN TAUNET_80
+remove_net TAUNET_52
+remove_gate TAUGATE_52
+disconnect_pin TAUGATE_58:A
+disconnect_pin TAUGATE_58:Z
+disconnect_pin inst_85:ZN
+connect_pin inst_85:ZN net_26
+remove_net TAUNET_58
+remove_gate TAUGATE_58
+disconnect_pin TAUGATE_228:A
+disconnect_pin TAUGATE_228:Z
+disconnect_pin inst_182:ZN
+connect_pin inst_182:ZN net_165
+remove_net TAUNET_228
+remove_gate TAUGATE_228
+disconnect_pin inst_187:A
+disconnect_pin inst_187:ZN
+disconnect_pin n210
+connect_pin n210 TAUNET_94
+disconnect_pin inst_161:A1
+connect_pin inst_161:A1 TAUNET_94
+remove_net n210
+remove_gate inst_187
+disconnect_pin TAUGATE_198:A
+disconnect_pin TAUGATE_198:Z
+disconnect_pin inst_206:ZN
+connect_pin inst_206:ZN net_112
+remove_net TAUNET_198
+remove_gate TAUGATE_198
+disconnect_pin TAUGATE_309:A
+disconnect_pin TAUGATE_309:Z
+disconnect_pin inst_7:Z
+connect_pin inst_7:Z net_15
+remove_net TAUNET_309
+remove_gate TAUGATE_309
+disconnect_pin TAUGATE_186:A
+disconnect_pin TAUGATE_186:Z
+disconnect_pin inst_71:ZN
+connect_pin inst_71:ZN net_193
+remove_net TAUNET_186
+remove_gate TAUGATE_186
+disconnect_pin TAUGATE_42:A
+disconnect_pin TAUGATE_42:Z
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_350
+remove_net TAUNET_42
+remove_gate TAUGATE_42
+disconnect_pin TAUGATE_164:A
+disconnect_pin TAUGATE_164:Z
+disconnect_pin inst_217:ZN
+connect_pin inst_217:ZN net_106
+remove_net TAUNET_164
+remove_gate TAUGATE_164
+disconnect_pin TAUGATE_94:A
+disconnect_pin TAUGATE_94:Z
+disconnect_pin n210
+connect_pin n210 net_0
+disconnect_pin inst_161:A1
+connect_pin inst_161:A1 net_0
+remove_net TAUNET_94
+remove_gate TAUGATE_94
+disconnect_pin inst_188:A
+disconnect_pin inst_188:ZN
+disconnect_pin TAUGATE_360:Z
+connect_pin TAUGATE_360:Z TAUNET_340
+disconnect_pin inst_150:A1
+connect_pin inst_150:A1 TAUNET_340
+disconnect_pin inst_148:A1
+connect_pin inst_148:A1 TAUNET_340
+disconnect_pin inst_142:A2
+connect_pin inst_142:A2 TAUNET_340
+disconnect_pin inst_151:A1
+connect_pin inst_151:A1 TAUNET_340
+disconnect_pin inst_107:A1
+connect_pin inst_107:A1 TAUNET_340
+disconnect_pin inst_108:A1
+connect_pin inst_108:A1 TAUNET_340
+disconnect_pin inst_104:A1
+connect_pin inst_104:A1 TAUNET_340
+disconnect_pin inst_88:A2
+connect_pin inst_88:A2 TAUNET_340
+disconnect_pin inst_87:A2
+connect_pin inst_87:A2 TAUNET_340
+disconnect_pin inst_185:A1
+connect_pin inst_185:A1 TAUNET_340
+disconnect_pin inst_75:A2
+connect_pin inst_75:A2 TAUNET_340
+disconnect_pin inst_149:A1
+connect_pin inst_149:A1 TAUNET_340
+remove_net n902
+remove_gate inst_188
+disconnect_pin TAUGATE_191:A
+disconnect_pin TAUGATE_191:Z
+disconnect_pin inst_82:ZN
+connect_pin inst_82:ZN net_161
+remove_net TAUNET_191
+remove_gate TAUGATE_191
+disconnect_pin TAUGATE_204:A
+disconnect_pin TAUGATE_204:Z
+disconnect_pin inst_159:ZN
+connect_pin inst_159:ZN net_101
+remove_net TAUNET_204
+remove_gate TAUGATE_204
+disconnect_pin TAUGATE_130:A
+disconnect_pin TAUGATE_130:Z
+disconnect_pin inst_129:ZN
+connect_pin inst_129:ZN n60
+remove_net TAUNET_130
+remove_gate TAUGATE_130
+disconnect_pin TAUGATE_350:A
+disconnect_pin TAUGATE_350:Z
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_112
+remove_net TAUNET_350
+remove_gate TAUGATE_350
+disconnect_pin TAUGATE_328:A
+disconnect_pin TAUGATE_328:Z
+disconnect_pin inst_73:ZN
+connect_pin inst_73:ZN net_125
+remove_net TAUNET_328
+remove_gate TAUGATE_328
+disconnect_pin TAUGATE_29:A
+disconnect_pin TAUGATE_29:Z
+disconnect_pin TAUGATE_122:Z
+connect_pin TAUGATE_122:Z TAUNET_242
+remove_net TAUNET_29
+remove_gate TAUGATE_29
+disconnect_pin TAUGATE_242:A
+disconnect_pin TAUGATE_242:Z
+disconnect_pin TAUGATE_122:Z
+connect_pin TAUGATE_122:Z net_100
+remove_net TAUNET_242
+remove_gate TAUGATE_242
+disconnect_pin inst_193:A
+disconnect_pin inst_193:ZN
+disconnect_pin inst_54:ZN
+connect_pin inst_54:ZN net_87
+disconnect_pin inst_110:A1
+connect_pin inst_110:A1 net_87
+disconnect_pin inst_166:A1
+connect_pin inst_166:A1 net_87
+remove_net net_81
+remove_gate inst_193
+disconnect_pin TAUGATE_4:A
+disconnect_pin TAUGATE_4:Z
+disconnect_pin inst_63:ZN
+connect_pin inst_63:ZN net_177
+remove_net TAUNET_4
+remove_gate TAUGATE_4
+disconnect_pin TAUGATE_148:A
+disconnect_pin TAUGATE_148:Z
+disconnect_pin TAUGATE_14:Z
+connect_pin TAUGATE_14:Z net_97
+remove_net TAUNET_148
+remove_gate TAUGATE_148
+disconnect_pin TAUGATE_119:A
+disconnect_pin TAUGATE_119:Z
+disconnect_pin TAUGATE_141:Z
+connect_pin TAUGATE_141:Z net_85
+disconnect_pin inst_164:A2
+connect_pin inst_164:A2 net_85
+disconnect_pin inst_78:A2
+connect_pin inst_78:A2 net_85
+remove_net TAUNET_119
+remove_gate TAUGATE_119
+disconnect_pin TAUGATE_342:A
+disconnect_pin TAUGATE_342:Z
+disconnect_pin inst_76:ZN
+connect_pin inst_76:ZN net_110
+remove_net TAUNET_342
+remove_gate TAUGATE_342
+disconnect_pin TAUGATE_146:A
+disconnect_pin TAUGATE_146:Z
+disconnect_pin inst_133:ZN
+connect_pin inst_133:ZN n51
+remove_net TAUNET_146
+remove_gate TAUGATE_146
+disconnect_pin TAUGATE_11:A
+disconnect_pin TAUGATE_11:Z
+disconnect_pin TAUGATE_240:Z
+connect_pin TAUGATE_240:Z n143
+remove_net TAUNET_11
+remove_gate TAUGATE_11
+disconnect_pin inst_196:A
+disconnect_pin inst_196:ZN
+disconnect_pin TAUGATE_250:Z
+connect_pin TAUGATE_250:Z net_133
+disconnect_pin inst_169:A2
+connect_pin inst_169:A2 net_133
+disconnect_pin inst_170:A2
+connect_pin inst_170:A2 net_133
+remove_net net_90
+remove_gate inst_196
+disconnect_pin TAUGATE_333:A
+disconnect_pin TAUGATE_333:Z
+disconnect_pin TAUGATE_307:Z
+connect_pin TAUGATE_307:Z net_18
+remove_net TAUNET_333
+remove_gate TAUGATE_333
+disconnect_pin TAUGATE_112:A
+disconnect_pin TAUGATE_112:Z
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN TAUNET_36
+remove_net TAUNET_112
+remove_gate TAUGATE_112
+disconnect_pin TAUGATE_369:A
+disconnect_pin TAUGATE_369:Z
+disconnect_pin inst_43:ZN
+connect_pin inst_43:ZN net_49
+remove_net TAUNET_369
+remove_gate TAUGATE_369
+disconnect_pin TAUGATE_54:A
+disconnect_pin TAUGATE_54:Z
+disconnect_pin inst_102:ZN
+connect_pin inst_102:ZN TAUNET_346
+remove_net TAUNET_54
+remove_gate TAUGATE_54
+disconnect_pin TAUGATE_266:A
+disconnect_pin TAUGATE_266:Z
+disconnect_pin TAUGATE_151:Z
+connect_pin TAUGATE_151:Z net_135
+remove_net TAUNET_266
+remove_gate TAUGATE_266
+disconnect_pin TAUGATE_354:A
+disconnect_pin TAUGATE_354:Z
+disconnect_pin inst_128:ZN
+connect_pin inst_128:ZN net_186
+remove_net TAUNET_354
+remove_gate TAUGATE_354
+disconnect_pin TAUGATE_293:A
+disconnect_pin TAUGATE_293:Z
+disconnect_pin inst_9:Z
+connect_pin inst_9:Z net_17
+remove_net TAUNET_293
+remove_gate TAUGATE_293
+disconnect_pin TAUGATE_322:A
+disconnect_pin TAUGATE_322:Z
+disconnect_pin inst_113:ZN
+connect_pin inst_113:ZN net_94
+remove_net TAUNET_322
+remove_gate TAUGATE_322
+disconnect_pin inst_200:A
+disconnect_pin inst_200:ZN
+disconnect_pin TAUGATE_14:Z
+connect_pin TAUGATE_14:Z TAUNET_132
+disconnect_pin inst_120:A2
+connect_pin inst_120:A2 TAUNET_132
+remove_net net_97
+remove_gate inst_200
+disconnect_pin TAUGATE_14:A
+disconnect_pin TAUGATE_14:Z
+disconnect_pin inst_169:ZN
+connect_pin inst_169:ZN TAUNET_132
+remove_net TAUNET_14
+remove_gate TAUGATE_14
+disconnect_pin TAUGATE_259:A
+disconnect_pin TAUGATE_259:Z
+disconnect_pin inst_163:ZN
+connect_pin inst_163:ZN net_73
+remove_net TAUNET_259
+remove_gate TAUGATE_259
+disconnect_pin TAUGATE_92:A
+disconnect_pin TAUGATE_92:Z
+disconnect_pin inst_161:ZN
+connect_pin inst_161:ZN net_79
+remove_net TAUNET_92
+remove_gate TAUGATE_92
+disconnect_pin TAUGATE_262:A
+disconnect_pin TAUGATE_262:Z
+disconnect_pin TAUGATE_116:Z
+connect_pin TAUGATE_116:Z net_32
+remove_net TAUNET_262
+remove_gate TAUGATE_262
+disconnect_pin TAUGATE_359:A
+disconnect_pin TAUGATE_359:Z
+disconnect_pin inst_51:ZN
+connect_pin inst_51:ZN TAUNET_1
+remove_net TAUNET_359
+remove_gate TAUGATE_359
+disconnect_pin TAUGATE_247:A
+disconnect_pin TAUGATE_247:Z
+disconnect_pin inst_69:ZN
+connect_pin inst_69:ZN net_190
+remove_net TAUNET_247
+remove_gate TAUGATE_247
+disconnect_pin TAUGATE_276:A
+disconnect_pin TAUGATE_276:Z
+disconnect_pin n898
+connect_pin n898 n898
+remove_net TAUNET_276
+remove_gate TAUGATE_276
+disconnect_pin TAUGATE_223:A
+disconnect_pin TAUGATE_223:Z
+disconnect_pin inst_143:ZN
+connect_pin inst_143:ZN TAUNET_224
+remove_net TAUNET_223
+remove_gate TAUGATE_223
+disconnect_pin inst_204:A
+disconnect_pin inst_204:ZN
+disconnect_pin TAUGATE_217:Z
+connect_pin TAUGATE_217:Z net_140
+disconnect_pin inst_21:A
+connect_pin inst_21:A net_140
+remove_net net_139
+remove_gate inst_204
+disconnect_pin TAUGATE_290:A
+disconnect_pin TAUGATE_290:Z
+disconnect_pin inst_58:ZN
+connect_pin inst_58:ZN n39
+remove_net TAUNET_290
+remove_gate TAUGATE_290
+disconnect_pin TAUGATE_22:A
+disconnect_pin TAUGATE_22:Z
+disconnect_pin inst_130:ZN
+connect_pin inst_130:ZN TAUNET_283
+remove_net TAUNET_22
+remove_gate TAUGATE_22
+disconnect_pin TAUGATE_192:A
+disconnect_pin TAUGATE_192:Z
+disconnect_pin inst_93:ZN
+connect_pin inst_93:ZN net_156
+remove_net TAUNET_192
+remove_gate TAUGATE_192
+disconnect_pin TAUGATE_360:A
+disconnect_pin TAUGATE_360:Z
+disconnect_pin n902
+connect_pin n902 TAUNET_340
+remove_net TAUNET_360
+remove_gate TAUGATE_360
+disconnect_pin TAUGATE_307:A
+disconnect_pin TAUGATE_307:Z
+disconnect_pin inst_157:ZN
+connect_pin inst_157:ZN net_18
+remove_net TAUNET_307
+remove_gate TAUGATE_307
+disconnect_pin TAUGATE_84:A
+disconnect_pin TAUGATE_84:Z
+disconnect_pin inst_108:ZN
+connect_pin inst_108:ZN net_78
+remove_net TAUNET_84
+remove_gate TAUGATE_84
+disconnect_pin TAUGATE_165:A
+disconnect_pin TAUGATE_165:Z
+disconnect_pin inst_131:ZN
+connect_pin inst_131:ZN n54
+remove_net TAUNET_165
+remove_gate TAUGATE_165
+disconnect_pin TAUGATE_352:A
+disconnect_pin TAUGATE_352:Z
+disconnect_pin inst_33:ZN
+connect_pin inst_33:ZN net_36
+remove_net TAUNET_352
+remove_gate TAUGATE_352
+disconnect_pin TAUGATE_289:A
+disconnect_pin TAUGATE_289:Z
+disconnect_pin inst_29:ZN
+connect_pin inst_29:ZN net_42
+remove_net TAUNET_289
+remove_gate TAUGATE_289
+disconnect_pin TAUGATE_243:A
+disconnect_pin TAUGATE_243:Z
+disconnect_pin inst_16:Z
+connect_pin inst_16:Z net_83
+remove_net TAUNET_243
+remove_gate TAUGATE_243
+disconnect_pin TAUGATE_80:A
+disconnect_pin TAUGATE_80:Z
+disconnect_pin inst_146:ZN
+connect_pin inst_146:ZN net_122
+remove_net TAUNET_80
+remove_gate TAUGATE_80
+disconnect_pin TAUGATE_140:A
+disconnect_pin TAUGATE_140:Z
+disconnect_pin inst_119:ZN
+connect_pin inst_119:ZN net_152
+remove_net TAUNET_140
+remove_gate TAUGATE_140
+disconnect_pin TAUGATE_123:A
+disconnect_pin TAUGATE_123:Z
+disconnect_pin inst_127:ZN
+connect_pin inst_127:ZN net_185
+remove_net TAUNET_123
+remove_gate TAUGATE_123
+disconnect_pin TAUGATE_145:A
+disconnect_pin TAUGATE_145:Z
+disconnect_pin n237
+connect_pin n237 n237
+remove_net TAUNET_145
+remove_gate TAUGATE_145
+disconnect_pin TAUGATE_181:A
+disconnect_pin TAUGATE_181:Z
+disconnect_pin inst_155:ZN
+connect_pin inst_155:ZN TAUNET_297
+remove_net TAUNET_181
+remove_gate TAUGATE_181
+disconnect_pin TAUGATE_37:A
+disconnect_pin TAUGATE_37:Z
+disconnect_pin TAUGATE_172:Z
+connect_pin TAUGATE_172:Z net_96
+remove_net TAUNET_37
+remove_gate TAUGATE_37
+disconnect_pin TAUGATE_65:A
+disconnect_pin TAUGATE_65:Z
+disconnect_pin inst_70:ZN
+connect_pin inst_70:ZN net_192
+remove_net TAUNET_65
+remove_gate TAUGATE_65
+disconnect_pin TAUGATE_156:A
+disconnect_pin TAUGATE_156:Z
+disconnect_pin n101
+connect_pin n101 n101
+remove_net TAUNET_156
+remove_gate TAUGATE_156
+disconnect_pin TAUGATE_286:A
+disconnect_pin TAUGATE_286:Z
+disconnect_pin inst_140:ZN
+connect_pin inst_140:ZN net_175
+remove_net TAUNET_286
+remove_gate TAUGATE_286
+disconnect_pin TAUGATE_319:A
+disconnect_pin TAUGATE_319:Z
+disconnect_pin inst_46:ZN
+connect_pin inst_46:ZN net_58
+remove_net TAUNET_319
+remove_gate TAUGATE_319
+disconnect_pin TAUGATE_162:A
+disconnect_pin TAUGATE_162:Z
+disconnect_pin inst_176:ZN
+connect_pin inst_176:ZN TAUNET_32
+remove_net TAUNET_162
+remove_gate TAUGATE_162
+disconnect_pin TAUGATE_258:A
+disconnect_pin TAUGATE_258:Z
+disconnect_pin inst_81:ZN
+connect_pin inst_81:ZN net_137
+disconnect_pin inst_94:A3
+connect_pin inst_94:A3 net_137
+remove_net TAUNET_258
+remove_gate TAUGATE_258
+disconnect_pin TAUGATE_200:A
+disconnect_pin TAUGATE_200:Z
+disconnect_pin n107
+connect_pin n107 n107
+remove_net TAUNET_200
+remove_gate TAUGATE_200
+disconnect_pin TAUGATE_97:A
+disconnect_pin TAUGATE_97:Z
+disconnect_pin inst_61:ZN
+connect_pin inst_61:ZN n48
+remove_net TAUNET_97
+remove_gate TAUGATE_97
+disconnect_pin TAUGATE_104:A
+disconnect_pin TAUGATE_104:Z
+disconnect_pin inst_144:ZN
+connect_pin inst_144:ZN net_138
+remove_net TAUNET_104
+remove_gate TAUGATE_104
+disconnect_pin TAUGATE_214:A
+disconnect_pin TAUGATE_214:Z
+disconnect_pin inst_149:ZN
+connect_pin inst_149:ZN net_179
+remove_net TAUNET_214
+remove_gate TAUGATE_214
+disconnect_pin TAUGATE_55:A
+disconnect_pin TAUGATE_55:Z
+disconnect_pin inst_65:ZN
+connect_pin inst_65:ZN n69
+remove_net TAUNET_55
+remove_gate TAUGATE_55
+disconnect_pin TAUGATE_143:A
+disconnect_pin TAUGATE_143:Z
+disconnect_pin inst_15:Z
+connect_pin inst_15:Z TAUNET_47
+remove_net TAUNET_143
+remove_gate TAUGATE_143
+disconnect_pin TAUGATE_95:A
+disconnect_pin TAUGATE_95:Z
+disconnect_pin inst_94:ZN
+connect_pin inst_94:ZN net_154
+remove_net TAUNET_95
+remove_gate TAUGATE_95
+disconnect_pin TAUGATE_108:A
+disconnect_pin TAUGATE_108:Z
+disconnect_pin inst_190:ZN
+connect_pin inst_190:ZN net_28
+remove_net TAUNET_108
+remove_gate TAUGATE_108
+disconnect_pin TAUGATE_363:A
+disconnect_pin TAUGATE_363:Z
+disconnect_pin n469
+connect_pin n469 n469
+remove_net TAUNET_363
+remove_gate TAUGATE_363
+disconnect_pin TAUGATE_141:A
+disconnect_pin TAUGATE_141:Z
+disconnect_pin inst_14:Z
+connect_pin inst_14:Z net_85
+remove_net TAUNET_141
+remove_gate TAUGATE_141
+disconnect_pin TAUGATE_23:A
+disconnect_pin TAUGATE_23:Z
+disconnect_pin inst_208:ZN
+connect_pin inst_208:ZN net_191
+remove_net TAUNET_23
+remove_gate TAUGATE_23
+disconnect_pin TAUGATE_327:A
+disconnect_pin TAUGATE_327:Z
+disconnect_pin inst_97:ZN
+connect_pin inst_97:ZN net_8
+remove_net TAUNET_327
+remove_gate TAUGATE_327
+disconnect_pin TAUGATE_93:A
+disconnect_pin TAUGATE_93:Z
+disconnect_pin inst_151:ZN
+connect_pin inst_151:ZN TAUNET_13
+remove_net TAUNET_93
+remove_gate TAUGATE_93
+disconnect_pin TAUGATE_172:A
+disconnect_pin TAUGATE_172:Z
+disconnect_pin inst_115:ZN
+connect_pin inst_115:ZN net_96
+disconnect_pin inst_176:A2
+connect_pin inst_176:A2 net_96
+remove_net TAUNET_172
+remove_gate TAUGATE_172
+disconnect_pin TAUGATE_187:A
+disconnect_pin TAUGATE_187:Z
+disconnect_pin inst_95:ZN
+connect_pin inst_95:ZN TAUNET_180
+remove_net TAUNET_187
+remove_gate TAUGATE_187
+disconnect_pin TAUGATE_299:A
+disconnect_pin TAUGATE_299:Z
+disconnect_pin inst_66:ZN
+connect_pin inst_66:ZN net_187
+remove_net TAUNET_299
+remove_gate TAUGATE_299
+disconnect_pin TAUGATE_321:A
+disconnect_pin TAUGATE_321:Z
+disconnect_pin inst_40:ZN
+connect_pin inst_40:ZN net_47
+remove_net TAUNET_321
+remove_gate TAUGATE_321
+disconnect_pin TAUGATE_180:A
+disconnect_pin TAUGATE_180:Z
+disconnect_pin inst_95:ZN
+connect_pin inst_95:ZN TAUNET_271
+disconnect_pin inst_184:A1
+connect_pin inst_184:A1 TAUNET_271
+remove_net TAUNET_180
+remove_gate TAUGATE_180
+disconnect_pin TAUGATE_217:A
+disconnect_pin TAUGATE_217:Z
+disconnect_pin inst_92:ZN
+connect_pin inst_92:ZN net_140
+remove_net TAUNET_217
+remove_gate TAUGATE_217
+disconnect_pin TAUGATE_274:A
+disconnect_pin TAUGATE_274:Z
+disconnect_pin inst_168:ZN
+connect_pin inst_168:ZN net_105
+disconnect_pin inst_89:A1
+connect_pin inst_89:A1 net_105
+disconnect_pin inst_117:A2
+connect_pin inst_117:A2 net_105
+remove_net TAUNET_274
+remove_gate TAUGATE_274
+disconnect_pin TAUGATE_60:A
+disconnect_pin TAUGATE_60:Z
+disconnect_pin inst_62:ZN
+connect_pin inst_62:ZN n30
+remove_net TAUNET_60
+remove_gate TAUGATE_60
+disconnect_pin TAUGATE_13:A
+disconnect_pin TAUGATE_13:Z
+disconnect_pin inst_151:ZN
+connect_pin inst_151:ZN net_182
+remove_net TAUNET_13
+remove_gate TAUGATE_13
+disconnect_pin TAUGATE_253:A
+disconnect_pin TAUGATE_253:Z
+disconnect_pin inst_27:Z
+connect_pin inst_27:Z TAUNET_61
+remove_net TAUNET_253
+remove_gate TAUGATE_253
+disconnect_pin inst_191:A
+disconnect_pin inst_191:ZN
+disconnect_pin inst_162:ZN
+connect_pin inst_162:ZN TAUNET_101
+disconnect_pin inst_217:A1
+connect_pin inst_217:A1 TAUNET_101
+remove_net net_29
+remove_gate inst_191
+disconnect_pin TAUGATE_75:A
+disconnect_pin TAUGATE_75:Z
+disconnect_pin TAUGATE_30:Z
+connect_pin TAUGATE_30:Z net_121
+remove_net TAUNET_75
+remove_gate TAUGATE_75
+disconnect_pin TAUGATE_365:A
+disconnect_pin TAUGATE_365:Z
+disconnect_pin inst_3:Z
+connect_pin inst_3:Z net_10
+remove_net TAUNET_365
+remove_gate TAUGATE_365
+disconnect_pin TAUGATE_221:A
+disconnect_pin TAUGATE_221:Z
+disconnect_pin inst_34:ZN
+connect_pin inst_34:ZN net_41
+remove_net TAUNET_221
+remove_gate TAUGATE_221
+disconnect_pin TAUGATE_121:A
+disconnect_pin TAUGATE_121:Z
+disconnect_pin inst_121:ZN
+connect_pin inst_121:ZN net_146
+remove_net TAUNET_121
+remove_gate TAUGATE_121
+disconnect_pin TAUGATE_230:A
+disconnect_pin TAUGATE_230:Z
+disconnect_pin inst_179:ZN
+connect_pin inst_179:ZN net_157
+remove_net TAUNET_230
+remove_gate TAUGATE_230
+disconnect_pin TAUGATE_72:A
+disconnect_pin TAUGATE_72:Z
+disconnect_pin inst_145:ZN
+connect_pin inst_145:ZN net_120
+remove_net TAUNET_72
+remove_gate TAUGATE_72
+disconnect_pin TAUGATE_268:A
+disconnect_pin TAUGATE_268:Z
+disconnect_pin TAUGATE_1:Z
+connect_pin TAUGATE_1:Z net_74
+remove_net TAUNET_268
+remove_gate TAUGATE_268
+disconnect_pin TAUGATE_182:A
+disconnect_pin TAUGATE_182:Z
+disconnect_pin inst_126:ZN
+connect_pin inst_126:ZN net_171
+remove_net TAUNET_182
+remove_gate TAUGATE_182
+disconnect_pin TAUGATE_197:A
+disconnect_pin TAUGATE_197:Z
+disconnect_pin inst_135:ZN
+connect_pin inst_135:ZN n75
+remove_net TAUNET_197
+remove_gate TAUGATE_197
+disconnect_pin TAUGATE_175:A
+disconnect_pin TAUGATE_175:Z
+disconnect_pin inst_11:Z
+connect_pin inst_11:Z net_39
+remove_net TAUNET_175
+remove_gate TAUGATE_175
+disconnect_pin TAUGATE_271:A
+disconnect_pin TAUGATE_271:Z
+disconnect_pin inst_95:ZN
+connect_pin inst_95:ZN net_170
+disconnect_pin inst_184:A1
+connect_pin inst_184:A1 net_170
+remove_net TAUNET_271
+remove_gate TAUGATE_271
+disconnect_pin TAUGATE_340:A
+disconnect_pin TAUGATE_340:Z
+disconnect_pin n902
+connect_pin n902 net_14
+disconnect_pin inst_150:A1
+connect_pin inst_150:A1 net_14
+disconnect_pin inst_148:A1
+connect_pin inst_148:A1 net_14
+disconnect_pin inst_142:A2
+connect_pin inst_142:A2 net_14
+disconnect_pin inst_151:A1
+connect_pin inst_151:A1 net_14
+disconnect_pin inst_107:A1
+connect_pin inst_107:A1 net_14
+disconnect_pin inst_108:A1
+connect_pin inst_108:A1 net_14
+disconnect_pin inst_104:A1
+connect_pin inst_104:A1 net_14
+disconnect_pin inst_88:A2
+connect_pin inst_88:A2 net_14
+disconnect_pin inst_87:A2
+connect_pin inst_87:A2 net_14
+disconnect_pin inst_185:A1
+connect_pin inst_185:A1 net_14
+disconnect_pin inst_75:A2
+connect_pin inst_75:A2 net_14
+disconnect_pin inst_149:A1
+connect_pin inst_149:A1 net_14
+remove_net TAUNET_340
+remove_gate TAUGATE_340
+disconnect_pin TAUGATE_255:A
+disconnect_pin TAUGATE_255:Z
+disconnect_pin inst_96:ZN
+connect_pin inst_96:ZN net_167
+remove_net TAUNET_255
+remove_gate TAUGATE_255
+disconnect_pin TAUGATE_367:A
+disconnect_pin TAUGATE_367:Z
+disconnect_pin inst_22:Z
+connect_pin inst_22:Z n3
+remove_net TAUNET_367
+remove_gate TAUGATE_367
+disconnect_pin TAUGATE_132:A
+disconnect_pin TAUGATE_132:Z
+disconnect_pin inst_169:ZN
+connect_pin inst_169:ZN net_98
+disconnect_pin inst_120:A2
+connect_pin inst_120:A2 net_98
+remove_net TAUNET_132
+remove_gate TAUGATE_132
+disconnect_pin TAUGATE_308:A
+disconnect_pin TAUGATE_308:Z
+disconnect_pin inst_44:ZN
+connect_pin inst_44:ZN net_61
+remove_net TAUNET_308
+remove_gate TAUGATE_308
+disconnect_pin TAUGATE_316:A
+disconnect_pin TAUGATE_316:Z
+disconnect_pin inst_72:ZN
+connect_pin inst_72:ZN net_195
+remove_net TAUNET_316
+remove_gate TAUGATE_316
+disconnect_pin TAUGATE_117:A
+disconnect_pin TAUGATE_117:Z
+disconnect_pin inst_147:ZN
+connect_pin inst_147:ZN net_168
+remove_net TAUNET_117
+remove_gate TAUGATE_117
+disconnect_pin TAUGATE_250:A
+disconnect_pin TAUGATE_250:Z
+disconnect_pin inst_111:ZN
+connect_pin inst_111:ZN net_133
+remove_net TAUNET_250
+remove_gate TAUGATE_250
+disconnect_pin TAUGATE_283:A
+disconnect_pin TAUGATE_283:Z
+disconnect_pin inst_130:ZN
+connect_pin inst_130:ZN n63
+remove_net TAUNET_283
+remove_gate TAUGATE_283
+disconnect_pin TAUGATE_57:A
+disconnect_pin TAUGATE_57:Z
+disconnect_pin n217
+connect_pin n217 n217
+remove_net TAUNET_57
+remove_gate TAUGATE_57
+disconnect_pin TAUGATE_77:A
+disconnect_pin TAUGATE_77:Z
+disconnect_pin inst_104:ZN
+connect_pin inst_104:ZN net_64
+remove_net TAUNET_77
+remove_gate TAUGATE_77
+disconnect_pin TAUGATE_213:A
+disconnect_pin TAUGATE_213:Z
+disconnect_pin inst_0:Z
+connect_pin inst_0:Z net_5
+remove_net TAUNET_213
+remove_gate TAUGATE_213
+disconnect_pin TAUGATE_372:A
+disconnect_pin TAUGATE_372:Z
+disconnect_pin inst_134:ZN
+connect_pin inst_134:ZN n57
+remove_net TAUNET_372
+remove_gate TAUGATE_372
+disconnect_pin TAUGATE_30:A
+disconnect_pin TAUGATE_30:Z
+disconnect_pin inst_210:ZN
+connect_pin inst_210:ZN net_121
+remove_net TAUNET_30
+remove_gate TAUGATE_30
+disconnect_pin TAUGATE_252:A
+disconnect_pin TAUGATE_252:Z
+disconnect_pin n221
+connect_pin n221 n221
+remove_net TAUNET_252
+remove_gate TAUGATE_252
+disconnect_pin TAUGATE_298:A
+disconnect_pin TAUGATE_298:Z
+disconnect_pin inst_24:Z
+connect_pin inst_24:Z n12
+remove_net TAUNET_298
+remove_gate TAUGATE_298
+disconnect_pin TAUGATE_157:A
+disconnect_pin TAUGATE_157:Z
+disconnect_pin inst_38:ZN
+connect_pin inst_38:ZN net_59
+remove_net TAUNET_157
+remove_gate TAUGATE_157
+disconnect_pin TAUGATE_240:A
+disconnect_pin TAUGATE_240:Z
+disconnect_pin n143
+connect_pin n143 n143
+remove_net TAUNET_240
+remove_gate TAUGATE_240
+disconnect_pin TAUGATE_338:A
+disconnect_pin TAUGATE_338:Z
+disconnect_pin inst_122:ZN
+connect_pin inst_122:ZN net_141
+remove_net TAUNET_338
+remove_gate TAUGATE_338
+disconnect_pin TAUGATE_36:A
+disconnect_pin TAUGATE_36:Z
+disconnect_pin inst_123:ZN
+connect_pin inst_123:ZN net_144
+remove_net TAUNET_36
+remove_gate TAUGATE_36
+disconnect_pin TAUGATE_47:A
+disconnect_pin TAUGATE_47:Z
+disconnect_pin inst_15:Z
+connect_pin inst_15:Z net_82
+remove_net TAUNET_47
+remove_gate TAUGATE_47
+disconnect_pin TAUGATE_105:A
+disconnect_pin TAUGATE_105:Z
+disconnect_pin inst_138:ZN
+connect_pin inst_138:ZN net_149
+remove_net TAUNET_105
+remove_gate TAUGATE_105
+disconnect_pin TAUGATE_124:A
+disconnect_pin TAUGATE_124:Z
+disconnect_pin inst_116:ZN
+connect_pin inst_116:ZN net_99
+disconnect_pin inst_207:A4
+connect_pin inst_207:A4 net_99
+disconnect_pin inst_206:A4
+connect_pin inst_206:A4 net_99
+disconnect_pin inst_137:A4
+connect_pin inst_137:A4 net_99
+remove_net TAUNET_124
+remove_gate TAUGATE_124
+disconnect_pin TAUGATE_361:A
+disconnect_pin TAUGATE_361:Z
+disconnect_pin inst_75:ZN
+connect_pin inst_75:ZN net_21
+remove_net TAUNET_361
+remove_gate TAUGATE_361
+disconnect_pin TAUGATE_39:A
+disconnect_pin TAUGATE_39:Z
+disconnect_pin n137
+connect_pin n137 n137
+remove_net TAUNET_39
+remove_gate TAUGATE_39
+disconnect_pin TAUGATE_101:A
+disconnect_pin TAUGATE_101:Z
+disconnect_pin inst_162:ZN
+connect_pin inst_162:ZN net_116
+disconnect_pin inst_217:A1
+connect_pin inst_217:A1 net_116
+remove_net TAUNET_101
+remove_gate TAUGATE_101
+disconnect_pin inst_202:A
+disconnect_pin inst_202:ZN
+disconnect_pin inst_170:ZN
+connect_pin inst_170:ZN net_104
+disconnect_pin inst_121:A2
+connect_pin inst_121:A2 net_104
+remove_net net_103
+remove_gate inst_202
+disconnect_pin TAUGATE_122:A
+disconnect_pin TAUGATE_122:Z
+disconnect_pin inst_17:Z
+connect_pin inst_17:Z net_100
+remove_net TAUNET_122
+remove_gate TAUGATE_122
+disconnect_pin TAUGATE_304:A
+disconnect_pin TAUGATE_304:Z
+disconnect_pin inst_49:ZN
+connect_pin inst_49:ZN net_69
+remove_net TAUNET_304
+remove_gate TAUGATE_304
+disconnect_pin TAUGATE_261:A
+disconnect_pin TAUGATE_261:Z
+disconnect_pin inst_91:ZN
+connect_pin inst_91:ZN net_153
+remove_net TAUNET_261
+remove_gate TAUGATE_261
+disconnect_pin TAUGATE_190:A
+disconnect_pin TAUGATE_190:Z
+disconnect_pin inst_109:ZN
+connect_pin inst_109:ZN net_93
+disconnect_pin inst_207:A3
+connect_pin inst_207:A3 net_93
+disconnect_pin inst_138:A3
+connect_pin inst_138:A3 net_93
+disconnect_pin inst_218:A1
+connect_pin inst_218:A1 net_93
+remove_net TAUNET_190
+remove_gate TAUGATE_190
+disconnect_pin TAUGATE_33:A
+disconnect_pin TAUGATE_33:Z
+disconnect_pin inst_57:ZN
+connect_pin inst_57:ZN n42
+remove_net TAUNET_33
+remove_gate TAUGATE_33
+disconnect_pin TAUGATE_151:A
+disconnect_pin TAUGATE_151:Z
+disconnect_pin inst_165:ZN
+connect_pin inst_165:ZN net_135
+remove_net TAUNET_151
+remove_gate TAUGATE_151
+disconnect_pin TAUGATE_116:A
+disconnect_pin TAUGATE_116:Z
+disconnect_pin inst_101:ZN
+connect_pin inst_101:ZN net_32
+remove_net TAUNET_116
+remove_gate TAUGATE_116
+disconnect_pin TAUGATE_347:A
+disconnect_pin TAUGATE_347:Z
+disconnect_pin inst_39:ZN
+connect_pin inst_39:ZN net_40
+remove_net TAUNET_347
+remove_gate TAUGATE_347
+disconnect_pin TAUGATE_83:A
+disconnect_pin TAUGATE_83:Z
+disconnect_pin inst_215:ZN
+connect_pin inst_215:ZN net_62
+remove_net TAUNET_83
+remove_gate TAUGATE_83
+disconnect_pin TAUGATE_32:A
+disconnect_pin TAUGATE_32:Z
+disconnect_pin inst_176:ZN
+connect_pin inst_176:ZN net_148
+remove_net TAUNET_32
+remove_gate TAUGATE_32
+disconnect_pin TAUGATE_18:A
+disconnect_pin TAUGATE_18:Z
+disconnect_pin inst_106:ZN
+connect_pin inst_106:ZN net_70
+remove_net TAUNET_18
+remove_gate TAUGATE_18
+disconnect_pin TAUGATE_129:A
+disconnect_pin TAUGATE_129:Z
+disconnect_pin inst_141:ZN
+connect_pin inst_141:ZN net_23
+remove_net TAUNET_129
+remove_gate TAUGATE_129
+disconnect_pin TAUGATE_61:A
+disconnect_pin TAUGATE_61:Z
+disconnect_pin inst_27:Z
+connect_pin inst_27:Z net_176
+remove_net TAUNET_61
+remove_gate TAUGATE_61
+disconnect_pin TAUGATE_34:A
+disconnect_pin TAUGATE_34:Z
+disconnect_pin inst_53:ZN
+connect_pin inst_53:ZN net_77
+remove_net TAUNET_34
+remove_gate TAUGATE_34
+disconnect_pin TAUGATE_346:A
+disconnect_pin TAUGATE_346:Z
+disconnect_pin inst_102:ZN
+connect_pin inst_102:ZN net_52
+remove_net TAUNET_346
+remove_gate TAUGATE_346
+disconnect_pin inst_190:A
+disconnect_pin inst_190:ZN
+disconnect_pin inst_159:ZN
+connect_pin inst_159:ZN net_28
+disconnect_pin inst_118:A1
+connect_pin inst_118:A1 net_28
+disconnect_pin inst_136:A1
+connect_pin inst_136:A1 net_28
+disconnect_pin inst_168:A1
+connect_pin inst_168:A1 net_28
+remove_net net_101
+remove_gate inst_190
+disconnect_pin TAUGATE_1:A
+disconnect_pin TAUGATE_1:Z
+disconnect_pin inst_51:ZN
+connect_pin inst_51:ZN net_74
+remove_net TAUNET_1
+remove_gate TAUGATE_1
+disconnect_pin TAUGATE_224:A
+disconnect_pin TAUGATE_224:Z
+disconnect_pin inst_143:ZN
+connect_pin inst_143:ZN net_25
+remove_net TAUNET_224
+remove_gate TAUGATE_224
+disconnect_pin TAUGATE_196:A
+disconnect_pin TAUGATE_196:Z
+disconnect_pin inst_125:ZN
+connect_pin inst_125:ZN net_162
+remove_net TAUNET_196
+remove_gate TAUGATE_196
+disconnect_pin TAUGATE_297:A
+disconnect_pin TAUGATE_297:Z
+disconnect_pin inst_155:ZN
+connect_pin inst_155:ZN net_9
+remove_net TAUNET_297
+remove_gate TAUGATE_297
+read_spef change_7.spef
+report_at -pin n66
+report_at -pin n66 -fall
+report_at -pin n66 -late
+report_at -pin n66 -late -fall
+report_rat -pin n66
+report_rat -pin n66 -fall
+report_rat -pin n66 -late
+report_rat -pin n66 -late -fall
+report_slack -pin n66
+report_slack -pin n66 -fall
+report_slack -pin n66 -late
+report_slack -pin n66 -late -fall
+report_at -pin n72
+report_at -pin n72 -fall
+report_at -pin n72 -late
+report_at -pin n72 -late -fall
+report_rat -pin n72
+report_rat -pin n72 -fall
+report_rat -pin n72 -late
+report_rat -pin n72 -late -fall
+report_slack -pin n72
+report_slack -pin n72 -fall
+report_slack -pin n72 -late
+report_slack -pin n72 -late -fall
+report_at -pin n69
+report_at -pin n69 -fall
+report_at -pin n69 -late
+report_at -pin n69 -late -fall
+report_rat -pin n69
+report_rat -pin n69 -fall
+report_rat -pin n69 -late
+report_rat -pin n69 -late -fall
+report_slack -pin n69
+report_slack -pin n69 -fall
+report_slack -pin n69 -late
+report_slack -pin n69 -late -fall
+report_at -pin n54
+report_at -pin n54 -fall
+report_at -pin n54 -late
+report_at -pin n54 -late -fall
+report_rat -pin n54
+report_rat -pin n54 -fall
+report_rat -pin n54 -late
+report_rat -pin n54 -late -fall
+report_slack -pin n54
+report_slack -pin n54 -fall
+report_slack -pin n54 -late
+report_slack -pin n54 -late -fall
+report_at -pin n18
+report_at -pin n18 -fall
+report_at -pin n18 -late
+report_at -pin n18 -late -fall
+report_rat -pin n18
+report_rat -pin n18 -fall
+report_rat -pin n18 -late
+report_rat -pin n18 -late -fall
+report_slack -pin n18
+report_slack -pin n18 -fall
+report_slack -pin n18 -late
+report_slack -pin n18 -late -fall
+report_at -pin n24
+report_at -pin n24 -fall
+report_at -pin n24 -late
+report_at -pin n24 -late -fall
+report_rat -pin n24
+report_rat -pin n24 -fall
+report_rat -pin n24 -late
+report_rat -pin n24 -late -fall
+report_slack -pin n24
+report_slack -pin n24 -fall
+report_slack -pin n24 -late
+report_slack -pin n24 -late -fall
+report_at -pin n75
+report_at -pin n75 -fall
+report_at -pin n75 -late
+report_at -pin n75 -late -fall
+report_rat -pin n75
+report_rat -pin n75 -fall
+report_rat -pin n75 -late
+report_rat -pin n75 -late -fall
+report_slack -pin n75
+report_slack -pin n75 -fall
+report_slack -pin n75 -late
+report_slack -pin n75 -late -fall
+report_at -pin n60
+report_at -pin n60 -fall
+report_at -pin n60 -late
+report_at -pin n60 -late -fall
+report_rat -pin n60
+report_rat -pin n60 -fall
+report_rat -pin n60 -late
+report_rat -pin n60 -late -fall
+report_slack -pin n60
+report_slack -pin n60 -fall
+report_slack -pin n60 -late
+report_slack -pin n60 -late -fall
+report_at -pin n39
+report_at -pin n39 -fall
+report_at -pin n39 -late
+report_at -pin n39 -late -fall
+report_rat -pin n39
+report_rat -pin n39 -fall
+report_rat -pin n39 -late
+report_rat -pin n39 -late -fall
+report_slack -pin n39
+report_slack -pin n39 -fall
+report_slack -pin n39 -late
+report_slack -pin n39 -late -fall
+report_at -pin n45
+report_at -pin n45 -fall
+report_at -pin n45 -late
+report_at -pin n45 -late -fall
+report_rat -pin n45
+report_rat -pin n45 -fall
+report_rat -pin n45 -late
+report_rat -pin n45 -late -fall
+report_slack -pin n45
+report_slack -pin n45 -fall
+report_slack -pin n45 -late
+report_slack -pin n45 -late -fall
+report_at -pin n42
+report_at -pin n42 -fall
+report_at -pin n42 -late
+report_at -pin n42 -late -fall
+report_rat -pin n42
+report_rat -pin n42 -fall
+report_rat -pin n42 -late
+report_rat -pin n42 -late -fall
+report_slack -pin n42
+report_slack -pin n42 -fall
+report_slack -pin n42 -late
+report_slack -pin n42 -late -fall
+report_at -pin n30
+report_at -pin n30 -fall
+report_at -pin n30 -late
+report_at -pin n30 -late -fall
+report_rat -pin n30
+report_rat -pin n30 -fall
+report_rat -pin n30 -late
+report_rat -pin n30 -late -fall
+report_slack -pin n30
+report_slack -pin n30 -fall
+report_slack -pin n30 -late
+report_slack -pin n30 -late -fall
+report_at -pin n63
+report_at -pin n63 -fall
+report_at -pin n63 -late
+report_at -pin n63 -late -fall
+report_rat -pin n63
+report_rat -pin n63 -fall
+report_rat -pin n63 -late
+report_rat -pin n63 -late -fall
+report_slack -pin n63
+report_slack -pin n63 -fall
+report_slack -pin n63 -late
+report_slack -pin n63 -late -fall
+report_at -pin n57
+report_at -pin n57 -fall
+report_at -pin n57 -late
+report_at -pin n57 -late -fall
+report_rat -pin n57
+report_rat -pin n57 -fall
+report_rat -pin n57 -late
+report_rat -pin n57 -late -fall
+report_slack -pin n57
+report_slack -pin n57 -fall
+report_slack -pin n57 -late
+report_slack -pin n57 -late -fall
+report_at -pin n9
+report_at -pin n9 -fall
+report_at -pin n9 -late
+report_at -pin n9 -late -fall
+report_rat -pin n9
+report_rat -pin n9 -fall
+report_rat -pin n9 -late
+report_rat -pin n9 -late -fall
+report_slack -pin n9
+report_slack -pin n9 -fall
+report_slack -pin n9 -late
+report_slack -pin n9 -late -fall
+report_at -pin n21
+report_at -pin n21 -fall
+report_at -pin n21 -late
+report_at -pin n21 -late -fall
+report_rat -pin n21
+report_rat -pin n21 -fall
+report_rat -pin n21 -late
+report_rat -pin n21 -late -fall
+report_slack -pin n21
+report_slack -pin n21 -fall
+report_slack -pin n21 -late
+report_slack -pin n21 -late -fall
+report_at -pin n51
+report_at -pin n51 -fall
+report_at -pin n51 -late
+report_at -pin n51 -late -fall
+report_rat -pin n51
+report_rat -pin n51 -fall
+report_rat -pin n51 -late
+report_rat -pin n51 -late -fall
+report_slack -pin n51
+report_slack -pin n51 -fall
+report_slack -pin n51 -late
+report_slack -pin n51 -late -fall
+report_at -pin n33
+report_at -pin n33 -fall
+report_at -pin n33 -late
+report_at -pin n33 -late -fall
+report_rat -pin n33
+report_rat -pin n33 -fall
+report_rat -pin n33 -late
+report_rat -pin n33 -late -fall
+report_slack -pin n33
+report_slack -pin n33 -fall
+report_slack -pin n33 -late
+report_slack -pin n33 -late -fall
+report_at -pin n6
+report_at -pin n6 -fall
+report_at -pin n6 -late
+report_at -pin n6 -late -fall
+report_rat -pin n6
+report_rat -pin n6 -fall
+report_rat -pin n6 -late
+report_rat -pin n6 -late -fall
+report_slack -pin n6
+report_slack -pin n6 -fall
+report_slack -pin n6 -late
+report_slack -pin n6 -late -fall
+report_at -pin n15
+report_at -pin n15 -fall
+report_at -pin n15 -late
+report_at -pin n15 -late -fall
+report_rat -pin n15
+report_rat -pin n15 -fall
+report_rat -pin n15 -late
+report_rat -pin n15 -late -fall
+report_slack -pin n15
+report_slack -pin n15 -fall
+report_slack -pin n15 -late
+report_slack -pin n15 -late -fall
+report_at -pin n12
+report_at -pin n12 -fall
+report_at -pin n12 -late
+report_at -pin n12 -late -fall
+report_rat -pin n12
+report_rat -pin n12 -fall
+report_rat -pin n12 -late
+report_rat -pin n12 -late -fall
+report_slack -pin n12
+report_slack -pin n12 -fall
+report_slack -pin n12 -late
+report_slack -pin n12 -late -fall
+report_at -pin n3
+report_at -pin n3 -fall
+report_at -pin n3 -late
+report_at -pin n3 -late -fall
+report_rat -pin n3
+report_rat -pin n3 -fall
+report_rat -pin n3 -late
+report_rat -pin n3 -late -fall
+report_slack -pin n3
+report_slack -pin n3 -fall
+report_slack -pin n3 -late
+report_slack -pin n3 -late -fall
+report_at -pin n27
+report_at -pin n27 -fall
+report_at -pin n27 -late
+report_at -pin n27 -late -fall
+report_rat -pin n27
+report_rat -pin n27 -fall
+report_rat -pin n27 -late
+report_rat -pin n27 -late -fall
+report_slack -pin n27
+report_slack -pin n27 -fall
+report_slack -pin n27 -late
+report_slack -pin n27 -late -fall
+report_at -pin n48
+report_at -pin n48 -fall
+report_at -pin n48 -late
+report_at -pin n48 -late -fall
+report_rat -pin n48
+report_rat -pin n48 -fall
+report_rat -pin n48 -late
+report_rat -pin n48 -late -fall
+report_slack -pin n48
+report_slack -pin n48 -fall
+report_slack -pin n48 -late
+report_slack -pin n48 -late -fall
+report_at -pin n36
+report_at -pin n36 -fall
+report_at -pin n36 -late
+report_at -pin n36 -late -fall
+report_rat -pin n36
+report_rat -pin n36 -fall
+report_rat -pin n36 -late
+report_rat -pin n36 -late -fall
+report_slack -pin n36
+report_slack -pin n36 -fall
+report_slack -pin n36 -late
+report_slack -pin n36 -late -fall

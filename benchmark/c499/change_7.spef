@@ -1,0 +1,4977 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "changes"
+*DATE "Tue Dec 02 19:00:31 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET net_107 1.7439
+*CONN
+*I inst_147:ZN O
+*I inst_95:B I
+*CAP
+1 inst_147:ZN 0.2611
+2 net_107:1 0.4098
+3 net_107:2 0.5009
+4 net_107:3 0.2843
+5 inst_95:B 0.2878
+*RES
+2 inst_147:ZN net_107:1 0.1659
+3 net_107:1 net_107:2 0.2742
+4 net_107:2 net_107:3 0.3494
+5 net_107:3 inst_95:B 0.1485
+*END
+
+*D_NET net_47 1.3760
+*CONN
+*I inst_47:ZN O
+*I inst_66:A I
+*CAP
+1 inst_47:ZN 0.2110
+2 net_47:1 0.3070
+3 net_47:2 0.3583
+4 net_47:3 0.1395
+5 net_47:4 0.0646
+6 net_47:5 0.0794
+7 inst_66:A 0.2161
+*RES
+2 inst_47:ZN net_47:1 0.1614
+3 net_47:1 net_47:2 0.3312
+4 net_47:2 net_47:3 0.3755
+5 net_47:3 net_47:4 0.4644
+6 net_47:4 net_47:5 0.4559
+7 net_47:5 inst_66:A 0.4050
+*END
+
+*D_NET nod23 0.4849
+*CONN
+*I inst_89:ZN O
+*P nod23 O
+*CAP
+1 inst_89:ZN 0.1670
+2 nod23:1 0.2440
+3 nod23:2 0.0332
+4 nod23 0.0406
+*RES
+2 inst_89:ZN nod23:1 0.2732
+3 nod23:1 nod23:2 0.0073
+4 nod23:2 nod23 0.1308
+*END
+
+*D_NET net_61 1.8161
+*CONN
+*I inst_53:ZN O
+*I inst_60:A I
+*CAP
+1 inst_53:ZN 0.2909
+2 net_61:1 0.0740
+3 net_61:2 0.4871
+4 net_61:3 0.4951
+5 net_61:4 0.4125
+6 inst_60:A 0.0565
+*RES
+2 inst_53:ZN net_61:1 0.1285
+3 net_61:1 net_61:2 0.0292
+4 net_61:2 net_61:3 0.2926
+5 net_61:3 net_61:4 0.4507
+6 net_61:4 inst_60:A 0.3356
+*END
+
+*D_NET net_137 1.9602
+*CONN
+*I inst_165:ZN O
+*I inst_92:B I
+*CAP
+1 inst_165:ZN 0.3845
+2 net_137:1 0.3056
+3 net_137:2 0.3464
+4 net_137:3 0.0305
+5 net_137:4 0.2383
+6 net_137:5 0.4020
+7 inst_92:B 0.2529
+*RES
+2 inst_165:ZN net_137:1 0.2665
+3 net_137:1 net_137:2 0.4354
+4 net_137:2 net_137:3 0.1977
+5 net_137:3 net_137:4 0.0788
+6 net_137:4 net_137:5 0.3276
+7 net_137:5 inst_92:B 0.3833
+*END
+
+*D_NET nid21 2.8321
+*CONN
+*P nid21 I
+*I inst_20:A I
+*I inst_91:A I
+*I inst_4:A I
+*CAP
+1 nid21 0.0716
+2 nid21:1 0.1922
+3 nid21:2 0.2805
+4 nid21:3 0.1322
+5 inst_91:A 0.1905
+6 nid21:4 0.2211
+7 nid21:5 0.1955
+8 nid21:6 0.1868
+9 nid21:7 0.4889
+10 inst_20:A 0.0703
+11 nid21:8 0.3990
+12 inst_4:A 0.4035
+*RES
+2 nid21 nid21:1 0.4017
+3 nid21:1 nid21:2 0.4680
+4 nid21:2 nid21:3 0.2976
+5 nid21:3 inst_91:A 0.2331
+6 nid21:2 nid21:4 0.3298
+7 nid21:4 nid21:5 0.4131
+8 nid21:5 nid21:6 0.3310
+9 nid21:6 nid21:7 0.2621
+10 nid21:7 inst_20:A 0.4792
+11 nid21:3 nid21:8 0.0219
+12 nid21:8 inst_4:A 0.0830
+*END
+
+*D_NET net_132 1.6212
+*CONN
+*I inst_162:ZN O
+*I inst_74:B I
+*CAP
+1 inst_162:ZN 0.1250
+2 net_132:1 0.4976
+3 net_132:2 0.3591
+4 net_132:3 0.2780
+5 net_132:4 0.2022
+6 inst_74:B 0.1593
+*RES
+2 inst_162:ZN net_132:1 0.4382
+3 net_132:1 net_132:2 0.3498
+4 net_132:2 net_132:3 0.4055
+5 net_132:3 net_132:4 0.4519
+6 net_132:4 inst_74:B 0.4658
+*END
+
+*D_NET net_54 2.2534
+*CONN
+*I inst_37:ZN O
+*I inst_55:B I
+*I inst_50:B I
+*CAP
+1 inst_37:ZN 0.4019
+2 net_54:1 0.2503
+3 inst_50:B 0.4700
+4 net_54:2 0.0376
+5 net_54:3 0.0972
+6 net_54:4 0.3594
+7 net_54:5 0.0525
+8 net_54:6 0.3248
+9 inst_55:B 0.2597
+*RES
+2 inst_37:ZN net_54:1 0.3789
+3 net_54:1 inst_50:B 0.3545
+4 net_54:1 net_54:2 0.1267
+5 net_54:2 net_54:3 0.3840
+6 net_54:3 net_54:4 0.2434
+7 net_54:4 net_54:5 0.3726
+8 net_54:5 net_54:6 0.2980
+9 net_54:6 inst_55:B 0.2454
+*END
+
+*D_NET net_105 3.7296
+*CONN
+*I inst_113:ZN O
+*I inst_148:A2 I
+*I inst_146:A2 I
+*I inst_141:A2 I
+*I inst_143:A2 I
+*CAP
+1 inst_113:ZN 0.1921
+2 net_105:1 0.4443
+3 net_105:2 0.1288
+4 inst_143:A2 0.3022
+5 net_105:3 0.0282
+6 net_105:4 0.3089
+7 net_105:5 0.0253
+8 net_105:6 0.3105
+9 inst_146:A2 0.1881
+10 net_105:7 0.3854
+11 inst_141:A2 0.3580
+12 net_105:8 0.2154
+13 net_105:9 0.4921
+14 net_105:10 0.1648
+15 inst_148:A2 0.1855
+*RES
+2 inst_113:ZN net_105:1 0.1405
+3 net_105:1 net_105:2 0.0668
+4 net_105:2 inst_143:A2 0.3699
+5 net_105:1 net_105:3 0.2034
+6 net_105:3 net_105:4 0.1592
+7 net_105:4 net_105:5 0.3147
+8 net_105:5 net_105:6 0.2761
+9 net_105:6 inst_146:A2 0.3643
+10 net_105:3 net_105:7 0.3774
+11 net_105:7 inst_141:A2 0.2731
+12 net_105:1 net_105:8 0.0112
+13 net_105:8 net_105:9 0.3530
+14 net_105:9 net_105:10 0.1128
+15 net_105:10 inst_148:A2 0.2239
+*END
+
+*D_NET net_62 0.9170
+*CONN
+*I inst_54:ZN O
+*I inst_63:A I
+*CAP
+1 inst_54:ZN 0.4230
+2 net_62:1 0.3290
+3 net_62:2 0.1620
+4 inst_63:A 0.0029
+*RES
+2 inst_54:ZN net_62:1 0.2883
+3 net_62:1 net_62:2 0.1903
+4 net_62:2 inst_63:A 0.4381
+*END
+
+*D_NET net_6 0.3519
+*CONN
+*I inst_129:ZN O
+*I inst_58:B I
+*CAP
+1 inst_129:ZN 0.0801
+2 net_6:1 0.1891
+3 net_6:2 0.0464
+4 inst_58:B 0.0364
+*RES
+2 inst_129:ZN net_6:1 0.0279
+3 net_6:1 net_6:2 0.4104
+4 net_6:2 inst_58:B 0.0649
+*END
+
+*D_NET nid13 3.8222
+*CONN
+*P nid13 I
+*I inst_100:A I
+*I inst_11:B I
+*I inst_14:A I
+*CAP
+1 nid13 0.1600
+2 nid13:1 0.4787
+3 nid13:2 0.1076
+4 inst_100:A 0.4606
+5 nid13:3 0.0580
+6 inst_11:B 0.3736
+7 nid13:4 0.3877
+8 nid13:5 0.3882
+9 nid13:6 0.4950
+10 nid13:7 0.0413
+11 nid13:8 0.4651
+12 inst_14:A 0.4065
+*RES
+2 nid13 nid13:1 0.3388
+3 nid13:1 nid13:2 0.4657
+4 nid13:2 inst_100:A 0.3595
+5 nid13:1 nid13:3 0.0395
+6 nid13:3 inst_11:B 0.3644
+7 nid13:2 nid13:4 0.3164
+8 nid13:4 nid13:5 0.3513
+9 nid13:5 nid13:6 0.1165
+10 nid13:6 nid13:7 0.0986
+11 nid13:7 nid13:8 0.2243
+12 nid13:8 inst_14:A 0.1286
+*END
+
+*D_NET net_129 1.4306
+*CONN
+*I inst_160:ZN O
+*I inst_105:B I
+*CAP
+1 inst_160:ZN 0.2482
+2 net_129:1 0.1533
+3 net_129:2 0.4091
+4 net_129:3 0.2613
+5 inst_105:B 0.3587
+*RES
+2 inst_160:ZN net_129:1 0.1869
+3 net_129:1 net_129:2 0.4974
+4 net_129:2 net_129:3 0.3047
+5 net_129:3 inst_105:B 0.1200
+*END
+
+*D_NET net_98 0.5270
+*CONN
+*I inst_140:ZN O
+*I inst_94:B I
+*CAP
+1 inst_140:ZN 0.1210
+2 net_98:1 0.1014
+3 net_98:2 0.0283
+4 inst_94:B 0.2763
+*RES
+2 inst_140:ZN net_98:1 0.2945
+3 net_98:1 net_98:2 0.3177
+4 net_98:2 inst_94:B 0.2101
+*END
+
+*D_NET net_119 1.4286
+*CONN
+*I inst_154:ZN O
+*I inst_97:B I
+*CAP
+1 inst_154:ZN 0.2046
+2 net_119:1 0.1317
+3 net_119:2 0.3617
+4 net_119:3 0.0856
+5 net_119:4 0.3629
+6 inst_97:B 0.2821
+*RES
+2 inst_154:ZN net_119:1 0.3900
+3 net_119:1 net_119:2 0.0557
+4 net_119:2 net_119:3 0.1253
+5 net_119:3 net_119:4 0.2716
+6 net_119:4 inst_97:B 0.3735
+*END
+
+*D_NET net_23 1.5454
+*CONN
+*I inst_28:ZN O
+*I inst_44:B I
+*CAP
+1 inst_28:ZN 0.3323
+2 net_23:1 0.0362
+3 net_23:2 0.4966
+4 net_23:3 0.4101
+5 inst_44:B 0.2702
+*RES
+2 inst_28:ZN net_23:1 0.2135
+3 net_23:1 net_23:2 0.0419
+4 net_23:2 net_23:3 0.2773
+5 net_23:3 inst_44:B 0.0903
+*END
+
+*D_NET net_12 2.3457
+*CONN
+*I inst_3:Z O
+*I inst_32:A I
+*CAP
+1 inst_3:Z 0.4602
+2 net_12:1 0.2009
+3 net_12:2 0.3114
+4 net_12:3 0.3090
+5 net_12:4 0.3972
+6 net_12:5 0.4228
+7 inst_32:A 0.2443
+*RES
+2 inst_3:Z net_12:1 0.2458
+3 net_12:1 net_12:2 0.3734
+4 net_12:2 net_12:3 0.1567
+5 net_12:3 net_12:4 0.1247
+6 net_12:4 net_12:5 0.2439
+7 net_12:5 inst_32:A 0.2588
+*END
+
+*D_NET net_117 6.7891
+*CONN
+*I inst_67:ZN O
+*I inst_131:A1 I
+*I inst_153:A1 I
+*I inst_107:A1 I
+*I inst_146:A1 I
+*I inst_108:A2 I
+*I inst_152:A1 I
+*I inst_163:A1 I
+*CAP
+1 inst_67:ZN 0.3528
+2 net_117:1 0.4436
+3 inst_163:A1 0.1981
+4 net_117:2 0.0423
+5 inst_153:A1 0.2861
+6 net_117:3 0.0209
+7 net_117:4 0.4380
+8 inst_107:A1 0.4130
+9 net_117:5 0.4464
+10 net_117:6 0.2438
+11 net_117:7 0.2969
+12 inst_146:A1 0.3091
+13 net_117:8 0.2618
+14 net_117:9 0.2468
+15 net_117:10 0.4002
+16 net_117:11 0.3652
+17 inst_108:A2 0.1857
+18 net_117:12 0.1130
+19 net_117:13 0.1026
+20 inst_152:A1 0.1939
+21 net_117:14 0.1138
+22 net_117:15 0.4033
+23 net_117:16 0.3663
+24 net_117:17 0.2540
+25 net_117:18 0.0526
+26 inst_131:A1 0.2388
+*RES
+2 inst_67:ZN net_117:1 0.3275
+3 net_117:1 inst_163:A1 0.0169
+4 net_117:1 net_117:2 0.4278
+5 net_117:2 inst_153:A1 0.3875
+6 net_117:2 net_117:3 0.4990
+7 net_117:3 net_117:4 0.2134
+8 net_117:4 inst_107:A1 0.1115
+9 net_117:3 net_117:5 0.5006
+10 net_117:5 net_117:6 0.2264
+11 net_117:6 net_117:7 0.3973
+12 net_117:7 inst_146:A1 0.2044
+13 net_117:2 net_117:8 0.0562
+14 net_117:8 net_117:9 0.0882
+15 net_117:9 net_117:10 0.4386
+16 net_117:10 net_117:11 0.2715
+17 net_117:11 inst_108:A2 0.0199
+18 net_117:10 net_117:12 0.1095
+19 net_117:12 net_117:13 0.0212
+20 net_117:13 inst_152:A1 0.1417
+21 net_117:5 net_117:14 0.1787
+22 net_117:14 net_117:15 0.3603
+23 net_117:15 net_117:16 0.0603
+24 net_117:16 net_117:17 0.0863
+25 net_117:17 net_117:18 0.3102
+26 net_117:18 inst_131:A1 0.1239
+*END
+
+*D_NET net_74 1.6234
+*CONN
+*I inst_72:ZN O
+*I inst_106:A3 I
+*CAP
+1 inst_72:ZN 0.0055
+2 net_74:1 0.2412
+3 net_74:2 0.3995
+4 net_74:3 0.4441
+5 net_74:4 0.4218
+6 net_74:5 0.0848
+7 inst_106:A3 0.0266
+*RES
+2 inst_72:ZN net_74:1 0.0274
+3 net_74:1 net_74:2 0.4218
+4 net_74:2 net_74:3 0.2061
+5 net_74:3 net_74:4 0.2110
+6 net_74:4 net_74:5 0.4583
+7 net_74:5 inst_106:A3 0.3985
+*END
+
+*D_NET net_53 1.9898
+*CONN
+*I inst_49:ZN O
+*I inst_57:A I
+*CAP
+1 inst_49:ZN 0.0725
+2 net_53:1 0.3124
+3 net_53:2 0.3685
+4 net_53:3 0.4317
+5 net_53:4 0.1801
+6 net_53:5 0.2826
+7 inst_57:A 0.3420
+*RES
+2 inst_49:ZN net_53:1 0.0965
+3 net_53:1 net_53:2 0.2555
+4 net_53:2 net_53:3 0.1304
+5 net_53:3 net_53:4 0.3675
+6 net_53:4 net_53:5 0.4634
+7 net_53:5 inst_57:A 0.2869
+*END
+
+*D_NET net_93 1.5530
+*CONN
+*I inst_132:ZN O
+*I inst_134:A1 I
+*I inst_114:A1 I
+*I inst_113:A1 I
+*CAP
+1 inst_132:ZN 0.1182
+2 net_93:1 0.0608
+3 inst_134:A1 0.3721
+4 net_93:2 0.0264
+5 net_93:3 0.2502
+6 inst_114:A1 0.2506
+7 net_93:4 0.1704
+8 net_93:5 0.2303
+9 net_93:6 0.0121
+10 inst_113:A1 0.0620
+*RES
+2 inst_132:ZN net_93:1 0.4648
+3 net_93:1 inst_134:A1 0.2376
+4 net_93:1 net_93:2 0.4486
+5 net_93:2 net_93:3 0.0641
+6 net_93:3 inst_114:A1 0.0138
+7 net_93:1 net_93:4 0.0267
+8 net_93:4 net_93:5 0.1278
+9 net_93:5 net_93:6 0.1079
+10 net_93:6 inst_113:A1 0.3621
+*END
+
+*D_NET nid3 2.8222
+*CONN
+*P nid3 I
+*I inst_8:B I
+*I inst_25:A I
+*I inst_82:A I
+*CAP
+1 nid3 0.3490
+2 nid3:1 0.3195
+3 nid3:2 0.4748
+4 nid3:3 0.2505
+5 nid3:4 0.2036
+6 nid3:5 0.3990
+7 inst_8:B 0.0185
+8 nid3:6 0.0406
+9 nid3:7 0.0917
+10 nid3:8 0.0078
+11 inst_25:A 0.0227
+12 nid3:9 0.3987
+13 nid3:10 0.0209
+14 nid3:11 0.1182
+15 inst_82:A 0.1067
+*RES
+2 nid3 nid3:1 0.3777
+3 nid3:1 nid3:2 0.2437
+4 nid3:2 nid3:3 0.3641
+5 nid3:3 nid3:4 0.1411
+6 nid3:4 nid3:5 0.2452
+7 nid3:5 inst_8:B 0.2723
+8 nid3:2 nid3:6 0.0264
+9 nid3:6 nid3:7 0.0174
+10 nid3:7 nid3:8 0.1906
+11 nid3:8 inst_25:A 0.1553
+12 nid3:2 nid3:9 0.4881
+13 nid3:9 nid3:10 0.3672
+14 nid3:10 nid3:11 0.4629
+15 nid3:11 inst_82:A 0.1157
+*END
+
+*D_NET nic3 1.8683
+*CONN
+*P nic3 I
+*I inst_126:A1 I
+*CAP
+1 nic3 0.2138
+2 nic3:1 0.2979
+3 nic3:2 0.3428
+4 nic3:3 0.2325
+5 nic3:4 0.2733
+6 nic3:5 0.1266
+7 inst_126:A1 0.3814
+*RES
+2 nic3 nic3:1 0.1363
+3 nic3:1 nic3:2 0.3277
+4 nic3:2 nic3:3 0.3144
+5 nic3:3 nic3:4 0.4503
+6 nic3:4 nic3:5 0.3676
+7 nic3:5 inst_126:A1 0.1603
+*END
+
+*D_NET net_130 1.5235
+*CONN
+*I inst_161:ZN O
+*I inst_90:B I
+*CAP
+1 inst_161:ZN 0.1159
+2 net_130:1 0.1465
+3 net_130:2 0.1463
+4 net_130:3 0.4621
+5 net_130:4 0.4065
+6 net_130:5 0.0227
+7 inst_90:B 0.2236
+*RES
+2 inst_161:ZN net_130:1 0.4114
+3 net_130:1 net_130:2 0.0715
+4 net_130:2 net_130:3 0.1546
+5 net_130:3 net_130:4 0.1861
+6 net_130:4 net_130:5 0.4367
+7 net_130:5 inst_90:B 0.3452
+*END
+
+*D_NET nid23 3.2526
+*CONN
+*P nid23 I
+*I inst_24:A I
+*I inst_0:A I
+*I inst_89:A I
+*CAP
+1 nid23 0.1217
+2 nid23:1 0.1222
+3 inst_24:A 0.0613
+4 nid23:2 0.2603
+5 nid23:3 0.2874
+6 nid23:4 0.3072
+7 inst_0:A 0.2768
+8 nid23:5 0.4796
+9 nid23:6 0.3806
+10 nid23:7 0.4946
+11 inst_89:A 0.4608
+*RES
+2 nid23 nid23:1 0.1692
+3 nid23:1 inst_24:A 0.4407
+4 nid23:1 nid23:2 0.1679
+5 nid23:2 nid23:3 0.2053
+6 nid23:3 nid23:4 0.2140
+7 nid23:4 inst_0:A 0.3306
+8 nid23:2 nid23:5 0.4692
+9 nid23:5 nid23:6 0.4766
+10 nid23:6 nid23:7 0.0589
+11 nid23:7 inst_89:A 0.0962
+*END
+
+*D_NET nod26 1.3235
+*CONN
+*I inst_86:ZN O
+*P nod26 O
+*CAP
+1 inst_86:ZN 0.1750
+2 nod26:1 0.0845
+3 nod26:2 0.1888
+4 nod26:3 0.1436
+5 nod26:4 0.1762
+6 nod26:5 0.4748
+7 nod26 0.0806
+*RES
+2 inst_86:ZN nod26:1 0.0407
+3 nod26:1 nod26:2 0.2069
+4 nod26:2 nod26:3 0.0491
+5 nod26:3 nod26:4 0.4137
+6 nod26:4 nod26:5 0.3046
+7 nod26:5 nod26 0.2987
+*END
+
+*D_NET nid26 3.5605
+*CONN
+*P nid26 I
+*I inst_19:B I
+*I inst_86:A I
+*I inst_13:B I
+*CAP
+1 nid26 0.1831
+2 nid26:1 0.0191
+3 nid26:2 0.3538
+4 nid26:3 0.4300
+5 nid26:4 0.3629
+6 nid26:5 0.0787
+7 inst_86:A 0.2007
+8 nid26:6 0.4911
+9 nid26:7 0.2002
+10 nid26:8 0.2573
+11 inst_19:B 0.3761
+12 nid26:9 0.1738
+13 inst_13:B 0.4336
+*RES
+2 nid26 nid26:1 0.2971
+3 nid26:1 nid26:2 0.4025
+4 nid26:2 nid26:3 0.5010
+5 nid26:3 nid26:4 0.3538
+6 nid26:4 nid26:5 0.4649
+7 nid26:5 inst_86:A 0.0482
+8 nid26:1 nid26:6 0.0616
+9 nid26:6 nid26:7 0.4298
+10 nid26:7 nid26:8 0.2857
+11 nid26:8 inst_19:B 0.2634
+12 nid26:1 nid26:9 0.4556
+13 nid26:9 inst_13:B 0.1284
+*END
+
+*D_NET net_127 1.6488
+*CONN
+*I inst_159:ZN O
+*I inst_89:B I
+*CAP
+1 inst_159:ZN 0.1731
+2 net_127:1 0.3095
+3 net_127:2 0.4895
+4 net_127:3 0.4033
+5 inst_89:B 0.2734
+*RES
+2 inst_159:ZN net_127:1 0.3461
+3 net_127:1 net_127:2 0.3729
+4 net_127:2 net_127:3 0.0418
+5 net_127:3 inst_89:B 0.3671
+*END
+
+*D_NET net_14 1.1766
+*CONN
+*I inst_5:Z O
+*I inst_46:A I
+*CAP
+1 inst_5:Z 0.1458
+2 net_14:1 0.0683
+3 net_14:2 0.2135
+4 net_14:3 0.4484
+5 net_14:4 0.1379
+6 net_14:5 0.1139
+7 inst_46:A 0.0489
+*RES
+2 inst_5:Z net_14:1 0.0861
+3 net_14:1 net_14:2 0.1477
+4 net_14:2 net_14:3 0.4806
+5 net_14:3 net_14:4 0.3473
+6 net_14:4 net_14:5 0.1114
+7 net_14:5 inst_46:A 0.0198
+*END
+
+*D_NET nid9 3.5229
+*CONN
+*P nid9 I
+*I inst_5:A I
+*I inst_11:A I
+*I inst_74:A I
+*CAP
+1 nid9 0.1100
+2 nid9:1 0.3290
+3 nid9:2 0.1592
+4 nid9:3 0.4236
+5 inst_11:A 0.3328
+6 nid9:4 0.4963
+7 inst_5:A 0.2377
+8 nid9:5 0.3400
+9 nid9:6 0.2352
+10 nid9:7 0.3112
+11 nid9:8 0.1345
+12 inst_74:A 0.4134
+*RES
+2 nid9 nid9:1 0.1906
+3 nid9:1 nid9:2 0.5003
+4 nid9:2 nid9:3 0.4347
+5 nid9:3 inst_11:A 0.3044
+6 nid9:1 nid9:4 0.2571
+7 nid9:4 inst_5:A 0.3610
+8 nid9:3 nid9:5 0.0741
+9 nid9:5 nid9:6 0.4290
+10 nid9:6 nid9:7 0.4891
+11 nid9:7 nid9:8 0.0621
+12 nid9:8 inst_74:A 0.2122
+*END
+
+*D_NET net_113 0.7629
+*CONN
+*I inst_151:ZN O
+*I inst_86:B I
+*CAP
+1 inst_151:ZN 0.1253
+2 net_113:1 0.2343
+3 net_113:2 0.1106
+4 net_113:3 0.0283
+5 inst_86:B 0.2644
+*RES
+2 inst_151:ZN net_113:1 0.3395
+3 net_113:1 net_113:2 0.4160
+4 net_113:2 net_113:3 0.1311
+5 net_113:3 inst_86:B 0.1702
+*END
+
+*D_NET net_26 0.8144
+*CONN
+*I inst_30:ZN O
+*I inst_36:B I
+*CAP
+1 inst_30:ZN 0.0383
+2 net_26:1 0.2177
+3 net_26:2 0.0520
+4 net_26:3 0.1787
+5 inst_36:B 0.3277
+*RES
+2 inst_30:ZN net_26:1 0.2308
+3 net_26:1 net_26:2 0.1825
+4 net_26:2 net_26:3 0.4154
+5 net_26:3 inst_36:B 0.4205
+*END
+
+*D_NET net_76 0.9305
+*CONN
+*I inst_133:ZN O
+*I inst_118:A3 I
+*CAP
+1 inst_133:ZN 0.3303
+2 net_76:1 0.3450
+3 inst_118:A3 0.2552
+*RES
+2 inst_133:ZN net_76:1 0.2397
+3 net_76:1 inst_118:A3 0.3943
+*END
+
+*D_NET nid7 2.4171
+*CONN
+*P nid7 I
+*I inst_76:A I
+*I inst_8:A I
+*I inst_29:A I
+*CAP
+1 nid7 0.3586
+2 nid7:1 0.2132
+3 nid7:2 0.3448
+4 inst_76:A 0.2539
+5 nid7:3 0.3825
+6 inst_8:A 0.4916
+7 nid7:4 0.0730
+8 inst_29:A 0.2996
+*RES
+2 nid7 nid7:1 0.0169
+3 nid7:1 nid7:2 0.2910
+4 nid7:2 inst_76:A 0.3418
+5 nid7:1 nid7:3 0.0258
+6 nid7:3 inst_8:A 0.0722
+7 nid7:1 nid7:4 0.1500
+8 nid7:4 inst_29:A 0.2720
+*END
+
+*D_NET net_32 1.4119
+*CONN
+*I inst_18:Z O
+*I inst_41:A I
+*CAP
+1 inst_18:Z 0.1555
+2 net_32:1 0.2976
+3 net_32:2 0.3531
+4 net_32:3 0.0316
+5 net_32:4 0.1823
+6 net_32:5 0.0755
+7 inst_41:A 0.3163
+*RES
+2 inst_18:Z net_32:1 0.3515
+3 net_32:1 net_32:2 0.2983
+4 net_32:2 net_32:3 0.4269
+5 net_32:3 net_32:4 0.0493
+6 net_32:4 net_32:5 0.0341
+7 net_32:5 inst_41:A 0.3020
+*END
+
+*D_NET net_101 1.2913
+*CONN
+*I inst_142:ZN O
+*I inst_78:B I
+*CAP
+1 inst_142:ZN 0.4000
+2 net_101:1 0.4709
+3 inst_78:B 0.4204
+*RES
+2 inst_142:ZN net_101:1 0.0122
+3 net_101:1 inst_78:B 0.2688
+*END
+
+*D_NET nic6 0.9187
+*CONN
+*P nic6 I
+*I inst_124:A1 I
+*CAP
+1 nic6 0.3051
+2 nic6:1 0.2956
+3 nic6:2 0.2210
+4 inst_124:A1 0.0970
+*RES
+2 nic6 nic6:1 0.2798
+3 nic6:1 nic6:2 0.3150
+4 nic6:2 inst_124:A1 0.0137
+*END
+
+*D_NET net_111 0.8876
+*CONN
+*I inst_150:ZN O
+*I inst_85:B I
+*CAP
+1 inst_150:ZN 0.3101
+2 net_111:1 0.2047
+3 inst_85:B 0.3729
+*RES
+2 inst_150:ZN net_111:1 0.0610
+3 net_111:1 inst_85:B 0.4010
+*END
+
+*D_NET net_90 3.6718
+*CONN
+*I inst_131:ZN O
+*I inst_133:A2 I
+*I inst_111:A2 I
+*I inst_117:A1 I
+*CAP
+1 inst_131:ZN 0.3768
+2 net_90:1 0.1250
+3 net_90:2 0.3526
+4 net_90:3 0.3715
+5 net_90:4 0.3144
+6 inst_111:A2 0.3618
+7 net_90:5 0.4981
+8 net_90:6 0.3134
+9 net_90:7 0.4059
+10 net_90:8 0.1396
+11 inst_133:A2 0.0910
+12 net_90:9 0.0712
+13 net_90:10 0.0044
+14 net_90:11 0.1986
+15 inst_117:A1 0.0476
+*RES
+2 inst_131:ZN net_90:1 0.0820
+3 net_90:1 net_90:2 0.2174
+4 net_90:2 net_90:3 0.3638
+5 net_90:3 net_90:4 0.4097
+6 net_90:4 inst_111:A2 0.2418
+7 net_90:4 net_90:5 0.1278
+8 net_90:5 net_90:6 0.3093
+9 net_90:6 net_90:7 0.3342
+10 net_90:7 net_90:8 0.2150
+11 net_90:8 inst_133:A2 0.0109
+12 net_90:4 net_90:9 0.0521
+13 net_90:9 net_90:10 0.0546
+14 net_90:10 net_90:11 0.0043
+15 net_90:11 inst_117:A1 0.2737
+*END
+
+*D_NET net_40 1.2711
+*CONN
+*I inst_33:ZN O
+*I inst_69:A I
+*CAP
+1 inst_33:ZN 0.2677
+2 net_40:1 0.1466
+3 net_40:2 0.2784
+4 net_40:3 0.2008
+5 inst_69:A 0.3776
+*RES
+2 inst_33:ZN net_40:1 0.2937
+3 net_40:1 net_40:2 0.0093
+4 net_40:2 net_40:3 0.2822
+5 net_40:3 inst_69:A 0.4311
+*END
+
+*D_NET nod7 1.6512
+*CONN
+*I inst_76:ZN O
+*P nod7 O
+*CAP
+1 inst_76:ZN 0.1138
+2 nod7:1 0.3567
+3 nod7:2 0.3242
+4 nod7:3 0.2336
+5 nod7:4 0.3863
+6 nod7 0.2365
+*RES
+2 inst_76:ZN nod7:1 0.1037
+3 nod7:1 nod7:2 0.3572
+4 nod7:2 nod7:3 0.2211
+5 nod7:3 nod7:4 0.2185
+6 nod7:4 nod7 0.2266
+*END
+
+*D_NET net_100 5.0398
+*CONN
+*I inst_110:ZN O
+*I inst_138:A2 I
+*I inst_139:A2 I
+*I inst_142:A2 I
+*I inst_158:A2 I
+*CAP
+1 inst_110:ZN 0.1297
+2 net_100:1 0.2417
+3 net_100:2 0.2444
+4 net_100:3 0.4262
+5 net_100:4 0.3737
+6 net_100:5 0.3015
+7 inst_142:A2 0.1830
+8 net_100:6 0.1111
+9 net_100:7 0.3711
+10 net_100:8 0.0512
+11 inst_139:A2 0.1351
+12 net_100:9 0.3234
+13 net_100:10 0.4610
+14 inst_138:A2 0.4832
+15 net_100:11 0.4556
+16 net_100:12 0.1835
+17 net_100:13 0.0020
+18 net_100:14 0.2614
+19 inst_158:A2 0.3010
+*RES
+2 inst_110:ZN net_100:1 0.3035
+3 net_100:1 net_100:2 0.4053
+4 net_100:2 net_100:3 0.0863
+5 net_100:3 net_100:4 0.2362
+6 net_100:4 net_100:5 0.1365
+7 net_100:5 inst_142:A2 0.0277
+8 net_100:5 net_100:6 0.0984
+9 net_100:6 net_100:7 0.0368
+10 net_100:7 net_100:8 0.4376
+11 net_100:8 inst_139:A2 0.1423
+12 net_100:2 net_100:9 0.2776
+13 net_100:9 net_100:10 0.3781
+14 net_100:10 inst_138:A2 0.3766
+15 net_100:4 net_100:11 0.2164
+16 net_100:11 net_100:12 0.4372
+17 net_100:12 net_100:13 0.1158
+18 net_100:13 net_100:14 0.1153
+19 net_100:14 inst_158:A2 0.3810
+*END
+
+*D_NET nod4 1.4651
+*CONN
+*I inst_79:ZN O
+*P nod4 O
+*CAP
+1 inst_79:ZN 0.1662
+2 nod4:1 0.2541
+3 nod4:2 0.2497
+4 nod4:3 0.4625
+5 nod4:4 0.2343
+6 nod4 0.0981
+*RES
+2 inst_79:ZN nod4:1 0.3461
+3 nod4:1 nod4:2 0.2382
+4 nod4:2 nod4:3 0.4109
+5 nod4:3 nod4:4 0.0945
+6 nod4:4 nod4 0.2326
+*END
+
+*D_NET net_69 0.7650
+*CONN
+*I inst_61:ZN O
+*I inst_65:B I
+*CAP
+1 inst_61:ZN 0.2674
+2 net_69:1 0.0414
+3 net_69:2 0.2455
+4 net_69:3 0.1970
+5 inst_65:B 0.0138
+*RES
+2 inst_61:ZN net_69:1 0.4527
+3 net_69:1 net_69:2 0.3131
+4 net_69:2 net_69:3 0.4392
+5 net_69:3 inst_65:B 0.4048
+*END
+
+*D_NET net_85 2.4604
+*CONN
+*I inst_135:ZN O
+*I inst_122:A3 I
+*I inst_137:A2 I
+*CAP
+1 inst_135:ZN 0.3283
+2 net_85:1 0.4199
+3 net_85:2 0.3736
+4 net_85:3 0.3306
+5 inst_122:A3 0.3042
+6 net_85:4 0.0758
+7 net_85:5 0.0262
+8 net_85:6 0.3812
+9 net_85:7 0.0656
+10 inst_137:A2 0.1550
+*RES
+2 inst_135:ZN net_85:1 0.1317
+3 net_85:1 net_85:2 0.1481
+4 net_85:2 net_85:3 0.2485
+5 net_85:3 inst_122:A3 0.2201
+6 net_85:2 net_85:4 0.0047
+7 net_85:4 net_85:5 0.1418
+8 net_85:5 net_85:6 0.2138
+9 net_85:6 net_85:7 0.3805
+10 net_85:7 inst_137:A2 0.2523
+*END
+
+*D_NET nid5 3.4785
+*CONN
+*P nid5 I
+*I inst_78:A I
+*I inst_22:A I
+*I inst_21:A I
+*CAP
+1 nid5 0.4938
+2 nid5:1 0.2131
+3 nid5:2 0.3201
+4 nid5:3 0.0320
+5 nid5:4 0.2786
+6 inst_78:A 0.3378
+7 nid5:5 0.3351
+8 nid5:6 0.4105
+9 nid5:7 0.3004
+10 inst_22:A 0.3665
+11 nid5:8 0.0294
+12 nid5:9 0.0059
+13 inst_21:A 0.3552
+*RES
+2 nid5 nid5:1 0.4364
+3 nid5:1 nid5:2 0.2454
+4 nid5:2 nid5:3 0.4527
+5 nid5:3 nid5:4 0.2663
+6 nid5:4 inst_78:A 0.3641
+7 nid5:2 nid5:5 0.1341
+8 nid5:5 nid5:6 0.0859
+9 nid5:6 nid5:7 0.1706
+10 nid5:7 inst_22:A 0.3812
+11 nid5:1 nid5:8 0.3839
+12 nid5:8 nid5:9 0.1840
+13 nid5:9 inst_21:A 0.4010
+*END
+
+*D_NET net_124 6.8985
+*CONN
+*I inst_111:ZN O
+*I inst_167:A2 I
+*I inst_157:A2 I
+*I inst_144:A2 I
+*I inst_149:A2 I
+*CAP
+1 inst_111:ZN 0.4559
+2 net_124:1 0.1715
+3 net_124:2 0.3050
+4 net_124:3 0.3594
+5 net_124:4 0.4902
+6 inst_144:A2 0.4716
+7 net_124:5 0.3308
+8 net_124:6 0.4080
+9 net_124:7 0.4669
+10 net_124:8 0.1932
+11 inst_157:A2 0.0675
+12 net_124:9 0.4574
+13 net_124:10 0.4683
+14 net_124:11 0.1543
+15 net_124:12 0.4873
+16 inst_167:A2 0.1669
+17 net_124:13 0.4210
+18 net_124:14 0.2594
+19 net_124:15 0.3565
+20 inst_149:A2 0.4074
+*RES
+2 inst_111:ZN net_124:1 0.2112
+3 net_124:1 net_124:2 0.1762
+4 net_124:2 net_124:3 0.1166
+5 net_124:3 net_124:4 0.1660
+6 net_124:4 inst_144:A2 0.2177
+7 net_124:3 net_124:5 0.0053
+8 net_124:5 net_124:6 0.1459
+9 net_124:6 net_124:7 0.0437
+10 net_124:7 net_124:8 0.4598
+11 net_124:8 inst_157:A2 0.3838
+12 net_124:4 net_124:9 0.4800
+13 net_124:9 net_124:10 0.4518
+14 net_124:10 net_124:11 0.0570
+15 net_124:11 net_124:12 0.4909
+16 net_124:12 inst_167:A2 0.0572
+17 net_124:3 net_124:13 0.4309
+18 net_124:13 net_124:14 0.4474
+19 net_124:14 net_124:15 0.2931
+20 net_124:15 inst_149:A2 0.2848
+*END
+
+*D_NET nid25 3.4330
+*CONN
+*P nid25 I
+*I inst_12:B I
+*I inst_18:A I
+*I inst_87:A I
+*CAP
+1 nid25 0.3320
+2 nid25:1 0.3663
+3 nid25:2 0.1512
+4 nid25:3 0.1368
+5 nid25:4 0.4493
+6 inst_18:A 0.4663
+7 nid25:5 0.3075
+8 nid25:6 0.0604
+9 inst_12:B 0.3908
+10 nid25:7 0.3010
+11 nid25:8 0.1515
+12 nid25:9 0.0492
+13 inst_87:A 0.2707
+*RES
+2 nid25 nid25:1 0.2866
+3 nid25:1 nid25:2 0.1873
+4 nid25:2 nid25:3 0.1599
+5 nid25:3 nid25:4 0.3589
+6 nid25:4 inst_18:A 0.4697
+7 nid25:3 nid25:5 0.2921
+8 nid25:5 nid25:6 0.4162
+9 nid25:6 inst_12:B 0.1285
+10 nid25:5 nid25:7 0.0711
+11 nid25:7 nid25:8 0.2365
+12 nid25:8 nid25:9 0.0021
+13 nid25:9 inst_87:A 0.2080
+*END
+
+*D_NET nid15 4.6226
+*CONN
+*P nid15 I
+*I inst_31:A I
+*I inst_3:A I
+*I inst_98:A I
+*CAP
+1 nid15 0.4886
+2 nid15:1 0.4404
+3 nid15:2 0.3187
+4 nid15:3 0.4272
+5 nid15:4 0.0224
+6 inst_98:A 0.4026
+7 nid15:5 0.2614
+8 nid15:6 0.1530
+9 inst_3:A 0.2582
+10 nid15:7 0.2666
+11 nid15:8 0.4255
+12 nid15:9 0.4671
+13 nid15:10 0.2972
+14 inst_31:A 0.3936
+*RES
+2 nid15 nid15:1 0.2784
+3 nid15:1 nid15:2 0.1803
+4 nid15:2 nid15:3 0.0882
+5 nid15:3 nid15:4 0.2924
+6 nid15:4 inst_98:A 0.4780
+7 nid15:4 nid15:5 0.4484
+8 nid15:5 nid15:6 0.0762
+9 nid15:6 inst_3:A 0.1986
+10 nid15:6 nid15:7 0.4880
+11 nid15:7 nid15:8 0.4169
+12 nid15:8 nid15:9 0.3167
+13 nid15:9 nid15:10 0.3376
+14 nid15:10 inst_31:A 0.1073
+*END
+
+*D_NET nid18 3.2735
+*CONN
+*P nid18 I
+*I inst_95:A I
+*I inst_17:B I
+*I inst_28:B I
+*CAP
+1 nid18 0.1300
+2 nid18:1 0.2362
+3 nid18:2 0.1908
+4 nid18:3 0.1996
+5 nid18:4 0.3123
+6 inst_28:B 0.1251
+7 nid18:5 0.4948
+8 nid18:6 0.4038
+9 nid18:7 0.1954
+10 nid18:8 0.0063
+11 inst_17:B 0.4904
+12 nid18:9 0.2934
+13 nid18:10 0.0661
+14 nid18:11 0.0281
+15 inst_95:A 0.1011
+*RES
+2 nid18 nid18:1 0.0048
+3 nid18:1 nid18:2 0.3126
+4 nid18:2 nid18:3 0.0195
+5 nid18:3 nid18:4 0.0541
+6 nid18:4 inst_28:B 0.3700
+7 nid18:3 nid18:5 0.0915
+8 nid18:5 nid18:6 0.4619
+9 nid18:6 nid18:7 0.1065
+10 nid18:7 nid18:8 0.1990
+11 nid18:8 inst_17:B 0.2576
+12 nid18:1 nid18:9 0.2539
+13 nid18:9 nid18:10 0.0765
+14 nid18:10 nid18:11 0.1980
+15 nid18:11 inst_95:A 0.3226
+*END
+
+*D_NET net_141 2.4686
+*CONN
+*I inst_167:ZN O
+*I inst_98:B I
+*CAP
+1 inst_167:ZN 0.2766
+2 net_141:1 0.4267
+3 net_141:2 0.4596
+4 net_141:3 0.3295
+5 net_141:4 0.4724
+6 net_141:5 0.4631
+7 inst_98:B 0.0407
+*RES
+2 inst_167:ZN net_141:1 0.4130
+3 net_141:1 net_141:2 0.3462
+4 net_141:2 net_141:3 0.0714
+5 net_141:3 net_141:4 0.2110
+6 net_141:4 net_141:5 0.2588
+7 net_141:5 inst_98:B 0.0339
+*END
+
+*D_NET nid28 2.9481
+*CONN
+*P nid28 I
+*I inst_84:A I
+*I inst_30:B I
+*I inst_9:A I
+*CAP
+1 nid28 0.4874
+2 nid28:1 0.2489
+3 inst_84:A 0.2584
+4 nid28:2 0.2746
+5 nid28:3 0.4228
+6 inst_30:B 0.1417
+7 nid28:4 0.2042
+8 nid28:5 0.2030
+9 nid28:6 0.2656
+10 inst_9:A 0.4413
+*RES
+2 nid28 nid28:1 0.0346
+3 nid28:1 inst_84:A 0.4333
+4 nid28:1 nid28:2 0.3754
+5 nid28:2 nid28:3 0.2016
+6 nid28:3 inst_30:B 0.0068
+7 nid28:3 nid28:4 0.1336
+8 nid28:4 nid28:5 0.4042
+9 nid28:5 nid28:6 0.0451
+10 nid28:6 inst_9:A 0.2391
+*END
+
+*D_NET net_115 0.9045
+*CONN
+*I inst_152:ZN O
+*I inst_96:B I
+*CAP
+1 inst_152:ZN 0.4146
+2 net_115:1 0.2654
+3 inst_96:B 0.2245
+*RES
+2 inst_152:ZN net_115:1 0.4797
+3 net_115:1 inst_96:B 0.0551
+*END
+
+*D_NET net_4 1.5272
+*CONN
+*I inst_127:ZN O
+*I inst_57:B I
+*CAP
+1 inst_127:ZN 0.0973
+2 net_4:1 0.1903
+3 net_4:2 0.2143
+4 net_4:3 0.0701
+5 net_4:4 0.2421
+6 net_4:5 0.4634
+7 inst_57:B 0.2497
+*RES
+2 inst_127:ZN net_4:1 0.2766
+3 net_4:1 net_4:2 0.3086
+4 net_4:2 net_4:3 0.2353
+5 net_4:3 net_4:4 0.4838
+6 net_4:4 net_4:5 0.0722
+7 net_4:5 inst_57:B 0.3539
+*END
+
+*D_NET nid2 4.3399
+*CONN
+*P nid2 I
+*I inst_6:B I
+*I inst_93:A I
+*I inst_25:B I
+*CAP
+1 nid2 0.0192
+2 nid2:1 0.4054
+3 nid2:2 0.3681
+4 inst_25:B 0.4419
+5 nid2:3 0.1374
+6 nid2:4 0.1713
+7 nid2:5 0.2153
+8 nid2:6 0.3119
+9 nid2:7 0.4918
+10 inst_93:A 0.3583
+11 nid2:8 0.4721
+12 nid2:9 0.1185
+13 nid2:10 0.4585
+14 inst_6:B 0.3703
+*RES
+2 nid2 nid2:1 0.1561
+3 nid2:1 nid2:2 0.1347
+4 nid2:2 inst_25:B 0.0224
+5 nid2:1 nid2:3 0.0251
+6 nid2:3 nid2:4 0.0071
+7 nid2:4 nid2:5 0.2242
+8 nid2:5 nid2:6 0.4834
+9 nid2:6 nid2:7 0.4589
+10 nid2:7 inst_93:A 0.0098
+11 nid2:5 nid2:8 0.0365
+12 nid2:8 nid2:9 0.4409
+13 nid2:9 nid2:10 0.4335
+14 nid2:10 inst_6:B 0.3158
+*END
+
+*D_NET net_17 1.4639
+*CONN
+*I inst_8:Z O
+*I inst_33:A I
+*CAP
+1 inst_8:Z 0.4798
+2 net_17:1 0.1778
+3 net_17:2 0.3155
+4 inst_33:A 0.4909
+*RES
+2 inst_8:Z net_17:1 0.2285
+3 net_17:1 net_17:2 0.2293
+4 net_17:2 inst_33:A 0.4514
+*END
+
+*D_NET net_95 2.5041
+*CONN
+*I inst_109:ZN O
+*I inst_134:A2 I
+*I inst_115:A1 I
+*I inst_116:A1 I
+*CAP
+1 inst_109:ZN 0.3442
+2 net_95:1 0.2112
+3 net_95:2 0.3238
+4 inst_134:A2 0.1536
+5 net_95:3 0.2665
+6 inst_115:A1 0.4580
+7 net_95:4 0.0719
+8 net_95:5 0.2913
+9 inst_116:A1 0.3837
+*RES
+2 inst_109:ZN net_95:1 0.2744
+3 net_95:1 net_95:2 0.3973
+4 net_95:2 inst_134:A2 0.0682
+5 net_95:1 net_95:3 0.4392
+6 net_95:3 inst_115:A1 0.4660
+7 net_95:1 net_95:4 0.4308
+8 net_95:4 net_95:5 0.4593
+9 net_95:5 inst_116:A1 0.4578
+*END
+
+*D_NET net_78 1.6302
+*CONN
+*I inst_106:ZN O
+*I inst_135:A1 I
+*CAP
+1 inst_106:ZN 0.4235
+2 net_78:1 0.4330
+3 net_78:2 0.3792
+4 inst_135:A1 0.3945
+*RES
+2 inst_106:ZN net_78:1 0.1168
+3 net_78:1 net_78:2 0.0632
+4 net_78:2 inst_135:A1 0.3389
+*END
+
+*D_NET nid20 2.7950
+*CONN
+*P nid20 I
+*I inst_15:A I
+*I inst_20:B I
+*I inst_92:A I
+*CAP
+1 nid20 0.0022
+2 nid20:1 0.0342
+3 nid20:2 0.1492
+4 nid20:3 0.1342
+5 nid20:4 0.2299
+6 inst_20:B 0.4466
+7 nid20:5 0.0259
+8 nid20:6 0.3818
+9 nid20:7 0.2326
+10 nid20:8 0.3632
+11 inst_15:A 0.2277
+12 nid20:9 0.1519
+13 inst_92:A 0.4158
+*RES
+2 nid20 nid20:1 0.0789
+3 nid20:1 nid20:2 0.1418
+4 nid20:2 nid20:3 0.2162
+5 nid20:3 nid20:4 0.3480
+6 nid20:4 inst_20:B 0.3423
+7 nid20:3 nid20:5 0.1399
+8 nid20:5 nid20:6 0.3067
+9 nid20:6 nid20:7 0.2194
+10 nid20:7 nid20:8 0.0694
+11 nid20:8 inst_15:A 0.1731
+12 nid20:4 nid20:9 0.0326
+13 nid20:9 inst_92:A 0.2788
+*END
+
+*D_NET net_27 0.9590
+*CONN
+*I inst_31:ZN O
+*I inst_33:B I
+*CAP
+1 inst_31:ZN 0.0975
+2 net_27:1 0.3850
+3 net_27:2 0.2235
+4 inst_33:B 0.2530
+*RES
+2 inst_31:ZN net_27:1 0.0538
+3 net_27:1 net_27:2 0.1085
+4 net_27:2 inst_33:B 0.3839
+*END
+
+*D_NET net_56 2.5573
+*CONN
+*I inst_41:ZN O
+*I inst_55:A I
+*I inst_51:A I
+*CAP
+1 inst_41:ZN 0.1655
+2 net_56:1 0.3040
+3 net_56:2 0.3068
+4 net_56:3 0.1313
+5 net_56:4 0.0490
+6 inst_55:A 0.1490
+7 net_56:5 0.4065
+8 net_56:6 0.3838
+9 net_56:7 0.2328
+10 net_56:8 0.0616
+11 inst_51:A 0.3670
+*RES
+2 inst_41:ZN net_56:1 0.4082
+3 net_56:1 net_56:2 0.0586
+4 net_56:2 net_56:3 0.2553
+5 net_56:3 net_56:4 0.4766
+6 net_56:4 inst_55:A 0.4662
+7 net_56:1 net_56:5 0.3852
+8 net_56:5 net_56:6 0.1467
+9 net_56:6 net_56:7 0.2409
+10 net_56:7 net_56:8 0.4071
+11 net_56:8 inst_51:A 0.2078
+*END
+
+*D_NET net_87 1.4958
+*CONN
+*I inst_137:ZN O
+*I inst_110:A3 I
+*I inst_111:A3 I
+*CAP
+1 inst_137:ZN 0.2212
+2 net_87:1 0.1904
+3 inst_110:A3 0.2527
+4 net_87:2 0.0062
+5 net_87:3 0.2799
+6 net_87:4 0.1542
+7 net_87:5 0.1497
+8 inst_111:A3 0.2415
+*RES
+2 inst_137:ZN net_87:1 0.0491
+3 net_87:1 inst_110:A3 0.0298
+4 net_87:1 net_87:2 0.4946
+5 net_87:2 net_87:3 0.2980
+6 net_87:3 net_87:4 0.1661
+7 net_87:4 net_87:5 0.4120
+8 net_87:5 inst_111:A3 0.1627
+*END
+
+*D_NET nod19 1.1896
+*CONN
+*I inst_94:ZN O
+*P nod19 O
+*CAP
+1 inst_94:ZN 0.3748
+2 nod19:1 0.1204
+3 nod19:2 0.0927
+4 nod19:3 0.1679
+5 nod19:4 0.0593
+6 nod19 0.3745
+*RES
+2 inst_94:ZN nod19:1 0.1708
+3 nod19:1 nod19:2 0.0756
+4 nod19:2 nod19:3 0.2634
+5 nod19:3 nod19:4 0.4707
+6 nod19:4 nod19 0.4356
+*END
+
+*D_NET nod28 1.1013
+*CONN
+*I inst_84:ZN O
+*P nod28 O
+*CAP
+1 inst_84:ZN 0.1695
+2 nod28:1 0.3553
+3 nod28:2 0.1500
+4 nod28 0.4264
+*RES
+2 inst_84:ZN nod28:1 0.0163
+3 nod28:1 nod28:2 0.2331
+4 nod28:2 nod28 0.4626
+*END
+
+*D_NET net_0 0.1862
+*CONN
+*I inst_123:ZN O
+*I inst_61:B I
+*CAP
+1 inst_123:ZN 0.1724
+2 net_0:1 0.0020
+3 inst_61:B 0.0117
+*RES
+2 inst_123:ZN net_0:1 0.2437
+3 net_0:1 inst_61:B 0.2268
+*END
+
+*D_NET nid0 3.5570
+*CONN
+*P nid0 I
+*I inst_105:A I
+*I inst_16:B I
+*I inst_10:B I
+*CAP
+1 nid0 0.0296
+2 nid0:1 0.1876
+3 nid0:2 0.0595
+4 nid0:3 0.2550
+5 inst_16:B 0.4579
+6 nid0:4 0.3670
+7 nid0:5 0.0788
+8 nid0:6 0.0125
+9 nid0:7 0.4083
+10 inst_105:A 0.2037
+11 nid0:8 0.3686
+12 nid0:9 0.1667
+13 nid0:10 0.4317
+14 nid0:11 0.1120
+15 nid0:12 0.0039
+16 inst_10:B 0.4142
+*RES
+2 nid0 nid0:1 0.3006
+3 nid0:1 nid0:2 0.2535
+4 nid0:2 nid0:3 0.2194
+5 nid0:3 inst_16:B 0.1135
+6 nid0:3 nid0:4 0.1594
+7 nid0:4 nid0:5 0.3957
+8 nid0:5 nid0:6 0.3077
+9 nid0:6 nid0:7 0.4522
+10 nid0:7 inst_105:A 0.3100
+11 nid0:3 nid0:8 0.1371
+12 nid0:8 nid0:9 0.2330
+13 nid0:9 nid0:10 0.4566
+14 nid0:10 nid0:11 0.2890
+15 nid0:11 nid0:12 0.4585
+16 nid0:12 inst_10:B 0.4359
+*END
+
+*D_NET net_35 0.7179
+*CONN
+*I inst_21:Z O
+*I inst_42:A I
+*CAP
+1 inst_21:Z 0.4771
+2 net_35:1 0.0595
+3 net_35:2 0.0997
+4 inst_42:A 0.0816
+*RES
+2 inst_21:Z net_35:1 0.0662
+3 net_35:1 net_35:2 0.4666
+4 net_35:2 inst_42:A 0.1226
+*END
+
+*D_NET net_22 1.2856
+*CONN
+*I inst_12:Z O
+*I inst_39:A I
+*CAP
+1 inst_12:Z 0.1999
+2 net_22:1 0.3714
+3 net_22:2 0.1596
+4 net_22:3 0.2815
+5 inst_39:A 0.2732
+*RES
+2 inst_12:Z net_22:1 0.4508
+3 net_22:1 net_22:2 0.0764
+4 net_22:2 net_22:3 0.0865
+5 net_22:3 inst_39:A 0.1765
+*END
+
+*D_NET net_16 2.0500
+*CONN
+*I inst_7:Z O
+*I inst_43:B I
+*CAP
+1 inst_7:Z 0.0392
+2 net_16:1 0.2748
+3 net_16:2 0.4790
+4 net_16:3 0.2826
+5 net_16:4 0.4852
+6 inst_43:B 0.4891
+*RES
+2 inst_7:Z net_16:1 0.0291
+3 net_16:1 net_16:2 0.3703
+4 net_16:2 net_16:3 0.3677
+5 net_16:3 net_16:4 0.1593
+6 net_16:4 inst_43:B 0.3850
+*END
+
+*D_NET nod17 1.4254
+*CONN
+*I inst_96:ZN O
+*P nod17 O
+*CAP
+1 inst_96:ZN 0.0338
+2 nod17:1 0.4639
+3 nod17:2 0.3021
+4 nod17:3 0.1998
+5 nod17:4 0.0562
+6 nod17:5 0.2314
+7 nod17 0.1382
+*RES
+2 inst_96:ZN nod17:1 0.1977
+3 nod17:1 nod17:2 0.2332
+4 nod17:2 nod17:3 0.2849
+5 nod17:3 nod17:4 0.0271
+6 nod17:4 nod17:5 0.4951
+7 nod17:5 nod17 0.2373
+*END
+
+*D_NET nic0 1.1584
+*CONN
+*P nic0 I
+*I inst_123:A1 I
+*CAP
+1 nic0 0.3818
+2 nic0:1 0.1957
+3 nic0:2 0.1559
+4 nic0:3 0.2317
+5 nic0:4 0.0834
+6 inst_123:A1 0.1100
+*RES
+2 nic0 nic0:1 0.0458
+3 nic0:1 nic0:2 0.1110
+4 nic0:2 nic0:3 0.0326
+5 nic0:3 nic0:4 0.0101
+6 nic0:4 inst_123:A1 0.4008
+*END
+
+*D_NET net_39 1.2122
+*CONN
+*I inst_25:Z O
+*I inst_38:B I
+*CAP
+1 inst_25:Z 0.0737
+2 net_39:1 0.2533
+3 net_39:2 0.1396
+4 net_39:3 0.3824
+5 inst_38:B 0.3632
+*RES
+2 inst_25:Z net_39:1 0.1255
+3 net_39:1 net_39:2 0.2846
+4 net_39:2 net_39:3 0.2591
+5 net_39:3 inst_38:B 0.4127
+*END
+
+*D_NET net_2 1.8302
+*CONN
+*I inst_125:ZN O
+*I inst_60:B I
+*CAP
+1 inst_125:ZN 0.4938
+2 net_2:1 0.0990
+3 net_2:2 0.0011
+4 net_2:3 0.0775
+5 net_2:4 0.4448
+6 net_2:5 0.3925
+7 inst_60:B 0.3215
+*RES
+2 inst_125:ZN net_2:1 0.2378
+3 net_2:1 net_2:2 0.4001
+4 net_2:2 net_2:3 0.4420
+5 net_2:3 net_2:4 0.2222
+6 net_2:4 net_2:5 0.3420
+7 net_2:5 inst_60:B 0.3597
+*END
+
+*D_NET net_102 1.2314
+*CONN
+*I inst_143:ZN O
+*I inst_81:B I
+*CAP
+1 inst_143:ZN 0.3425
+2 net_102:1 0.1461
+3 net_102:2 0.4619
+4 inst_81:B 0.2809
+*RES
+2 inst_143:ZN net_102:1 0.0637
+3 net_102:1 net_102:2 0.4466
+4 net_102:2 inst_81:B 0.3916
+*END
+
+*D_NET net_9 1.8662
+*CONN
+*I inst_0:Z O
+*I inst_40:B I
+*CAP
+1 inst_0:Z 0.3548
+2 net_9:1 0.4779
+3 net_9:2 0.2777
+4 net_9:3 0.4837
+5 net_9:4 0.0359
+6 net_9:5 0.0747
+7 inst_40:B 0.1615
+*RES
+2 inst_0:Z net_9:1 0.3691
+3 net_9:1 net_9:2 0.0307
+4 net_9:2 net_9:3 0.3827
+5 net_9:3 net_9:4 0.0250
+6 net_9:4 net_9:5 0.1642
+7 net_9:5 inst_40:B 0.1919
+*END
+
+*D_NET net_59 1.0800
+*CONN
+*I inst_52:ZN O
+*I inst_59:A I
+*CAP
+1 inst_52:ZN 0.0939
+2 net_59:1 0.3958
+3 net_59:2 0.4060
+4 inst_59:A 0.1842
+*RES
+2 inst_52:ZN net_59:1 0.4443
+3 net_59:1 net_59:2 0.3910
+4 net_59:2 inst_59:A 0.4960
+*END
+
+*D_NET net_42 0.8594
+*CONN
+*I inst_35:ZN O
+*I inst_65:A I
+*CAP
+1 inst_35:ZN 0.1725
+2 net_42:1 0.1498
+3 net_42:2 0.1188
+4 net_42:3 0.2871
+5 inst_65:A 0.1313
+*RES
+2 inst_35:ZN net_42:1 0.2862
+3 net_42:1 net_42:2 0.3231
+4 net_42:2 net_42:3 0.1272
+5 net_42:3 inst_65:A 0.4510
+*END
+
+*D_NET nic1 0.9450
+*CONN
+*P nic1 I
+*I inst_129:A1 I
+*CAP
+1 nic1 0.0390
+2 nic1:1 0.0966
+3 nic1:2 0.3549
+4 inst_129:A1 0.4545
+*RES
+2 nic1 nic1:1 0.0384
+3 nic1:1 nic1:2 0.2530
+4 nic1:2 inst_129:A1 0.2540
+*END
+
+*D_NET net_65 0.6207
+*CONN
+*I inst_57:ZN O
+*I inst_67:B I
+*CAP
+1 inst_57:ZN 0.1864
+2 net_65:1 0.3901
+3 inst_67:B 0.0442
+*RES
+2 inst_57:ZN net_65:1 0.4590
+3 net_65:1 inst_67:B 0.2179
+*END
+
+*D_NET nod25 1.1101
+*CONN
+*I inst_87:ZN O
+*P nod25 O
+*CAP
+1 inst_87:ZN 0.4761
+2 nod25:1 0.1986
+3 nod25 0.4354
+*RES
+2 inst_87:ZN nod25:1 0.4854
+3 nod25:1 nod25 0.4872
+*END
+
+*D_NET net_50 1.6078
+*CONN
+*I inst_48:ZN O
+*I inst_56:A I
+*CAP
+1 inst_48:ZN 0.1973
+2 net_50:1 0.1624
+3 net_50:2 0.1622
+4 net_50:3 0.0304
+5 net_50:4 0.3267
+6 net_50:5 0.3463
+7 inst_56:A 0.3825
+*RES
+2 inst_48:ZN net_50:1 0.0638
+3 net_50:1 net_50:2 0.4279
+4 net_50:2 net_50:3 0.1760
+5 net_50:3 net_50:4 0.2478
+6 net_50:4 net_50:5 0.4092
+7 net_50:5 inst_56:A 0.0469
+*END
+
+*D_NET nod8 0.6189
+*CONN
+*I inst_75:ZN O
+*P nod8 O
+*CAP
+1 inst_75:ZN 0.1233
+2 nod8:1 0.0172
+3 nod8:2 0.2546
+4 nod8 0.2239
+*RES
+2 inst_75:ZN nod8:1 0.2273
+3 nod8:1 nod8:2 0.3983
+4 nod8:2 nod8 0.1230
+*END
+
+*D_NET net_38 0.8273
+*CONN
+*I inst_24:Z O
+*I inst_47:B I
+*CAP
+1 inst_24:Z 0.4930
+2 net_38:1 0.2913
+3 net_38:2 0.0163
+4 inst_47:B 0.0267
+*RES
+2 inst_24:Z net_38:1 0.3981
+3 net_38:1 net_38:2 0.0332
+4 net_38:2 inst_47:B 0.3293
+*END
+
+*D_NET net_96 1.1594
+*CONN
+*I inst_138:ZN O
+*I inst_77:B I
+*CAP
+1 inst_138:ZN 0.0465
+2 net_96:1 0.4480
+3 net_96:2 0.4028
+4 net_96:3 0.0290
+5 inst_77:B 0.2331
+*RES
+2 inst_138:ZN net_96:1 0.2045
+3 net_96:1 net_96:2 0.0027
+4 net_96:2 net_96:3 0.2557
+5 net_96:3 inst_77:B 0.3715
+*END
+
+*D_NET net_66 1.5215
+*CONN
+*I inst_58:ZN O
+*I inst_71:B I
+*CAP
+1 inst_58:ZN 0.1063
+2 net_66:1 0.2055
+3 net_66:2 0.2535
+4 net_66:3 0.3926
+5 net_66:4 0.2993
+6 inst_71:B 0.2643
+*RES
+2 inst_58:ZN net_66:1 0.2074
+3 net_66:1 net_66:2 0.0996
+4 net_66:2 net_66:3 0.4272
+5 net_66:3 net_66:4 0.4367
+6 net_66:4 inst_71:B 0.3233
+*END
+
+*D_NET net_44 1.0094
+*CONN
+*I inst_43:ZN O
+*I inst_68:A I
+*CAP
+1 inst_43:ZN 0.1240
+2 net_44:1 0.4967
+3 inst_68:A 0.3887
+*RES
+2 inst_43:ZN net_44:1 0.4556
+3 net_44:1 inst_68:A 0.4799
+*END
+
+*D_NET nod11 2.4089
+*CONN
+*I inst_102:ZN O
+*P nod11 O
+*CAP
+1 inst_102:ZN 0.4639
+2 nod11:1 0.4434
+3 nod11:2 0.3746
+4 nod11:3 0.2676
+5 nod11:4 0.4860
+6 nod11:5 0.1238
+7 nod11 0.2495
+*RES
+2 inst_102:ZN nod11:1 0.3916
+3 nod11:1 nod11:2 0.1836
+4 nod11:2 nod11:3 0.0555
+5 nod11:3 nod11:4 0.0592
+6 nod11:4 nod11:5 0.4448
+7 nod11:5 nod11 0.3521
+*END
+
+*D_NET net_136 1.7116
+*CONN
+*I inst_164:ZN O
+*I inst_104:B I
+*CAP
+1 inst_164:ZN 0.4628
+2 net_136:1 0.0032
+3 net_136:2 0.1283
+4 net_136:3 0.4042
+5 net_136:4 0.3712
+6 inst_104:B 0.3419
+*RES
+2 inst_164:ZN net_136:1 0.1923
+3 net_136:1 net_136:2 0.3021
+4 net_136:2 net_136:3 0.2553
+5 net_136:3 net_136:4 0.1829
+6 net_136:4 inst_104:B 0.4320
+*END
+
+*D_NET net_134 2.2982
+*CONN
+*I inst_163:ZN O
+*I inst_91:B I
+*CAP
+1 inst_163:ZN 0.4505
+2 net_134:1 0.3772
+3 net_134:2 0.4893
+4 net_134:3 0.5006
+5 net_134:4 0.0906
+6 net_134:5 0.1121
+7 inst_91:B 0.2778
+*RES
+2 inst_163:ZN net_134:1 0.1931
+3 net_134:1 net_134:2 0.3334
+4 net_134:2 net_134:3 0.0690
+5 net_134:3 net_134:4 0.1259
+6 net_134:4 net_134:5 0.1250
+7 net_134:5 inst_91:B 0.1970
+*END
+
+*D_NET nod13 1.5479
+*CONN
+*I inst_100:ZN O
+*P nod13 O
+*CAP
+1 inst_100:ZN 0.2612
+2 nod13:1 0.3469
+3 nod13:2 0.3236
+4 nod13:3 0.4918
+5 nod13 0.1244
+*RES
+2 inst_100:ZN nod13:1 0.3950
+3 nod13:1 nod13:2 0.4168
+4 nod13:2 nod13:3 0.0096
+5 nod13:3 nod13 0.3368
+*END
+
+*D_NET net_19 0.8864
+*CONN
+*I inst_9:Z O
+*I inst_34:A I
+*CAP
+1 inst_9:Z 0.0792
+2 net_19:1 0.1193
+3 net_19:2 0.2373
+4 net_19:3 0.4156
+5 inst_34:A 0.0350
+*RES
+2 inst_9:Z net_19:1 0.4117
+3 net_19:1 net_19:2 0.1948
+4 net_19:2 net_19:3 0.3415
+5 net_19:3 inst_34:A 0.3758
+*END
+
+*D_NET nid29 2.4148
+*CONN
+*P nid29 I
+*I inst_83:A I
+*I inst_30:A I
+*I inst_12:A I
+*CAP
+1 nid29 0.2255
+2 nid29:1 0.0348
+3 nid29:2 0.0564
+4 nid29:3 0.4768
+5 nid29:4 0.4959
+6 inst_30:A 0.1935
+7 nid29:5 0.0553
+8 nid29:6 0.0882
+9 inst_83:A 0.1463
+10 nid29:7 0.0338
+11 nid29:8 0.1622
+12 nid29:9 0.3364
+13 inst_12:A 0.1095
+*RES
+2 nid29 nid29:1 0.0545
+3 nid29:1 nid29:2 0.2449
+4 nid29:2 nid29:3 0.2051
+5 nid29:3 nid29:4 0.0892
+6 nid29:4 inst_30:A 0.0409
+7 nid29:3 nid29:5 0.1560
+8 nid29:5 nid29:6 0.4284
+9 nid29:6 inst_83:A 0.1626
+10 nid29:3 nid29:7 0.1428
+11 nid29:7 nid29:8 0.3754
+12 nid29:8 nid29:9 0.2800
+13 nid29:9 inst_12:A 0.4939
+*END
+
+*D_NET net_45 0.1094
+*CONN
+*I inst_44:ZN O
+*I inst_64:A I
+*CAP
+1 inst_44:ZN 0.0102
+2 net_45:1 0.0740
+3 inst_64:A 0.0252
+*RES
+2 inst_44:ZN net_45:1 0.3849
+3 net_45:1 inst_64:A 0.0440
+*END
+
+*D_NET net_89 8.8556
+*CONN
+*I inst_66:ZN O
+*I inst_118:A1 I
+*I inst_122:A1 I
+*I inst_110:A1 I
+*I inst_111:A1 I
+*I inst_159:A1 I
+*I inst_150:A1 I
+*I inst_140:A1 I
+*I inst_141:A1 I
+*I inst_73:A I
+*CAP
+1 inst_66:ZN 0.3147
+2 net_89:1 0.2964
+3 net_89:2 0.3860
+4 net_89:3 0.1341
+5 net_89:4 0.3906
+6 inst_111:A1 0.1034
+7 net_89:5 0.1953
+8 net_89:6 0.1600
+9 inst_122:A1 0.4986
+10 net_89:7 0.1776
+11 net_89:8 0.3994
+12 net_89:9 0.1643
+13 net_89:10 0.3265
+14 net_89:11 0.1398
+15 inst_110:A1 0.2385
+16 net_89:12 0.0821
+17 net_89:13 0.2433
+18 inst_118:A1 0.0992
+19 net_89:14 0.3065
+20 net_89:15 0.3478
+21 net_89:16 0.4588
+22 inst_159:A1 0.0143
+23 net_89:17 0.2593
+24 inst_150:A1 0.3433
+25 net_89:18 0.4959
+26 inst_140:A1 0.0935
+27 net_89:19 0.2014
+28 net_89:20 0.2240
+29 inst_141:A1 0.3607
+30 net_89:21 0.3740
+31 net_89:22 0.4320
+32 net_89:23 0.0431
+33 net_89:24 0.0955
+34 inst_73:A 0.4555
+*RES
+2 inst_66:ZN net_89:1 0.0601
+3 net_89:1 net_89:2 0.4821
+4 net_89:2 net_89:3 0.3892
+5 net_89:3 net_89:4 0.0021
+6 net_89:4 inst_111:A1 0.0349
+7 net_89:1 net_89:5 0.0089
+8 net_89:5 net_89:6 0.4360
+9 net_89:6 inst_122:A1 0.1920
+10 net_89:1 net_89:7 0.2106
+11 net_89:7 net_89:8 0.1828
+12 net_89:8 net_89:9 0.3452
+13 net_89:9 net_89:10 0.3190
+14 net_89:10 net_89:11 0.1308
+15 net_89:11 inst_110:A1 0.1057
+16 net_89:1 net_89:12 0.2940
+17 net_89:12 net_89:13 0.1936
+18 net_89:13 inst_118:A1 0.0570
+19 net_89:12 net_89:14 0.0900
+20 net_89:14 net_89:15 0.2138
+21 net_89:15 net_89:16 0.4225
+22 net_89:16 inst_159:A1 0.1859
+23 net_89:9 net_89:17 0.3554
+24 net_89:17 inst_150:A1 0.2037
+25 net_89:14 net_89:18 0.3241
+26 net_89:18 inst_140:A1 0.1141
+27 net_89:5 net_89:19 0.4335
+28 net_89:19 net_89:20 0.2691
+29 net_89:20 inst_141:A1 0.4887
+30 net_89:20 net_89:21 0.2560
+31 net_89:21 net_89:22 0.1771
+32 net_89:22 net_89:23 0.1851
+33 net_89:23 net_89:24 0.2931
+34 net_89:24 inst_73:A 0.0455
+*END
+
+*D_NET net_126 1.9497
+*CONN
+*I inst_158:ZN O
+*I inst_76:B I
+*CAP
+1 inst_158:ZN 0.1046
+2 net_126:1 0.3097
+3 net_126:2 0.3614
+4 net_126:3 0.4761
+5 net_126:4 0.2370
+6 inst_76:B 0.4609
+*RES
+2 inst_158:ZN net_126:1 0.1362
+3 net_126:1 net_126:2 0.3061
+4 net_126:2 net_126:3 0.1446
+5 net_126:3 net_126:4 0.2626
+6 net_126:4 inst_76:B 0.2776
+*END
+
+*D_NET nod1 0.8822
+*CONN
+*I inst_104:ZN O
+*P nod1 O
+*CAP
+1 inst_104:ZN 0.2606
+2 nod1:1 0.0017
+3 nod1:2 0.2694
+4 nod1 0.3505
+*RES
+2 inst_104:ZN nod1:1 0.2145
+3 nod1:1 nod1:2 0.1667
+4 nod1:2 nod1 0.1068
+*END
+
+*D_NET net_34 1.5784
+*CONN
+*I inst_20:Z O
+*I inst_40:A I
+*CAP
+1 inst_20:Z 0.4885
+2 net_34:1 0.2001
+3 net_34:2 0.4641
+4 inst_40:A 0.4257
+*RES
+2 inst_20:Z net_34:1 0.4319
+3 net_34:1 net_34:2 0.3027
+4 net_34:2 inst_40:A 0.3769
+*END
+
+*D_NET net_108 1.5866
+*CONN
+*I inst_148:ZN O
+*I inst_84:B I
+*CAP
+1 inst_148:ZN 0.2814
+2 net_108:1 0.4194
+3 net_108:2 0.3070
+4 net_108:3 0.4196
+5 inst_84:B 0.1591
+*RES
+2 inst_148:ZN net_108:1 0.2992
+3 net_108:1 net_108:2 0.0921
+4 net_108:2 net_108:3 0.4441
+5 net_108:3 inst_84:B 0.2780
+*END
+
+*D_NET nod15 0.8684
+*CONN
+*I inst_98:ZN O
+*P nod15 O
+*CAP
+1 inst_98:ZN 0.4319
+2 nod15:1 0.1678
+3 nod15:2 0.1285
+4 nod15 0.1402
+*RES
+2 inst_98:ZN nod15:1 0.4755
+3 nod15:1 nod15:2 0.4507
+4 nod15:2 nod15 0.1332
+*END
+
+*D_NET net_63 1.4027
+*CONN
+*I inst_55:ZN O
+*I inst_62:A I
+*CAP
+1 inst_55:ZN 0.0227
+2 net_63:1 0.4951
+3 net_63:2 0.0639
+4 net_63:3 0.4738
+5 inst_62:A 0.3472
+*RES
+2 inst_55:ZN net_63:1 0.1660
+3 net_63:1 net_63:2 0.3547
+4 net_63:2 net_63:3 0.1664
+5 net_63:3 inst_62:A 0.0883
+*END
+
+*D_NET nid6 2.8128
+*CONN
+*P nid6 I
+*I inst_6:A I
+*I inst_29:B I
+*I inst_77:A I
+*CAP
+1 nid6 0.4521
+2 nid6:1 0.2001
+3 nid6:2 0.0831
+4 inst_77:A 0.3497
+5 nid6:3 0.1705
+6 nid6:4 0.3056
+7 nid6:5 0.2232
+8 inst_29:B 0.2105
+9 nid6:6 0.0641
+10 nid6:7 0.1486
+11 nid6:8 0.2039
+12 inst_6:A 0.4015
+*RES
+2 nid6 nid6:1 0.0440
+3 nid6:1 nid6:2 0.1956
+4 nid6:2 inst_77:A 0.4927
+5 nid6:1 nid6:3 0.2773
+6 nid6:3 nid6:4 0.1966
+7 nid6:4 nid6:5 0.2381
+8 nid6:5 inst_29:B 0.1727
+9 nid6:3 nid6:6 0.4385
+10 nid6:6 nid6:7 0.2952
+11 nid6:7 nid6:8 0.1672
+12 nid6:8 inst_6:A 0.3566
+*END
+
+*D_NET net_116 5.1697
+*CONN
+*I inst_114:ZN O
+*I inst_150:A2 I
+*I inst_153:A2 I
+*I inst_151:A2 I
+*I inst_156:A2 I
+*CAP
+1 inst_114:ZN 0.1053
+2 net_116:1 0.0772
+3 net_116:2 0.2598
+4 net_116:3 0.0272
+5 net_116:4 0.1108
+6 net_116:5 0.0583
+7 inst_151:A2 0.1704
+8 net_116:6 0.3174
+9 net_116:7 0.3692
+10 inst_153:A2 0.4211
+11 net_116:8 0.1329
+12 net_116:9 0.4504
+13 net_116:10 0.3111
+14 net_116:11 0.4014
+15 net_116:12 0.3966
+16 inst_150:A2 0.3499
+17 net_116:13 0.3006
+18 net_116:14 0.4199
+19 net_116:15 0.0918
+20 net_116:16 0.1378
+21 net_116:17 0.0832
+22 inst_156:A2 0.1774
+*RES
+2 inst_114:ZN net_116:1 0.1172
+3 net_116:1 net_116:2 0.3994
+4 net_116:2 net_116:3 0.2757
+5 net_116:3 net_116:4 0.2037
+6 net_116:4 net_116:5 0.1956
+7 net_116:5 inst_151:A2 0.3946
+8 net_116:1 net_116:6 0.2732
+9 net_116:6 net_116:7 0.1196
+10 net_116:7 inst_153:A2 0.4794
+11 net_116:5 net_116:8 0.2104
+12 net_116:8 net_116:9 0.0051
+13 net_116:9 net_116:10 0.2517
+14 net_116:10 net_116:11 0.0150
+15 net_116:11 net_116:12 0.1774
+16 net_116:12 inst_150:A2 0.3181
+17 net_116:11 net_116:13 0.4862
+18 net_116:13 net_116:14 0.1406
+19 net_116:14 net_116:15 0.4593
+20 net_116:15 net_116:16 0.1752
+21 net_116:16 net_116:17 0.1192
+22 net_116:17 inst_156:A2 0.4628
+*END
+
+*D_NET net_30 1.1529
+*CONN
+*I inst_16:Z O
+*I inst_35:A I
+*CAP
+1 inst_16:Z 0.4185
+2 net_30:1 0.2769
+3 inst_35:A 0.4574
+*RES
+2 inst_16:Z net_30:1 0.1984
+3 net_30:1 inst_35:A 0.1896
+*END
+
+*D_NET net_91 2.0494
+*CONN
+*I inst_122:ZN O
+*I inst_112:A2 I
+*I inst_117:A2 I
+*CAP
+1 inst_122:ZN 0.4957
+2 net_91:1 0.2328
+3 net_91:2 0.4624
+4 net_91:3 0.2712
+5 inst_117:A2 0.4182
+6 net_91:4 0.0016
+7 inst_112:A2 0.1675
+*RES
+2 inst_122:ZN net_91:1 0.1100
+3 net_91:1 net_91:2 0.1024
+4 net_91:2 net_91:3 0.1109
+5 net_91:3 inst_117:A2 0.3591
+6 net_91:2 net_91:4 0.3488
+7 net_91:4 inst_112:A2 0.2156
+*END
+
+*D_NET nod21 1.4908
+*CONN
+*I inst_91:ZN O
+*P nod21 O
+*CAP
+1 inst_91:ZN 0.2969
+2 nod21:1 0.4874
+3 nod21:2 0.4231
+4 nod21:3 0.0305
+5 nod21 0.2528
+*RES
+2 inst_91:ZN nod21:1 0.0842
+3 nod21:1 nod21:2 0.0014
+4 nod21:2 nod21:3 0.4065
+5 nod21:3 nod21 0.1388
+*END
+
+*D_NET nod3 1.0796
+*CONN
+*I inst_82:ZN O
+*P nod3 O
+*CAP
+1 inst_82:ZN 0.1776
+2 nod3:1 0.2666
+3 nod3:2 0.1664
+4 nod3:3 0.0772
+5 nod3 0.3918
+*RES
+2 inst_82:ZN nod3:1 0.3098
+3 nod3:1 nod3:2 0.1469
+4 nod3:2 nod3:3 0.1824
+5 nod3:3 nod3 0.2693
+*END
+
+*D_NET net_24 1.3584
+*CONN
+*I inst_29:ZN O
+*I inst_42:B I
+*CAP
+1 inst_29:ZN 0.3821
+2 net_24:1 0.0709
+3 net_24:2 0.4961
+4 inst_42:B 0.4092
+*RES
+2 inst_29:ZN net_24:1 0.4538
+3 net_24:1 net_24:2 0.3826
+4 net_24:2 inst_42:B 0.4229
+*END
+
+*D_NET net_55 1.7550
+*CONN
+*I inst_50:ZN O
+*I inst_61:A I
+*CAP
+1 inst_50:ZN 0.2182
+2 net_55:1 0.4786
+3 net_55:2 0.4230
+4 net_55:3 0.2551
+5 inst_61:A 0.3800
+*RES
+2 inst_50:ZN net_55:1 0.0936
+3 net_55:1 net_55:2 0.3493
+4 net_55:2 net_55:3 0.1123
+5 net_55:3 inst_61:A 0.1284
+*END
+
+*D_NET net_99 1.4016
+*CONN
+*I inst_141:ZN O
+*I inst_80:B I
+*CAP
+1 inst_141:ZN 0.4702
+2 net_99:1 0.0120
+3 net_99:2 0.0092
+4 net_99:3 0.5006
+5 inst_80:B 0.4095
+*RES
+2 inst_141:ZN net_99:1 0.0919
+3 net_99:1 net_99:2 0.2302
+4 net_99:2 net_99:3 0.3833
+5 net_99:3 inst_80:B 0.3435
+*END
+
+*D_NET net_106 1.1160
+*CONN
+*I inst_146:ZN O
+*I inst_83:B I
+*CAP
+1 inst_146:ZN 0.2737
+2 net_106:1 0.2446
+3 net_106:2 0.2502
+4 net_106:3 0.0707
+5 inst_83:B 0.2769
+*RES
+2 inst_146:ZN net_106:1 0.3625
+3 net_106:1 net_106:2 0.0934
+4 net_106:2 net_106:3 0.3687
+5 net_106:3 inst_83:B 0.1769
+*END
+
+*D_NET net_46 1.0750
+*CONN
+*I inst_45:ZN O
+*I inst_71:A I
+*CAP
+1 inst_45:ZN 0.1602
+2 net_46:1 0.3201
+3 net_46:2 0.1957
+4 net_46:3 0.1470
+5 inst_71:A 0.2519
+*RES
+2 inst_45:ZN net_46:1 0.1410
+3 net_46:1 net_46:2 0.3451
+4 net_46:2 net_46:3 0.2097
+5 net_46:3 inst_71:A 0.0374
+*END
+
+*D_NET net_140 0.8506
+*CONN
+*I inst_166:ZN O
+*I inst_102:B I
+*CAP
+1 inst_166:ZN 0.4322
+2 net_140:1 0.1578
+3 inst_102:B 0.2606
+*RES
+2 inst_166:ZN net_140:1 0.1901
+3 net_140:1 inst_102:B 0.1438
+*END
+
+*D_NET net_118 1.1686
+*CONN
+*I inst_153:ZN O
+*I inst_87:B I
+*CAP
+1 inst_153:ZN 0.4821
+2 net_118:1 0.0508
+3 net_118:2 0.4536
+4 inst_87:B 0.1822
+*RES
+2 inst_153:ZN net_118:1 0.1764
+3 net_118:1 net_118:2 0.2619
+4 net_118:2 inst_87:B 0.0098
+*END
+
+*D_NET nr 7.5157
+*CONN
+*P nr I
+*I inst_125:A2 I
+*I inst_123:A2 I
+*I inst_127:A2 I
+*I inst_129:A2 I
+*I inst_126:A2 I
+*I inst_124:A2 I
+*I inst_130:A2 I
+*I inst_128:A2 I
+*CAP
+1 nr 0.3666
+2 nr:1 0.0695
+3 nr:2 0.4498
+4 nr:3 0.1049
+5 nr:4 0.4247
+6 inst_128:A2 0.1320
+7 nr:5 0.2724
+8 nr:6 0.0730
+9 nr:7 0.0993
+10 inst_123:A2 0.0798
+11 nr:8 0.0446
+12 nr:9 0.3704
+13 inst_127:A2 0.4315
+14 nr:10 0.3054
+15 nr:11 0.0282
+16 nr:12 0.1520
+17 inst_129:A2 0.4942
+18 nr:13 0.2315
+19 nr:14 0.1447
+20 nr:15 0.1956
+21 nr:16 0.4050
+22 inst_126:A2 0.0750
+23 nr:17 0.0437
+24 nr:18 0.0766
+25 nr:19 0.2484
+26 nr:20 0.0117
+27 nr:21 0.0938
+28 inst_124:A2 0.2800
+29 nr:22 0.0906
+30 nr:23 0.4456
+31 inst_130:A2 0.1090
+32 nr:24 0.2868
+33 nr:25 0.4011
+34 nr:26 0.3479
+35 inst_125:A2 0.1303
+*RES
+2 nr nr:1 0.0074
+3 nr:1 nr:2 0.3711
+4 nr:2 nr:3 0.3601
+5 nr:3 nr:4 0.3918
+6 nr:4 inst_128:A2 0.4132
+7 nr:4 nr:5 0.0502
+8 nr:5 nr:6 0.2214
+9 nr:6 nr:7 0.3796
+10 nr:7 inst_123:A2 0.1381
+11 nr:5 nr:8 0.4544
+12 nr:8 nr:9 0.2996
+13 nr:9 inst_127:A2 0.0342
+14 nr:9 nr:10 0.3819
+15 nr:10 nr:11 0.1866
+16 nr:11 nr:12 0.3461
+17 nr:12 inst_129:A2 0.3038
+18 nr:4 nr:13 0.1078
+19 nr:13 nr:14 0.1867
+20 nr:14 nr:15 0.4055
+21 nr:15 nr:16 0.0735
+22 nr:16 inst_126:A2 0.3442
+23 nr:2 nr:17 0.3291
+24 nr:17 nr:18 0.4620
+25 nr:18 nr:19 0.3499
+26 nr:19 nr:20 0.0216
+27 nr:20 nr:21 0.3317
+28 nr:21 inst_124:A2 0.3239
+29 nr:6 nr:22 0.2173
+30 nr:22 nr:23 0.2098
+31 nr:23 inst_130:A2 0.2837
+32 nr:16 nr:24 0.4861
+33 nr:24 nr:25 0.2366
+34 nr:25 nr:26 0.3964
+35 nr:26 inst_125:A2 0.3577
+*END
+
+*D_NET nic4 1.8809
+*CONN
+*P nic4 I
+*I inst_128:A1 I
+*CAP
+1 nic4 0.0281
+2 nic4:1 0.3140
+3 nic4:2 0.0430
+4 nic4:3 0.3601
+5 nic4:4 0.2786
+6 nic4:5 0.3696
+7 inst_128:A1 0.4875
+*RES
+2 nic4 nic4:1 0.0363
+3 nic4:1 nic4:2 0.1372
+4 nic4:2 nic4:3 0.3094
+5 nic4:3 nic4:4 0.2163
+6 nic4:4 nic4:5 0.3052
+7 nic4:5 inst_128:A1 0.0303
+*END
+
+*D_NET net_104 1.2330
+*CONN
+*I inst_145:ZN O
+*I inst_82:B I
+*CAP
+1 inst_145:ZN 0.3372
+2 net_104:1 0.2379
+3 net_104:2 0.2922
+4 inst_82:B 0.3657
+*RES
+2 inst_145:ZN net_104:1 0.1594
+3 net_104:1 net_104:2 0.0783
+4 net_104:2 inst_82:B 0.3509
+*END
+
+*D_NET nid10 2.4711
+*CONN
+*P nid10 I
+*I inst_103:A I
+*I inst_26:B I
+*I inst_7:B I
+*CAP
+1 nid10 0.0218
+2 nid10:1 0.1122
+3 nid10:2 0.0176
+4 nid10:3 0.2080
+5 nid10:4 0.1330
+6 inst_7:B 0.2216
+7 nid10:5 0.1137
+8 nid10:6 0.3466
+9 nid10:7 0.0127
+10 nid10:8 0.0611
+11 inst_26:B 0.1875
+12 nid10:9 0.0673
+13 nid10:10 0.1208
+14 nid10:11 0.2521
+15 nid10:12 0.3199
+16 inst_103:A 0.2751
+*RES
+2 nid10 nid10:1 0.2224
+3 nid10:1 nid10:2 0.3752
+4 nid10:2 nid10:3 0.4754
+5 nid10:3 nid10:4 0.3006
+6 nid10:4 inst_7:B 0.4730
+7 nid10:3 nid10:5 0.1902
+8 nid10:5 nid10:6 0.1310
+9 nid10:6 nid10:7 0.2821
+10 nid10:7 nid10:8 0.4804
+11 nid10:8 inst_26:B 0.2314
+12 nid10:4 nid10:9 0.4029
+13 nid10:9 nid10:10 0.0779
+14 nid10:10 nid10:11 0.4244
+15 nid10:11 nid10:12 0.3089
+16 nid10:12 inst_103:A 0.3825
+*END
+
+*D_NET nod16 1.5013
+*CONN
+*I inst_97:ZN O
+*P nod16 O
+*CAP
+1 inst_97:ZN 0.3889
+2 nod16:1 0.4163
+3 nod16:2 0.1092
+4 nod16:3 0.3878
+5 nod16 0.1991
+*RES
+2 inst_97:ZN nod16:1 0.0960
+3 nod16:1 nod16:2 0.3952
+4 nod16:2 nod16:3 0.0494
+5 nod16:3 nod16 0.0317
+*END
+
+*D_NET net_72 7.1720
+*CONN
+*I inst_70:ZN O
+*I inst_131:A2 I
+*I inst_108:A1 I
+*I inst_148:A1 I
+*I inst_107:A2 I
+*I inst_165:A1 I
+*I inst_156:A1 I
+*I inst_154:A1 I
+*CAP
+1 inst_70:ZN 0.4335
+2 net_72:1 0.4563
+3 net_72:2 0.2020
+4 net_72:3 0.1077
+5 inst_107:A2 0.3706
+6 net_72:4 0.0518
+7 net_72:5 0.3089
+8 net_72:6 0.1544
+9 net_72:7 0.3845
+10 inst_108:A1 0.2149
+11 net_72:8 0.3759
+12 net_72:9 0.1116
+13 net_72:10 0.3800
+14 net_72:11 0.0353
+15 inst_148:A1 0.0467
+16 net_72:12 0.0264
+17 net_72:13 0.0122
+18 net_72:14 0.0267
+19 net_72:15 0.2974
+20 inst_131:A2 0.0469
+21 net_72:16 0.3318
+22 net_72:17 0.4567
+23 net_72:18 0.4095
+24 inst_165:A1 0.1225
+25 net_72:19 0.2780
+26 net_72:20 0.3268
+27 inst_156:A1 0.3313
+28 net_72:21 0.4362
+29 net_72:22 0.2471
+30 inst_154:A1 0.1884
+*RES
+2 inst_70:ZN net_72:1 0.3192
+3 net_72:1 net_72:2 0.1242
+4 net_72:2 net_72:3 0.0347
+5 net_72:3 inst_107:A2 0.1630
+6 net_72:3 net_72:4 0.4092
+7 net_72:4 net_72:5 0.3628
+8 net_72:5 net_72:6 0.1642
+9 net_72:6 net_72:7 0.3437
+10 net_72:7 inst_108:A1 0.4658
+11 net_72:3 net_72:8 0.0656
+12 net_72:8 net_72:9 0.2876
+13 net_72:9 net_72:10 0.4401
+14 net_72:10 net_72:11 0.2599
+15 net_72:11 inst_148:A1 0.4129
+16 net_72:5 net_72:12 0.3781
+17 net_72:12 net_72:13 0.1708
+18 net_72:13 net_72:14 0.0341
+19 net_72:14 net_72:15 0.3211
+20 net_72:15 inst_131:A2 0.0698
+21 net_72:10 net_72:16 0.3701
+22 net_72:16 net_72:17 0.0970
+23 net_72:17 net_72:18 0.1480
+24 net_72:18 inst_165:A1 0.2690
+25 net_72:3 net_72:19 0.2957
+26 net_72:19 net_72:20 0.3854
+27 net_72:20 inst_156:A1 0.0892
+28 net_72:2 net_72:21 0.3586
+29 net_72:21 net_72:22 0.4801
+30 net_72:22 inst_154:A1 0.1253
+*END
+
+*D_NET net_25 1.6031
+*CONN
+*I inst_13:Z O
+*I inst_41:B I
+*CAP
+1 inst_13:Z 0.0864
+2 net_25:1 0.4745
+3 net_25:2 0.3566
+4 net_25:3 0.1047
+5 net_25:4 0.1510
+6 inst_41:B 0.4299
+*RES
+2 inst_13:Z net_25:1 0.3873
+3 net_25:1 net_25:2 0.0392
+4 net_25:2 net_25:3 0.2836
+5 net_25:3 net_25:4 0.1854
+6 net_25:4 inst_41:B 0.2861
+*END
+
+*D_NET net_7 1.7143
+*CONN
+*I inst_130:ZN O
+*I inst_62:B I
+*CAP
+1 inst_130:ZN 0.1158
+2 net_7:1 0.4479
+3 net_7:2 0.4202
+4 net_7:3 0.2004
+5 net_7:4 0.2002
+6 net_7:5 0.0818
+7 inst_62:B 0.2479
+*RES
+2 inst_130:ZN net_7:1 0.4095
+3 net_7:1 net_7:2 0.1860
+4 net_7:2 net_7:3 0.4875
+5 net_7:3 net_7:4 0.1954
+6 net_7:4 net_7:5 0.0039
+7 net_7:5 inst_62:B 0.1800
+*END
+
+*D_NET net_70 1.1070
+*CONN
+*I inst_62:ZN O
+*I inst_68:B I
+*CAP
+1 inst_62:ZN 0.4546
+2 net_70:1 0.0094
+3 net_70:2 0.1665
+4 net_70:3 0.3058
+5 inst_68:B 0.1706
+*RES
+2 inst_62:ZN net_70:1 0.1839
+3 net_70:1 net_70:2 0.0141
+4 net_70:2 net_70:3 0.3657
+5 net_70:3 inst_68:B 0.1020
+*END
+
+*D_NET nod9 2.0075
+*CONN
+*I inst_74:ZN O
+*P nod9 O
+*CAP
+1 inst_74:ZN 0.4466
+2 nod9:1 0.2713
+3 nod9:2 0.2463
+4 nod9:3 0.4213
+5 nod9:4 0.2025
+6 nod9 0.4196
+*RES
+2 inst_74:ZN nod9:1 0.4912
+3 nod9:1 nod9:2 0.0664
+4 nod9:2 nod9:3 0.0137
+5 nod9:3 nod9:4 0.0228
+6 nod9:4 nod9 0.4626
+*END
+
+*D_NET nod22 2.1636
+*CONN
+*I inst_90:ZN O
+*P nod22 O
+*CAP
+1 inst_90:ZN 0.1449
+2 nod22:1 0.3424
+3 nod22:2 0.4664
+4 nod22:3 0.2681
+5 nod22:4 0.4391
+6 nod22:5 0.2913
+7 nod22 0.2114
+*RES
+2 inst_90:ZN nod22:1 0.3955
+3 nod22:1 nod22:2 0.3017
+4 nod22:2 nod22:3 0.4246
+5 nod22:3 nod22:4 0.0793
+6 nod22:4 nod22:5 0.0665
+7 nod22:5 nod22 0.0685
+*END
+
+*D_NET nid17 2.2217
+*CONN
+*P nid17 I
+*I inst_27:A I
+*I inst_96:A I
+*I inst_4:B I
+*CAP
+1 nid17 0.4417
+2 nid17:1 0.1244
+3 inst_4:B 0.2375
+4 nid17:2 0.1591
+5 nid17:3 0.0033
+6 nid17:4 0.1514
+7 inst_96:A 0.0517
+8 nid17:5 0.2926
+9 nid17:6 0.2033
+10 nid17:7 0.4754
+11 inst_27:A 0.0813
+*RES
+2 nid17 nid17:1 0.1047
+3 nid17:1 inst_4:B 0.4458
+4 nid17:1 nid17:2 0.4166
+5 nid17:2 nid17:3 0.1790
+6 nid17:3 nid17:4 0.0269
+7 nid17:4 inst_96:A 0.2013
+8 nid17:1 nid17:5 0.4716
+9 nid17:5 nid17:6 0.4403
+10 nid17:6 nid17:7 0.3843
+11 nid17:7 inst_27:A 0.2562
+*END
+
+*D_NET nid27 3.9666
+*CONN
+*P nid27 I
+*I inst_13:A I
+*I inst_85:A I
+*I inst_23:B I
+*CAP
+1 nid27 0.3666
+2 nid27:1 0.4591
+3 nid27:2 0.0255
+4 nid27:3 0.1597
+5 nid27:4 0.4509
+6 nid27:5 0.1621
+7 inst_85:A 0.0269
+8 nid27:6 0.0158
+9 nid27:7 0.0300
+10 nid27:8 0.2280
+11 nid27:9 0.4115
+12 nid27:10 0.3816
+13 inst_13:A 0.2463
+14 nid27:11 0.1580
+15 nid27:12 0.2010
+16 nid27:13 0.3749
+17 inst_23:B 0.2689
+*RES
+2 nid27 nid27:1 0.1554
+3 nid27:1 nid27:2 0.3696
+4 nid27:2 nid27:3 0.0050
+5 nid27:3 nid27:4 0.0271
+6 nid27:4 nid27:5 0.0583
+7 nid27:5 inst_85:A 0.0479
+8 nid27:4 nid27:6 0.1596
+9 nid27:6 nid27:7 0.1159
+10 nid27:7 nid27:8 0.0964
+11 nid27:8 nid27:9 0.3626
+12 nid27:9 nid27:10 0.1047
+13 nid27:10 inst_13:A 0.4894
+14 nid27:9 nid27:11 0.3762
+15 nid27:11 nid27:12 0.4885
+16 nid27:12 nid27:13 0.4098
+17 nid27:13 inst_23:B 0.4855
+*END
+
+*D_NET nod6 1.0451
+*CONN
+*I inst_77:ZN O
+*P nod6 O
+*CAP
+1 inst_77:ZN 0.4404
+2 nod6:1 0.3380
+3 nod6 0.2667
+*RES
+2 inst_77:ZN nod6:1 0.2547
+3 nod6:1 nod6 0.0811
+*END
+
+*D_NET net_5 1.6300
+*CONN
+*I inst_128:ZN O
+*I inst_63:B I
+*CAP
+1 inst_128:ZN 0.3232
+2 net_5:1 0.2528
+3 net_5:2 0.0098
+4 net_5:3 0.0299
+5 net_5:4 0.4974
+6 net_5:5 0.0346
+7 inst_63:B 0.4823
+*RES
+2 inst_128:ZN net_5:1 0.2935
+3 net_5:1 net_5:2 0.0853
+4 net_5:2 net_5:3 0.4288
+5 net_5:3 net_5:4 0.4647
+6 net_5:4 net_5:5 0.1887
+7 net_5:5 inst_63:B 0.0854
+*END
+
+*D_NET nod12 1.1312
+*CONN
+*I inst_101:ZN O
+*P nod12 O
+*CAP
+1 inst_101:ZN 0.0901
+2 nod12:1 0.0274
+3 nod12:2 0.2551
+4 nod12:3 0.2327
+5 nod12:4 0.3047
+6 nod12 0.2213
+*RES
+2 inst_101:ZN nod12:1 0.3364
+3 nod12:1 nod12:2 0.1861
+4 nod12:2 nod12:3 0.1641
+5 nod12:3 nod12:4 0.3197
+6 nod12:4 nod12 0.1243
+*END
+
+*D_NET net_13 0.9209
+*CONN
+*I inst_4:Z O
+*I inst_39:B I
+*CAP
+1 inst_4:Z 0.1053
+2 net_13:1 0.2897
+3 net_13:2 0.1299
+4 net_13:3 0.1879
+5 net_13:4 0.1834
+6 inst_39:B 0.0247
+*RES
+2 inst_4:Z net_13:1 0.4220
+3 net_13:1 net_13:2 0.2978
+4 net_13:2 net_13:3 0.3851
+5 net_13:3 net_13:4 0.0216
+6 net_13:4 inst_39:B 0.0737
+*END
+
+*D_NET nic5 0.5811
+*CONN
+*P nic5 I
+*I inst_127:A1 I
+*CAP
+1 nic5 0.0421
+2 nic5:1 0.1166
+3 inst_127:A1 0.4224
+*RES
+2 nic5 nic5:1 0.2640
+3 nic5:1 inst_127:A1 0.0512
+*END
+
+*D_NET net_138 5.7608
+*CONN
+*I inst_117:ZN O
+*I inst_162:A2 I
+*I inst_155:A2 I
+*I inst_169:A2 I
+*I inst_166:A2 I
+*CAP
+1 inst_117:ZN 0.4877
+2 net_138:1 0.4314
+3 net_138:2 0.0481
+4 net_138:3 0.1304
+5 inst_166:A2 0.4912
+6 net_138:4 0.4399
+7 net_138:5 0.0686
+8 inst_155:A2 0.3530
+9 net_138:6 0.1763
+10 net_138:7 0.3063
+11 net_138:8 0.4846
+12 net_138:9 0.1991
+13 net_138:10 0.1247
+14 inst_169:A2 0.0612
+15 net_138:11 0.1702
+16 net_138:12 0.2935
+17 net_138:13 0.4880
+18 net_138:14 0.3326
+19 net_138:15 0.3152
+20 inst_162:A2 0.3590
+*RES
+2 inst_117:ZN net_138:1 0.0201
+3 net_138:1 net_138:2 0.4741
+4 net_138:2 net_138:3 0.1452
+5 net_138:3 inst_166:A2 0.3101
+6 net_138:3 net_138:4 0.2251
+7 net_138:4 net_138:5 0.2605
+8 net_138:5 inst_155:A2 0.4387
+9 net_138:2 net_138:6 0.0462
+10 net_138:6 net_138:7 0.3845
+11 net_138:7 net_138:8 0.4871
+12 net_138:8 net_138:9 0.4276
+13 net_138:9 net_138:10 0.4119
+14 net_138:10 inst_169:A2 0.0728
+15 net_138:2 net_138:11 0.2241
+16 net_138:11 net_138:12 0.4734
+17 net_138:12 net_138:13 0.1186
+18 net_138:13 net_138:14 0.2757
+19 net_138:14 net_138:15 0.1126
+20 net_138:15 inst_162:A2 0.2518
+*END
+
+*D_NET nid30 2.8173
+*CONN
+*P nid30 I
+*I inst_19:A I
+*I inst_81:A I
+*I inst_1:B I
+*CAP
+1 nid30 0.4337
+2 nid30:1 0.2825
+3 inst_1:B 0.2464
+4 nid30:2 0.1134
+5 nid30:3 0.2949
+6 nid30:4 0.0354
+7 inst_81:A 0.3139
+8 nid30:5 0.4054
+9 nid30:6 0.3682
+10 inst_19:A 0.3236
+*RES
+2 nid30 nid30:1 0.0937
+3 nid30:1 inst_1:B 0.4728
+4 nid30:1 nid30:2 0.5001
+5 nid30:2 nid30:3 0.2374
+6 nid30:3 nid30:4 0.1754
+7 nid30:4 inst_81:A 0.3960
+8 nid30:3 nid30:5 0.4330
+9 nid30:5 nid30:6 0.2654
+10 nid30:6 inst_19:A 0.3366
+*END
+
+*D_NET net_94 2.7637
+*CONN
+*I inst_121:ZN O
+*I inst_114:A2 I
+*I inst_116:A2 I
+*CAP
+1 inst_121:ZN 0.3982
+2 net_94:1 0.4539
+3 net_94:2 0.0804
+4 net_94:3 0.0697
+5 inst_116:A2 0.0667
+6 net_94:4 0.3457
+7 net_94:5 0.2329
+8 net_94:6 0.4018
+9 net_94:7 0.1315
+10 net_94:8 0.1871
+11 inst_114:A2 0.3958
+*RES
+2 inst_121:ZN net_94:1 0.4661
+3 net_94:1 net_94:2 0.1540
+4 net_94:2 net_94:3 0.3295
+5 net_94:3 inst_116:A2 0.4651
+6 net_94:2 net_94:4 0.0633
+7 net_94:4 net_94:5 0.2429
+8 net_94:5 net_94:6 0.4722
+9 net_94:6 net_94:7 0.1135
+10 net_94:7 net_94:8 0.0739
+11 net_94:8 inst_114:A2 0.2333
+*END
+
+*D_NET nid12 2.9324
+*CONN
+*P nid12 I
+*I inst_2:B I
+*I inst_14:B I
+*I inst_101:A I
+*CAP
+1 nid12 0.1361
+2 nid12:1 0.4837
+3 inst_14:B 0.0759
+4 nid12:2 0.3572
+5 nid12:3 0.1000
+6 nid12:4 0.3060
+7 nid12:5 0.0289
+8 nid12:6 0.3636
+9 inst_2:B 0.4285
+10 nid12:7 0.3372
+11 inst_101:A 0.3154
+*RES
+2 nid12 nid12:1 0.2920
+3 nid12:1 inst_14:B 0.2736
+4 nid12:1 nid12:2 0.2126
+5 nid12:2 nid12:3 0.4822
+6 nid12:3 nid12:4 0.0787
+7 nid12:4 nid12:5 0.0485
+8 nid12:5 nid12:6 0.4865
+9 nid12:6 inst_2:B 0.2320
+10 nid12:4 nid12:7 0.4901
+11 nid12:7 inst_101:A 0.4728
+*END
+
+*D_NET net_11 1.0272
+*CONN
+*I inst_2:Z O
+*I inst_35:B I
+*CAP
+1 inst_2:Z 0.2996
+2 net_11:1 0.0898
+3 net_11:2 0.3835
+4 inst_35:B 0.2544
+*RES
+2 inst_2:Z net_11:1 0.3916
+3 net_11:1 net_11:2 0.1849
+4 net_11:2 inst_35:B 0.4592
+*END
+
+*D_NET nod18 0.3466
+*CONN
+*I inst_95:ZN O
+*P nod18 O
+*CAP
+1 inst_95:ZN 0.0712
+2 nod18:1 0.0124
+3 nod18:2 0.2487
+4 nod18 0.0143
+*RES
+2 inst_95:ZN nod18:1 0.3771
+3 nod18:1 nod18:2 0.1855
+4 nod18:2 nod18 0.0737
+*END
+
+*D_NET net_18 1.8071
+*CONN
+*I inst_27:ZN O
+*I inst_37:B I
+*CAP
+1 inst_27:ZN 0.4263
+2 net_18:1 0.1773
+3 net_18:2 0.3030
+4 net_18:3 0.0764
+5 net_18:4 0.4696
+6 inst_37:B 0.3544
+*RES
+2 inst_27:ZN net_18:1 0.0990
+3 net_18:1 net_18:2 0.4714
+4 net_18:2 net_18:3 0.3266
+5 net_18:3 net_18:4 0.3237
+6 net_18:4 inst_37:B 0.2725
+*END
+
+*D_NET net_123 1.9349
+*CONN
+*I inst_156:ZN O
+*I inst_88:B I
+*CAP
+1 inst_156:ZN 0.1493
+2 net_123:1 0.0844
+3 net_123:2 0.4949
+4 net_123:3 0.3192
+5 net_123:4 0.4777
+6 net_123:5 0.3412
+7 inst_88:B 0.0683
+*RES
+2 inst_156:ZN net_123:1 0.1749
+3 net_123:1 net_123:2 0.1147
+4 net_123:2 net_123:3 0.2474
+5 net_123:3 net_123:4 0.0992
+6 net_123:4 net_123:5 0.0425
+7 net_123:5 inst_88:B 0.4161
+*END
+
+*D_NET net_114 3.3238
+*CONN
+*I inst_116:ZN O
+*I inst_140:A2 I
+*I inst_152:A2 I
+*I inst_147:A2 I
+*I inst_154:A2 I
+*CAP
+1 inst_116:ZN 0.3616
+2 net_114:1 0.4304
+3 inst_140:A2 0.2204
+4 net_114:2 0.2784
+5 net_114:3 0.4512
+6 net_114:4 0.0673
+7 net_114:5 0.1677
+8 inst_152:A2 0.3530
+9 net_114:6 0.1752
+10 net_114:7 0.1529
+11 inst_147:A2 0.2384
+12 net_114:8 0.0654
+13 inst_154:A2 0.3620
+*RES
+2 inst_116:ZN net_114:1 0.4474
+3 net_114:1 inst_140:A2 0.4821
+4 net_114:1 net_114:2 0.2792
+5 net_114:2 net_114:3 0.1034
+6 net_114:3 net_114:4 0.1321
+7 net_114:4 net_114:5 0.3361
+8 net_114:5 inst_152:A2 0.0265
+9 net_114:5 net_114:6 0.2874
+10 net_114:6 net_114:7 0.4349
+11 net_114:7 inst_147:A2 0.0671
+12 net_114:3 net_114:8 0.2508
+13 net_114:8 inst_154:A2 0.0301
+*END
+
+*D_NET net_131 5.1908
+*CONN
+*I inst_71:ZN O
+*I inst_162:A1 I
+*I inst_164:A1 I
+*I inst_142:A1 I
+*I inst_132:A1 I
+*I inst_109:A2 I
+*I inst_106:A1 I
+*I inst_149:A1 I
+*CAP
+1 inst_71:ZN 0.1729
+2 net_131:1 0.1153
+3 net_131:2 0.0309
+4 inst_132:A1 0.3731
+5 net_131:3 0.3990
+6 net_131:4 0.1874
+7 net_131:5 0.1002
+8 net_131:6 0.0404
+9 inst_164:A1 0.1089
+10 net_131:7 0.0117
+11 inst_142:A1 0.2233
+12 net_131:8 0.2787
+13 net_131:9 0.0376
+14 inst_162:A1 0.1485
+15 net_131:10 0.3640
+16 inst_109:A2 0.4445
+17 net_131:11 0.1396
+18 net_131:12 0.4938
+19 net_131:13 0.3993
+20 inst_106:A1 0.4146
+21 net_131:14 0.4806
+22 inst_149:A1 0.2263
+*RES
+2 inst_71:ZN net_131:1 0.4996
+3 net_131:1 net_131:2 0.0705
+4 net_131:2 inst_132:A1 0.2235
+5 net_131:1 net_131:3 0.0405
+6 net_131:3 net_131:4 0.0616
+7 net_131:4 net_131:5 0.1522
+8 net_131:5 net_131:6 0.0882
+9 net_131:6 inst_164:A1 0.2107
+10 net_131:3 net_131:7 0.1735
+11 net_131:7 inst_142:A1 0.3487
+12 net_131:2 net_131:8 0.4260
+13 net_131:8 net_131:9 0.3206
+14 net_131:9 inst_162:A1 0.1767
+15 net_131:8 net_131:10 0.0505
+16 net_131:10 inst_109:A2 0.1611
+17 net_131:2 net_131:11 0.3266
+18 net_131:11 net_131:12 0.3753
+19 net_131:12 net_131:13 0.0733
+20 net_131:13 inst_106:A1 0.4073
+21 net_131:3 net_131:14 0.3202
+22 net_131:14 inst_149:A1 0.3142
+*END
+
+*D_NET net_29 1.9346
+*CONN
+*I inst_15:Z O
+*I inst_34:B I
+*CAP
+1 inst_15:Z 0.4955
+2 net_29:1 0.2020
+3 net_29:2 0.1098
+4 net_29:3 0.2498
+5 net_29:4 0.2431
+6 net_29:5 0.3852
+7 inst_34:B 0.2493
+*RES
+2 inst_15:Z net_29:1 0.3298
+3 net_29:1 net_29:2 0.3147
+4 net_29:2 net_29:3 0.4718
+5 net_29:3 net_29:4 0.1991
+6 net_29:4 net_29:5 0.2187
+7 net_29:5 inst_34:B 0.2680
+*END
+
+*D_NET net_68 1.0885
+*CONN
+*I inst_60:ZN O
+*I inst_66:B I
+*CAP
+1 inst_60:ZN 0.3536
+2 net_68:1 0.1605
+3 net_68:2 0.1071
+4 net_68:3 0.0458
+5 net_68:4 0.0640
+6 inst_66:B 0.3574
+*RES
+2 inst_60:ZN net_68:1 0.1086
+3 net_68:1 net_68:2 0.3063
+4 net_68:2 net_68:3 0.3866
+5 net_68:3 net_68:4 0.2645
+6 net_68:4 inst_66:B 0.0733
+*END
+
+*D_NET nod27 0.8849
+*CONN
+*I inst_85:ZN O
+*P nod27 O
+*CAP
+1 inst_85:ZN 0.4983
+2 nod27:1 0.2662
+3 nod27:2 0.0754
+4 nod27 0.0450
+*RES
+2 inst_85:ZN nod27:1 0.3417
+3 nod27:1 nod27:2 0.1947
+4 nod27:2 nod27 0.0471
+*END
+
+*D_NET net_142 0.8626
+*CONN
+*I inst_168:ZN O
+*I inst_93:B I
+*CAP
+1 inst_168:ZN 0.0152
+2 net_142:1 0.2479
+3 net_142:2 0.1781
+4 inst_93:B 0.4214
+*RES
+2 inst_168:ZN net_142:1 0.2843
+3 net_142:1 net_142:2 0.1074
+4 net_142:2 inst_93:B 0.1368
+*END
+
+*D_NET net_77 1.1506
+*CONN
+*I inst_134:ZN O
+*I inst_119:A3 I
+*CAP
+1 inst_134:ZN 0.4385
+2 net_77:1 0.2915
+3 inst_119:A3 0.4206
+*RES
+2 inst_134:ZN net_77:1 0.3062
+3 net_77:1 inst_119:A3 0.4935
+*END
+
+*D_NET net_20 1.9246
+*CONN
+*I inst_10:Z O
+*I inst_38:A I
+*CAP
+1 inst_10:Z 0.4407
+2 net_20:1 0.1299
+3 net_20:2 0.0865
+4 net_20:3 0.4690
+5 net_20:4 0.4318
+6 net_20:5 0.2746
+7 inst_38:A 0.0921
+*RES
+2 inst_10:Z net_20:1 0.2488
+3 net_20:1 net_20:2 0.3961
+4 net_20:2 net_20:3 0.3415
+5 net_20:3 net_20:4 0.1100
+6 net_20:4 net_20:5 0.4136
+7 net_20:5 inst_38:A 0.1039
+*END
+
+*D_NET net_31 0.8429
+*CONN
+*I inst_17:Z O
+*I inst_37:A I
+*CAP
+1 inst_17:Z 0.0953
+2 net_31:1 0.0711
+3 net_31:2 0.4235
+4 inst_37:A 0.2530
+*RES
+2 inst_17:Z net_31:1 0.0650
+3 net_31:1 net_31:2 0.4257
+4 net_31:2 inst_37:A 0.3053
+*END
+
+*D_NET net_36 1.3173
+*CONN
+*I inst_22:Z O
+*I inst_45:A I
+*CAP
+1 inst_22:Z 0.0290
+2 net_36:1 0.0646
+3 net_36:2 0.3963
+4 net_36:3 0.1518
+5 net_36:4 0.3554
+6 inst_45:A 0.3203
+*RES
+2 inst_22:Z net_36:1 0.0734
+3 net_36:1 net_36:2 0.1888
+4 net_36:2 net_36:3 0.2820
+5 net_36:3 net_36:4 0.2783
+6 net_36:4 inst_45:A 0.3891
+*END
+
+*D_NET net_49 2.0927
+*CONN
+*I inst_40:ZN O
+*I inst_48:A I
+*I inst_50:A I
+*CAP
+1 inst_40:ZN 0.2930
+2 net_49:1 0.2578
+3 net_49:2 0.2384
+4 net_49:3 0.1091
+5 inst_48:A 0.4585
+6 net_49:4 0.3169
+7 net_49:5 0.2642
+8 inst_50:A 0.1549
+*RES
+2 inst_40:ZN net_49:1 0.2667
+3 net_49:1 net_49:2 0.3381
+4 net_49:2 net_49:3 0.2163
+5 net_49:3 inst_48:A 0.1763
+6 net_49:3 net_49:4 0.4977
+7 net_49:4 net_49:5 0.0367
+8 net_49:5 inst_50:A 0.4175
+*END
+
+*D_NET net_15 1.4899
+*CONN
+*I inst_6:Z O
+*I inst_43:A I
+*CAP
+1 inst_6:Z 0.3907
+2 net_15:1 0.1127
+3 net_15:2 0.1864
+4 net_15:3 0.4093
+5 net_15:4 0.3201
+6 inst_43:A 0.0707
+*RES
+2 inst_6:Z net_15:1 0.0623
+3 net_15:1 net_15:2 0.4409
+4 net_15:2 net_15:3 0.1305
+5 net_15:3 net_15:4 0.2985
+6 net_15:4 inst_43:A 0.4536
+*END
+
+*D_NET net_41 1.6875
+*CONN
+*I inst_34:ZN O
+*I inst_70:A I
+*CAP
+1 inst_34:ZN 0.4394
+2 net_41:1 0.3644
+3 net_41:2 0.2175
+4 net_41:3 0.1762
+5 net_41:4 0.1414
+6 net_41:5 0.0516
+7 inst_70:A 0.2969
+*RES
+2 inst_34:ZN net_41:1 0.1059
+3 net_41:1 net_41:2 0.4992
+4 net_41:2 net_41:3 0.2504
+5 net_41:3 net_41:4 0.2667
+6 net_41:4 net_41:5 0.3637
+7 net_41:5 inst_70:A 0.0877
+*END
+
+*D_NET nod31 0.7147
+*CONN
+*I inst_80:ZN O
+*P nod31 O
+*CAP
+1 inst_80:ZN 0.1010
+2 nod31:1 0.4741
+3 nod31 0.1396
+*RES
+2 inst_80:ZN nod31:1 0.1834
+3 nod31:1 nod31 0.0389
+*END
+
+*D_NET net_57 1.2941
+*CONN
+*I inst_51:ZN O
+*I inst_58:A I
+*CAP
+1 inst_51:ZN 0.0181
+2 net_57:1 0.4399
+3 net_57:2 0.3156
+4 net_57:3 0.1556
+5 net_57:4 0.1854
+6 inst_58:A 0.1795
+*RES
+2 inst_51:ZN net_57:1 0.0383
+3 net_57:1 net_57:2 0.1381
+4 net_57:2 net_57:3 0.2248
+5 net_57:3 net_57:4 0.2517
+6 net_57:4 inst_58:A 0.1971
+*END
+
+*D_NET net_71 0.9628
+*CONN
+*I inst_63:ZN O
+*I inst_70:B I
+*CAP
+1 inst_63:ZN 0.0257
+2 net_71:1 0.4461
+3 inst_70:B 0.4910
+*RES
+2 inst_63:ZN net_71:1 0.4793
+3 net_71:1 inst_70:B 0.2145
+*END
+
+*D_NET nic7 0.6328
+*CONN
+*P nic7 I
+*I inst_125:A1 I
+*CAP
+1 nic7 0.2105
+2 nic7:1 0.0316
+3 nic7:2 0.2185
+4 nic7:3 0.0122
+5 inst_125:A1 0.1600
+*RES
+2 nic7 nic7:1 0.3235
+3 nic7:1 nic7:2 0.0652
+4 nic7:2 nic7:3 0.1643
+5 nic7:3 inst_125:A1 0.2580
+*END
+
+*D_NET nod5 1.3522
+*CONN
+*I inst_78:ZN O
+*P nod5 O
+*CAP
+1 inst_78:ZN 0.2587
+2 nod5:1 0.3482
+3 nod5:2 0.2291
+4 nod5:3 0.1210
+5 nod5:4 0.0516
+6 nod5 0.3436
+*RES
+2 inst_78:ZN nod5:1 0.0773
+3 nod5:1 nod5:2 0.0739
+4 nod5:2 nod5:3 0.3221
+5 nod5:3 nod5:4 0.4452
+6 nod5:4 nod5 0.2491
+*END
+
+*D_NET net_3 1.5600
+*CONN
+*I inst_126:ZN O
+*I inst_56:B I
+*CAP
+1 inst_126:ZN 0.4513
+2 net_3:1 0.4467
+3 net_3:2 0.0339
+4 net_3:3 0.3445
+5 inst_56:B 0.2837
+*RES
+2 inst_126:ZN net_3:1 0.2860
+3 net_3:1 net_3:2 0.0983
+4 net_3:2 net_3:3 0.1665
+5 net_3:3 inst_56:B 0.3449
+*END
+
+*D_NET nid11 3.1124
+*CONN
+*P nid11 I
+*I inst_26:A I
+*I inst_31:B I
+*I inst_102:A I
+*CAP
+1 nid11 0.2289
+2 nid11:1 0.4064
+3 nid11:2 0.3827
+4 nid11:3 0.0926
+5 inst_26:A 0.0509
+6 nid11:4 0.1640
+7 nid11:5 0.2155
+8 inst_31:B 0.3273
+9 nid11:6 0.0673
+10 nid11:7 0.2042
+11 nid11:8 0.1873
+12 nid11:9 0.3097
+13 inst_102:A 0.4756
+*RES
+2 nid11 nid11:1 0.2326
+3 nid11:1 nid11:2 0.3515
+4 nid11:2 nid11:3 0.3980
+5 nid11:3 inst_26:A 0.1453
+6 nid11:1 nid11:4 0.3793
+7 nid11:4 nid11:5 0.2880
+8 nid11:5 inst_31:B 0.4221
+9 nid11:5 nid11:6 0.4043
+10 nid11:6 nid11:7 0.1607
+11 nid11:7 nid11:8 0.1532
+12 nid11:8 nid11:9 0.2879
+13 nid11:9 inst_102:A 0.0155
+*END
+
+*D_NET net_84 0.7104
+*CONN
+*I inst_119:ZN O
+*I inst_135:A2 I
+*CAP
+1 inst_119:ZN 0.1888
+2 net_84:1 0.1555
+3 inst_135:A2 0.3661
+*RES
+2 inst_119:ZN net_84:1 0.3997
+3 net_84:1 inst_135:A2 0.0098
+*END
+
+*D_NET nod29 1.8667
+*CONN
+*I inst_83:ZN O
+*P nod29 O
+*CAP
+1 inst_83:ZN 0.2259
+2 nod29:1 0.1947
+3 nod29:2 0.4572
+4 nod29:3 0.3201
+5 nod29:4 0.1902
+6 nod29 0.4786
+*RES
+2 inst_83:ZN nod29:1 0.4191
+3 nod29:1 nod29:2 0.1223
+4 nod29:2 nod29:3 0.0503
+5 nod29:3 nod29:4 0.0594
+6 nod29:4 nod29 0.1057
+*END
+
+*D_NET net_92 2.2392
+*CONN
+*I inst_120:ZN O
+*I inst_115:A2 I
+*I inst_113:A2 I
+*CAP
+1 inst_120:ZN 0.4436
+2 net_92:1 0.0657
+3 net_92:2 0.3281
+4 net_92:3 0.4417
+5 inst_115:A2 0.0491
+6 net_92:4 0.2470
+7 net_92:5 0.3154
+8 net_92:6 0.2966
+9 inst_113:A2 0.0519
+*RES
+2 inst_120:ZN net_92:1 0.3845
+3 net_92:1 net_92:2 0.2922
+4 net_92:2 net_92:3 0.1790
+5 net_92:3 inst_115:A2 0.2058
+6 net_92:3 net_92:4 0.3428
+7 net_92:4 net_92:5 0.3389
+8 net_92:5 net_92:6 0.4187
+9 net_92:6 inst_113:A2 0.1008
+*END
+
+*D_NET net_1 1.2938
+*CONN
+*I inst_124:ZN O
+*I inst_59:B I
+*CAP
+1 inst_124:ZN 0.4116
+2 net_1:1 0.1090
+3 net_1:2 0.0705
+4 net_1:3 0.2717
+5 inst_59:B 0.4310
+*RES
+2 inst_124:ZN net_1:1 0.4668
+3 net_1:1 net_1:2 0.4923
+4 net_1:2 net_1:3 0.1433
+5 net_1:3 inst_59:B 0.4719
+*END
+
+*D_NET net_112 7.0643
+*CONN
+*I inst_64:ZN O
+*I inst_151:A1 I
+*I inst_122:A2 I
+*I inst_161:A1 I
+*I inst_143:A1 I
+*I inst_147:A1 I
+*I inst_73:B I
+*I inst_118:A2 I
+*I inst_137:A1 I
+*CAP
+1 inst_64:ZN 0.3289
+2 net_112:1 0.2871
+3 net_112:2 0.0337
+4 net_112:3 0.0453
+5 inst_161:A1 0.2676
+6 net_112:4 0.1648
+7 net_112:5 0.0641
+8 inst_122:A2 0.4337
+9 net_112:6 0.1528
+10 net_112:7 0.3688
+11 net_112:8 0.1118
+12 net_112:9 0.4245
+13 inst_151:A1 0.4026
+14 net_112:10 0.0117
+15 inst_143:A1 0.2220
+16 net_112:11 0.1038
+17 net_112:12 0.1585
+18 inst_147:A1 0.3473
+19 net_112:13 0.1002
+20 inst_73:B 0.2820
+21 net_112:14 0.3402
+22 net_112:15 0.4575
+23 net_112:16 0.4450
+24 inst_118:A2 0.0206
+25 net_112:17 0.0640
+26 net_112:18 0.4117
+27 net_112:19 0.4922
+28 net_112:20 0.2908
+29 inst_137:A1 0.2310
+*RES
+2 inst_64:ZN net_112:1 0.0983
+3 net_112:1 net_112:2 0.4410
+4 net_112:2 net_112:3 0.0982
+5 net_112:3 inst_161:A1 0.4533
+6 net_112:3 net_112:4 0.3421
+7 net_112:4 net_112:5 0.2005
+8 net_112:5 inst_122:A2 0.4555
+9 net_112:1 net_112:6 0.3252
+10 net_112:6 net_112:7 0.0591
+11 net_112:7 net_112:8 0.0749
+12 net_112:8 net_112:9 0.4434
+13 net_112:9 inst_151:A1 0.0926
+14 net_112:3 net_112:10 0.0761
+15 net_112:10 inst_143:A1 0.2118
+16 net_112:2 net_112:11 0.0882
+17 net_112:11 net_112:12 0.0960
+18 net_112:12 inst_147:A1 0.4207
+19 net_112:10 net_112:13 0.1811
+20 net_112:13 inst_73:B 0.2148
+21 net_112:7 net_112:14 0.2095
+22 net_112:14 net_112:15 0.4843
+23 net_112:15 net_112:16 0.2213
+24 net_112:16 inst_118:A2 0.4519
+25 net_112:13 net_112:17 0.4362
+26 net_112:17 net_112:18 0.2764
+27 net_112:18 net_112:19 0.4578
+28 net_112:19 net_112:20 0.4049
+29 net_112:20 inst_137:A1 0.2559
+*END
+
+*D_NET nid1 2.4606
+*CONN
+*P nid1 I
+*I inst_22:B I
+*I inst_104:A I
+*I inst_10:A I
+*CAP
+1 nid1 0.3435
+2 nid1:1 0.3712
+3 nid1:2 0.4259
+4 nid1:3 0.2253
+5 nid1:4 0.3806
+6 inst_104:A 0.0277
+7 nid1:5 0.1337
+8 inst_22:B 0.0446
+9 nid1:6 0.0816
+10 inst_10:A 0.4266
+*RES
+2 nid1 nid1:1 0.0469
+3 nid1:1 nid1:2 0.3299
+4 nid1:2 nid1:3 0.1030
+5 nid1:3 nid1:4 0.4158
+6 nid1:4 inst_104:A 0.3530
+7 nid1:4 nid1:5 0.4636
+8 nid1:5 inst_22:B 0.2332
+9 nid1:3 nid1:6 0.0405
+10 nid1:6 inst_10:A 0.2867
+*END
+
+*D_NET net_103 0.7160
+*CONN
+*I inst_144:ZN O
+*I inst_99:B I
+*CAP
+1 inst_144:ZN 0.0212
+2 net_103:1 0.3378
+3 inst_99:B 0.3570
+*RES
+2 inst_144:ZN net_103:1 0.2769
+3 net_103:1 inst_99:B 0.1500
+*END
+
+*D_NET net_139 8.8715
+*CONN
+*I inst_69:ZN O
+*I inst_145:A1 I
+*I inst_167:A1 I
+*I inst_72:B I
+*I inst_158:A1 I
+*I inst_120:A1 I
+*I inst_166:A1 I
+*I inst_121:A1 I
+*I inst_119:A1 I
+*CAP
+1 inst_69:ZN 0.3771
+2 net_139:1 0.2886
+3 net_139:2 0.2613
+4 net_139:3 0.4719
+5 net_139:4 0.4407
+6 inst_72:B 0.0260
+7 net_139:5 0.1196
+8 net_139:6 0.4854
+9 net_139:7 0.4757
+10 net_139:8 0.0199
+11 inst_167:A1 0.4571
+12 net_139:9 0.2990
+13 net_139:10 0.4380
+14 net_139:11 0.0027
+15 net_139:12 0.0886
+16 net_139:13 0.2223
+17 inst_145:A1 0.3445
+18 net_139:14 0.0637
+19 net_139:15 0.3494
+20 net_139:16 0.2283
+21 net_139:17 0.4659
+22 inst_158:A1 0.0847
+23 net_139:18 0.4581
+24 inst_120:A1 0.4569
+25 net_139:19 0.1153
+26 inst_166:A1 0.1048
+27 net_139:20 0.2652
+28 net_139:21 0.1719
+29 net_139:22 0.3833
+30 inst_121:A1 0.4192
+31 net_139:23 0.4797
+32 inst_119:A1 0.0067
+*RES
+2 inst_69:ZN net_139:1 0.1036
+3 net_139:1 net_139:2 0.0863
+4 net_139:2 net_139:3 0.4216
+5 net_139:3 net_139:4 0.1174
+6 net_139:4 inst_72:B 0.3418
+7 net_139:1 net_139:5 0.1983
+8 net_139:5 net_139:6 0.4697
+9 net_139:6 net_139:7 0.1779
+10 net_139:7 net_139:8 0.4202
+11 net_139:8 inst_167:A1 0.4842
+12 net_139:6 net_139:9 0.2899
+13 net_139:9 net_139:10 0.2827
+14 net_139:10 net_139:11 0.4496
+15 net_139:11 net_139:12 0.0184
+16 net_139:12 net_139:13 0.0331
+17 net_139:13 inst_145:A1 0.4597
+18 net_139:6 net_139:14 0.2018
+19 net_139:14 net_139:15 0.2809
+20 net_139:15 net_139:16 0.2224
+21 net_139:16 net_139:17 0.0127
+22 net_139:17 inst_158:A1 0.4914
+23 net_139:4 net_139:18 0.4849
+24 net_139:18 inst_120:A1 0.1851
+25 net_139:3 net_139:19 0.0302
+26 net_139:19 inst_166:A1 0.1089
+27 net_139:19 net_139:20 0.4112
+28 net_139:20 net_139:21 0.1535
+29 net_139:21 net_139:22 0.4753
+30 net_139:22 inst_121:A1 0.1839
+31 net_139:6 net_139:23 0.4986
+32 net_139:23 inst_119:A1 0.2747
+*END
+
+*D_NET nod10 0.9716
+*CONN
+*I inst_103:ZN O
+*P nod10 O
+*CAP
+1 inst_103:ZN 0.2188
+2 nod10:1 0.2640
+3 nod10:2 0.3350
+4 nod10 0.1539
+*RES
+2 inst_103:ZN nod10:1 0.4051
+3 nod10:1 nod10:2 0.1501
+4 nod10:2 nod10 0.2693
+*END
+
+*D_NET net_43 0.7579
+*CONN
+*I inst_39:ZN O
+*I inst_67:A I
+*CAP
+1 inst_39:ZN 0.0276
+2 net_43:1 0.1302
+3 net_43:2 0.2444
+4 inst_67:A 0.3557
+*RES
+2 inst_39:ZN net_43:1 0.3325
+3 net_43:1 net_43:2 0.3858
+4 net_43:2 inst_67:A 0.3493
+*END
+
+*D_NET net_10 1.3797
+*CONN
+*I inst_1:Z O
+*I inst_36:A I
+*CAP
+1 inst_1:Z 0.1026
+2 net_10:1 0.2372
+3 net_10:2 0.0402
+4 net_10:3 0.0937
+5 net_10:4 0.4746
+6 inst_36:A 0.4313
+*RES
+2 inst_1:Z net_10:1 0.1756
+3 net_10:1 net_10:2 0.3727
+4 net_10:2 net_10:3 0.2875
+5 net_10:3 net_10:4 0.4513
+6 net_10:4 inst_36:A 0.2552
+*END
+
+*D_NET net_28 1.0847
+*CONN
+*I inst_14:Z O
+*I inst_32:B I
+*CAP
+1 inst_14:Z 0.3037
+2 net_28:1 0.2024
+3 net_28:2 0.1618
+4 inst_32:B 0.4168
+*RES
+2 inst_14:Z net_28:1 0.0497
+3 net_28:1 net_28:2 0.3005
+4 net_28:2 inst_32:B 0.4602
+*END
+
+*D_NET nid31 4.1111
+*CONN
+*P nid31 I
+*I inst_1:A I
+*I inst_80:A I
+*I inst_23:A I
+*CAP
+1 nid31 0.4956
+2 nid31:1 0.0704
+3 nid31:2 0.1894
+4 nid31:3 0.1397
+5 nid31:4 0.3075
+6 nid31:5 0.3155
+7 inst_1:A 0.4276
+8 nid31:6 0.3384
+9 inst_80:A 0.0447
+10 nid31:7 0.4332
+11 nid31:8 0.3239
+12 nid31:9 0.2449
+13 nid31:10 0.1282
+14 nid31:11 0.2441
+15 inst_23:A 0.4080
+*RES
+2 nid31 nid31:1 0.2905
+3 nid31:1 nid31:2 0.1060
+4 nid31:2 nid31:3 0.1477
+5 nid31:3 nid31:4 0.2673
+6 nid31:4 nid31:5 0.3351
+7 nid31:5 inst_1:A 0.4607
+8 nid31:1 nid31:6 0.2763
+9 nid31:6 inst_80:A 0.2562
+10 nid31:6 nid31:7 0.0730
+11 nid31:7 nid31:8 0.3737
+12 nid31:8 nid31:9 0.4177
+13 nid31:9 nid31:10 0.0718
+14 nid31:10 nid31:11 0.1946
+15 nid31:11 inst_23:A 0.3315
+*END
+
+*D_NET net_21 1.5144
+*CONN
+*I inst_11:Z O
+*I inst_45:B I
+*CAP
+1 inst_11:Z 0.1672
+2 net_21:1 0.0451
+3 net_21:2 0.2514
+4 net_21:3 0.3830
+5 net_21:4 0.3360
+6 inst_45:B 0.3318
+*RES
+2 inst_11:Z net_21:1 0.0905
+3 net_21:1 net_21:2 0.2772
+4 net_21:2 net_21:3 0.0900
+5 net_21:3 net_21:4 0.3335
+6 net_21:4 inst_45:B 0.2993
+*END
+
+*D_NET net_51 3.0795
+*CONN
+*I inst_46:ZN O
+*I inst_52:B I
+*I inst_49:B I
+*CAP
+1 inst_46:ZN 0.2894
+2 net_51:1 0.3058
+3 net_51:2 0.4665
+4 net_51:3 0.3526
+5 net_51:4 0.3769
+6 net_51:5 0.1238
+7 inst_49:B 0.3484
+8 net_51:6 0.0805
+9 net_51:7 0.2161
+10 net_51:8 0.4437
+11 inst_52:B 0.0758
+*RES
+2 inst_46:ZN net_51:1 0.0799
+3 net_51:1 net_51:2 0.2002
+4 net_51:2 net_51:3 0.0906
+5 net_51:3 net_51:4 0.4816
+6 net_51:4 net_51:5 0.4591
+7 net_51:5 inst_49:B 0.3373
+8 net_51:5 net_51:6 0.4152
+9 net_51:6 net_51:7 0.0319
+10 net_51:7 net_51:8 0.0923
+11 net_51:8 inst_52:B 0.0603
+*END
+
+*D_NET net_79 1.1280
+*CONN
+*I inst_107:ZN O
+*I inst_136:A1 I
+*CAP
+1 inst_107:ZN 0.2700
+2 net_79:1 0.3597
+3 net_79:2 0.1925
+4 inst_136:A1 0.3058
+*RES
+2 inst_107:ZN net_79:1 0.2137
+3 net_79:1 net_79:2 0.1961
+4 net_79:2 inst_136:A1 0.2038
+*END
+
+*D_NET nid22 3.2942
+*CONN
+*P nid22 I
+*I inst_90:A I
+*I inst_0:B I
+*I inst_28:A I
+*CAP
+1 nid22 0.1566
+2 nid22:1 0.3710
+3 nid22:2 0.4703
+4 inst_90:A 0.4110
+5 nid22:3 0.0420
+6 nid22:4 0.4961
+7 inst_0:B 0.3518
+8 nid22:5 0.2710
+9 nid22:6 0.3500
+10 nid22:7 0.2415
+11 inst_28:A 0.1330
+*RES
+2 nid22 nid22:1 0.0702
+3 nid22:1 nid22:2 0.1606
+4 nid22:2 inst_90:A 0.0305
+5 nid22:1 nid22:3 0.0796
+6 nid22:3 nid22:4 0.1915
+7 nid22:4 inst_0:B 0.1810
+8 nid22:1 nid22:5 0.3595
+9 nid22:5 nid22:6 0.2702
+10 nid22:6 nid22:7 0.3942
+11 nid22:7 inst_28:A 0.4158
+*END
+
+*D_NET net_143 1.6605
+*CONN
+*I inst_169:ZN O
+*I inst_75:B I
+*CAP
+1 inst_169:ZN 0.2483
+2 net_143:1 0.3285
+3 net_143:2 0.4047
+4 net_143:3 0.2834
+5 net_143:4 0.0867
+6 inst_75:B 0.3088
+*RES
+2 inst_169:ZN net_143:1 0.1115
+3 net_143:1 net_143:2 0.4853
+4 net_143:2 net_143:3 0.3246
+5 net_143:3 net_143:4 0.1696
+6 net_143:4 inst_75:B 0.2362
+*END
+
+*D_NET net_97 0.5006
+*CONN
+*I inst_139:ZN O
+*I inst_79:B I
+*CAP
+1 inst_139:ZN 0.0392
+2 net_97:1 0.2518
+3 inst_79:B 0.2096
+*RES
+2 inst_139:ZN net_97:1 0.3074
+3 net_97:1 inst_79:B 0.2750
+*END
+
+*D_NET nid16 2.3173
+*CONN
+*P nid16 I
+*I inst_15:B I
+*I inst_27:B I
+*I inst_97:A I
+*CAP
+1 nid16 0.0769
+2 nid16:1 0.1341
+3 nid16:2 0.2220
+4 nid16:3 0.3518
+5 inst_27:B 0.4653
+6 nid16:4 0.3337
+7 nid16:5 0.2473
+8 inst_15:B 0.1271
+9 nid16:6 0.1326
+10 nid16:7 0.0752
+11 inst_97:A 0.1513
+*RES
+2 nid16 nid16:1 0.2054
+3 nid16:1 nid16:2 0.2675
+4 nid16:2 nid16:3 0.4399
+5 nid16:3 inst_27:B 0.1557
+6 nid16:2 nid16:4 0.1966
+7 nid16:4 nid16:5 0.1156
+8 nid16:5 inst_15:B 0.0944
+9 nid16:5 nid16:6 0.3451
+10 nid16:6 nid16:7 0.1511
+11 nid16:7 inst_97:A 0.2881
+*END
+
+*D_NET nod24 1.7209
+*CONN
+*I inst_88:ZN O
+*P nod24 O
+*CAP
+1 inst_88:ZN 0.4928
+2 nod24:1 0.0208
+3 nod24:2 0.3834
+4 nod24:3 0.3199
+5 nod24:4 0.4374
+6 nod24 0.0664
+*RES
+2 inst_88:ZN nod24:1 0.0880
+3 nod24:1 nod24:2 0.0245
+4 nod24:2 nod24:3 0.1736
+5 nod24:3 nod24:4 0.2568
+6 nod24:4 nod24 0.4921
+*END
+
+*D_NET net_88 2.4254
+*CONN
+*I inst_108:ZN O
+*I inst_133:A1 I
+*I inst_112:A1 I
+*I inst_110:A2 I
+*CAP
+1 inst_108:ZN 0.5005
+2 net_88:1 0.0672
+3 net_88:2 0.3732
+4 net_88:3 0.1949
+5 net_88:4 0.0098
+6 inst_133:A1 0.0627
+7 net_88:5 0.1741
+8 net_88:6 0.2044
+9 net_88:7 0.1194
+10 net_88:8 0.2936
+11 inst_112:A1 0.0405
+12 net_88:9 0.0132
+13 net_88:10 0.3035
+14 inst_110:A2 0.0684
+*RES
+2 inst_108:ZN net_88:1 0.3021
+3 net_88:1 net_88:2 0.3332
+4 net_88:2 net_88:3 0.3663
+5 net_88:3 net_88:4 0.0202
+6 net_88:4 inst_133:A1 0.4506
+7 net_88:3 net_88:5 0.2039
+8 net_88:5 net_88:6 0.1879
+9 net_88:6 net_88:7 0.4334
+10 net_88:7 net_88:8 0.0972
+11 net_88:8 inst_112:A1 0.0387
+12 net_88:5 net_88:9 0.0446
+13 net_88:9 net_88:10 0.4336
+14 net_88:10 inst_110:A2 0.1160
+*END
+
+*D_NET net_60 2.8533
+*CONN
+*I inst_42:ZN O
+*I inst_53:B I
+*I inst_54:B I
+*CAP
+1 inst_42:ZN 0.3963
+2 net_60:1 0.4221
+3 net_60:2 0.3801
+4 net_60:3 0.4814
+5 inst_54:B 0.4311
+6 net_60:4 0.0973
+7 net_60:5 0.3962
+8 inst_53:B 0.2487
+*RES
+2 inst_42:ZN net_60:1 0.0843
+3 net_60:1 net_60:2 0.1405
+4 net_60:2 net_60:3 0.3228
+5 net_60:3 inst_54:B 0.2702
+6 net_60:2 net_60:4 0.3315
+7 net_60:4 net_60:5 0.3649
+8 net_60:5 inst_53:B 0.0836
+*END
+
+*D_NET nod14 0.8481
+*CONN
+*I inst_99:ZN O
+*P nod14 O
+*CAP
+1 inst_99:ZN 0.2026
+2 nod14:1 0.0729
+3 nod14:2 0.2013
+4 nod14 0.3712
+*RES
+2 inst_99:ZN nod14:1 0.4339
+3 nod14:1 nod14:2 0.2847
+4 nod14:2 nod14 0.3815
+*END
+
+*D_NET nic2 0.7901
+*CONN
+*P nic2 I
+*I inst_130:A1 I
+*CAP
+1 nic2 0.0879
+2 nic2:1 0.2264
+3 inst_130:A1 0.4758
+*RES
+2 nic2 nic2:1 0.0895
+3 nic2:1 inst_130:A1 0.0119
+*END
+
+*D_NET net_81 1.3210
+*CONN
+*I inst_118:ZN O
+*I inst_136:A2 I
+*CAP
+1 inst_118:ZN 0.4292
+2 net_81:1 0.4369
+3 net_81:2 0.1185
+4 net_81:3 0.0231
+5 inst_136:A2 0.3132
+*RES
+2 inst_118:ZN net_81:1 0.3086
+3 net_81:1 net_81:2 0.1239
+4 net_81:2 net_81:3 0.4680
+5 net_81:3 inst_136:A2 0.0869
+*END
+
+*D_NET nid14 4.6780
+*CONN
+*P nid14 I
+*I inst_99:A I
+*I inst_3:B I
+*I inst_7:A I
+*CAP
+1 nid14 0.1799
+2 nid14:1 0.3040
+3 nid14:2 0.2742
+4 inst_99:A 0.2478
+5 nid14:3 0.4264
+6 nid14:4 0.1099
+7 nid14:5 0.4255
+8 nid14:6 0.1633
+9 nid14:7 0.4828
+10 inst_3:B 0.3710
+11 nid14:8 0.1951
+12 nid14:9 0.3896
+13 nid14:10 0.3021
+14 nid14:11 0.3317
+15 nid14:12 0.1610
+16 inst_7:A 0.3139
+*RES
+2 nid14 nid14:1 0.3689
+3 nid14:1 nid14:2 0.1435
+4 nid14:2 inst_99:A 0.1327
+5 nid14:1 nid14:3 0.0982
+6 nid14:3 nid14:4 0.2869
+7 nid14:4 nid14:5 0.2271
+8 nid14:5 nid14:6 0.3058
+9 nid14:6 nid14:7 0.1826
+10 nid14:7 inst_3:B 0.2318
+11 nid14:1 nid14:8 0.0654
+12 nid14:8 nid14:9 0.0671
+13 nid14:9 nid14:10 0.4211
+14 nid14:10 nid14:11 0.4754
+15 nid14:11 nid14:12 0.2393
+16 nid14:12 inst_7:A 0.3222
+*END
+
+*D_NET net_58 2.4228
+*CONN
+*I inst_38:ZN O
+*I inst_52:A I
+*I inst_54:A I
+*CAP
+1 inst_38:ZN 0.2480
+2 net_58:1 0.1919
+3 inst_54:A 0.1611
+4 net_58:2 0.2909
+5 net_58:3 0.3822
+6 net_58:4 0.3696
+7 net_58:5 0.2438
+8 net_58:6 0.3770
+9 inst_52:A 0.1582
+*RES
+2 inst_38:ZN net_58:1 0.4816
+3 net_58:1 inst_54:A 0.3865
+4 net_58:1 net_58:2 0.1808
+5 net_58:2 net_58:3 0.1573
+6 net_58:3 net_58:4 0.3371
+7 net_58:4 net_58:5 0.4956
+8 net_58:5 net_58:6 0.1861
+9 net_58:6 inst_52:A 0.2053
+*END
+
+*D_NET net_82 10.3432
+*CONN
+*I inst_68:ZN O
+*I inst_120:A2 I
+*I inst_119:A2 I
+*I inst_138:A1 I
+*I inst_121:A2 I
+*I inst_72:A I
+*I inst_155:A1 I
+*I inst_144:A1 I
+*I inst_168:A1 I
+*CAP
+1 inst_68:ZN 0.4226
+2 net_82:1 0.3075
+3 net_82:2 0.3660
+4 inst_120:A2 0.0118
+5 net_82:3 0.0998
+6 net_82:4 0.3919
+7 inst_119:A2 0.4285
+8 net_82:5 0.4097
+9 net_82:6 0.4471
+10 net_82:7 0.1396
+11 net_82:8 0.1711
+12 inst_138:A1 0.3932
+13 net_82:9 0.2311
+14 net_82:10 0.3534
+15 net_82:11 0.2652
+16 net_82:12 0.3277
+17 net_82:13 0.0549
+18 inst_121:A2 0.2223
+19 net_82:14 0.1173
+20 net_82:15 0.2531
+21 net_82:16 0.1945
+22 net_82:17 0.2605
+23 inst_72:A 0.3472
+24 net_82:18 0.1861
+25 net_82:19 0.4199
+26 net_82:20 0.1078
+27 net_82:21 0.4719
+28 net_82:22 0.3110
+29 inst_155:A1 0.3398
+30 net_82:23 0.0535
+31 net_82:24 0.0756
+32 net_82:25 0.3673
+33 net_82:26 0.2669
+34 net_82:27 0.0255
+35 inst_144:A1 0.4091
+36 net_82:28 0.2336
+37 net_82:29 0.4415
+38 net_82:30 0.2613
+39 net_82:31 0.0071
+40 inst_168:A1 0.1496
+*RES
+2 inst_68:ZN net_82:1 0.4275
+3 net_82:1 net_82:2 0.0066
+4 net_82:2 inst_120:A2 0.2929
+5 net_82:1 net_82:3 0.1325
+6 net_82:3 net_82:4 0.2501
+7 net_82:4 inst_119:A2 0.1758
+8 net_82:3 net_82:5 0.4824
+9 net_82:5 net_82:6 0.0916
+10 net_82:6 net_82:7 0.1717
+11 net_82:7 net_82:8 0.0588
+12 net_82:8 inst_138:A1 0.0740
+13 net_82:1 net_82:9 0.1554
+14 net_82:9 net_82:10 0.2606
+15 net_82:10 net_82:11 0.3654
+16 net_82:11 net_82:12 0.3215
+17 net_82:12 net_82:13 0.4509
+18 net_82:13 inst_121:A2 0.1987
+19 net_82:3 net_82:14 0.4745
+20 net_82:14 net_82:15 0.0587
+21 net_82:15 net_82:16 0.0611
+22 net_82:16 net_82:17 0.3505
+23 net_82:17 inst_72:A 0.4261
+24 net_82:7 net_82:18 0.3617
+25 net_82:18 net_82:19 0.0923
+26 net_82:19 net_82:20 0.1306
+27 net_82:20 net_82:21 0.4615
+28 net_82:21 net_82:22 0.0809
+29 net_82:22 inst_155:A1 0.4357
+30 net_82:13 net_82:23 0.2535
+31 net_82:23 net_82:24 0.0343
+32 net_82:24 net_82:25 0.1714
+33 net_82:25 net_82:26 0.4679
+34 net_82:26 net_82:27 0.0178
+35 net_82:27 inst_144:A1 0.1927
+36 net_82:24 net_82:28 0.1572
+37 net_82:28 net_82:29 0.3611
+38 net_82:29 net_82:30 0.3333
+39 net_82:30 net_82:31 0.2109
+40 net_82:31 inst_168:A1 0.2706
+*END
+
+*D_NET net_67 1.8155
+*CONN
+*I inst_59:ZN O
+*I inst_64:B I
+*CAP
+1 inst_59:ZN 0.3328
+2 net_67:1 0.4448
+3 net_67:2 0.2207
+4 net_67:3 0.4791
+5 net_67:4 0.1023
+6 inst_64:B 0.2359
+*RES
+2 inst_59:ZN net_67:1 0.0582
+3 net_67:1 net_67:2 0.0726
+4 net_67:2 net_67:3 0.0314
+5 net_67:3 net_67:4 0.2941
+6 net_67:4 inst_64:B 0.2779
+*END
+
+*D_NET net_64 0.8178
+*CONN
+*I inst_56:ZN O
+*I inst_69:B I
+*CAP
+1 inst_56:ZN 0.3215
+2 net_64:1 0.2263
+3 net_64:2 0.2557
+4 inst_69:B 0.0143
+*RES
+2 inst_56:ZN net_64:1 0.3581
+3 net_64:1 net_64:2 0.1192
+4 net_64:2 inst_69:B 0.1795
+*END
+
+*D_NET net_37 1.6646
+*CONN
+*I inst_23:Z O
+*I inst_47:A I
+*CAP
+1 inst_23:Z 0.3661
+2 net_37:1 0.3516
+3 net_37:2 0.4207
+4 net_37:3 0.2478
+5 inst_47:A 0.2784
+*RES
+2 inst_23:Z net_37:1 0.1790
+3 net_37:1 net_37:2 0.0199
+4 net_37:2 net_37:3 0.2424
+5 net_37:3 inst_47:A 0.3850
+*END
+
+*D_NET net_121 1.8618
+*CONN
+*I inst_155:ZN O
+*I inst_103:B I
+*CAP
+1 inst_155:ZN 0.3667
+2 net_121:1 0.4689
+3 net_121:2 0.2556
+4 net_121:3 0.2424
+5 net_121:4 0.4412
+6 inst_103:B 0.0870
+*RES
+2 inst_155:ZN net_121:1 0.2088
+3 net_121:1 net_121:2 0.3355
+4 net_121:2 net_121:3 0.3190
+5 net_121:3 net_121:4 0.0255
+6 net_121:4 inst_103:B 0.2321
+*END
+
+*D_NET net_73 7.1925
+*CONN
+*I inst_65:ZN O
+*I inst_132:A2 I
+*I inst_109:A1 I
+*I inst_160:A1 I
+*I inst_139:A1 I
+*I inst_157:A1 I
+*I inst_169:A1 I
+*I inst_106:A2 I
+*CAP
+1 inst_65:ZN 0.4917
+2 net_73:1 0.0610
+3 net_73:2 0.3022
+4 inst_157:A1 0.3857
+5 net_73:3 0.1070
+6 net_73:4 0.4181
+7 inst_109:A1 0.0775
+8 net_73:5 0.3783
+9 inst_160:A1 0.1198
+10 net_73:6 0.2299
+11 net_73:7 0.1019
+12 net_73:8 0.0789
+13 net_73:9 0.3234
+14 net_73:10 0.4203
+15 inst_139:A1 0.4700
+16 net_73:11 0.0022
+17 net_73:12 0.2094
+18 net_73:13 0.3933
+19 net_73:14 0.1720
+20 net_73:15 0.4231
+21 inst_132:A2 0.3045
+22 net_73:16 0.4949
+23 inst_169:A1 0.2797
+24 net_73:17 0.3153
+25 net_73:18 0.2210
+26 net_73:19 0.0428
+27 net_73:20 0.0298
+28 inst_106:A2 0.3387
+*RES
+2 inst_65:ZN net_73:1 0.3097
+3 net_73:1 net_73:2 0.1697
+4 net_73:2 inst_157:A1 0.2923
+5 net_73:2 net_73:3 0.1388
+6 net_73:3 net_73:4 0.2006
+7 net_73:4 inst_109:A1 0.3278
+8 net_73:4 net_73:5 0.1244
+9 net_73:5 inst_160:A1 0.2097
+10 net_73:3 net_73:6 0.0911
+11 net_73:6 net_73:7 0.0438
+12 net_73:7 net_73:8 0.4903
+13 net_73:8 net_73:9 0.0861
+14 net_73:9 net_73:10 0.4642
+15 net_73:10 inst_139:A1 0.1430
+16 net_73:9 net_73:11 0.3076
+17 net_73:11 net_73:12 0.0390
+18 net_73:12 net_73:13 0.3200
+19 net_73:13 net_73:14 0.2553
+20 net_73:14 net_73:15 0.4187
+21 net_73:15 inst_132:A2 0.4523
+22 net_73:9 net_73:16 0.1007
+23 net_73:16 inst_169:A1 0.4520
+24 net_73:12 net_73:17 0.3183
+25 net_73:17 net_73:18 0.0136
+26 net_73:18 net_73:19 0.2783
+27 net_73:19 net_73:20 0.4715
+28 net_73:20 inst_106:A2 0.4402
+*END
+
+*D_NET nod0 1.5092
+*CONN
+*I inst_105:ZN O
+*P nod0 O
+*CAP
+1 inst_105:ZN 0.1814
+2 nod0:1 0.0416
+3 nod0:2 0.0724
+4 nod0:3 0.0762
+5 nod0:4 0.3395
+6 nod0:5 0.3343
+7 nod0 0.4637
+*RES
+2 inst_105:ZN nod0:1 0.2589
+3 nod0:1 nod0:2 0.4005
+4 nod0:2 nod0:3 0.2265
+5 nod0:3 nod0:4 0.4088
+6 nod0:4 nod0:5 0.4993
+7 nod0:5 nod0 0.1612
+*END
+
+*D_NET net_48 1.2675
+*CONN
+*I inst_36:ZN O
+*I inst_51:B I
+*I inst_48:B I
+*CAP
+1 inst_36:ZN 0.4710
+2 net_48:1 0.2045
+3 inst_48:B 0.4566
+4 net_48:2 0.0108
+5 inst_51:B 0.1246
+*RES
+2 inst_36:ZN net_48:1 0.3134
+3 net_48:1 inst_48:B 0.2532
+4 net_48:1 net_48:2 0.1285
+5 net_48:2 inst_51:B 0.0370
+*END
+
+*D_NET nod20 1.7170
+*CONN
+*I inst_92:ZN O
+*P nod20 O
+*CAP
+1 inst_92:ZN 0.1833
+2 nod20:1 0.3866
+3 nod20:2 0.3599
+4 nod20:3 0.3532
+5 nod20:4 0.1350
+6 nod20:5 0.0433
+7 nod20 0.2556
+*RES
+2 inst_92:ZN nod20:1 0.2715
+3 nod20:1 nod20:2 0.0776
+4 nod20:2 nod20:3 0.4080
+5 nod20:3 nod20:4 0.0103
+6 nod20:4 nod20:5 0.4686
+7 nod20:5 nod20 0.2347
+*END
+
+*D_NET net_33 1.0273
+*CONN
+*I inst_19:Z O
+*I inst_44:A I
+*CAP
+1 inst_19:Z 0.4471
+2 net_33:1 0.3607
+3 inst_44:A 0.2195
+*RES
+2 inst_19:Z net_33:1 0.1095
+3 net_33:1 inst_44:A 0.1004
+*END
+
+*D_NET net_86 1.7389
+*CONN
+*I inst_136:ZN O
+*I inst_121:A3 I
+*I inst_120:A3 I
+*CAP
+1 inst_136:ZN 0.0859
+2 net_86:1 0.4974
+3 net_86:2 0.1184
+4 net_86:3 0.0357
+5 net_86:4 0.2223
+6 net_86:5 0.2582
+7 inst_120:A3 0.0050
+8 net_86:6 0.2792
+9 inst_121:A3 0.2368
+*RES
+2 inst_136:ZN net_86:1 0.1370
+3 net_86:1 net_86:2 0.3736
+4 net_86:2 net_86:3 0.3253
+5 net_86:3 net_86:4 0.1538
+6 net_86:4 net_86:5 0.3175
+7 net_86:5 inst_120:A3 0.3849
+8 net_86:4 net_86:6 0.0608
+9 net_86:6 inst_121:A3 0.3193
+*END
+
+*D_NET net_8 0.5423
+*CONN
+*I inst_26:ZN O
+*I inst_46:B I
+*CAP
+1 inst_26:ZN 0.2921
+2 net_8:1 0.1355
+3 inst_46:B 0.1147
+*RES
+2 inst_26:ZN net_8:1 0.0367
+3 net_8:1 inst_46:B 0.3749
+*END
+
+*D_NET net_75 0.8548
+*CONN
+*I inst_73:ZN O
+*I inst_107:A3 I
+*CAP
+1 inst_73:ZN 0.2457
+2 net_75:1 0.1516
+3 inst_107:A3 0.4574
+*RES
+2 inst_73:ZN net_75:1 0.3159
+3 net_75:1 inst_107:A3 0.3233
+*END
+
+*D_NET nid24 2.7534
+*CONN
+*P nid24 I
+*I inst_18:B I
+*I inst_88:A I
+*I inst_9:B I
+*CAP
+1 nid24 0.3514
+2 nid24:1 0.0679
+3 nid24:2 0.2290
+4 inst_88:A 0.4865
+5 nid24:3 0.0614
+6 nid24:4 0.2581
+7 inst_18:B 0.1264
+8 nid24:5 0.3629
+9 nid24:6 0.2197
+10 nid24:7 0.4452
+11 inst_9:B 0.1447
+*RES
+2 nid24 nid24:1 0.2303
+3 nid24:1 nid24:2 0.3434
+4 nid24:2 inst_88:A 0.1962
+5 nid24:2 nid24:3 0.3577
+6 nid24:3 nid24:4 0.4964
+7 nid24:4 inst_18:B 0.1025
+8 nid24:1 nid24:5 0.3744
+9 nid24:5 nid24:6 0.2018
+10 nid24:6 nid24:7 0.0749
+11 nid24:7 inst_9:B 0.4616
+*END
+
+*D_NET nid4 3.7202
+*CONN
+*P nid4 I
+*I inst_21:B I
+*I inst_16:A I
+*I inst_79:A I
+*CAP
+1 nid4 0.1120
+2 nid4:1 0.4771
+3 nid4:2 0.0380
+4 nid4:3 0.0924
+5 inst_21:B 0.2480
+6 nid4:4 0.4411
+7 nid4:5 0.2183
+8 nid4:6 0.0042
+9 nid4:7 0.2739
+10 inst_16:A 0.1723
+11 nid4:8 0.0377
+12 nid4:9 0.1956
+13 nid4:10 0.3433
+14 nid4:11 0.3246
+15 nid4:12 0.4388
+16 inst_79:A 0.3028
+*RES
+2 nid4 nid4:1 0.4794
+3 nid4:1 nid4:2 0.4677
+4 nid4:2 nid4:3 0.0369
+5 nid4:3 inst_21:B 0.0282
+6 nid4:3 nid4:4 0.0391
+7 nid4:4 nid4:5 0.3144
+8 nid4:5 nid4:6 0.1277
+9 nid4:6 nid4:7 0.4922
+10 nid4:7 inst_16:A 0.0275
+11 nid4:5 nid4:8 0.4215
+12 nid4:8 nid4:9 0.2250
+13 nid4:9 nid4:10 0.3001
+14 nid4:10 nid4:11 0.1962
+15 nid4:11 nid4:12 0.4533
+16 nid4:12 inst_79:A 0.1460
+*END
+
+*D_NET net_133 3.0570
+*CONN
+*I inst_115:ZN O
+*I inst_159:A2 I
+*I inst_165:A2 I
+*I inst_161:A2 I
+*I inst_163:A2 I
+*CAP
+1 inst_115:ZN 0.1945
+2 net_133:1 0.1778
+3 net_133:2 0.3394
+4 inst_159:A2 0.0791
+5 net_133:3 0.2639
+6 inst_165:A2 0.1577
+7 net_133:4 0.5008
+8 net_133:5 0.0060
+9 net_133:6 0.0533
+10 net_133:7 0.2259
+11 inst_161:A2 0.1870
+12 net_133:8 0.4792
+13 inst_163:A2 0.3924
+*RES
+2 inst_115:ZN net_133:1 0.4330
+3 net_133:1 net_133:2 0.0256
+4 net_133:2 inst_159:A2 0.3040
+5 net_133:1 net_133:3 0.2140
+6 net_133:3 inst_165:A2 0.3516
+7 net_133:1 net_133:4 0.1643
+8 net_133:4 net_133:5 0.3751
+9 net_133:5 net_133:6 0.0055
+10 net_133:6 net_133:7 0.2656
+11 net_133:7 inst_161:A2 0.1130
+12 net_133:3 net_133:8 0.2529
+13 net_133:8 inst_163:A2 0.0387
+*END
+
+*D_NET nid19 3.9304
+*CONN
+*P nid19 I
+*I inst_24:B I
+*I inst_17:A I
+*I inst_94:A I
+*CAP
+1 nid19 0.3068
+2 nid19:1 0.2184
+3 nid19:2 0.1496
+4 nid19:3 0.4803
+5 nid19:4 0.0070
+6 nid19:5 0.2283
+7 inst_17:A 0.5008
+8 nid19:6 0.2508
+9 nid19:7 0.3250
+10 nid19:8 0.0857
+11 inst_24:B 0.1660
+12 nid19:9 0.3490
+13 nid19:10 0.3677
+14 nid19:11 0.1448
+15 inst_94:A 0.3503
+*RES
+2 nid19 nid19:1 0.1736
+3 nid19:1 nid19:2 0.0048
+4 nid19:2 nid19:3 0.2006
+5 nid19:3 nid19:4 0.3753
+6 nid19:4 nid19:5 0.3449
+7 nid19:5 inst_17:A 0.3898
+8 nid19:1 nid19:6 0.3195
+9 nid19:6 nid19:7 0.3808
+10 nid19:7 nid19:8 0.4457
+11 nid19:8 inst_24:B 0.0786
+12 nid19:8 nid19:9 0.0691
+13 nid19:9 nid19:10 0.4825
+14 nid19:10 nid19:11 0.3090
+15 nid19:11 inst_94:A 0.1940
+*END
+
+*D_NET nod2 1.1106
+*CONN
+*I inst_93:ZN O
+*P nod2 O
+*CAP
+1 inst_93:ZN 0.1920
+2 nod2:1 0.2764
+3 nod2:2 0.1276
+4 nod2:3 0.0830
+5 nod2:4 0.2799
+6 nod2 0.1516
+*RES
+2 inst_93:ZN nod2:1 0.0299
+3 nod2:1 nod2:2 0.4609
+4 nod2:2 nod2:3 0.0257
+5 nod2:3 nod2:4 0.3095
+6 nod2:4 nod2 0.5000
+*END
+
+*D_NET net_125 0.9385
+*CONN
+*I inst_157:ZN O
+*I inst_101:B I
+*CAP
+1 inst_157:ZN 0.3737
+2 net_125:1 0.1635
+3 net_125:2 0.0355
+4 net_125:3 0.1251
+5 net_125:4 0.1060
+6 inst_101:B 0.1346
+*RES
+2 inst_157:ZN net_125:1 0.2945
+3 net_125:1 net_125:2 0.4720
+4 net_125:2 net_125:3 0.1076
+5 net_125:3 net_125:4 0.2094
+6 net_125:4 inst_101:B 0.0053
+*END
+

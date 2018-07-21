@@ -1,0 +1,15 @@
+clock clk_net 1 50
+at G1 0 0 0 0
+slew G1 5 5 5 5
+at G2 0 0 0 0
+slew G2 5 5 5 5
+at clk_net 0 0 0 0
+slew clk_net 5 5 5 5
+at reset_net 0 0 0 0
+slew reset_net 5 5 5 5
+at G3 0 0 0 0
+slew G3 5 5 5 5
+at G0 0 0 0 0
+slew G0 5 5 5 5
+rat G17 2.1 2.1 2.2 2.2
+load G17 4.0

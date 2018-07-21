@@ -1,0 +1,76 @@
+clock clock 10000 50
+slew clock 100 100 100 100
+at N_0_ 1000 1000 1000 1000
+at N_1_ 1000 1000 1000 1000
+at N_2_ 1000 1000 1000 1000
+at N_3_ 1000 1000 1000 1000
+at N_4_ 1000 1000 1000 1000
+at N_5_ 1000 1000 1000 1000
+at N_6_ 1000 1000 1000 1000
+at N_7_ 1000 1000 1000 1000
+at N_8_ 1000 1000 1000 1000
+at reset 1000 1000 1000 1000
+at start 1000 1000 1000 1000
+slew N_0_ 100 100 100 100
+slew N_1_ 100 100 100 100
+slew N_2_ 100 100 100 100
+slew N_3_ 100 100 100 100
+slew N_4_ 100 100 100 100
+slew N_5_ 100 100 100 100
+slew N_6_ 100 100 100 100
+slew N_7_ 100 100 100 100
+slew N_8_ 100 100 100 100
+slew reset 100 100 100 100
+slew start 100 100 100 100
+rat counter_0_ 1000 1000 1000 1000
+rat counter_1_ 1000 1000 1000 1000
+rat counter_2_ 1000 1000 1000 1000
+rat counter_3_ 1000 1000 1000 1000
+rat counter_4_ 1000 1000 1000 1000
+rat counter_5_ 1000 1000 1000 1000
+rat counter_6_ 1000 1000 1000 1000
+rat counter_7_ 1000 1000 1000 1000
+rat done 1000 1000 1000 1000
+rat dp_0_ 1000 1000 1000 1000
+rat dp_1_ 1000 1000 1000 1000
+rat dp_2_ 1000 1000 1000 1000
+rat dp_3_ 1000 1000 1000 1000
+rat dp_4_ 1000 1000 1000 1000
+rat dp_5_ 1000 1000 1000 1000
+rat dp_6_ 1000 1000 1000 1000
+rat dp_7_ 1000 1000 1000 1000
+rat dp_8_ 1000 1000 1000 1000
+rat sr_0_ 1000 1000 1000 1000
+rat sr_1_ 1000 1000 1000 1000
+rat sr_2_ 1000 1000 1000 1000
+rat sr_3_ 1000 1000 1000 1000
+rat sr_4_ 1000 1000 1000 1000
+rat sr_5_ 1000 1000 1000 1000
+rat sr_6_ 1000 1000 1000 1000
+rat sr_7_ 1000 1000 1000 1000
+load counter_0_ 10
+load counter_1_ 10
+load counter_2_ 10
+load counter_3_ 10
+load counter_4_ 10
+load counter_5_ 10
+load counter_6_ 10
+load counter_7_ 10
+load done 10
+load dp_0_ 10
+load dp_1_ 10
+load dp_2_ 10
+load dp_3_ 10
+load dp_4_ 10
+load dp_5_ 10
+load dp_6_ 10
+load dp_7_ 10
+load dp_8_ 10
+load sr_0_ 10
+load sr_1_ 10
+load sr_2_ 10
+load sr_3_ 10
+load sr_4_ 10
+load sr_5_ 10
+load sr_6_ 10
+load sr_7_ 10

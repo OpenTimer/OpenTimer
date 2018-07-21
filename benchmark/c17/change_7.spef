@@ -1,0 +1,225 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "changes"
+*DATE "Mon Jan 05 14:29:30 2015"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET nx1 1.7439
+*CONN
+*P nx1 I
+*I inst_1:A1 I
+*CAP
+1 nx1 0.2611
+2 nx1:1 0.4098
+3 nx1:2 0.5009
+4 nx1:3 0.2843
+5 inst_1:A1 0.2878
+*RES
+2 nx1 nx1:1 0.1659
+3 nx1:1 nx1:2 0.2742
+4 nx1:2 nx1:3 0.3494
+5 nx1:3 inst_1:A1 0.1485
+*END
+
+*D_NET nx23 1.3760
+*CONN
+*I inst_4:ZN O
+*P nx23 O
+*CAP
+1 inst_4:ZN 0.2110
+2 nx23:1 0.3070
+3 nx23:2 0.3583
+4 nx23:3 0.1395
+5 nx23:4 0.0646
+6 nx23:5 0.0794
+7 nx23 0.2161
+*RES
+2 inst_4:ZN nx23:1 0.1614
+3 nx23:1 nx23:2 0.3312
+4 nx23:2 nx23:3 0.3755
+5 nx23:3 nx23:4 0.4644
+6 nx23:4 nx23:5 0.4559
+7 nx23:5 nx23 0.4050
+*END
+
+*D_NET net_1 1.9117
+*CONN
+*I inst_0:ZN O
+*I inst_2:A2 I
+*I inst_3:A2 I
+*CAP
+1 inst_0:ZN 0.1670
+2 net_1:1 0.2440
+3 net_1:2 0.0332
+4 inst_2:A2 0.0406
+5 net_1:3 0.3706
+6 net_1:4 0.0740
+7 net_1:5 0.4871
+8 inst_3:A2 0.4951
+*RES
+2 inst_0:ZN net_1:1 0.2732
+3 net_1:1 net_1:2 0.0073
+4 net_1:2 inst_2:A2 0.1308
+5 net_1:1 net_1:3 0.4125
+6 net_1:3 net_1:4 0.0565
+7 net_1:4 net_1:5 0.1285
+8 net_1:5 inst_3:A2 0.0292
+*END
+
+*D_NET nx7 2.3577
+*CONN
+*P nx7 I
+*I inst_2:A1 I
+*CAP
+1 nx7 0.4507
+2 nx7:1 0.3995
+3 nx7:2 0.3845
+4 nx7:3 0.4708
+5 nx7:4 0.3056
+6 inst_2:A1 0.3464
+*RES
+2 nx7 nx7:1 0.0305
+3 nx7:1 nx7:2 0.2383
+4 nx7:2 nx7:3 0.4020
+5 nx7:3 nx7:4 0.2529
+6 nx7:4 inst_2:A1 0.2665
+*END
+
+*D_NET nx3 1.5117
+*CONN
+*P nx3 I
+*I inst_1:A2 I
+*I inst_0:A1 I
+*CAP
+1 nx3 0.1977
+2 nx3:1 0.3276
+3 inst_0:A1 0.3833
+4 nx3:2 0.2805
+5 nx3:3 0.1322
+6 inst_1:A2 0.1905
+*RES
+2 nx3 nx3:1 0.3292
+3 nx3:1 inst_0:A1 0.0716
+4 nx3:1 nx3:2 0.4017
+5 nx3:2 nx3:3 0.4680
+6 nx3:3 inst_1:A2 0.2976
+*END
+
+*D_NET net_2 1.4553
+*CONN
+*I inst_2:ZN O
+*I inst_4:A2 I
+*CAP
+1 inst_2:ZN 0.2927
+2 net_2:1 0.2211
+3 net_2:2 0.1955
+4 net_2:3 0.1868
+5 net_2:4 0.4889
+6 inst_4:A2 0.0703
+*RES
+2 inst_2:ZN net_2:1 0.3298
+3 net_2:1 net_2:2 0.4131
+4 net_2:2 net_2:3 0.3310
+5 net_2:3 net_2:4 0.2621
+6 net_2:4 inst_4:A2 0.4792
+*END
+
+*D_NET nx22 1.1591
+*CONN
+*I inst_5:ZN O
+*P nx22 O
+*CAP
+1 inst_5:ZN 0.0717
+2 nx22:1 0.4035
+3 nx22:2 0.0219
+4 nx22:3 0.0830
+5 nx22:4 0.4539
+6 nx22 0.1250
+*RES
+2 inst_5:ZN nx22:1 0.3196
+3 nx22:1 nx22:2 0.4976
+4 nx22:2 nx22:3 0.3591
+5 nx22:3 nx22:4 0.2780
+6 nx22:4 nx22 0.2022
+*END
+
+*D_NET nx6 2.5322
+*CONN
+*P nx6 I
+*I inst_0:A2 I
+*CAP
+1 nx6 0.4382
+2 nx6:1 0.4055
+3 nx6:2 0.4519
+4 nx6:3 0.4658
+5 nx6:4 0.3690
+6 inst_0:A2 0.4019
+*RES
+2 nx6 nx6:1 0.0632
+3 nx6:1 nx6:2 0.2503
+4 nx6:2 nx6:3 0.4700
+5 nx6:3 nx6:4 0.3789
+6 nx6:4 inst_0:A2 0.3545
+*END
+
+*D_NET net_0 1.0398
+*CONN
+*I inst_1:ZN O
+*I inst_5:A1 I
+*CAP
+1 inst_1:ZN 0.4316
+2 net_0:1 0.4734
+3 net_0:2 0.0376
+4 inst_5:A1 0.0972
+*RES
+2 inst_1:ZN net_0:1 0.3594
+3 net_0:1 net_0:2 0.0525
+4 net_0:2 inst_5:A1 0.3248
+*END
+
+*D_NET net_3 2.5362
+*CONN
+*I inst_3:ZN O
+*I inst_5:A2 I
+*I inst_4:A1 I
+*CAP
+1 inst_3:ZN 0.1267
+2 net_3:1 0.2434
+3 net_3:2 0.3726
+4 net_3:3 0.2980
+5 net_3:4 0.2454
+6 inst_4:A1 0.4670
+7 net_3:5 0.3699
+8 inst_5:A2 0.4131
+*RES
+2 inst_3:ZN net_3:1 0.1921
+3 net_3:1 net_3:2 0.1376
+4 net_3:2 net_3:3 0.4443
+5 net_3:3 net_3:4 0.1288
+6 net_3:4 inst_4:A1 0.3022
+7 net_3:1 net_3:5 0.4004
+8 net_3:5 inst_5:A2 0.4814
+*END
+
+*D_NET nx2 0.7257
+*CONN
+*P nx2 I
+*I inst_3:A1 I
+*CAP
+1 nx2 0.3915
+2 nx2:1 0.3089
+3 inst_3:A1 0.0253
+*RES
+2 nx2 nx2:1 0.3105
+3 nx2:1 inst_3:A1 0.1881
+*END
+

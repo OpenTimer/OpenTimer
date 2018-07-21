@@ -1,0 +1,146 @@
+at n43gat 0 0 0 0
+slew n43gat 5 5 5 5
+at n190gat 0 0 0 0
+slew n190gat 5 5 5 5
+at n99gat 0 0 0 0
+slew n99gat 5 5 5 5
+at n78gat 0 0 0 0
+slew n78gat 5 5 5 5
+at n85gat 0 0 0 0
+slew n85gat 5 5 5 5
+at n232gat 0 0 0 0
+slew n232gat 5 5 5 5
+at n211gat 0 0 0 0
+slew n211gat 5 5 5 5
+at n226gat 0 0 0 0
+slew n226gat 5 5 5 5
+at n155gat 0 0 0 0
+slew n155gat 5 5 5 5
+at n176gat 0 0 0 0
+slew n176gat 5 5 5 5
+at n162gat 0 0 0 0
+slew n162gat 5 5 5 5
+at n64gat 0 0 0 0
+slew n64gat 5 5 5 5
+at n230gat 0 0 0 0
+slew n230gat 5 5 5 5
+at n92gat 0 0 0 0
+slew n92gat 5 5 5 5
+at n228gat 0 0 0 0
+slew n228gat 5 5 5 5
+at n127gat 0 0 0 0
+slew n127gat 5 5 5 5
+at n22gat 0 0 0 0
+slew n22gat 5 5 5 5
+at n1gat 0 0 0 0
+slew n1gat 5 5 5 5
+at n113gat 0 0 0 0
+slew n113gat 5 5 5 5
+at n183gat 0 0 0 0
+slew n183gat 5 5 5 5
+at n148gat 0 0 0 0
+slew n148gat 5 5 5 5
+at n29gat 0 0 0 0
+slew n29gat 5 5 5 5
+at n197gat 0 0 0 0
+slew n197gat 5 5 5 5
+at n134gat 0 0 0 0
+slew n134gat 5 5 5 5
+at n204gat 0 0 0 0
+slew n204gat 5 5 5 5
+at n218gat 0 0 0 0
+slew n218gat 5 5 5 5
+at n227gat 0 0 0 0
+slew n227gat 5 5 5 5
+at n8gat 0 0 0 0
+slew n8gat 5 5 5 5
+at n169gat 0 0 0 0
+slew n169gat 5 5 5 5
+at n225gat 0 0 0 0
+slew n225gat 5 5 5 5
+at n36gat 0 0 0 0
+slew n36gat 5 5 5 5
+at n57gat 0 0 0 0
+slew n57gat 5 5 5 5
+at n231gat 0 0 0 0
+slew n231gat 5 5 5 5
+at n106gat 0 0 0 0
+slew n106gat 5 5 5 5
+at n233gat 0 0 0 0
+slew n233gat 5 5 5 5
+at n50gat 0 0 0 0
+slew n50gat 5 5 5 5
+at n15gat 0 0 0 0
+slew n15gat 5 5 5 5
+at n71gat 0 0 0 0
+slew n71gat 5 5 5 5
+at n120gat 0 0 0 0
+slew n120gat 5 5 5 5
+at n229gat 0 0 0 0
+slew n229gat 5 5 5 5
+at n141gat 0 0 0 0
+slew n141gat 5 5 5 5
+rat n1328gat 9 9 11 11
+load n1328gat 4.0
+rat n1348gat 9 9 11 11
+load n1348gat 4.0
+rat n1338gat 9 9 11 11
+load n1338gat 4.0
+rat n1331gat 9 9 11 11
+load n1331gat 4.0
+rat n1339gat 9 9 11 11
+load n1339gat 4.0
+rat n1344gat 9 9 11 11
+load n1344gat 4.0
+rat n1346gat 9 9 11 11
+load n1346gat 4.0
+rat n1353gat 9 9 11 11
+load n1353gat 4.0
+rat n1337gat 9 9 11 11
+load n1337gat 4.0
+rat n1333gat 9 9 11 11
+load n1333gat 4.0
+rat n1347gat 9 9 11 11
+load n1347gat 4.0
+rat n1340gat 9 9 11 11
+load n1340gat 4.0
+rat n1354gat 9 9 11 11
+load n1354gat 4.0
+rat n1351gat 9 9 11 11
+load n1351gat 4.0
+rat n1355gat 9 9 11 11
+load n1355gat 4.0
+rat n1352gat 9 9 11 11
+load n1352gat 4.0
+rat n1343gat 9 9 11 11
+load n1343gat 4.0
+rat n1329gat 9 9 11 11
+load n1329gat 4.0
+rat n1332gat 9 9 11 11
+load n1332gat 4.0
+rat n1336gat 9 9 11 11
+load n1336gat 4.0
+rat n1324gat 9 9 11 11
+load n1324gat 4.0
+rat n1335gat 9 9 11 11
+load n1335gat 4.0
+rat n1334gat 9 9 11 11
+load n1334gat 4.0
+rat n1349gat 9 9 11 11
+load n1349gat 4.0
+rat n1330gat 9 9 11 11
+load n1330gat 4.0
+rat n1327gat 9 9 11 11
+load n1327gat 4.0
+rat n1341gat 9 9 11 11
+load n1341gat 4.0
+rat n1326gat 9 9 11 11
+load n1326gat 4.0
+rat n1345gat 9 9 11 11
+load n1345gat 4.0
+rat n1342gat 9 9 11 11
+load n1342gat 4.0
+rat n1350gat 9 9 11 11
+load n1350gat 4.0
+rat n1325gat 9 9 11 11
+load n1325gat 4.0

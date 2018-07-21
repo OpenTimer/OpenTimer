@@ -1,0 +1,354 @@
+report_at -pin u1:a
+report_at -pin u1:a -fall
+report_at -pin u1:a -late
+report_at -pin u1:a -late -fall
+report_at -pin u1:b
+report_at -pin u1:b -fall
+report_at -pin u1:b -late
+report_at -pin u1:b -late -fall
+report_at -pin u1:o
+report_at -pin u1:o -fall
+report_at -pin u1:o -late
+report_at -pin u1:o -late -fall
+report_at -pin f1:d
+report_at -pin f1:d -fall
+report_at -pin f1:d -late
+report_at -pin f1:d -late -fall
+report_at -pin f1:ck
+report_at -pin f1:ck -fall
+report_at -pin f1:ck -late
+report_at -pin f1:ck -late -fall
+report_at -pin f1:q
+report_at -pin f1:q -fall
+report_at -pin f1:q -late
+report_at -pin f1:q -late -fall
+report_at -pin u2:a
+report_at -pin u2:a -fall
+report_at -pin u2:a -late
+report_at -pin u2:a -late -fall
+report_at -pin u2:o
+report_at -pin u2:o -fall
+report_at -pin u2:o -late
+report_at -pin u2:o -late -fall
+report_at -pin u3:a
+report_at -pin u3:a -fall
+report_at -pin u3:a -late
+report_at -pin u3:a -late -fall
+report_at -pin u3:o
+report_at -pin u3:o -fall
+report_at -pin u3:o -late
+report_at -pin u3:o -late -fall
+report_at -pin u4:a
+report_at -pin u4:a -fall
+report_at -pin u4:a -late
+report_at -pin u4:a -late -fall
+report_at -pin u4:b
+report_at -pin u4:b -fall
+report_at -pin u4:b -late
+report_at -pin u4:b -late -fall
+report_at -pin u4:o
+report_at -pin u4:o -fall
+report_at -pin u4:o -late
+report_at -pin u4:o -late -fall
+report_at -pin out
+report_at -pin out -fall
+report_at -pin out -late -fall
+report_at -pin out -late -fall
+report_rat -pin u1:a
+report_rat -pin u1:a -fall
+report_rat -pin u1:a -late
+report_rat -pin u1:a -late -fall
+report_rat -pin u1:b
+report_rat -pin u1:b -fall
+report_rat -pin u1:b -late
+report_rat -pin u1:b -late -fall
+report_rat -pin u1:o
+report_rat -pin u1:o -fall
+report_rat -pin u1:o -late
+report_rat -pin u1:o -late -fall
+report_rat -pin f1:d
+report_rat -pin f1:d -fall
+report_rat -pin f1:d -late
+report_rat -pin f1:d -late -fall
+report_rat -pin f1:ck
+report_rat -pin f1:ck -fall
+report_rat -pin f1:ck -late
+report_rat -pin f1:ck -late -fall
+report_rat -pin f1:q
+report_rat -pin f1:q -fall
+report_rat -pin f1:q -late
+report_rat -pin f1:q -late -fall
+report_rat -pin u2:a
+report_rat -pin u2:a -fall
+report_rat -pin u2:a -late
+report_rat -pin u2:a -late -fall
+report_rat -pin u2:o
+report_rat -pin u2:o -fall
+report_rat -pin u2:o -late
+report_rat -pin u2:o -late -fall
+report_rat -pin u3:a
+report_rat -pin u3:a -fall
+report_rat -pin u3:a -late
+report_rat -pin u3:a -late -fall
+report_rat -pin u3:o
+report_rat -pin u3:o -fall
+report_rat -pin u3:o -late
+report_rat -pin u3:o -late -fall
+report_rat -pin u4:a
+report_rat -pin u4:a -fall
+report_rat -pin u4:a -late
+report_rat -pin u4:a -late -fall
+report_rat -pin u4:b
+report_rat -pin u4:b -fall
+report_rat -pin u4:b -late
+report_rat -pin u4:b -late -fall
+report_rat -pin u4:o
+report_rat -pin u4:o -fall
+report_rat -pin u4:o -late
+report_rat -pin u4:o -late -fall
+report_rat -pin out
+report_rat -pin out -fall
+report_rat -pin out -late -fall
+report_rat -pin out -late -fall
+report_slack -pin u1:a
+report_slack -pin u1:a -fall
+report_slack -pin u1:a -late
+report_slack -pin u1:a -late -fall
+report_slack -pin u1:b
+report_slack -pin u1:b -fall
+report_slack -pin u1:b -late
+report_slack -pin u1:b -late -fall
+report_slack -pin u1:o
+report_slack -pin u1:o -fall
+report_slack -pin u1:o -late
+report_slack -pin u1:o -late -fall
+report_slack -pin f1:d
+report_slack -pin f1:d -fall
+report_slack -pin f1:d -late
+report_slack -pin f1:d -late -fall
+report_slack -pin f1:ck
+report_slack -pin f1:ck -fall
+report_slack -pin f1:ck -late
+report_slack -pin f1:ck -late -fall
+report_slack -pin f1:q
+report_slack -pin f1:q -fall
+report_slack -pin f1:q -late
+report_slack -pin f1:q -late -fall
+report_slack -pin u2:a
+report_slack -pin u2:a -fall
+report_slack -pin u2:a -late
+report_slack -pin u2:a -late -fall
+report_slack -pin u2:o
+report_slack -pin u2:o -fall
+report_slack -pin u2:o -late
+report_slack -pin u2:o -late -fall
+report_slack -pin u3:a
+report_slack -pin u3:a -fall
+report_slack -pin u3:a -late
+report_slack -pin u3:a -late -fall
+report_slack -pin u3:o
+report_slack -pin u3:o -fall
+report_slack -pin u3:o -late
+report_slack -pin u3:o -late -fall
+report_slack -pin u4:a
+report_slack -pin u4:a -fall
+report_slack -pin u4:a -late
+report_slack -pin u4:a -late -fall
+report_slack -pin u4:b
+report_slack -pin u4:b -fall
+report_slack -pin u4:b -late
+report_slack -pin u4:b -late -fall
+report_slack -pin u4:o
+report_slack -pin u4:o -fall
+report_slack -pin u4:o -late
+report_slack -pin u4:o -late -fall
+report_slack -pin out
+report_slack -pin out -fall
+report_slack -pin out -late
+report_slack -pin out -late -fall
+repower_gate u3 INV_X1
+insert_gate newbox INV_X3
+insert_net newnet
+disconnect_pin u3:o
+connect_pin newbox:o out
+connect_pin u3:o newnet
+connect_pin newbox:a newnet
+read_spef change1.spef
+report_at -pin out
+report_at -pin out -late -fall
+repower_gate u3 INV_X2
+disconnect_pin newbox:a
+disconnect_pin newbox:o
+disconnect_pin u3:o
+remove_net newnet
+remove_gate newbox
+connect_pin u3:o out
+read_spef change2.spef
+report_at -pin u1:a
+report_at -pin u1:a -fall
+report_at -pin u1:a -late
+report_at -pin u1:a -late -fall
+report_at -pin u1:b
+report_at -pin u1:b -fall
+report_at -pin u1:b -late
+report_at -pin u1:b -late -fall
+report_at -pin u1:o
+report_at -pin u1:o -fall
+report_at -pin u1:o -late
+report_at -pin u1:o -late -fall
+report_at -pin f1:d
+report_at -pin f1:d -fall
+report_at -pin f1:d -late
+report_at -pin f1:d -late -fall
+report_at -pin f1:ck
+report_at -pin f1:ck -fall
+report_at -pin f1:ck -late
+report_at -pin f1:ck -late -fall
+report_at -pin f1:q
+report_at -pin f1:q -fall
+report_at -pin f1:q -late
+report_at -pin f1:q -late -fall
+report_at -pin u2:a
+report_at -pin u2:a -fall
+report_at -pin u2:a -late
+report_at -pin u2:a -late -fall
+report_at -pin u2:o
+report_at -pin u2:o -fall
+report_at -pin u2:o -late
+report_at -pin u2:o -late -fall
+report_at -pin u3:a
+report_at -pin u3:a -fall
+report_at -pin u3:a -late
+report_at -pin u3:a -late -fall
+report_at -pin u3:o
+report_at -pin u3:o -fall
+report_at -pin u3:o -late
+report_at -pin u3:o -late -fall
+report_at -pin u4:a
+report_at -pin u4:a -fall
+report_at -pin u4:a -late
+report_at -pin u4:a -late -fall
+report_at -pin u4:b
+report_at -pin u4:b -fall
+report_at -pin u4:b -late
+report_at -pin u4:b -late -fall
+report_at -pin u4:o
+report_at -pin u4:o -fall
+report_at -pin u4:o -late
+report_at -pin u4:o -late -fall
+report_at -pin out
+report_at -pin out -fall
+report_at -pin out -late -fall
+report_at -pin out -late -fall
+report_rat -pin u1:a
+report_rat -pin u1:a -fall
+report_rat -pin u1:a -late
+report_rat -pin u1:a -late -fall
+report_rat -pin u1:b
+report_rat -pin u1:b -fall
+report_rat -pin u1:b -late
+report_rat -pin u1:b -late -fall
+report_rat -pin u1:o
+report_rat -pin u1:o -fall
+report_rat -pin u1:o -late
+report_rat -pin u1:o -late -fall
+report_rat -pin f1:d
+report_rat -pin f1:d -fall
+report_rat -pin f1:d -late
+report_rat -pin f1:d -late -fall
+report_rat -pin f1:ck
+report_rat -pin f1:ck -fall
+report_rat -pin f1:ck -late
+report_rat -pin f1:ck -late -fall
+report_rat -pin f1:q
+report_rat -pin f1:q -fall
+report_rat -pin f1:q -late
+report_rat -pin f1:q -late -fall
+report_rat -pin u2:a
+report_rat -pin u2:a -fall
+report_rat -pin u2:a -late
+report_rat -pin u2:a -late -fall
+report_rat -pin u2:o
+report_rat -pin u2:o -fall
+report_rat -pin u2:o -late
+report_rat -pin u2:o -late -fall
+report_rat -pin u3:a
+report_rat -pin u3:a -fall
+report_rat -pin u3:a -late
+report_rat -pin u3:a -late -fall
+report_rat -pin u3:o
+report_rat -pin u3:o -fall
+report_rat -pin u3:o -late
+report_rat -pin u3:o -late -fall
+report_rat -pin u4:a
+report_rat -pin u4:a -fall
+report_rat -pin u4:a -late
+report_rat -pin u4:a -late -fall
+report_rat -pin u4:b
+report_rat -pin u4:b -fall
+report_rat -pin u4:b -late
+report_rat -pin u4:b -late -fall
+report_rat -pin u4:o
+report_rat -pin u4:o -fall
+report_rat -pin u4:o -late
+report_rat -pin u4:o -late -fall
+report_rat -pin out
+report_rat -pin out -fall
+report_rat -pin out -late -fall
+report_rat -pin out -late -fall
+report_slack -pin u1:a
+report_slack -pin u1:a -fall
+report_slack -pin u1:a -late
+report_slack -pin u1:a -late -fall
+report_slack -pin u1:b
+report_slack -pin u1:b -fall
+report_slack -pin u1:b -late
+report_slack -pin u1:b -late -fall
+report_slack -pin u1:o
+report_slack -pin u1:o -fall
+report_slack -pin u1:o -late
+report_slack -pin u1:o -late -fall
+report_slack -pin f1:d
+report_slack -pin f1:d -fall
+report_slack -pin f1:d -late
+report_slack -pin f1:d -late -fall
+report_slack -pin f1:ck
+report_slack -pin f1:ck -fall
+report_slack -pin f1:ck -late
+report_slack -pin f1:ck -late -fall
+report_slack -pin f1:q
+report_slack -pin f1:q -fall
+report_slack -pin f1:q -late
+report_slack -pin f1:q -late -fall
+report_slack -pin u2:a
+report_slack -pin u2:a -fall
+report_slack -pin u2:a -late
+report_slack -pin u2:a -late -fall
+report_slack -pin u2:o
+report_slack -pin u2:o -fall
+report_slack -pin u2:o -late
+report_slack -pin u2:o -late -fall
+report_slack -pin u3:a
+report_slack -pin u3:a -fall
+report_slack -pin u3:a -late
+report_slack -pin u3:a -late -fall
+report_slack -pin u3:o
+report_slack -pin u3:o -fall
+report_slack -pin u3:o -late
+report_slack -pin u3:o -late -fall
+report_slack -pin u4:a
+report_slack -pin u4:a -fall
+report_slack -pin u4:a -late
+report_slack -pin u4:a -late -fall
+report_slack -pin u4:b
+report_slack -pin u4:b -fall
+report_slack -pin u4:b -late
+report_slack -pin u4:b -late -fall
+report_slack -pin u4:o
+report_slack -pin u4:o -fall
+report_slack -pin u4:o -late
+report_slack -pin u4:o -late -fall
+report_slack -pin out
+report_slack -pin out -fall
+report_slack -pin out -late
+report_slack -pin out -late -fall

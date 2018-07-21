@@ -1,0 +1,14 @@
+at nx1 0 0 0 0
+slew nx1 5 5 5 5
+at nx3 0 0 0 0
+slew nx3 5 5 5 5
+at nx2 0 0 0 0
+slew nx2 10 15 10 15
+at nx4 0 0 0 0
+slew nx4 5 5 5 5
+rat nx33 9 9 11 11
+load nx33 4.0
+rat nx44 9 9 11 11
+load nx44 4.0
+rat nx12 9 9 11 11
+load nx12 4.0

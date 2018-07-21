@@ -1,0 +1,146 @@
+at nid20 0 0 0 0
+slew nid20 5 5 5 5
+at nid6 0 0 0 0
+slew nid6 5 5 5 5
+at nid21 0 0 0 0
+slew nid21 5 5 5 5
+at nic7 0 0 0 0
+slew nic7 5 5 5 5
+at nid0 0 0 0 0
+slew nid0 5 5 5 5
+at nid11 0 0 0 0
+slew nid11 5 5 5 5
+at nid13 0 0 0 0
+slew nid13 5 5 5 5
+at nr 0 0 0 0
+slew nr 5 5 5 5
+at nic0 0 0 0 0
+slew nic0 5 5 5 5
+at nid1 0 0 0 0
+slew nid1 5 5 5 5
+at nic4 0 0 0 0
+slew nic4 5 5 5 5
+at nid10 0 0 0 0
+slew nid10 5 5 5 5
+at nid31 0 0 0 0
+slew nid31 5 5 5 5
+at nid3 0 0 0 0
+slew nid3 5 5 5 5
+at nic1 0 0 0 0
+slew nic1 5 5 5 5
+at nid22 0 0 0 0
+slew nid22 5 5 5 5
+at nic3 0 0 0 0
+slew nic3 5 5 5 5
+at nid26 0 0 0 0
+slew nid26 5 5 5 5
+at nid23 0 0 0 0
+slew nid23 5 5 5 5
+at nid16 0 0 0 0
+slew nid16 5 5 5 5
+at nid17 0 0 0 0
+slew nid17 5 5 5 5
+at nid27 0 0 0 0
+slew nid27 5 5 5 5
+at nid9 0 0 0 0
+slew nid9 5 5 5 5
+at nic2 0 0 0 0
+slew nic2 5 5 5 5
+at nid7 0 0 0 0
+slew nid7 5 5 5 5
+at nic5 0 0 0 0
+slew nic5 5 5 5 5
+at nid30 0 0 0 0
+slew nid30 5 5 5 5
+at nic6 0 0 0 0
+slew nic6 5 5 5 5
+at nid14 0 0 0 0
+slew nid14 5 5 5 5
+at nid29 0 0 0 0
+slew nid29 5 5 5 5
+at nid8 0 0 0 0
+slew nid8 5 5 5 5
+at nid12 0 0 0 0
+slew nid12 5 5 5 5
+at nid5 0 0 0 0
+slew nid5 5 5 5 5
+at nid15 0 0 0 0
+slew nid15 5 5 5 5
+at nid25 0 0 0 0
+slew nid25 5 5 5 5
+at nid18 0 0 0 0
+slew nid18 5 5 5 5
+at nid28 0 0 0 0
+slew nid28 5 5 5 5
+at nid24 0 0 0 0
+slew nid24 5 5 5 5
+at nid4 0 0 0 0
+slew nid4 5 5 5 5
+at nid19 0 0 0 0
+slew nid19 5 5 5 5
+at nid2 0 0 0 0
+slew nid2 5 5 5 5
+rat nod24 9 9 11 11
+load nod24 4.0
+rat nod6 9 9 11 11
+load nod6 4.0
+rat nod23 9 9 11 11
+load nod23 4.0
+rat nod31 9 9 11 11
+load nod31 4.0
+rat nod14 9 9 11 11
+load nod14 4.0
+rat nod11 9 9 11 11
+load nod11 4.0
+rat nod19 9 9 11 11
+load nod19 4.0
+rat nod28 9 9 11 11
+load nod28 4.0
+rat nod12 9 9 11 11
+load nod12 4.0
+rat nod5 9 9 11 11
+load nod5 4.0
+rat nod13 9 9 11 11
+load nod13 4.0
+rat nod3 9 9 11 11
+load nod3 4.0
+rat nod21 9 9 11 11
+load nod21 4.0
+rat nod29 9 9 11 11
+load nod29 4.0
+rat nod1 9 9 11 11
+load nod1 4.0
+rat nod7 9 9 11 11
+load nod7 4.0
+rat nod17 9 9 11 11
+load nod17 4.0
+rat nod30 9 9 11 11
+load nod30 4.0
+rat nod18 9 9 11 11
+load nod18 4.0
+rat nod4 9 9 11 11
+load nod4 4.0
+rat nod10 9 9 11 11
+load nod10 4.0
+rat nod15 9 9 11 11
+load nod15 4.0
+rat nod0 9 9 11 11
+load nod0 4.0
+rat nod16 9 9 11 11
+load nod16 4.0
+rat nod20 9 9 11 11
+load nod20 4.0
+rat nod27 9 9 11 11
+load nod27 4.0
+rat nod2 9 9 11 11
+load nod2 4.0
+rat nod9 9 9 11 11
+load nod9 4.0
+rat nod25 9 9 11 11
+load nod25 4.0
+rat nod8 9 9 11 11
+load nod8 4.0
+rat nod26 9 9 11 11
+load nod26 4.0
+rat nod22 9 9 11 11
+load nod22 4.0

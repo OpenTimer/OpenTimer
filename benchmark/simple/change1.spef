@@ -1,0 +1,37 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "simple"
+*DATE "Tue Sep 25 11:51:50 2012"
+*VENDOR "ISPD 2013 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET out 0.17
+*CONN
+*I newbox:o O
+*P out O
+*CAP
+1 newbox:o 0.02
+2 out 0.15
+*RES
+1 newbox:o out 3.98
+*END
+
+*D_NET newnet 0.99
+*CONN
+*I u3:o O
+*I newbox:a I
+*CAP
+1 u3:o 0.45
+2 newbox:a 0.54
+*RES
+1 u3:o newbox:a 4.321
+*END
+

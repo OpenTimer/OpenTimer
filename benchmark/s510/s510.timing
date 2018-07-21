@@ -1,0 +1,57 @@
+clock blif_clk_net 1 50
+at cnt509 0 0 0 0
+slew cnt509 5 5 5 5
+at pcnt12 0 0 0 0
+slew pcnt12 5 5 5 5
+at cnt283 0 0 0 0
+slew cnt283 5 5 5 5
+at cnt44 0 0 0 0
+slew cnt44 5 5 5 5
+at cnt13 0 0 0 0
+slew cnt13 5 5 5 5
+at pcnt241 0 0 0 0
+slew pcnt241 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at pcnt6 0 0 0 0
+slew pcnt6 5 5 5 5
+at cnt261 0 0 0 0
+slew cnt261 5 5 5 5
+at john 0 0 0 0
+slew john 5 5 5 5
+at pcnt17 0 0 0 0
+slew pcnt17 5 5 5 5
+at cnt511 0 0 0 0
+slew cnt511 5 5 5 5
+at cnt272 0 0 0 0
+slew cnt272 5 5 5 5
+at cnt21 0 0 0 0
+slew cnt21 5 5 5 5
+at cnt567 0 0 0 0
+slew cnt567 5 5 5 5
+at cnt10 0 0 0 0
+slew cnt10 5 5 5 5
+at cnt45 0 0 0 0
+slew cnt45 5 5 5 5
+at pcnt27 0 0 0 0
+slew pcnt27 5 5 5 5
+at cnt284 0 0 0 0
+slew cnt284 5 5 5 5
+at cnt591 0 0 0 0
+slew cnt591 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+rat cclr 2.1 2.1 2.2 2.2
+load cclr 4.0
+rat vsync 2.1 2.1 2.2 2.2
+load vsync 4.0
+rat cblank 2.1 2.1 2.2 2.2
+load cblank 4.0
+rat csync 2.1 2.1 2.2 2.2
+load csync 4.0
+rat pc 2.1 2.1 2.2 2.2
+load pc 4.0
+rat csm 2.1 2.1 2.2 2.2
+load csm 4.0
+rat pclr 2.1 2.1 2.2 2.2
+load pclr 4.0

@@ -1,0 +1,45 @@
+clock blif_clk_net 1 50
+at B0 0 0 0 0
+slew B0 5 5 5 5
+at A1 0 0 0 0
+slew A1 5 5 5 5
+at B1 0 0 0 0
+slew B1 5 5 5 5
+at A2 0 0 0 0
+slew A2 5 5 5 5
+at A3 0 0 0 0
+slew A3 5 5 5 5
+at blif_clk_net 0 0 0 0
+slew blif_clk_net 5 5 5 5
+at START 0 0 0 0
+slew START 5 5 5 5
+at B3 0 0 0 0
+slew B3 5 5 5 5
+at A0 0 0 0 0
+slew A0 5 5 5 5
+at blif_reset_net 0 0 0 0
+slew blif_reset_net 5 5 5 5
+at B2 0 0 0 0
+slew B2 5 5 5 5
+rat P7 2.1 2.1 2.2 2.2
+load P7 4.0
+rat P5 2.1 2.1 2.2 2.2
+load P5 4.0
+rat CNTVCON2 2.1 2.1 2.2 2.2
+load CNTVCON2 4.0
+rat P2 2.1 2.1 2.2 2.2
+load P2 4.0
+rat CNTVCO2 2.1 2.1 2.2 2.2
+load CNTVCO2 4.0
+rat P1 2.1 2.1 2.2 2.2
+load P1 4.0
+rat P0 2.1 2.1 2.2 2.2
+load P0 4.0
+rat READY 2.1 2.1 2.2 2.2
+load READY 4.0
+rat P6 2.1 2.1 2.2 2.2
+load P6 4.0
+rat P3 2.1 2.1 2.2 2.2
+load P3 4.0
+rat P4 2.1 2.1 2.2 2.2
+load P4 4.0

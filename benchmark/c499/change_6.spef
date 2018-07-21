@@ -1,0 +1,171 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "changes"
+*DATE "Tue Dec 02 19:00:24 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET nid7 4.5250
+*CONN
+*I TAUGATE_25:Z O
+*I inst_76:A I
+*I inst_8:A I
+*I inst_29:A I
+*CAP
+1 TAUGATE_25:Z 0.2611
+2 nid7:1 0.4098
+3 nid7:2 0.5009
+4 nid7:3 0.2843
+5 inst_8:A 0.2878
+6 nid7:4 0.4685
+7 nid7:5 0.3070
+8 nid7:6 0.3583
+9 inst_76:A 0.1395
+10 nid7:7 0.4644
+11 nid7:8 0.4559
+12 nid7:9 0.4050
+13 nid7:10 0.0154
+14 inst_29:A 0.1670
+*RES
+2 TAUGATE_25:Z nid7:1 0.1659
+3 nid7:1 nid7:2 0.2742
+4 nid7:2 nid7:3 0.3494
+5 nid7:3 inst_8:A 0.1485
+6 nid7:3 nid7:4 0.0646
+7 nid7:4 nid7:5 0.0794
+8 nid7:5 nid7:6 0.2161
+9 nid7:6 inst_76:A 0.1614
+10 nid7:4 nid7:7 0.1555
+11 nid7:7 nid7:8 0.2440
+12 nid7:8 nid7:9 0.0332
+13 nid7:9 nid7:10 0.0406
+14 nid7:10 inst_29:A 0.2732
+*END
+
+*D_NET nod30 0.8663
+*CONN
+*I inst_81:ZN O
+*P nod30 O
+*CAP
+1 inst_81:ZN 0.1308
+2 nod30:1 0.2909
+3 nod30:2 0.3706
+4 nod30 0.0740
+*RES
+2 inst_81:ZN nod30:1 0.4871
+3 nod30:1 nod30:2 0.4951
+4 nod30:2 nod30 0.4125
+*END
+
+*D_NET net_135 4.3846
+*CONN
+*I inst_112:ZN O
+*I inst_145:A2 I
+*I inst_160:A2 I
+*I inst_164:A2 I
+*I inst_168:A2 I
+*CAP
+1 inst_112:ZN 0.1285
+2 net_135:1 0.2926
+3 inst_145:A2 0.4507
+4 net_135:2 0.0305
+5 net_135:3 0.2383
+6 net_135:4 0.4020
+7 net_135:5 0.2529
+8 inst_160:A2 0.2665
+9 net_135:6 0.2236
+10 inst_164:A2 0.1922
+11 net_135:7 0.4680
+12 net_135:8 0.2976
+13 net_135:9 0.2331
+14 net_135:10 0.2927
+15 net_135:11 0.3943
+16 inst_168:A2 0.2211
+*RES
+2 inst_112:ZN net_135:1 0.3356
+3 net_135:1 inst_145:A2 0.3995
+4 net_135:1 net_135:2 0.4354
+5 net_135:2 net_135:3 0.1977
+6 net_135:3 net_135:4 0.0788
+7 net_135:4 net_135:5 0.3276
+8 net_135:5 inst_160:A2 0.3833
+9 net_135:4 net_135:6 0.2805
+10 net_135:6 inst_164:A2 0.1322
+11 net_135:2 net_135:7 0.1955
+12 net_135:7 net_135:8 0.1868
+13 net_135:8 net_135:9 0.4889
+14 net_135:9 net_135:10 0.0703
+15 net_135:10 net_135:11 0.3298
+16 net_135:11 inst_168:A2 0.4131
+*END
+
+*D_NET net_109 1.4221
+*CONN
+*I inst_149:ZN O
+*I inst_100:B I
+*CAP
+1 inst_149:ZN 0.2621
+2 net_109:1 0.1808
+3 net_109:2 0.0717
+4 net_109:3 0.3990
+5 net_109:4 0.4035
+6 net_109:5 0.0219
+7 inst_100:B 0.0830
+*RES
+2 inst_149:ZN net_109:1 0.4539
+3 net_109:1 net_109:2 0.1250
+4 net_109:2 net_109:3 0.3196
+5 net_109:3 net_109:4 0.4976
+6 net_109:4 net_109:5 0.3591
+7 net_109:5 inst_100:B 0.2780
+*END
+
+*D_NET nid8 4.6096
+*CONN
+*P nid8 I
+*I inst_2:A I
+*I inst_5:B I
+*I inst_75:A I
+*CAP
+1 nid8 0.1593
+2 nid8:1 0.3498
+3 nid8:2 0.4055
+4 nid8:3 0.4519
+5 nid8:4 0.4658
+6 nid8:5 0.3690
+7 inst_5:B 0.4019
+8 nid8:6 0.0376
+9 nid8:7 0.0972
+10 nid8:8 0.3594
+11 nid8:9 0.0525
+12 nid8:10 0.3248
+13 inst_2:A 0.2597
+14 nid8:11 0.4443
+15 nid8:12 0.1288
+16 inst_75:A 0.3022
+*RES
+2 nid8 nid8:1 0.0632
+3 nid8:1 nid8:2 0.2503
+4 nid8:2 nid8:3 0.4700
+5 nid8:3 nid8:4 0.3789
+6 nid8:4 nid8:5 0.3545
+7 nid8:5 inst_5:B 0.1033
+8 nid8:2 nid8:6 0.1267
+9 nid8:6 nid8:7 0.3840
+10 nid8:7 nid8:8 0.2434
+11 nid8:8 nid8:9 0.3726
+12 nid8:9 nid8:10 0.2980
+13 nid8:10 inst_2:A 0.2454
+14 nid8:4 nid8:11 0.1405
+15 nid8:11 nid8:12 0.0668
+16 nid8:12 inst_75:A 0.3699
+*END
+
