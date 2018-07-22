@@ -194,6 +194,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Jin Hu][Jin Hu] helped define the timing API and produced the golden benchmarks for integration tests.
 - [Myung-Chul Kim][Myung-Chul Kim] helped test OpenTimer through ICCAD CAD contest.
 - [George Chen][George Chen] helped defined path report formats and test OpenTimer through TAU contest.
+- [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 
 Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the funding support from NSF and DARPA to continue our development on OpenTimer.
@@ -213,6 +214,7 @@ Meanwhile, we appreciate the funding support from NSF and DARPA to continue our 
 [Pei-Yu Lee]:            mailto:palacedeforsaken@gmail.com
 [George Chen]:           mailto:george@geochrist.com
 [Jignesh Shah]:          mailto:jignesh.shah@intel.com
+[Pao-I Chen]:            mailto:poyipenny@gmail.com
 [Github releases]:       https://github.com/OpenTimer/OpenTimer/releases
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
