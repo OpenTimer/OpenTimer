@@ -1,4 +1,5 @@
-# OpenTimer 
+# OpenTimer <img align="right" width="10%" src="image/logo.png">
+
 
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
