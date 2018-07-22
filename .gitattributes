@@ -1,3 +1,1 @@
-* text=auto
-
-benchmark export-ignore
+benchmark/ export-ignore
