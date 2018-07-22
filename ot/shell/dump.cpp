@@ -46,16 +46,16 @@ void dump_contributors(Timer& timer, std::istream& is, std::ostream& os, std::os
   // contributor list
   static std::string_view contributors = "\n\
 OpenTimer contributor list:\n\n\
-  Tsung-Wei Huang    UIUC     <twh760812@gmail.com>\n\
-  Martin Wong        UIUC     <mdfwong@illinois.edu>\n\
-  Chun-Xun Lin       UIUC     <clin99@illinois.edu>\n\
-  Tin-Yin Lai        UIUC     <tinyinlai@gmail.com>\n\
-  Jin Hu             IBM      <jinhu@umich.edu>\n\
-  Myung-Chul Kim     IBM      <mckima@us.ibm.com>\n\
-  Pei-Yu Lee         NCTU     <palacedeforsaken@gmail.com>\n\
-  Kunal Ghosh        VSD      <kunalpghosh@gmail.com>\n\
-  George Chen        Intel    <george@geochrist.com>\n\
-  Jignesh Shah       Intel    <jignesh.shah@intel.com>\n\
+  Tsung-Wei Huang    <twh760812@gmail.com>\n\
+  Martin Wong        <mdfwong@illinois.edu>\n\
+  Chun-Xun Lin       <clin99@illinois.edu>\n\
+  Kunal Ghosh        <kunalpghosh@gmail.com>\n\
+  Pei-Yu Lee         <palacedeforsaken@gmail.com>\n\
+  Tin-Yin Lai        <tinyinlai@gmail.com>\n\
+  Jin Hu             <jinhu@umich.edu>\n\
+  Myung-Chul Kim     <mckima@us.ibm.com>\n\
+  George Chen        <george@geochrist.com>\n\
+  Pao-I Chen         <poyipenny@gmail.com>\n\
 \nPlease let me know <twh760812@gmail.com> if I forgot someone!\n";
   
   os << contributors << '\n';

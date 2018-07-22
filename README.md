@@ -2,6 +2,13 @@
 
 A High-performance Timing Analysis Tool for VLSI Systems.
 
+# Why OpenTimer?
+
+OpenTimer is a new static timing analysis (STA) tool to help IC designers
+quickly verify the circuit timing.
+It is developed completely from the ground up using C++17
+to efficiently support parallel and incremental timing.
+
 # Get Started with OpenTimer
 
 The easiest way to start using OpenTimer is to use *OpenTimer shell*.
@@ -58,7 +65,9 @@ Slack        :   -23.2976
 ----------------------------------
 ```
 
-You can dump to a dot format and use online tools like [GraphViz][GraphViz]
+The critical path originates from the primary input `inp1` all the way 
+to the data pin `f1:D` of the flip-flop `f1`.
+You can dump a dot format and use online tools like [GraphViz][GraphViz]
 to visualize the timing graph.
 
 ```bash
@@ -71,7 +80,7 @@ We have provided three vanilla command files,
 [simple.conf](./example/simple/simple.conf), 
 [unit.conf](./example/simple/unit.conf), and 
 [opt.conf](./example/simple/opt.conf)
-to demonstrate other useage of OpenTimer. 
+to demonstrate more usages of OpenTimer. 
 You can redirect it through stdin to OpenTimer shell.
 
 ```bash
@@ -113,13 +122,18 @@ industry standard timer and are being used by many EDA researchers.
 ~$ make test
 ```
 
-# OpenTimer API
+# OpenTimer Shell
 
-OpenTimer has very specialized data structrues and procedures to
-enable efficient parallel and incremental timing.
-It is important to understand the philosophy behind our API design to ensure the best 
-performance and current results.
-OpenTimer API has three types, *Builder*, *Action*, and *Accessor*.
+# Integrate OpenTimer to your Project
+
+## C++ API
+
+
+
+OpenTimer has very efficient data structures and procedures to
+enable parallel and incremental timing.
+The philosophy is to separate the API into three categories,
+*Builder*, *Action*, and *Accessor*.
 
 | Type |  Description | Example | Time Complexity |
 | -------  |  ----------- |  --- | -- |
@@ -131,9 +145,10 @@ OpenTimer API has three types, *Builder*, *Action*, and *Accessor*.
 
 The folder [example](./example) contains several examples and is a great place to learn how to use OpenTimer.
 
-| Example |  Description |
-| ------- |  ----------- | 
-| [simple](./example/simple) |  A simple sequential circuit design with one FF, four gates, and a clock.
+| Example |  Description | Library |
+| ------- |  ----------- | ------- |
+| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. | osu standard cell library |
+| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| two libraries, one early and another late. |
 
 The folder [benchmark](./benchmark) contains more designs but they are mainly used for internal regression 
 and integration tests.
@@ -185,7 +200,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Tsung-Wei Huang][Tsung-Wei Huang] created the OpenTimer project is now the chief architect.
 - [Martin Wong][Martin Wong] supported the OpenTimer project through NSF and DARPA funding.
 - [Chun-Xun Lin][Chun-Xun Lin] implemented the prompt interface of OpenTimer shell.
-- [Kunal Ghosh][Kunal Ghosh] provided a list of critical features to include in OpenTimer.
+- [Kunal Ghosh][Kunal Ghosh] provided a list of practical features to include in OpenTimer.
 - [Pei-Yu Lee][Pei-Yu Lee] provided useful incremental timing discussion and helped fix bugs.
 - [Tin-Yin Lai][Tin-Yin Lai] discussed micro modeling algorithms and helped fix bugs.
 - [Jin Hu][Jin Hu] helped define the timing API and produced the golden benchmarks for integration tests.
@@ -194,7 +209,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 
 Please don't hesitate to [let me know][email me] if I forgot someone! 
-Meanwhile, we appreciate the funding support from NSF and DARPA to continue our development on OpenTimer.
+Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
 
 ![](image/nsf.png) ![](image/darpa.png)
 
