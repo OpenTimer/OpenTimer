@@ -1,0 +1,38 @@
+digraph TimingGraph {
+  rankdir="LR"
+  "inp1" [shape=ellipse style=filled fillcolor=red fontcolor=white]
+  "u1:A" [shape=ellipse style=filled fillcolor=red fontcolor=white]
+  "tau2015_clk";
+  "f1:D" [shape=ellipse style=filled fillcolor=red fontcolor=white];
+  "out";
+  "u1:Y" [shape=ellipse style=filled fillcolor=red fontcolor=white];
+  "u4:B" ;
+  "inp1";
+  "inp2";
+  "u2:A";
+  "u1:B";
+  "f1:CLK";
+  "f1:Q";
+  "u2:Y";
+  "u3:Y";
+  "u4:A" [shape=ellipse style=filled fillcolor=red fontcolor=white];
+  "u3:A";
+  "u4:Y" [shape=ellipse style=filled fillcolor=red fontcolor=white];
+  "u3:Y" -> "out";
+  "f1:Q" -> "u4:B";
+  "u1:Y" -> "u4:A";
+  "u4:Y" -> "f1:D";
+  "u4:B" -> "u4:Y";
+  "u4:A" -> "u4:Y";
+  "u2:Y" -> "u3:A";
+  "u3:A" -> "u3:Y";
+  "f1:Q" -> "u2:A";
+  "u2:A" -> "u2:Y";
+  "tau2015_clk" -> "f1:CLK";
+  "f1:CLK" -> "f1:D";
+  "f1:CLK" -> "f1:Q";
+  "inp2" -> "u1:B";
+  "inp1" -> "u1:A";
+  "u1:B" -> "u1:Y";
+  "u1:A" -> "u1:Y";
+}

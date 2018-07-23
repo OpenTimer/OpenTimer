@@ -20,6 +20,7 @@ message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 # The version number
 set(OT_VERSION_MAJOR "2")
@@ -49,64 +50,100 @@ configure_file(
 # add the binayr tree to the search path for include files so we can find TutorialConfig.h
 include_directories(${PROJECT_SOURCE_DIR})
 
-# Add OpenTimer library
-add_library(OpenTimer 
-  ot/policy.hpp
-  ot/config.hpp
-  ot/exception.hpp
-  ot/traits.hpp
-  ot/headerdef.hpp 
-  ot/utility/os.hpp ot/utility/os.cpp
-  ot/utility/lambda.hpp
-  ot/utility/singleton.hpp
-  ot/utility/utility.hpp
-  ot/utility/logger.hpp
-  ot/utility/index.hpp
-  ot/utility/tokenizer.hpp ot/utility/tokenizer.cpp
-  ot/utility/scope_guard.hpp
-  ot/utility/CLI11.hpp
-  ot/utility/iterator.hpp
-  ot/static/logger.hpp
-  ot/static/thread.hpp
-  ot/taskflow/taskflow.hpp
-  ot/spef/spef.cpp ot/spef/spef.hpp
-  ot/verilog/verilog.cpp ot/verilog/verilog.hpp
-  ot/liberty/lut.cpp ot/liberty/lut.hpp
-  ot/liberty/timing.cpp ot/liberty/timing.hpp
-  ot/liberty/cellpin.cpp ot/liberty/cellpin.hpp
-  ot/liberty/cell.cpp ot/liberty/cell.hpp
-  ot/liberty/celllib.cpp ot/liberty/celllib.hpp
-  ot/tau/tau15.hpp ot/tau/tau15.cpp
-  ot/unit/unit.cpp ot/unit/unit.hpp
-  ot/timer/cppr.cpp ot/timer/cppr.hpp
-  ot/timer/test.hpp ot/timer/test.cpp
-  ot/timer/timer.hpp ot/timer/timer.cpp 
-  ot/timer/sfxt.cpp ot/timer/sfxt.hpp
-  ot/timer/net.hpp ot/timer/net.cpp
-  ot/timer/pin.hpp ot/timer/pin.cpp
-  ot/timer/arc.hpp ot/timer/arc.cpp
-  ot/timer/gate.hpp ot/timer/gate.cpp
-  ot/timer/clock.hpp ot/timer/clock.cpp
-  ot/timer/endpoint.hpp ot/timer/endpoint.cpp
-  ot/timer/path.hpp ot/timer/path.cpp
-  ot/timer/verilog.cpp
-  ot/timer/celllib.cpp
-  ot/timer/spef.cpp
-  ot/timer/sdc.cpp
-  ot/timer/dump.cpp
-  ot/timer/unit.cpp
-  ot/sdc/mask.hpp
-  ot/sdc/sdc.hpp ot/sdc/sdc.cpp
-  ot/sdc/tokenize.hpp ot/sdc/tokenize.cpp
-  ot/sdc/object.cpp ot/sdc/object.hpp
-  ot/shell/shell.hpp ot/shell/shell.cpp
-  ot/shell/dump.cpp 
-  ot/shell/builder.cpp 
-  ot/shell/action.cpp
+# OpenTimer source
+set(OT_CPP
+  ot/unit/unit.cpp
   ot/shell/misc.cpp
   ot/shell/obselete.cpp
-  ot/shell/prompt.hpp
+  ot/shell/builder.cpp
+  ot/shell/action.cpp
+  ot/shell/shell.cpp
+  ot/shell/dump.cpp
+  ot/timer/arc.cpp
+  ot/timer/celllib.cpp
+  ot/timer/test.cpp
+  ot/timer/timer.cpp
+  ot/timer/clock.cpp
+  ot/timer/sdc.cpp
+  ot/timer/endpoint.cpp
+  ot/timer/net.cpp
+  ot/timer/sfxt.cpp
+  ot/timer/unit.cpp
+  ot/timer/path.cpp
+  ot/timer/spef.cpp
+  ot/timer/cppr.cpp
+  ot/timer/verilog.cpp
+  ot/timer/gate.cpp
+  ot/timer/dump.cpp
+  ot/timer/pin.cpp
+  ot/liberty/celllib.cpp
+  ot/liberty/cell.cpp
+  ot/liberty/cellpin.cpp
+  ot/liberty/lut.cpp
+  ot/liberty/timing.cpp
+  ot/verilog/verilog.cpp
+  ot/sdc/tokenize.cpp
+  ot/sdc/object.cpp
+  ot/sdc/sdc.cpp
+  ot/tau/tau15.cpp
+  ot/utility/os.cpp
+  ot/utility/tokenizer.cpp
+  ot/spef/spef.cpp
 )
+
+# OpenTimer hpp
+set(OT_HPP 
+  ot/unit/unit.hpp
+  ot/policy.hpp
+  ot/shell/shell.hpp
+  ot/shell/prompt.hpp
+  ot/traits.hpp
+  ot/timer/cppr.hpp
+  ot/timer/gate.hpp
+  ot/timer/pin.hpp
+  ot/timer/sfxt.hpp
+  ot/timer/path.hpp
+  ot/timer/timer.hpp
+  ot/timer/test.hpp
+  ot/timer/clock.hpp
+  ot/timer/endpoint.hpp
+  ot/timer/net.hpp
+  ot/timer/arc.hpp
+  ot/config.hpp
+  ot/headerdef.hpp
+  ot/liberty/lut.hpp
+  ot/liberty/timing.hpp
+  ot/liberty/cellpin.hpp
+  ot/liberty/cell.hpp
+  ot/liberty/celllib.hpp
+  ot/verilog/verilog.hpp
+  ot/static/logger.hpp
+  ot/static/thread.hpp
+  ot/sdc/object.hpp
+  ot/sdc/sdc.hpp
+  ot/sdc/mask.hpp
+  ot/sdc/tokenize.hpp
+  ot/taskflow/taskflow.hpp
+  ot/tau/tau15.hpp
+  ot/exception.hpp
+  ot/utility/logger.hpp
+  ot/utility/scope_guard.hpp
+  ot/utility/utility.hpp
+  ot/utility/index.hpp
+  ot/utility/lambda.hpp
+  ot/utility/tokenizer.hpp
+  ot/utility/CLI11.hpp
+  ot/utility/singleton.hpp
+  ot/utility/os.hpp
+  ot/utility/iterator.hpp
+  ot/spef/spef.hpp
+)
+
+message(STATUS "OT_CPP: ${OT_CPP}")
+message(STATUS "OT_HPP: ${OT_HPP}")
+
+# Add OpenTimer library
+add_library(OpenTimer ${OT_CPP} ${OT_HPP})
 
 # Find program
 find_program(PYTHON_EXECUTABLE python)
@@ -116,9 +153,9 @@ message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
 #set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
-###################################################################################################
+###########################################################
 # Executables
-###################################################################################################
+###########################################################
 message(STATUS "Building executables ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
@@ -146,9 +183,26 @@ add_executable(ot-shell main/shell/shell.cpp)
 target_link_libraries(ot-shell ${OT_EXE_LINKER_FLAGS})
 message(STATUS "OpenTimer shell: ${OT_SHELL}")
 
-###################################################################################################
+###########################################################
+# Install
+# cmake .. -DCMAKE_INSTALL_PREFIX=<prefix_path>
+###########################################################
+
+# hpp
+foreach(file ${OT_HPP})
+  get_filename_component( dir ${file} DIRECTORY )
+  install(FILES ${file} DESTINATION include/${dir} )
+endforeach()
+
+# library
+install(TARGETS OpenTimer DESTINATION lib)
+
+# executable
+install(TARGETS ot-shell DESTINATION bin)
+
+###########################################################
 # Test
-###################################################################################################
+###########################################################
 
 # Test 
 enable_testing()

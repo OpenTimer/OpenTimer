@@ -220,20 +220,94 @@ The table below shows a list of commonly used commands.
 | set_num_threads | builder | N | set the number of threads | set_num_threads 4 |
 | read_celllib | builder | [-early \| -late] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
 | read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
-| read_spef | builder | file | read parasitics in SPEF format | read_spef myrc.spef |
+| read_spef | builder | file | read parasitics in SPEF | read_spef myrc.spef |
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
 | update_timing | action | n/a | update the timing | update_timing |
 | report_timing | action | n/a | report the timing | report_timing |
 | dump_graph | accessor | [-o file] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
-| dump_timer | accessor | [-o file] | dump the timer details | dump_timer -o timer.txt |
-| dump_slack | accessor | [-o file] | dump the slack values of all pins | dump_slack -o slack.txt |
+| dump_timer | accessor | [-o file] | dump the present timer details | dump_timer -o timer.txt |
+| dump_slack | accessor | [-o file] | dump the present slack values of all pins | dump_slack -o slack.txt |
 
 # Integrate OpenTimer to your Project
 
+There are a number of ways to develop your project on top of OpenTimer.
+
+## Install OpenTimer
+
+Our project [CMakeLists.txt](CMakeLists.txt) has defined the required files
+to install when you hit `make install`.
+The installation paths are `<prefix>/include`, `<prefix>/lib`, and `<prefix>/bin`
+for the hpp files, library, and executable where `<prefix>` can be configured 
+through the cmake variable [CMAKE_INSTALL_PREFIX](https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_PREFIX.html#variable:CMAKE_INSTALL_PREFIX).
+The following example installs OpenTimer to `/tmp`.
+
+```bash
+~$ cd build/
+~$ cmake ../ -DCMAKE_INSTALL_PREFIX=/tmp
+~$ make 
+~$ make install
+~$ ls
+bin/  include/  lib/
+```
+
+Now create a `app.cpp` file that does nothing but dump the timer details.
+
+```cpp
+#include <ot/timer/timer.hpp>
+int main(int argc, char* argv[]) {
+  ot::Timer timer;
+  std::cout << timer.dump_timer();
+  return 0;
+}
+```
+
+Compile your application together with the OpenTimer headers and library.
+You will need to specify the `-std=c++1z` and `-lstdc++fs` flags
+to use C++17 features and filesystem libraries.
+
+```bash
+~$ g++ timer.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o timer.out
+~$ ./timer.out
+```
+
 ## C++ API
 
-The class [Timer](ot/timer/timer.hpp) is the only entry you need when integrating OpenTimer to your project.
-*All public methods are thread-safe*.
+The class [Timer](ot/timer/timer.hpp) is the main entry you need to use OpenTimer in your project. 
+The table below summarizes a list of commonly used methods.
+
+| Method | Type | Argument | Return | Description |
+| ------ | ---- | -------- | ------ | ----------- |
+| num_threads | builder | unsigned | self | set the number of threads |
+| celllib| builder | path, split | self | read the cell library for early and late splits |
+| verilog| builder | path | self | read a verilog netlist |
+| spef   | builder | path | self | read parasitics in SPEF |
+| sdc    | builder | path | self | read a Synopsys Design Constraint file |
+| update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
+| at | action | pin_name, split, transition | optional of float | update the timing and return the arrival time of a pin, if exists, at a give split and transition |
+| slew | action | pin_name, split, transition | optional of float | update the timing and return the slew of a pin at a give split and transition, if exists |
+| rat | action | pin_name, split, transition | optional of float | update the timing and return the required arrival time of a pin at a give split and transition, if exists |
+| slack | action | pin_name, split, transition | optional of float | update the timing and return the slack of a pin at a give split and transition, if exists |
+| tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
+| wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
+| dump_graph | accessor | n/a | string | dump the present timing graph to a dot format |
+| dump_timer | accessor | n/a | string | dump the present timer details |
+| dump_slack | accessor | n/a | string | dump the present slack values of all pins |
+
+
+*All public methods are thread-safe* as a result of OpenTimer lineage.
+Keep in mind the chronological order of calling each method does matter.
+It is users' responsibility to ensure a correct execution order to avoid errors.
+The example below demonstrates a correct execution to generate a netlist 
+on top of two cell libraries, while individual parsings are transparently parallelized.
+
+```cpp
+// analyze the timing of the simple design
+timer.celllib("simple_Early.lib", ot::EARLY)
+     .celllib("simple_Late.lib", ot::LATE)
+     .verilog("simple.v")
+     .spef   ("simple.spef")
+     .update_timing();
+```
 
 # Examples
 
