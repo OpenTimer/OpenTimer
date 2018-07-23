@@ -156,16 +156,15 @@ The table below shows a list of commonly used commands.
 | Command | type | Arguments | Description | Example |
 | ------- | ---- | --------- | ----------- | ------- |
 | set_num_threads | builder | N | set the number of threads | set_num_threads 4 |
-| read_celllib | builder | [ -early \| -late ] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
+| read_celllib | builder | [-early \| -late] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
 | read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
 | read_spef | builder | file | read parasitics in SPEF format | read_spef myrc.spef |
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
 | update_timing | action | n/a | update the timing | update_timing |
 | report_timing | action | n/a | report the timing | report_timing |
-| report_slew   | action | -pin name [ -early \| -late ] [ -rise \| -fall ] | report the transition value of a pin | report_slew -pin f1:d -early -fall |
-| dump_graph | accessor | [ -o file ] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
-| dump_timer | accessor | [ -o file ] | dump the timer details | dump_timer -o timer.txt |
-| dump_slack | accessor | [ -o file ] | dump the slack values of all pins | dump_slack -o slack.txt |
+| dump_graph | accessor | [-o file] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
+| dump_timer | accessor | [-o file] | dump the timer details | dump_timer -o timer.txt |
+| dump_slack | accessor | [-o file] | dump the slack values of all pins | dump_slack -o slack.txt |
 
 # Integrate OpenTimer to your Project
 
