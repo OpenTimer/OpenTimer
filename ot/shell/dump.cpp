@@ -72,15 +72,15 @@ List of commonly used commands:\n\
 \n[Builder] operations to build the timer\n\n\
   set_units          -[time|power|resistance|capacitance|voltage|current] <unit>\n\
   set_num_threads    <N>\n\
-  read_celllib       [-early <file>] [-late <file>]\n\
+  read_celllib       [-early|-late] <file>\n\
   read_verilog       <file>\n\
   read_spef          <file>\n\
   read_sdc           <file>\n\
   read_timing        <file>\n\
-  set_slew           -pin [-early|-late] [-rise|-fall] <value>\n\
-  set_at             -pin [-early|-late] [-rise|-fall] <value>\n\
-  set_rat            -pin [-early|-late] [-rise|-fall] <value>\n\
-  set_load           -pin [-early|-late] [-rise|-fall] <value>\n\
+  set_slew           -pin name [-early|-late] [-rise|-fall] <value>\n\
+  set_at             -pin name [-early|-late] [-rise|-fall] <value>\n\
+  set_rat            -pin name [-early|-late] [-rise|-fall] <value>\n\
+  set_load           -pin name [-early|-late] [-rise|-fall] <value>\n\
   insert_gate        <gate> <cell>\n\
   repower_gate       <gate> <cell>\n\
   remove_gate        <gate>\n\
@@ -92,10 +92,10 @@ List of commonly used commands:\n\
 \n[Action] operations to update the timer\n\n\
   update_timing\n\
   report_timing\n\
-  report_slew        -pin [-early|-late] [-rise|-fall]\n\
-  report_at          -pin [-early|-late] [-rise|-fall]\n\
-  report_rat         -pin [-early|-late] [-rise|-fall]\n\
-  report_slack       -pin [-early|-late] [-rise|-fall]\n\
+  report_slew        -pin name [-early|-late] [-rise|-fall]\n\
+  report_at          -pin name [-early|-late] [-rise|-fall]\n\
+  report_rat         -pin name [-early|-late] [-rise|-fall]\n\
+  report_slack       -pin name [-early|-late] [-rise|-fall]\n\
 \n[Dump] operations to inspect the timer\n\n\
   help\n\
   version\n\

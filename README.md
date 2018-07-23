@@ -85,8 +85,6 @@ You can redirect it through stdin to OpenTimer shell.
 
 ```bash
 cd example/simple
-../../bin/ot-shell < simple.conf  # demonstrate the basic usage
-../../bin/ot-shell < unit.conf    # demonstrate how to set units
 ../../bin/ot-shell < opt.conf     # modify the design and perform incremental timing
 ```
 
@@ -122,17 +120,11 @@ industry standard timer and are being used by many EDA researchers.
 ~$ make test
 ```
 
-# OpenTimer Shell
-
-# Integrate OpenTimer to your Project
-
-## C++ API
-
-
+# Design Philosophy
 
 OpenTimer has very efficient data structures and procedures to
 enable parallel and incremental timing.
-The philosophy is to separate the API into three categories,
+Our design philosophy is to divide timing operations into three categories,
 *Builder*, *Action*, and *Accessor*.
 
 | Type |  Description | Example | Time Complexity |
@@ -141,22 +133,52 @@ The philosophy is to separate the API into three categories,
 | Action   | carry out builder operations to update the timing | update_timing, report_timing, report_slack | Algorithm-dependent |
 | Accessors| inspect the timer without changing any internal data structures | dump_timer, dump_slack, dump_net_load | Operation-dependent |
 
+# OpenTimer Shell
+
+OpenTimer shell is a powerful command line tool to perform interactive analysis.
+It is also the easiest way to get your first timing report off the ground.
+The program `ot-shell` can be found in the folder `bin/` after you 
+[Compile OpenTimer](#compile-opentimer).
+
+## Commands
+
+The table below shows a list of commonly used commands.
+
+| Command | type | Arguments | Description | Example |
+| ------- | ---- | --------- | ----------- | ------- |
+| set_num_threads | builder | N | set the number of threads | set_num_threads 4 |
+| read_celllib | builder | [ -early \| -late ] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
+| read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
+| read_spef | builder | file | read parasitics in SPEF format | read_spef myrc.spef |
+| read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
+| update_timing | action | n/a | update the timing | update_timing |
+| report_timing | action | n/a | report the timing | report_timing |
+| report_slew   | action | -pin name [ -early \| -late ] [ -rise \| -fall ] | report the transition value of a pin | report_slew -pin f1:d -early -fall |
+| dump_graph | accessor | [ -o file ] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
+| dump_timer | accessor | [ -o file ] | dump the timer details | dump_timer -o timer.txt |
+| dump_slack | accessor | [ -o file ] | dump the slack values of all pins | dump_slack -o slack.txt |
+
+# Integrate OpenTimer to your Project
+
+## C++ API
+
+The class [Timer](ot/timer/timer.hpp) is the only entry you need when integrating OpenTimer to your project.
+*All public methods are thread-safe*.
+
 # Examples
 
 The folder [example](./example) contains several examples and is a great place to learn how to use OpenTimer.
 
-| Example |  Description | Library |
-| ------- |  ----------- | ------- |
-| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. | osu standard cell library |
-| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| two libraries, one early and another late. |
+| Example |  Description |
+| ------- |  ----------- | 
+| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. |
+| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.|
 
 The folder [benchmark](./benchmark) contains more designs but they are mainly used for internal regression 
 and integration tests.
 
 
-# Get Involved
-+ Report bugs/issues by submitting a [Github issue][Github issues].
-+ Submit contributions using [pull requests][Github pull requests].
+
 
 # Who is Using OpenTimer?
 
@@ -172,27 +194,19 @@ Many industry and academic people are using OpenTimer in their projects:
 - [VSD][VSD], VLSI System Design Corporation
 - [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
 
-Please [let me know][email me] if I forgot your project! To cite OpenTimer in your work, use:
+To cite OpenTimer in your work, use:
 
 + [OpenTimer: A High-performance Timing Analysis Tool][OpenTimerPaper], IEEE/ACM ICCAD 2015.
 + [UI-Timer: An Ultra-fast Clock Network Pessimism Removal Algorithm][UI-TimerPaper], IEEE/ACM ICCAD 2014
 
-We are growing our users to contribute to open-source EDA ecosystems. 
+Please [let me know][email me] if I forgot your project! We are growing our users to contribute to open-source EDA ecosystems. 
 Feedback and suggestions are welcome.
 
-# License
 
-<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
+# Get Involved
++ Report bugs/issues by submitting a [Github issue][Github issues].
++ Submit contributions using [pull requests][Github pull requests].
 
-OpenTimer is licensed under the [MIT License](./LICENSE):
-
-Copyright &copy; 2018 [Tsung-Wei Huang][Tsung-Wei Huang] and [Martin Wong][Martin Wong].
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 # Contributors
@@ -212,6 +226,21 @@ Please don't hesitate to [let me know][email me] if I forgot someone!
 Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
 
 ![](image/nsf.png) ![](image/darpa.png)
+
+
+# License
+
+<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
+
+OpenTimer is licensed under the [MIT License](./LICENSE):
+
+Copyright &copy; 2018 [Tsung-Wei Huang][Tsung-Wei Huang] and [Martin Wong][Martin Wong].
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
 * * *
