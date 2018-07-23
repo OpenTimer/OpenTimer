@@ -8,14 +8,14 @@ A High-performance Timing Analysis Tool for VLSI Systems.
 
 OpenTimer is a new static timing analysis (STA) tool to help IC designers
 quickly verify the circuit timing.
-It is developed completely from the ground up using C++17
+It is developed completely from the ground up using *C++17*
 to efficiently support parallel and incremental timing. 
 Key features are:
 
 + Industry standard format (.lib, .v, .spef, .sdc) support.
 + Graph- and path-based timing analysis.
 + Parallel incremental timing for fast timing closure.
-+ Award-winning tools and golden timers in TAU timing analysis contests.
++ Award-winning tools and golden timers in ACM TAU timing analysis contests.
 
 
 # Get Started with OpenTimer
@@ -78,6 +78,7 @@ The critical path originates from the primary input `inp1` all the way
 to the data pin `f1:D` of the flip-flop `f1`.
 You can dump a dot format and use online tools like [GraphViz][GraphViz]
 to visualize the timing graph.
+The critical path is marked in red.
 
 ```bash
 ot> dump_graph -o simple.dot  # dump the timing graph to the .dot format
@@ -97,8 +98,9 @@ cd example/simple
 ../../bin/ot-shell < opt.conf     # modify the design and perform incremental timing
 ```
 
-The following graph is generated after applying gate chaning operations in 
+The graph below is generated after applying gate changing operations in 
 [opt.conf](./example/simple/opt.conf).
+One gate (marked in cyan) is inserted to the timing graph.
 By default, OpenTimer performs parallel incremental timing to maintain slack integrity.
 
 ![](image/simple_opt_graph.png)
@@ -110,7 +112,8 @@ We use [CMake](https://cmake.org/) to manage the source and tests.
 We recommend using out-of-source build.
 
 ```bash
-~$ cmake --version  # must be at least 3.6 or higher
+~$ git clone https://github.com/OpenTimer/OpenTimer.git
+~$ cd OpenTimer
 ~$ mkdir build
 ~$ cd build
 ~$ cmake ../
@@ -142,6 +145,65 @@ Our design philosophy is to divide timing operations into three categories,
 | Action   | carry out builder operations to update the timing | update_timing, report_timing, report_slack | Algorithm-dependent |
 | Accessors| inspect the timer without changing any internal data structures | dump_timer, dump_slack, dump_net_load | Operation-dependent |
 
+## OpenTimer Lineage
+
+OpenTimer maintains a lineage graph of *builder* operations 
+to create a *task execution plan* (TEP).
+A TEP starts with no dependency and keeps adding tasks to the lineage graph
+every time you call a builder operation.
+It records what transformations need to be executed 
+after an action has been called.
+
+
+![](image/lineage.png)
+
+The above figure shows an example
+lineage graph of a sequence of builder operations.
+The cyan path is the main lineage line 
+with additional tasks attached to enable parallel execution.
+OpenTimer use [Cpp-Taskflow][Cpp-Taskflow] to create dependency graphs.
+
+## Update Timing
+
+A TEP is materialized and executed when the timer is requested to perform 
+an *action* operation.
+Each action operation triggers timing update
+from the earliest task to the one that produces the result
+of the action call.
+Internally, OpenTimer creates task dependency graph to update timing in parallel,
+including forward (slew, arrival time) 
+and backward (required arrival time) propagations.
+
+![](image/update_timing_simple.png)
+
+The figure above shows the dependency graph (forward in white, backward in cyan) 
+to update the timing of the 
+[simple](example/simple/simple.v) design.
+When an action call finishes, it cleans out the lineage graph
+with all timing up-to-date.
+
+## Inspect OpenTimer
+
+The *accessor* operations let you inspect the timer status and dump static information
+that can be helpful for debugging and turnaround.
+All accessor operations are declared as *const methods* in the timer class. 
+Calling them promises not to alter any internal members.
+
+```bash
+ot> dump_slack  # dump all slack values of the present state
+Slack [pins:17|time:1ns]
+-----------------------------------------------------------
+       E/R         E/F         L/R         L/F          Pin
+-----------------------------------------------------------
+       -22       -23.3        67.3          66         u1:A
+       n/a       0.328         n/a       -23.3  tau2015_clk
+       ...         ...         ...         ...          ...
+      25.8        26.5       -15.8       -16.5          out
+      26.5        25.8       -16.5       -15.8         u3:A
+     -22.5       -23.3          44        49.4         u4:Y
+-----------------------------------------------------------
+```
+
 # OpenTimer Shell
 
 OpenTimer shell is a powerful command line tool to perform interactive analysis.
@@ -171,7 +233,6 @@ The table below shows a list of commonly used commands.
 ## C++ API
 
 The class [Timer](ot/timer/timer.hpp) is the only entry you need when integrating OpenTimer to your project.
-It defines 
 *All public methods are thread-safe*.
 
 # Examples
@@ -274,6 +335,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [OpenTimerPaper]:        ./doc/iccad15.pdf
 [UI-TimerPaper]:         ./doc/iccad14.pdf
 [email me]:              mailto:twh760812@gmail.com
+[Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
 [VSD]:                   https://www.vlsisystemdesign.com/
 [ICCAD15]:               http://cad-contest.el.cycu.edu.tw/problem_C/default.html
 [TAU14]:                 https://sites.google.com/site/taucontest2014/

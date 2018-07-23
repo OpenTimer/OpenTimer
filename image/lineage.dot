@@ -1,0 +1,15 @@
+digraph G {
+  rankdir="LR"
+  "set_units" [shape=ellipse style=filled fillcolor=cyan]
+  "read_celllib early (modify)" [shape=ellipse style=filled fillcolor=cyan]
+  "read_celllib late (modify)" [shape=ellipse style=filled fillcolor=cyan]
+  "read_verilog" [shape=ellipse style=filled fillcolor=cyan]
+  "read_spef (modify)" [shape=ellipse style=filled fillcolor=cyan]
+  "set_units" -> "read_celllib early (modify)"
+  "read_celllib early (parse)" -> "read_celllib early (modify)";
+  "read_celllib late (modify)" -> "read_verilog"
+  "read_celllib late (parse)" -> "read_celllib late (modify)"
+  "read_celllib early (modify)" -> "read_celllib late (modify)"
+  "read_spef (parse)" -> "read_spef (modify)";
+  "read_verilog" -> "read_spef (modify)"
+}

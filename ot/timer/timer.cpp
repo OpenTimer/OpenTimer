@@ -945,7 +945,7 @@ void Timer::_update_timing() {
   _build_fprop_tasks();
   _build_bprop_tasks();
   
-  //std::cout << _taskflow.dump();
+  //std::cout << _taskflow.dump() << '\n';
 
   // Execute the task
   _taskflow.wait_for_all();
