@@ -136,7 +136,8 @@ industry standard timer and are being used by many EDA researchers.
 
 OpenTimer has very efficient data structures and procedures to
 enable parallel and incremental timing.
-Our design philosophy is to divide timing operations into three categories,
+To make the most use of multi-threading,
+each timing operation is divided into three categories,
 *Builder*, *Action*, and *Accessor*.
 
 | Type |  Description | Example | Time Complexity |
