@@ -4,10 +4,19 @@ A High-performance Timing Analysis Tool for VLSI Systems.
 
 # Why OpenTimer?
 
+<img align="right" height="40%" src="image/critical_path.jpg">
+
 OpenTimer is a new static timing analysis (STA) tool to help IC designers
 quickly verify the circuit timing.
 It is developed completely from the ground up using C++17
-to efficiently support parallel and incremental timing.
+to efficiently support parallel and incremental timing. 
+Key features are:
+
++ Industry standard format (.lib, .v, .spef, .sdc) support.
++ Graph- and path-based timing analysis.
++ Parallel incremental timing for fast timing closure.
++ Award-winning tools and golden timers in TAU timing analysis contests.
+
 
 # Get Started with OpenTimer
 
@@ -163,6 +172,7 @@ The table below shows a list of commonly used commands.
 ## C++ API
 
 The class [Timer](ot/timer/timer.hpp) is the only entry you need when integrating OpenTimer to your project.
+It defines 
 *All public methods are thread-safe*.
 
 # Examples
