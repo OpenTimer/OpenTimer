@@ -4,7 +4,7 @@ A High-performance Timing Analysis Tool for VLSI Systems.
 
 # Why OpenTimer?
 
-<img align="right" height="40%" src="image/critical_path.jpg">
+<img align="right" width="30%" src="image/critical_path.jpg">
 
 OpenTimer is a new static timing analysis (STA) tool to help IC designers
 quickly verify the circuit timing.
