@@ -250,7 +250,7 @@ The following example installs OpenTimer to `/tmp`.
 bin/  include/  lib/
 ```
 
-Now create a `app.cpp` file that does nothing but dump the timer details.
+Now create a `app.cpp` file under `/tmp` that does nothing but dumps the timer details.
 
 ```cpp
 #include <ot/timer/timer.hpp>
@@ -266,8 +266,8 @@ You will need to specify the `-std=c++1z` and `-lstdc++fs` flags
 to use C++17 features and filesystem libraries.
 
 ```bash
-~$ g++ timer.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o timer.out
-~$ ./timer.out
+~$ g++ app.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o app.out
+~$ ./app.out
 ```
 
 ## C++ API
