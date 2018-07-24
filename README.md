@@ -225,9 +225,13 @@ The table below shows a list of commonly used commands.
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
 | update_timing | action | n/a | update the timing | update_timing |
 | report_timing | action | n/a | report the timing | report_timing |
+| report_tns | action | n/a | report the total negative slack | report_tns |
+| report_wns | action | n/a | report the worst negative slack | report_wns |
 | dump_graph | accessor | [-o file] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
 | dump_timer | accessor | [-o file] | dump the present timer details | dump_timer -o timer.txt |
 | dump_slack | accessor | [-o file] | dump the present slack values of all pins | dump_slack -o slack.txt |
+
+To see the full command list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
 # Integrate OpenTimer to your Project
 
@@ -310,6 +314,8 @@ timer.celllib("simple_Early.lib", ot::EARLY)
      .update_timing();
 ```
 
+To see the full API list, visit [OpenTimer Wiki][OpenTimer Wiki].
+
 # Examples
 
 The folder [example](./example) contains several examples and is a great place to learn how to use OpenTimer.
@@ -323,6 +329,12 @@ The folder [benchmark](./benchmark) contains more designs but they are mainly us
 and integration tests.
 
 
+# Roadmap
+
+In short term, OpenTimer aims to incorporate more features and broaden the input/output
+supports for industry standard formats.
+The long term goal is to help enable an open-source EDA flow 
+that can be tremendously beneficial for both academia and semiconductor industry.
 
 
 # Who is Using OpenTimer?
@@ -351,7 +363,7 @@ Feedback and suggestions are welcome.
 # Get Involved
 + Report bugs/issues by submitting a [Github issue][Github issues].
 + Submit contributions using [pull requests][Github pull requests].
-
++ See development status by visiting [OpenTimer Wiki][OpenTimer Wiki].
 
 
 # Contributors
@@ -405,6 +417,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
 [GraphViz]:              https://dreampuf.github.io/GraphvizOnline/
+[OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html
 [OpenTimerCitation]:     https://scholar.google.com/scholar?oi=bibs&hl=en&cites=142282068238605079
 [OpenTimerPaper]:        ./doc/iccad15.pdf
