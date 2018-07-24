@@ -1,5 +1,8 @@
 # OpenTimer <img align="right" width="10%" src="image/logo.png">
 
+[![Build Status](https://travis-ci.org/OpenTimer/OpenTimer.svg?branch=master)](https://travis-ci.org/OpenTimer/OpenTimer)
+[![License: MIT](./image/license_badge.svg)](./LICENSE)
+
 A High-performance Timing Analysis Tool for VLSI Systems.
 
 # Why OpenTimer?
