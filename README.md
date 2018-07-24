@@ -147,7 +147,7 @@ each timing operation is divided into three categories,
 
 | Type |  Description | Example | Time Complexity |
 | -------  |  ----------- |  --- | -- |
-| Builder  | create lazy tasks to build the analysis framework | read_celllib, insert_gate, set_slew | O(1) |
+| Builder  | create lazy tasks to build an analysis framework | read_celllib, insert_gate, set_slew | O(1) |
 | Action   | carry out builder operations to update the timing | update_timing, report_timing, report_slack | Algorithm-dependent |
 | Accessors| inspect the timer without changing any internal data structures | dump_timer, dump_slack, dump_net_load | Operation-dependent |
 
