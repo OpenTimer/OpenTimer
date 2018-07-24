@@ -5,7 +5,7 @@
 [![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
-A High-performance Timing Analysis Tool for VLSI Systems.
+A High-Performance Timing Analysis Tool for VLSI Systems
 
 # Why OpenTimer?
 
@@ -27,7 +27,7 @@ Key features are:
 
 The easiest way to start using OpenTimer is to use *OpenTimer shell*.
 OpenTimer shell is a powerful tool for interactive analysis
-and is the simplest way to learn core functionalities.
+and the simplest way to learn core functionalities.
 [Compile OpenTimer](#compile-opentimer) and launch the shell program `ot-shell`
 under the `bin` directory.
 
@@ -386,6 +386,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Myung-Chul Kim][Myung-Chul Kim] helped test OpenTimer through ICCAD CAD contest.
 - [George Chen][George Chen] helped defined path report formats and test OpenTimer through TAU contest.
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
+- [Leslie Hwang][Leslie Hwang] reviewed the documentation and README.
 
 Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
@@ -421,6 +422,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [George Chen]:           mailto:george@geochrist.com
 [Jignesh Shah]:          mailto:jignesh.shah@intel.com
 [Pao-I Chen]:            mailto:poyipenny@gmail.com
+[Leslie Hwang]:          mailto:tkdlezz@gmail.com 
 [Github releases]:       https://github.com/OpenTimer/OpenTimer/releases
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
