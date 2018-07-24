@@ -1,6 +1,8 @@
 # OpenTimer <img align="right" width="10%" src="image/logo.png">
 
 [![Build Status](https://travis-ci.org/OpenTimer/OpenTimer.svg?branch=master)](https://travis-ci.org/OpenTimer/OpenTimer)
+[![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
+[![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
 A High-performance Timing Analysis Tool for VLSI Systems.
