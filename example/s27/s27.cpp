@@ -3,11 +3,11 @@
 
 #include <ot/timer/timer.hpp>
 
-// Function: main
 int main(int argc, char *argv[]) {
   
   ot::Timer timer;
   
+  // Read design
   timer.num_threads(std::thread::hardware_concurrency())
        .celllib("s27_Early.lib", ot::EARLY)
        .celllib("s27_Late.lib", ot::LATE)
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     std::cout << "WNS is not available\n";
   }
 
-  // Example: Run design modifiers.
+  // apply design modifiers
   timer.repower_gate("inst_10", "INV_X16")
        .insert_gate("TAUGATE_1", "BUF_X2")
        .insert_net("TAUNET_1")
@@ -39,15 +39,18 @@ int main(int argc, char *argv[]) {
        .connect_pin("TAUGATE_1:A", "TAUNET_1")
        .connect_pin("TAUGATE_1:Z", "net_14")
        .spef("change_1.spef");
-
+  
+  // report the slack
   std::cout << "Late/Fall slack at pin G17: " 
             << *timer.slack("G17", ot::LATE, ot::FALL) 
             << '\n';
-
+  
+  // report the arrival time
   std::cout << "Late/Fall arrival time at pin G17: "
             << *timer.at("G17", ot::LATE, ot::FALL)
             << '\n';
   
+  // report the required arrival time
   std::cout << "Late/Fall required arrival time at pin G17: "
             << *timer.rat("G17", ot::LATE, ot::FALL)
             << '\n';
@@ -55,6 +58,14 @@ int main(int argc, char *argv[]) {
   // Dump the timer
   std::cout << timer.dump_timer();
 
+  // Dump the slack
+  std::cout << timer.dump_slack();
+
+  // change from pico seconds to nano seconds
+  timer.time_unit(ot::nanoseconds(1))
+       .capacitance_unit(ot::picofarads(1))
+       .update_timing();
+  
   // Dump the slack
   std::cout << timer.dump_slack();
   
