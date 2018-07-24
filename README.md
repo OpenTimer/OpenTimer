@@ -91,7 +91,7 @@ ot> dump_graph -o simple.dot  # dump the timing graph to the .dot format
 
 ![](image/simple_graph.png)
 
-We have provided three vanilla command files, 
+We have provided three command files, 
 [simple.conf](./example/simple/simple.conf), 
 [unit.conf](./example/simple/unit.conf), and 
 [opt.conf](./example/simple/opt.conf)
