@@ -326,6 +326,7 @@ The folder [example](./example) contains several examples and is a great place t
 | ------- |  ----------- | ---- |
 | [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. | ot-shell < simple.conf |
 | [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| ot-shell < c17.conf |
+| [s27](./example/s27) | A C++ application using OpenTimer API to analyze the timing of a sequential circuit.| ./s27 |
 
 The folder [benchmark](./benchmark) contains more designs but they are mainly used for internal regression 
 and integration tests.
