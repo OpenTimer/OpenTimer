@@ -184,6 +184,15 @@ target_link_libraries(ot-shell ${OT_EXE_LINKER_FLAGS})
 message(STATUS "OpenTimer shell: ${OT_SHELL}")
 
 ###########################################################
+# Example
+###########################################################
+
+#s27
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/s27)
+add_executable(s27 example/s27/s27.cpp)
+target_link_libraries(s27 ${OT_EXE_LINKER_FLAGS})
+
+###########################################################
 # Install
 # cmake .. -DCMAKE_INSTALL_PREFIX=<prefix_path>
 ###########################################################

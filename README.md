@@ -277,7 +277,9 @@ to use C++17 features and filesystem libraries.
 
 ## C++ API
 
-The class [Timer](ot/timer/timer.hpp) is the main entry you need to use OpenTimer in your project. 
+OpenTimer is written in modern C++17.
+The class [Timer](ot/timer/timer.hpp) is the main entry you need to 
+use OpenTimer in your project. 
 The table below summarizes a list of commonly used methods.
 
 | Method | Type | Argument | Return | Description |
@@ -320,10 +322,10 @@ To see the full API list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
 The folder [example](./example) contains several examples and is a great place to learn how to use OpenTimer.
 
-| Example |  Description |
-| ------- |  ----------- | 
-| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. |
-| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.|
+| Example |  Description | How to Run? |
+| ------- |  ----------- | ---- |
+| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. | ot-shell < simple.conf |
+| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| ot-shell < c17.conf |
 
 The folder [benchmark](./benchmark) contains more designs but they are mainly used for internal regression 
 and integration tests.
