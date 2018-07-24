@@ -112,7 +112,7 @@ By default, OpenTimer performs parallel incremental timing to maintain slack int
 
 # Compile OpenTimer
 OpenTimer is very self-contained and has very few dependencies.
-The only thing you need is a GNU C++ Compiler G++ v7.2 with -std=c++1z.
+The only thing you need is a GNU C++ Compiler [G++ v7.2](https://gcc.gnu.org/gcc-7/) with -std=c++1z.
 We use [CMake](https://cmake.org/) to manage the source and tests.
 We recommend using out-of-source build.
 
