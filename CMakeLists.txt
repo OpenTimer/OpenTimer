@@ -22,6 +22,7 @@ message(STATUS "CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 # The version number
 set(OT_VERSION_MAJOR "2")
@@ -41,6 +42,24 @@ message(STATUS "OT_LICENSE: ${OT_LICENSE}")
 # Set static library output path
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 message(STATUS "CMAKE_ARCHIVE_OUTPUT_DIRECTORY: ${PROJECT_SOURCE_DIR}/lib")
+
+###########################################################
+# Library dependencies
+###########################################################
+
+# Find program
+find_program(PYTHON_EXECUTABLE python)
+message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+
+# Find package
+#set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+find_package(Threads REQUIRED)
+
+# Find tcl
+find_package(TCL REQUIRED)
+message(STATUS "TCL_TCLSH: ${TCL_TCLSH}")
+message(STATUS "TCL_LIBRARY_PATH: ${TCL_LIBRARY}")
+message(STATUS "TCL_INCLUDE_PATH: ${TCL_INCLUDE_PATH}")
 
 # configure a header file to pass some of the CMake settins
 configure_file(
@@ -111,6 +130,7 @@ set(OT_HPP
   ot/timer/net.hpp
   ot/timer/arc.hpp
   ot/config.hpp
+  ot/json/json.hpp
   ot/headerdef.hpp
   ot/liberty/lut.hpp
   ot/liberty/timing.hpp
@@ -140,19 +160,12 @@ set(OT_HPP
   ot/spef/spef.hpp
 )
 
-message(STATUS "OT_CPP: ${OT_CPP}")
-message(STATUS "OT_HPP: ${OT_HPP}")
+#message(STATUS "OT_CPP: ${OT_CPP}")
+#message(STATUS "OT_HPP: ${OT_HPP}")
 
 # Add OpenTimer library
 add_library(OpenTimer ${OT_CPP} ${OT_HPP})
 
-# Find program
-find_program(PYTHON_EXECUTABLE python)
-message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
-
-# Find package
-#set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
-find_package(Threads REQUIRED)
 
 ###########################################################
 # Executables
@@ -199,10 +212,12 @@ target_link_libraries(s27 ${OT_EXE_LINKER_FLAGS})
 ###########################################################
 
 # hpp
-foreach(file ${OT_HPP})
-  get_filename_component( dir ${file} DIRECTORY )
-  install(FILES ${file} DESTINATION include/${dir} )
-endforeach()
+#foreach(file ${OT_HPP})
+#  get_filename_component( dir ${file} DIRECTORY )
+#  install(FILES ${file} DESTINATION include/${dir} )
+#endforeach()
+
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/ot DESTINATION include)
 
 # library
 install(TARGETS OpenTimer DESTINATION lib)

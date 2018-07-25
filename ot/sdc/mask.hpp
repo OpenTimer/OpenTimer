@@ -1,3 +1,6 @@
+#ifndef OT_SDC_MASK_HPP_
+#define OT_SDC_MASK_HPP_
+
 #include <ot/headerdef.hpp>
 
 namespace ot::sdc {
@@ -38,4 +41,4 @@ struct TimingMask {
 
 };  // end of namespace ot::sdc. ------------------------------------------------------------------
 
-
+#endif

@@ -1,3 +1,6 @@
+#ifndef OT_SDC_OBJECT_HPP
+#define OT_SDC_OBJECT_HPP
+
 #include <ot/sdc/tokenize.hpp>
 
 namespace ot::sdc {
@@ -103,4 +106,4 @@ std::ostream& operator << (std::ostream&, const Clock&);
 
 
 
-
+#endif

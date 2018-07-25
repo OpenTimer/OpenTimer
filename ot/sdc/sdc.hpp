@@ -1,3 +1,6 @@
+#ifndef OT_SDC_SDC_HPP_
+#define OT_SDC_SDC_HPP_
+
 #include <ot/sdc/object.hpp>
 #include <ot/sdc/mask.hpp>
 
@@ -122,4 +125,4 @@ struct SDC {
 };  // end of namespace ot::sdc. ------------------------------------------------------------------
 
 
-
+#endif

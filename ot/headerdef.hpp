@@ -45,6 +45,7 @@
 
 // third-party include
 #include <ot/taskflow/taskflow.hpp>
+#include <ot/json/json.hpp>
 
 // Top header declaration.
 #include <ot/config.hpp>
@@ -55,6 +56,10 @@ namespace std {
 };
 
 namespace ot {
+
+using json = nlohmann::json;
+
+// --------------------------------------------------------
 
 using namespace std::chrono_literals;
 using namespace std::literals::string_literals;

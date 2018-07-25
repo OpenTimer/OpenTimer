@@ -17,6 +17,8 @@ MIT License\n\
 \n\
 Copyright (c) 2018 Tsung-Wei Huang and Martin D. F. Wong\n\
 \n\
+The University of Illinois at Urbana-Champaign, IL, USA\n\
+\n\
 Permission is hereby granted, free of charge, to any person obtaining a copy\n\
 of this software and associated documentation files (the \"Software\"), to deal\n\
 in the Software without restriction, including without limitation the rights\n\

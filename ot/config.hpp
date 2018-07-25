@@ -3,5 +3,5 @@
 #define OT_VERSION_PATCH 0
 #define OT_VERSION "2.0.0 (alpha)"
 #define OT_HOME "/Users/twhuang/PhD/Code/OpenTimer"
-#define OT_LICENSE "/Users/twhuang/PhD/Code/OpenTimer/LICENSE"
-#define OT_BENCHMARK_DIR "/Users/twhuang/PhD/Code/OpenTimer/benchmark"
+#define OT_INSTALL_PREFIX "/usr/local"
+#define OT_TCLSH_PATH "/usr/bin/tclsh"
