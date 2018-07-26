@@ -242,11 +242,7 @@ target_link_libraries(utility ${OT_EXE_LINKER_FLAGS})
 add_executable(unit unittest/unit.cpp)
 target_link_libraries(unit ${OT_EXE_LINKER_FLAGS})
 
-add_executable(sdc unittest/sdc.cpp)
-target_link_libraries(sdc ${OT_EXE_LINKER_FLAGS})
-
 add_test(unittest.utility ${OT_UNITTEST_DIR}/utility -d yes)
-add_test(unittest.sdc ${OT_UNITTEST_DIR}/sdc -d yes)
 add_test(unittest.unit ${OT_UNITTEST_DIR}/unit -d yes)
 
 # Integration test for shell

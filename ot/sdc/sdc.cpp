@@ -31,11 +31,12 @@ void SDC::read(const std::filesystem::path& path) {
     sdc_home.empty() || !std::filesystem::exists(sdc_home), 
     "sdc home ", sdc_home, " doesn't exist"
   );
-
-  auto sdc_json = path;
-  sdc_json.replace_extension(".json");
   
-  OT_LOGI("loading sdc ", path, " to json ", sdc_json, " ...");
+  OT_LOGI("loading sdc ", path, " ...");
+
+  auto sdc_path = std::filesystem::absolute(path);
+  auto sdc_json = sdc_path;
+  sdc_json.replace_extension(".json");
     
   if(auto cpid = ::fork(); cpid == -1) {
     OT_LOGE("can't fork sdc reader");
@@ -52,7 +53,7 @@ void SDC::read(const std::filesystem::path& path) {
     std::vector<std::string> args {
       OT_TCLSH_PATH,
       "sdc.tcl",
-      path.c_str(),
+      sdc_path.c_str(),
       sdc_json.c_str()
     };
 
