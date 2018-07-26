@@ -12,15 +12,14 @@ Timer& Timer::spef(std::filesystem::path path) {
 
   // Reader task
   auto reader = _taskflow.silent_emplace([path=std::move(path), spef] () {
-    OT_LOGI("loading spef ", path, " ...");
     spef->read(path);
   });
   
   // Spef update task (this has to be after reader)
   auto modifier = _taskflow.silent_emplace([this, spef] () {
-    OT_LOGI("add ", spef->nets.size(), " spef nets");
     _rebase_unit(*spef);
     _spef(*spef);
+    OT_LOGI("added ", spef->nets.size(), " spef nets");
   });
   
   // Build the task dependency.

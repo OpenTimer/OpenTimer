@@ -1,7 +1,7 @@
 #include <ot/timer/timer.hpp>
 
 int main(int argc, char* argv[]) {
-  
+
   using namespace std::literals::string_literals;
 
   if(argc != 5) {

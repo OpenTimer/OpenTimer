@@ -58,6 +58,13 @@ std::ostream& operator << (std::ostream& os, const Spef& spef) {
 // *R_UNIT 1 KOHM
 // *L_UNIT 1 UH
 void Spef::read(const std::filesystem::path& path) {
+  
+  OT_LOGE_RIF(
+    path.empty() || !std::filesystem::exists(path),
+    "spef ", path, " doesn't exist"
+  );
+
+  OT_LOGI("loading spef ", path, " ...");
 
   auto tokens = tokenize(path);
 

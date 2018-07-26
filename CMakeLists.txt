@@ -174,9 +174,9 @@ message(STATUS "Building executables ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 list(APPEND OT_EXE_LINKER_FLAGS "")
-list(APPEND OT_EXE_LINKER_FLAGS OpenTimer)
-list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
 list(APPEND OT_EXE_LINKER_FLAGS stdc++fs)
+list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
+list(APPEND OT_EXE_LINKER_FLAGS OpenTimer)
 message(STATUS "OT_EXE_LINKER_FLAGS: ${OT_EXE_LINKER_FLAGS}")
 
 # tau15
@@ -237,13 +237,13 @@ message(STATUS "Building unit tests ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/unittest)
 
 add_executable(utility unittest/utility.cpp)
-target_link_libraries(utility OpenTimer)
+target_link_libraries(utility ${OT_EXE_LINKER_FLAGS})
 
 add_executable(unit unittest/unit.cpp)
-target_link_libraries(unit OpenTimer)
+target_link_libraries(unit ${OT_EXE_LINKER_FLAGS})
 
 add_executable(sdc unittest/sdc.cpp)
-target_link_libraries(sdc OpenTimer)
+target_link_libraries(sdc ${OT_EXE_LINKER_FLAGS})
 
 add_test(unittest.utility ${OT_UNITTEST_DIR}/utility -d yes)
 add_test(unittest.sdc ${OT_UNITTEST_DIR}/sdc -d yes)

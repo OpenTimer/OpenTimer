@@ -3,7 +3,7 @@
 #include "doctest.h"
 #include <ot/sdc/sdc.hpp>
 
-// Operator << tokens
+/*// Operator << tokens
 std::ostream& operator << (std::ostream& os, const std::vector<std::string>& tokens) {
   for(size_t i=0; i<tokens.size(); ++i) {
     if(i != 0) {
@@ -431,6 +431,6 @@ TEST_CASE("CreateClock") {
       REQUIRE(false);
     }
   }, *obj.port);
-}
+}*/
 
 

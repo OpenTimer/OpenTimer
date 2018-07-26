@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/OpenTimer/OpenTimer.svg?branch=master)](https://travis-ci.org/OpenTimer/OpenTimer)
 [![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
+[![Version](image/version_badge.svg)](https://github.com/OpenTimer/OpenTimer/tree/master)
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
 A High-Performance Timing Analysis Tool for VLSI Systems
@@ -111,8 +112,20 @@ By default, OpenTimer performs parallel incremental timing to maintain slack int
 ![](image/simple_opt_graph.png)
 
 # Compile OpenTimer
+
+## System Requirements
+
 OpenTimer is very self-contained and has very few dependencies.
-The only thing you need is a GNU C++ Compiler [G++ v7.2](https://gcc.gnu.org/gcc-7/) with -std=c++1z.
+To compile OpenTimer , you need:
+
++ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with -std=c++1z
++ [Tcl/Tk](https://www.tcl.tk/about/language.html) packages
+(most Unix/Linux/OSX distributions already include Tcl/Tk)
+
+OpenTimer has been tested to run well on Linux distributions and MAC OSX.
+
+## Build through CMake
+
 We use [CMake](https://cmake.org/) to manage the source and tests.
 We recommend using out-of-source build.
 
@@ -400,7 +413,9 @@ Meanwhile, we appreciate the funding support from our sponsors to continue our d
 
 OpenTimer is licensed under the [MIT License](./LICENSE):
 
-Copyright &copy; 2018 [Tsung-Wei Huang][Tsung-Wei Huang] and [Martin Wong][Martin Wong].
+Copyright &copy; 2018 [Tsung-Wei Huang][Tsung-Wei Huang] and [Martin Wong][Martin Wong]
+
+The University of Illinois at Urbana-Champaign, IL, USA
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

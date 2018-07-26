@@ -21,6 +21,20 @@ std::string to_upper(std::string s) {
   return s;
 }
 
+// Functon : remove_quote
+std::string remove_quote(std::string s) {
+  s.erase(std::remove( s.begin(), s.end(), '\"'), s.end());
+  return s;
+}
+
+// Function: unquoted
+std::string unquoted(std::string s) {
+  if(s.size() >= 2 && s.front() == '\"' && s.back() == '\"') {
+    return s.substr(1, s.size() - 2);
+  }
+  else return s;
+}
+
 // Function: is_numeric
 bool is_numeric(const std::string& token) {
   return std::regex_match(token, std::regex("(\\+|-)?[0-9]*(\\.?([0-9]+))$")); 

@@ -12,14 +12,13 @@ Timer& Timer::sdc(std::filesystem::path path) {
   
   // reader
   auto reader = _taskflow.silent_emplace([this, sdc, path=std::move(path)] () {
-    OT_LOGI("loading sdc ", path, " ...");
     sdc->read(path);
   });
 
   // modifier
   auto modifier = _taskflow.silent_emplace([this, sdc] () mutable {
-    OT_LOGI("sdc [commands:", sdc->commands.size(), ']');
     _sdc(*sdc);
+    OT_LOGI("added ", sdc->commands.size(), " sdc commands");
   });
 
   // Build the task dependency
@@ -40,14 +39,16 @@ void Timer::_sdc(sdc::SDC& sdc) {
       }
     }, command);
   }
+
+
+  //
 }
 
 // Procedure: _sdc
 // Sets input delay on pins or input ports relative to a clock signal.
 void Timer::_sdc(sdc::SetInputDelay& obj) {
 
-  OT_LOGW_RIF(!obj.value, obj.command, ": delay not defined");
-  OT_LOGW_RIF(!obj.port,  obj.command, ": port not defined");
+  assert(obj.delay_value && obj.port_pin_list);
 
   auto mask = sdc::TimingMask(obj.min, obj.max, obj.rise, obj.fall);
 
@@ -55,7 +56,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
     [&] (sdc::AllInputs&) {
       for(auto& kvp : _pis) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _at(kvp.second, el, rf, obj.value);
+          _at(kvp.second, el, rf, obj.delay_value);
         }
       }
     },
@@ -63,7 +64,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pis.find(port); itr != _pis.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _at(itr->second, el, rf, obj.value); 
+            _at(itr->second, el, rf, obj.delay_value); 
           }
         }
         else {
@@ -74,15 +75,14 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
     [] (auto&&) {
       assert(false);
     }
-  }, *obj.port);
+  }, *obj.port_pin_list);
 }
 
 // Procedure: _sdc
 // Sets input transition on pins or input ports relative to a clock signal.
 void Timer::_sdc(sdc::SetInputTransition& obj) {
 
-  OT_LOGW_RIF(!obj.value, obj.command, ": transition not defined");
-  OT_LOGW_RIF(!obj.port,  obj.command, ": port not defined");
+  assert(obj.transition && obj.port_list);
 
   auto mask = sdc::TimingMask(obj.min, obj.max, obj.rise, obj.fall);
 
@@ -90,7 +90,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
     [&] (sdc::AllInputs&) {
       for(auto& kvp : _pis) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _slew(kvp.second, el, rf, obj.value);
+          _slew(kvp.second, el, rf, obj.transition);
         }
       }
     },
@@ -98,7 +98,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pis.find(port); itr != _pis.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _slew(itr->second, el, rf, obj.value); 
+            _slew(itr->second, el, rf, obj.transition); 
           }
         }
         else {
@@ -109,15 +109,14 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
     [] (auto&&) {
       assert(false);
     }
-  }, *obj.port);
+  }, *obj.port_list);
 }
 
 // Procedure: _sdc
 // Sets output delay on pins or input ports relative to a clock signal.
 void Timer::_sdc(sdc::SetOutputDelay& obj) {
 
-  OT_LOGW_RIF(!obj.value, obj.command, ": delay not defined");
-  OT_LOGW_RIF(!obj.port,  obj.command, ": port not defined");
+  assert(obj.delay_value && obj.port_pin_list);
 
   auto mask = sdc::TimingMask(obj.min, obj.max, obj.rise, obj.fall);
 
@@ -125,7 +124,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
     [&] (sdc::AllOutputs&) {
       for(auto& kvp : _pos) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _rat(kvp.second, el, rf, obj.value);
+          _rat(kvp.second, el, rf, obj.delay_value);
         }
       }
     },
@@ -133,7 +132,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pos.find(port); itr != _pos.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _rat(itr->second, el, rf, obj.value); 
+            _rat(itr->second, el, rf, obj.delay_value); 
           }
         }
         else {
@@ -144,15 +143,14 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
     [] (auto&&) {
       assert(false);
     }
-  }, *obj.port);
+  }, *obj.port_pin_list);
 }
 
 // Procedure: _sdc
 // Sets the load attribute to a specified value on specified ports and nets.
 void Timer::_sdc(sdc::SetLoad& obj) {
 
-  OT_LOGW_RIF(!obj.value, obj.command, ": load not defined");
-  OT_LOGW_RIF(!obj.port,  obj.command, ": port not defined");
+  assert(obj.value && obj.objects);
   
   auto mask = sdc::TimingMask(obj.min, obj.max, std::nullopt, std::nullopt);
 
@@ -179,16 +177,14 @@ void Timer::_sdc(sdc::SetLoad& obj) {
     [] (auto&&) {
       assert(false);
     }
-  }, *obj.port);
+  }, *obj.objects);
 }
 
 // Procedure: _sdc
 // create a clock object and defines its waveform in the current design.
 void Timer::_sdc(sdc::CreateClock& obj) {
 
-  OT_LOGW_RIF(obj.name.empty(), obj.command, ": name not defined");
-  OT_LOGW_RIF(!obj.period, obj.command, ": period not defined");
-  OT_LOGW_RIF(!obj.port,   obj.command, ": port not defined");
+  assert(obj.period && obj.port_pin_list && !obj.name.empty());
 
   std::visit(Functors{
     [&] (sdc::GetPorts& get_ports) {
@@ -209,7 +205,7 @@ void Timer::_sdc(sdc::CreateClock& obj) {
     [] (auto&&) {
       assert(false);
     }
-  }, *obj.port);
+  }, *obj.port_pin_list);
 
 }
 

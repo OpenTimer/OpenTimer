@@ -20,6 +20,9 @@ namespace ot {
 std::string to_lower(std::string);
 std::string to_upper(std::string);
 
+std::string remove_quote(std::string);
+std::string unquoted(std::string);
+
 // check string syntax
 bool is_numeric(const std::string&);
 bool is_array(const std::string&);

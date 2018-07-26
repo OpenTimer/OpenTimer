@@ -42,6 +42,8 @@
 #include <ratio>
 #include <experimental/filesystem>
 #include <optional>
+#include <unistd.h>
+#include <sys/wait.h>
 
 // third-party include
 #include <ot/taskflow/taskflow.hpp>
@@ -57,7 +59,7 @@ namespace std {
 
 namespace ot {
 
-using json = nlohmann::json;
+using Json = nlohmann::json;
 
 // --------------------------------------------------------
 

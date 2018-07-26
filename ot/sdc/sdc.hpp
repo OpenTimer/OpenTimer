@@ -6,9 +6,13 @@
 
 namespace ot::sdc {
 
+// Function: sdc_home
+std::filesystem::path home();
+
 // SetInputDelay
 struct SetInputDelay {
   inline static constexpr auto command = "set_input_delay";
+  std::string clock;
   std::optional<std::byte> clock_fall;
   std::optional<std::byte> level_sensitive;
   std::optional<std::byte> add_delay;
@@ -18,12 +22,12 @@ struct SetInputDelay {
   std::optional<std::byte> max;
   std::optional<std::byte> rise;
   std::optional<std::byte> fall;
-  std::optional<float> value;
-  std::optional<Clock> clock;
-  std::optional<Port> port;
-};
+  std::optional<float> delay_value;
+  std::optional<Object> port_pin_list;
 
-std::ostream& operator << (std::ostream&, const SetInputDelay&);
+  SetInputDelay() = default;
+  SetInputDelay(const Json&);
+};
 
 // ------------------------------------------------------------------------------------------------
 
@@ -31,24 +35,25 @@ std::ostream& operator << (std::ostream&, const SetInputDelay&);
 // Set a fixed transition on input or inout ports
 struct SetInputTransition {
   inline static constexpr auto command = "set_input_transition";
+  std::string clock;
   std::optional<std::byte> min;
   std::optional<std::byte> max;
   std::optional<std::byte> rise;
   std::optional<std::byte> fall;
   std::optional<std::byte> clock_fall;
-  std::optional<float> value;
-  std::optional<Clock> clock;
-  std::optional<Port> port;
-};
+  std::optional<float> transition;
+  std::optional<Object> port_list;
 
-std::ostream& operator << (std::ostream&, const SetInputTransition&);
+  SetInputTransition() = default;
+  SetInputTransition(const Json&);
+};
 
 // ------------------------------------------------------------------------------------------------
 
 // SetOutputDelay
 struct SetOutputDelay {
   inline static constexpr auto command = "set_output_delay";
-  std::optional<Clock> clock;
+  std::string clock;
   std::optional<std::byte> clock_fall;
   std::optional<std::byte> level_sensitive;
   std::optional<std::byte> rise;
@@ -58,11 +63,12 @@ struct SetOutputDelay {
   std::optional<std::byte> add_delay;
   std::optional<std::byte> network_latency_included; 
   std::optional<std::byte> source_latency_included;
-  std::optional<float> value;
-  std::optional<Port> port;
-};
+  std::optional<float> delay_value;
+  std::optional<Object> port_pin_list;
 
-std::ostream& operator << (std::ostream&, const SetOutputDelay&);
+  SetOutputDelay() = default;
+  SetOutputDelay(const Json&);
+};
 
 // ------------------------------------------------------------------------------------------------
 
@@ -75,10 +81,11 @@ struct SetLoad {
   std::optional<std::byte> pin_load;
   std::optional<std::byte> wire_load;
   std::optional<float> value;
-  std::optional<Port> port;
-};
+  std::optional<Object> objects;
 
-std::ostream& operator << (std::ostream&, const SetLoad&);
+  SetLoad() = default;
+  SetLoad(const Json&);
+};
 
 // ------------------------------------------------------------------------------------------------
 
@@ -90,10 +97,11 @@ struct CreateClock {
   std::string name;
   std::string comment;
   std::optional<std::array<float, MAX_TRAN>> waveform;
-  std::optional<Port> port;
+  std::optional<Object> port_pin_list;
+  
+  CreateClock() = default;
+  CreateClock(const Json&);
 };
-
-std::ostream& operator << (std::ostream&, const CreateClock&);
 
 // ------------------------------------------------------------------------------------------------
 
@@ -105,12 +113,6 @@ using Command = std::variant<
   CreateClock
 >;
 
-SetInputDelay      extract_set_input_delay     (token_iter_t&, token_iter_t);
-SetInputTransition extract_set_input_transition(token_iter_t&, token_iter_t);
-SetOutputDelay     extract_set_output_delay    (token_iter_t&, token_iter_t);
-SetLoad            extract_set_load            (token_iter_t&, token_iter_t);
-CreateClock        extract_create_clock        (token_iter_t&, token_iter_t);
-
 // ------------------------------------------------------------------------------------------------
 
 // Class: SDC
@@ -118,7 +120,6 @@ struct SDC {
 
   std::vector<Command> commands;
 
-  void read(const std::string&);
   void read(const std::filesystem::path&);
 };
 

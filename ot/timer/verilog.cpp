@@ -12,14 +12,13 @@ Timer& Timer::verilog(std::filesystem::path path) {
 
   // reader
   auto reader = _taskflow.silent_emplace([this, module, path=std::move(path)] () {
-    OT_LOGI("loading netlist ", path, " ...");
     *module = vlog::read_verilog(path);
   });
 
   // modifier
   auto modifier = _taskflow.silent_emplace([this, module] () mutable {
-    OT_LOGI("add ", module->info());
     _verilog(*module);
+    OT_LOGI("added ", module->info());
   });
 
   // Build the task dependency

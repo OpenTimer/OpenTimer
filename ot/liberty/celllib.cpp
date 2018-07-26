@@ -613,6 +613,13 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
 
 // Procedure: read
 void Celllib::read(const std::filesystem::path& path, Split el) {
+  
+  OT_LOGE_RIF(
+    path.empty() || !std::filesystem::exists(path),
+    "celllib ", path, " doesn't exist"
+  );
+
+  OT_LOGI("loading celllib ", path, " ...");
 
   split = el;
 
