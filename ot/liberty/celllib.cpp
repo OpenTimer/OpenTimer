@@ -891,6 +891,19 @@ std::ostream& operator << (std::ostream& os, const Celllib& c) {
   return os;
 }
 
+// Procedure: merge
+void Celllib::merge(Celllib& other) {  
+
+  //std::optional<VoltageUnit> voltage_unit;
+  //std::optional<CurrentUnit> current_unit;
+  //std::optional<ResistanceUnit> resistance_unit;
+  //std::optional<CapacitanceUnit> capacitance_unit;
+  //std::optional<PowerUnit> power_unit;
+  //std::optional<DelayModel> delay_model;
+
+  lut_templates.merge(std::move(other.lut_templates)); 
+  cells.merge(std::move(other.cells)); 
+}
 
 
 };  // namespace ot. ------------------------------------------------------------------------------

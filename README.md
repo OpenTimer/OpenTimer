@@ -49,34 +49,36 @@ ot>
 
 We have provided a [simple design](./example/simple)
 which consists of five gates (one NAND, one NOR, two INV, one FF) and one clock. 
+Move to the folder and read this simple design.
 
-<img src="image/simple_schematic.jpg" width="70%">[simple.v](./example/simple/simple.v)
-
-Move to the folder and analyze the timing of this simple design.
+<img align="right" src="image/simple_schematic.jpg" width="55%">
 
 ```bash
-ot> cd example/simple/
-ot> read_celllib osu018_stdcells.lib  # read the cell library
-ot> read_verilog simple.v             # read the verilog netlist
-ot> read_spef simple.spef             # read the parasitics
-ot> read_sdc simple.sdc               # read Synopsys Design Constraints
-ot> report_timing                     # report the most critical path
+ot> cd example/simple
+ot> read_celllib osu018_stdcells.lib
+ot> read_verilog simple.v   
+ot> read_sdc simple.sdc
+```
 
+Report the timing to show the most critical path.
+
+```bash
+ot> report_timing                     # report the most critical path
 Endpoint     :   f1:D
 Startpoint   :   inp1
 Path type    :   early
-Required Time:   26.5196
-Arrival Time :   3.222
-Slack        :   -23.2976
+Required Time:   26.5175
+Arrival Time :   2.97909
+Slack        :   -23.5384
 ----------------------------------
    Arrival       Delay   Dir   Pin
 ----------------------------------
          0         n/a  fall  inp1
-   0.16108     0.16108  fall  u1:A
-   2.98034     2.81926  rise  u1:Y
-     3.012   0.0316606  rise  u4:A
-   3.20226    0.190258  fall  u4:Y
-     3.222    0.019743  fall  f1:D
+         0           0  fall  u1:A
+   2.79669     2.79669  rise  u1:Y
+   2.79669           0  rise  u4:A
+   2.97909    0.182399  fall  u4:Y
+   2.97909           0  fall  f1:D
 ----------------------------------
 ```
 

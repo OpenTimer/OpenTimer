@@ -16,14 +16,7 @@ Timer& Timer::celllib(std::filesystem::path path, Split mode) {
 
   // Placeholder to add_lineage
   auto modifier = _taskflow.silent_emplace([this, lib, mode] () {
-
-    _celllib[mode] = std::move(*lib);
-    _rebase_unit(_celllib[mode]);
-
-    OT_LOGI(
-      "added ", to_string(mode), " celllib ", std::quoted(lib->name), 
-      " [cells:", lib->cells.size(), ']'
-    );
+    _merge(*lib, mode);
   });
 
   // Reader -> modifier
@@ -35,4 +28,21 @@ Timer& Timer::celllib(std::filesystem::path path, Split mode) {
   return *this;
 }
 
+// Procedure: _merge
+void Timer::_merge(Celllib& lib, Split el) {
+
+  _rebase_unit(lib);
+
+  _celllib[el].merge(lib);
+    
+  OT_LOGI(
+    "added ", to_string(el), " celllib ", std::quoted(lib.name), 
+    " [cells:", _celllib[el].cells.size(), ']'
+  );
+}
+
 };  // end of namespace ot. -----------------------------------------------------------------------
+
+
+
+

@@ -217,6 +217,7 @@ class Timer {
     void _to_power_unit(const PowerUnit&);
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
+    void _merge(Celllib&, Split);
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
