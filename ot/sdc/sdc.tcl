@@ -1,12 +1,13 @@
 #!/usr/bin/env tclsh
 
+source [file join [file dirname [info script]] sdcparsercore.tcl]
+lappend auto_path [file join json]
+
 package require json 
 package require json::write
 
 # disable json indentation
 json::write indented false
-
-source [file join [file dirname [info script]] sdcparsercore.tcl]
 
 # environment variable
 #global env

@@ -17,7 +17,7 @@ Object parse_port(const std::string& line) {
   
   auto itr = std::sregex_token_iterator(line.begin(), line.end(), ws_re, -1);
   auto end = std::sregex_token_iterator();
-  auto num = std::distance(itr, end);
+  //auto num = std::distance(itr, end);
 
   GetPorts get_ports;
 
