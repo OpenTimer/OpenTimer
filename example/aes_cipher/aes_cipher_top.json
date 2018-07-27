@@ -1,1 +1,0 @@
-[{"command":"create_clock","-period":"400","port_pin_list":"clk","-name":"clk"},{"command":"set_input_delay","-add_delay":"yes","-clock":"clk","port_pin_list":"all_inputs","delay_value":"0","-max":"yes"},{"command":"set_output_delay","-add_delay":"yes","-clock":"clk","port_pin_list":"all_outputs","delay_value":"0","-max":"yes"}]
