@@ -22,14 +22,14 @@ std::unique_ptr<char*, std::function<void(char**)>> c_args(
   std::unique_ptr<char*, std::function<void(char**)>> ptr(
     new char*[args.size()+1],
     [n=args.size()] (char** ptr) {
-      for(auto i=0; i<=n; ++i) {
+      for(size_t i=0; i<=n; ++i) {
         delete [] ptr[i];
       }
       delete [] ptr;
     }
   );
 
-  for(int i=0; i<args.size(); ++i) {
+  for(size_t i=0; i<args.size(); ++i) {
     ptr.get()[i] = new char [args[i].length() + 1];
     std::strcpy(ptr.get()[i], args[i].c_str());
   }

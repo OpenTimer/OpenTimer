@@ -58,9 +58,7 @@ find_package(Threads REQUIRED)
 # Tclsh module
 include(FindTclsh)
 if (NOT TCL_TCLSH)
-  message(FATAL_ERROR 
-    "tclsh is required!\nPlease visit https://www.tcl.tk/software/tcltk/"
-  )
+  message(FATAL_ERROR "tclsh is required: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
 
