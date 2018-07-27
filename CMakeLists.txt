@@ -55,11 +55,14 @@ message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
 #set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
-# Find tcl
-find_package(TCL REQUIRED)
-message(STATUS "TCL_TCLSH: ${TCL_TCLSH}")
-message(STATUS "TCL_LIBRARY_PATH: ${TCL_LIBRARY}")
-message(STATUS "TCL_INCLUDE_PATH: ${TCL_INCLUDE_PATH}")
+# Tclsh module
+include(FindTclsh)
+if (NOT TCL_TCLSH)
+  message(FATAL_ERROR 
+    "tclsh is required!\nPlease visit https://www.tcl.tk/software/tcltk/"
+  )
+endif(NOT TCL_TCLSH)
+
 
 # configure a header file to pass some of the CMake settins
 configure_file(
@@ -174,9 +177,9 @@ message(STATUS "Building executables ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 list(APPEND OT_EXE_LINKER_FLAGS "")
-list(APPEND OT_EXE_LINKER_FLAGS stdc++fs)
-list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
 list(APPEND OT_EXE_LINKER_FLAGS OpenTimer)
+list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
+list(APPEND OT_EXE_LINKER_FLAGS stdc++fs)
 message(STATUS "OT_EXE_LINKER_FLAGS: ${OT_EXE_LINKER_FLAGS}")
 
 # tau15
