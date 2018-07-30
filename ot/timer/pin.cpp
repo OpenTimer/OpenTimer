@@ -357,6 +357,16 @@ void Pin::_relax_rat(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float v
 }
 
 // Procedure: _remap_cellpin
+void Pin::_remap_cellpin(Split el, const Cellpin* cpin) {
+
+  (std::get<CellpinView>(_handle))[el] = cpin;
+
+  if(_net) {
+    _net->_rc_timing_updated = false;
+  }
+}
+
+// Procedure: _remap_cellpin
 void Pin::_remap_cellpin(Split el, const Cellpin& cpin) {
   
   (std::get<CellpinView>(_handle))[el] = &cpin;

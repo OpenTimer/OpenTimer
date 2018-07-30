@@ -75,34 +75,6 @@ Cell* Celllib::cell(const std::string& name) {
   }
 }
 
-// Function: is_dummy_timing
-bool Celllib::is_dummy_timing(const Timing& timing) const {
-
-  if(!split) {
-    return false;
-  }
-  
-  switch(split.value()) {
-    case EARLY:
-      if(timing.is_setup_constraint()) {
-        return true; 
-      }
-    break;
-
-    case LATE:
-      if(timing.is_hold_constraint()) {
-        return true;
-      }
-    break;
-
-    default:
-      OT_LOGF("unexpected split ", std::quoted(to_string(split.value())));
-    break;
-  }
-
-  return false;
-}
-
 // Function: _extract_lut_template
 LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iterator end) {
 
@@ -349,89 +321,11 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
         OT_LOGF("syntax error in timing_type");
       }
 
-      if(*itr == "combinational") {
-        timing.type = TimingType::COMBINATIONAL;
-      }
-      else if(*itr == "combinational_rise") {
-        timing.type = TimingType::COMBINATIONAL_RISE;
-      }
-      else if(*itr == "combinational_fall") {
-        timing.type = TimingType::COMBINATIONAL_FALL;
-      }
-      else if(*itr == "three_state_disable") {
-        timing.type = TimingType::THREE_STATE_DISABLE;
-      }
-      else if(*itr == "three_state_disable_rise") {
-        timing.type = TimingType::THREE_STATE_DISABLE_RISE;
-      }
-      else if(*itr == "three_state_disable_fall") {
-        timing.type = TimingType::THREE_STATE_DISABLE_FALL;
-      }
-      else if(*itr == "three_state_enable") {
-        timing.type = TimingType::THREE_STATE_ENABLE;
-      }
-      else if(*itr == "three_state_enable_rise") {
-        timing.type = TimingType::THREE_STATE_ENABLE_RISE;
-      }
-      else if(*itr == "three_state_enable_fall") {
-        timing.type = TimingType::THREE_STATE_ENABLE_FALL;
-      }
-      else if(*itr == "rising_edge") {
-        timing.type = TimingType::RISING_EDGE;
-      }
-      else if(*itr == "falling_edge") {
-        timing.type = TimingType::FALLING_EDGE;
-      }
-      else if(*itr == "preset") {
-        timing.type = TimingType::PRESET;
-      }
-      else if(*itr == "clear") {
-        timing.type = TimingType::CLEAR;
-      }
-      else if(*itr == "hold_rising") {
-        timing.type = TimingType::HOLD_RISING;
-      }
-      else if(*itr == "hold_falling") {
-        timing.type = TimingType::HOLD_FALLING;
-      }
-      else if(*itr == "setup_rising") {
-        timing.type = TimingType::SETUP_RISING;
-      }
-      else if(*itr == "setup_falling") {
-        timing.type = TimingType::SETUP_FALLING;
-      }
-      else if(*itr == "recovery_rising") {
-        timing.type = TimingType::RECOVERY_RISING;
-      }
-      else if(*itr == "recovery_falling") {
-        timing.type = TimingType::RECOVERY_FALLING;
-      }
-      else if(*itr == "skew_rising") {
-        timing.type = TimingType::SKEW_RISING;
-      }
-      else if(*itr == "skew_falling") {
-        timing.type = TimingType::SKEW_FALLING;
-      }
-      else if(*itr == "removal_rising") {
-        timing.type = TimingType::REMOVAL_RISING;
-      }
-      else if(*itr == "removal_falling") {
-        timing.type = TimingType::REMOVAL_FALLING;
-      }
-      else if(*itr == "min_pulse_width") {
-        timing.type = TimingType::MIN_PULSE_WIDTH;
-      }
-      else if(*itr == "minimum_period") {
-        timing.type = TimingType::MINIMUM_PERIOD;
-      }
-      else if(*itr == "max_clock_tree_path") {
-        timing.type = TimingType::MAX_CLOCK_TREE_PATH;
-      }
-      else if(*itr == "min_clock_tree_path") {
-        timing.type = TimingType::MIN_CLOCK_TREE_PATH;
+      if(auto titr = timing_types.find(*itr); titr != timing_types.end()) {
+        timing.type = titr->second;
       }
       else {
-        OT_LOGW("unexpected timing type '", *itr);
+        OT_LOGW("unexpected timing type ", std::quoted(*itr));
       }
     }
     else if (*itr == "related_pin") {
@@ -547,9 +441,6 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.original_pin = std::move(*itr);
     }
     else if(*itr == "timing") {
-      //if(auto timing = _extract_timing(itr, end); !is_dummy_timing(timing)) {
-      //  cellpin.timings.push_back(std::move(timing));
-      //}
       cellpin.timings.push_back(_extract_timing(itr, end));
     }
     else if(*itr == "}") {

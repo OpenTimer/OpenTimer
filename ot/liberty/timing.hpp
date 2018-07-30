@@ -12,7 +12,7 @@ enum class TimingSense {
 };
 
 enum class TimingType {
-  COMBINATIONAL,
+  COMBINATIONAL = 0,
   COMBINATIONAL_RISE,
   COMBINATIONAL_FALL,
   THREE_STATE_DISABLE,
@@ -48,6 +48,44 @@ enum class TimingType {
   NOCHANGE_LOW_HIGH,
   NOCHANGE_LOW_LOW,
 };
+  
+inline const std::unordered_map<std::string, TimingType> timing_types = {
+  {"combinational",            TimingType::COMBINATIONAL},
+  {"combinational_rise",       TimingType::COMBINATIONAL_RISE},
+  {"combinational_fall",       TimingType::COMBINATIONAL_FALL},
+  {"three_state_disable",      TimingType::THREE_STATE_DISABLE},
+  {"three_state_disable_rise", TimingType::THREE_STATE_DISABLE_RISE},
+  {"three_state_disable_fall", TimingType::THREE_STATE_DISABLE_FALL},
+  {"three_state_enable",       TimingType::THREE_STATE_ENABLE},
+  {"three_state_enable_rise",  TimingType::THREE_STATE_ENABLE_RISE},
+  {"three_state_enable_fall",  TimingType::THREE_STATE_ENABLE_FALL},
+  {"rising_edge",              TimingType::RISING_EDGE},
+  {"falling_edge",             TimingType::FALLING_EDGE},
+  {"preset",                   TimingType::PRESET},
+  {"clear",                    TimingType::CLEAR},
+  {"hold_rising",              TimingType::HOLD_RISING},
+  {"hold_falling",             TimingType::HOLD_FALLING},
+  {"setup_rising",             TimingType::SETUP_RISING},
+  {"setup_falling",            TimingType::SETUP_FALLING},
+  {"recovery_rising",          TimingType::RECOVERY_RISING},
+  {"recovery_falling",         TimingType::RECOVERY_FALLING},
+  {"skew_rising",              TimingType::SKEW_RISING},
+  {"skew_falling",             TimingType::SKEW_FALLING},
+  {"removal_rising",           TimingType::REMOVAL_RISING},
+  {"removal_falling",          TimingType::REMOVAL_FALLING},
+  {"min_pulse_width",          TimingType::MIN_PULSE_WIDTH},
+  {"minimum_period",           TimingType::MINIMUM_PERIOD},
+  {"max_clock_tree_path",      TimingType::MAX_CLOCK_TREE_PATH},
+  {"min_clock_tree_path",      TimingType::MIN_CLOCK_TREE_PATH},
+  {"non_seq_setup_rising",     TimingType::NON_SEQ_SETUP_RISING},
+  {"non_seq_setup_falling",    TimingType::NON_SEQ_SETUP_FALLING},
+  {"non_seq_hold_rising",      TimingType::NON_SEQ_HOLD_RISING},
+  {"non_seq_hold_falling",     TimingType::NON_SEQ_HOLD_FALLING},
+  {"nochange_high_high",       TimingType::NOCHANGE_HIGH_HIGH},
+  {"nochange_high_low",        TimingType::NOCHANGE_HIGH_LOW},
+  {"nochange_low_high",        TimingType::NOCHANGE_LOW_HIGH},
+  {"nochange_low_low",         TimingType::NOCHANGE_LOW_LOW}
+};
 
 // Function: to_string
 std::string to_string(TimingSense);
@@ -58,9 +96,8 @@ struct Timing {
   
   std::string related_pin;
 
-  TimingSense sense {TimingSense::NON_UNATE};
-  TimingType type {TimingType::COMBINATIONAL};
-
+  std::optional<TimingSense> sense;               // by default non-sense
+  std::optional<TimingType> type;                 // by default combinational
   std::optional<TimingLut> cell_rise;             // Delay LUT rise (sink).
   std::optional<TimingLut> cell_fall;             // Delay LUT fall (sink).
   std::optional<TimingLut> rise_transition;       // Slew LUT rise (sink).

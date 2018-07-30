@@ -173,6 +173,7 @@ class Pin {
     void _insert_fanin(Arc&);
     void _remove_fanout(Arc&);
     void _remove_fanin(Arc&);
+    void _remap_cellpin(Split, const Cellpin*);
     void _remap_cellpin(Split, const Cellpin&);
     void _reset_slew();
     void _reset_at();

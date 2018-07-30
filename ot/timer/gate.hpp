@@ -32,7 +32,7 @@ class Gate {
     std::vector<Pin*> _pins;
     std::vector<Arc*> _arcs;
     std::vector<Test*> _tests;
-    
+
     void _repower(CellView);
 }; 
 

@@ -52,8 +52,6 @@ struct Celllib {
   LutTemplate* lut_template(const std::string&);
   Cell* cell(const std::string&);
 
-  bool is_dummy_timing(const Timing&) const;
-
   private:
 
   LutTemplate _extract_lut_template(token_iterator&, const token_iterator);

@@ -167,17 +167,19 @@ bool Timing::is_transition_defined(Tran irf, Tran orf) const {
 
   if(!is_input_transition_defined(irf)) return false;
   
-  switch(sense) {
-    case TimingSense::POSITIVE_UNATE:
-      if(irf != orf) return false;
-    break;
+  if(sense) {
+    switch(*sense) {
+      case TimingSense::POSITIVE_UNATE:
+        if(irf != orf) return false;
+      break;
 
-    case TimingSense::NEGATIVE_UNATE:
-      if(irf == orf) return false;
-    break;
+      case TimingSense::NEGATIVE_UNATE:
+        if(irf == orf) return false;
+      break;
 
-    default:
-    break;
+      default:
+      break;
+    }
   }
 
   return true;
@@ -205,74 +207,78 @@ bool Timing::is_constraint() const {
 
 // Function: is_hold_constraint
 bool Timing::is_hold_constraint() const {
-  switch (type) {
-    case TimingType::HOLD_RISING:
-      return true;
-    break;
-    case TimingType::HOLD_FALLING:
-      return true;
-    break;
-    default:
-      return false;
-    break;
-  };
+  if(type) {
+    switch (*type) {
+      case TimingType::HOLD_RISING:
+      case TimingType::HOLD_FALLING:
+        return true;
+      break;
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
 }
 
 // Function: is_setup_constraint
 bool Timing::is_setup_constraint() const {
-  switch (type) {
-    case TimingType::SETUP_RISING:
-      return true;
-    break;
-    case TimingType::SETUP_FALLING:
-      return true;
-    break;
-    default:
-      return false;
-    break;
-  };
+  if(type) {
+    switch (*type) {
+      case TimingType::SETUP_RISING:
+      case TimingType::SETUP_FALLING:
+        return true;
+      break;
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
 }
 
 // Function: is_falling_edge_triggered
 bool Timing::is_falling_edge_triggered() const {
-  switch (type) {
-    case TimingType::SETUP_FALLING:
-      return true;
-    break;
+  if(type) {
+    switch (*type) {
+      case TimingType::SETUP_FALLING:
+      case TimingType::HOLD_FALLING:
+      case TimingType::FALLING_EDGE:
+        return true;
+      break;
 
-    case TimingType::HOLD_FALLING:
-      return true;
-    break;
-
-    case TimingType::FALLING_EDGE:
-      return true;
-    break;
-
-    default:
-      return false;
-    break;
-  };
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
 }
 
 // Function: is_rising_edge_triggered
 bool Timing::is_rising_edge_triggered() const {
-  switch (type) {
-    case TimingType::SETUP_RISING:
-      return true;
-    break;
+  if(type) {
+    switch (*type) {
+      case TimingType::SETUP_RISING:
+      case TimingType::HOLD_RISING:
+      case TimingType::RISING_EDGE:
+        return true;
+      break;
 
-    case TimingType::HOLD_RISING:
-      return true;
-    break;
-
-    case TimingType::RISING_EDGE:
-      return true;
-    break;
-
-    default:
-      return false;
-    break;
-  };
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
 }
 
 // Procedure: scale_time
@@ -568,10 +574,14 @@ std::ostream& operator << (std::ostream& os, const Timing& timing) {
   os << "      related_pin : \"" << timing.related_pin << "\";\n";
 
   // Write the timing sense.
-  os << "      timing_sense : " << to_string(timing.sense) << ";\n";
+  if(timing.sense) {
+    os << "      timing_sense : " << to_string(*timing.sense) << ";\n";
+  }
 
   // Write the timing type.
-  os << "      timing_type : " << to_string(timing.type) << ";\n";
+  if(timing.type) {
+    os << "      timing_type : " << to_string(*timing.type) << ";\n";
+  }
 
   // Write cell_rise
   if(timing.cell_rise) {

@@ -114,106 +114,59 @@ Timer& Timer::insert_gate(std::string gate, std::string cell) {
 // Function: _insert_gate
 void Timer::_insert_gate(const std::string& gname, const std::string& cname) {
 
+  if(_gates.find(gname) != _gates.end()) {
+    OT_LOGW("gate ", gname, " already existed");
+    return;
+  }
+
   auto cell = CellView {_celllib[EARLY].cell(cname), _celllib[LATE].cell(cname)};
 
-  OT_LOGE_RIF(!cell[EARLY] || !cell[LATE], "cell ", cname, " not found");
-  OT_LOGW_RIF(!_gates.try_emplace(gname, gname, cell).second, gname, " already existed");
+  if(!cell[EARLY] || !cell[LATE]) {
+    OT_LOGE("cell ", cname, " not found in celllib");
+    return;
+  }
+  
+  auto& gate = _gates.try_emplace(gname, gname, cell).first->second;
+  
+  // Insert pins
+  for(const auto& [cpname, ecpin] : cell[EARLY]->cellpins) {
 
-  auto& gate = _gates.at(gname);
+    CellpinView cpv {&ecpin, cell[LATE]->cellpin(cpname)};
 
-  for(const auto& [cpin_name, ecpin] : cell[EARLY]->cellpins) {
-
-    CellpinView cp;
-
-    // cellpin on early side
-    auto& pin = _insert_pin(gname + ':' + cpin_name);
-    //pin._cellpin[EARLY] = &ecpin;
-    cp[EARLY] = &ecpin;
-    gate._pins.push_back(&pin);
-    
-    // cellpin on late side
-    if((cp[LATE] = cell[LATE]->cellpin(cpin_name)) == nullptr) {
-      OT_LOGF("cellpin ", cpin_name, " not found in late cell ", cell[LATE]->name);
+    if(!cpv[EARLY] || !cpv[LATE]) {
+      OT_LOGF("cellpin ", cpname, " mismatched in celllib");
     }
 
-    pin._handle = cp;
+    auto& pin = _insert_pin(gname + ':' + cpname);
+    pin._handle = cpv;
+    
+    gate._pins.push_back(&pin);
   }
   
   // Insert arcs
-  for(const auto& [cpname, ecp] : cell[EARLY]->cellpins) {
-    auto& to_pin = _insert_pin(gname + ':' + cpname);
-    auto& lcp = *(cell[LATE]->cellpin(cpname));
+  FOR_EACH_EL(el) {
 
-    // scan each early timing
-    for(const auto& etm : ecp.timings) {
+    for(const auto& [cpname, cp] : cell[el]->cellpins) {
+      auto& to_pin = _insert_pin(gname + ':' + cpname);
 
-      if(_is_redundant_timing(etm, EARLY)) {
-        continue;
-      }
-      
-      TimingView tv {nullptr, nullptr};
-      tv[EARLY] = &etm;
-      
-      auto& from_pin = _insert_pin(gname + ':' + etm.related_pin);
-      auto& arc = _insert_arc(from_pin, to_pin, tv);
-      
-      //OT_LOGD("create early timing ", from_pin._name, "->", to_pin._name);
+      for(const auto& tm : cp.timings) {
+        if(_is_redundant_timing(tm, el)) {
+          continue;
+        }
 
-      gate._arcs.push_back(&arc);
-      if(etm.is_constraint()) {
-        auto& test = _insert_test(arc);
-        gate._tests.push_back(&test);
-      }
-    }
+        TimingView tv{nullptr, nullptr};
+        tv[el] = &tm;
 
-    // scan each late timing
-    for(const auto& ltm : lcp.timings) {
-
-      if(_is_redundant_timing(ltm, LATE)) {
-        continue;
-      }
-
-      //auto itr = std::find_if(gate._arcs.begin(), gate._arcs.end(), [&] (Arc* arc) {
-      //  if(auto tv = arc->timing_view(); tv[EARLY]) {
-      //    return tv[EARLY]->isomorphic(ltm);
-      //  }
-      //  else return false;
-      //});
-
-      //if(itr != gate._arcs.end()) {
-      //  (*itr)->_remap_timing(LATE, ltm);
-      //}
-      //else {
-
-        TimingView tv {nullptr, nullptr};
-        tv[LATE] = &ltm;
-        
-        auto& from_pin = _insert_pin(gname + ':' + ltm.related_pin);
+        auto& from_pin = _insert_pin(gname + ':' + tm.related_pin);
         auto& arc = _insert_arc(from_pin, to_pin, tv);
-
+        
         gate._arcs.push_back(&arc);
-        if(ltm.is_constraint()) {
+        if(tm.is_constraint()) {
           auto& test = _insert_test(arc);
           gate._tests.push_back(&test);
         }
-      //}
-    }
-
-
-    /*assert(ecp.timings.size() == lcp.timings.size());
-    for(size_t i=0; i<ecp.timings.size(); ++i) {
-      auto& etiming = ecp.timings[i];
-      auto& ltiming = lcp.timings[i];
-      assert(etiming.related_pin == ltiming.related_pin);
-      auto& from_pin = _insert_pin(gname + ':' + etiming.related_pin);
-      auto& arc = _insert_arc(from_pin, to_pin, {&etiming, &ltiming});
-      gate._arcs.push_back(&arc);
-      if(etiming.is_constraint()) {
-        assert(ltiming.is_constraint());
-        auto& test = _insert_test(arc);
-        gate._tests.push_back(&test);
       }
-    }*/
+    }
   }
 }
 
