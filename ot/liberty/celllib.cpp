@@ -105,20 +105,8 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
         OT_LOGF("variable_1 error in lut template ", lt.name);
       }
 
-      if(*itr == "total_output_net_capacitance") {
-        lt.variable1 = LutVar::TOTAL_OUTPUT_NET_CAPACITANCE;
-      }
-      else if(*itr == "input_net_transition") {
-        lt.variable1 = LutVar::INPUT_NET_TRANSITION;
-      }
-      else if(*itr == "constrained_pin_transition") {
-        lt.variable1 = LutVar::CONSTRAINED_PIN_TRANSITION;
-      }
-      else if(*itr == "related_pin_transition") {
-        lt.variable1 = LutVar::RELATED_PIN_TRANSITION;
-      }
-      else if(*itr == "input_transition_time") {
-        lt.variable1 = LutVar::INPUT_TRANSITION_TIME;
+      if(auto vitr = lut_vars.find(*itr); vitr != lut_vars.end()) {
+        lt.variable1 = vitr->second;
       }
       else {
         OT_LOGW("unexpected lut template variable ", *itr);
@@ -131,20 +119,8 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
         OT_LOGF("variable_2 error in lut template ", lt.name);
       }
 
-      if(*itr == "total_output_net_capacitance") {
-        lt.variable2 = LutVar::TOTAL_OUTPUT_NET_CAPACITANCE;
-      }
-      else if(*itr == "input_net_transition") {
-        lt.variable2 = LutVar::INPUT_NET_TRANSITION;
-      }
-      else if(*itr == "constrained_pin_transition") {
-        lt.variable2 = LutVar::CONSTRAINED_PIN_TRANSITION;
-      }
-      else if(*itr == "related_pin_transition") {
-        lt.variable2 = LutVar::RELATED_PIN_TRANSITION;
-      }
-      else if(*itr == "input_transition_time") {
-        lt.variable2 = LutVar::INPUT_TRANSITION_TIME;
+      if(auto vitr = lut_vars.find(*itr); vitr != lut_vars.end()) {
+        lt.variable2 = vitr->second;
       }
       else {
         OT_LOGW("unexpected lut template variable ", *itr);
@@ -382,17 +358,8 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
         OT_LOGF("can't get the direction in cellpin ", cellpin.name);
       }
 
-      if(*itr == "input") {
-        cellpin.direction = CellpinDirection::INPUT;
-      }
-      else if(*itr == "output") {
-        cellpin.direction = CellpinDirection::OUTPUT;
-      }
-      else if(*itr == "inout") {
-        cellpin.direction = CellpinDirection::INOUT;
-      }
-      else if(*itr == "internal") {
-        cellpin.direction = CellpinDirection::INTERNAL;
+      if(auto ditr = cellpin_directions.find(*itr); ditr != cellpin_directions.end()) {
+        cellpin.direction = ditr->second;
       }
       else {
         OT_LOGW("unexpected cellpin direction ", *itr);

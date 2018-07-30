@@ -13,6 +13,13 @@ enum class CellpinDirection {
   INTERNAL
 };
 
+inline const std::unordered_map<std::string, CellpinDirection> cellpin_directions {
+  {"input",    CellpinDirection::INPUT},
+  {"output",   CellpinDirection::OUTPUT},
+  {"inout",    CellpinDirection::INOUT},
+  {"internal", CellpinDirection::INTERNAL}
+};
+
 // Class: Cellpin
 struct Cellpin {
 
