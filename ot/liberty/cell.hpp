@@ -24,6 +24,9 @@ struct Cell {
 
 std::ostream& operator << (std::ostream&, const Cell&);
 
+// Alias
+using CellView = std::array<const Cell*, MAX_SPLIT>;
+
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

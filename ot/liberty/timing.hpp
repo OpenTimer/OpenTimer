@@ -79,7 +79,6 @@ struct Timing {
   bool is_transition_defined(Tran, Tran) const;   // Query the timing transition status.
   bool isomorphic(const Timing&) const;
 
-  void merge(Timing&&);
   void scale_time(float);
   void scale_capacitance(float);
 
@@ -89,6 +88,9 @@ struct Timing {
 };
 
 std::ostream& operator << (std::ostream&, const Timing&);
+
+// Alias
+using TimingView = std::array<const Timing*, MAX_SPLIT>;
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

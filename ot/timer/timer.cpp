@@ -58,7 +58,7 @@ Timer& Timer::repower_gate(std::string gate, std::string cell) {
 
   auto op = _taskflow.silent_emplace([this, gate=std::move(gate), cell=std::move(cell)] () {
     _repower_gate(gate, cell);
-  }).name("repower gate");
+  });
   
   _add_to_lineage(op);
   
@@ -66,16 +66,19 @@ Timer& Timer::repower_gate(std::string gate, std::string cell) {
 }
 
 // Procedure: _repower_gate
-void Timer::_repower_gate(const std::string& gate_name, const std::string& cell_name) {
+void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
 
   // Insert the gate if it doesn't exist.
-  if(auto gitr = _gates.find(gate_name); gitr == _gates.end()) {
-    OT_LOGW("gate ", gate_name, " doesn't exist (insert rather than repower)");
-    _insert_gate(gate_name, cell_name);
+  if(auto gitr = _gates.find(gname); gitr == _gates.end()) {
+    OT_LOGW("gate ", gname, " doesn't exist (insert instead)");
+    _insert_gate(gname, cname);
     return;
   }
   else {
-    auto cell = _cell_split_view(cell_name);
+
+    auto cell = CellView {_celllib[EARLY].cell(cname), _celllib[LATE].cell(cname)};
+
+    OT_LOGE_RIF(!cell[EARLY] || !cell[LATE], "cell ", cname, " not found");
 
     auto& gate = gitr->second;
     
@@ -90,18 +93,6 @@ void Timer::_repower_gate(const std::string& gate_name, const std::string& cell_
       }
     }
   }
-}
-
-// Function: _cell_split_view
-SplitView<Cell> Timer::_cell_split_view(const std::string& name) {
-
-  std::array<const Cell*, MAX_SPLIT> cell;
-  
-  FOR_EACH_EL_IF(el, !(cell[el] = _celllib[el].cell(name))) {
-    OT_LOGF("cell ", name, " not found in ", to_string(el), " celllib");
-  }
-
-  return SplitView<Cell>(*cell[EARLY], *cell[LATE]);
 }
 
 // Fucntion: insert_gate
@@ -121,54 +112,108 @@ Timer& Timer::insert_gate(std::string gate, std::string cell) {
 }
 
 // Function: _insert_gate
-void Timer::_insert_gate(const std::string& gate_name, const std::string& cell_name) {
+void Timer::_insert_gate(const std::string& gname, const std::string& cname) {
 
-  auto cell = _cell_split_view(cell_name);
+  auto cell = CellView {_celllib[EARLY].cell(cname), _celllib[LATE].cell(cname)};
 
-  if(_gates.try_emplace(gate_name, gate_name, cell).second == false) {
-    OT_LOGW("ignore inserting gate ", gate_name, " (already existed");
-    return;
-  }
+  OT_LOGE_RIF(!cell[EARLY] || !cell[LATE], "cell ", cname, " not found");
+  OT_LOGW_RIF(!_gates.try_emplace(gname, gname, cell).second, gname, " already existed");
 
-  auto& gate = _gates.at(gate_name);
+  auto& gate = _gates.at(gname);
 
-  for(const auto& [cpin_name, ecpin] : cell.get(EARLY).cellpins) {
+  for(const auto& [cpin_name, ecpin] : cell[EARLY]->cellpins) {
 
-    std::array<const Cellpin*, MAX_SPLIT> cp;
+    CellpinView cp;
 
     // cellpin on early side
-    auto& pin = _insert_pin(gate_name + ':' + cpin_name);
+    auto& pin = _insert_pin(gname + ':' + cpin_name);
     //pin._cellpin[EARLY] = &ecpin;
     cp[EARLY] = &ecpin;
     gate._pins.push_back(&pin);
     
     // cellpin on late side
-    if((cp[LATE] = cell.get(LATE).cellpin(cpin_name)) == nullptr) {
-      OT_LOGF("cellpin ", cpin_name, " not found in late cell ", cell.get(LATE).name);
+    if((cp[LATE] = cell[LATE]->cellpin(cpin_name)) == nullptr) {
+      OT_LOGF("cellpin ", cpin_name, " not found in late cell ", cell[LATE]->name);
     }
 
     pin._handle = cp;
   }
   
   // Insert arcs
-  for(const auto& [cpname, ecp] : cell.get(EARLY).cellpins) {
-    auto& to_pin = _insert_pin(gate_name + ':' + cpname);
-    auto& lcp = *(cell.get(LATE).cellpin(cpname));
+  for(const auto& [cpname, ecp] : cell[EARLY]->cellpins) {
+    auto& to_pin = _insert_pin(gname + ':' + cpname);
+    auto& lcp = *(cell[LATE]->cellpin(cpname));
 
-    assert(ecp.timings.size() == lcp.timings.size());
+    // scan each early timing
+    for(const auto& etm : ecp.timings) {
+
+      if(_is_redundant_timing(etm, EARLY)) {
+        continue;
+      }
+      
+      TimingView tv {nullptr, nullptr};
+      tv[EARLY] = &etm;
+      
+      auto& from_pin = _insert_pin(gname + ':' + etm.related_pin);
+      auto& arc = _insert_arc(from_pin, to_pin, tv);
+      
+      //OT_LOGD("create early timing ", from_pin._name, "->", to_pin._name);
+
+      gate._arcs.push_back(&arc);
+      if(etm.is_constraint()) {
+        auto& test = _insert_test(arc);
+        gate._tests.push_back(&test);
+      }
+    }
+
+    // scan each late timing
+    for(const auto& ltm : lcp.timings) {
+
+      if(_is_redundant_timing(ltm, LATE)) {
+        continue;
+      }
+
+      //auto itr = std::find_if(gate._arcs.begin(), gate._arcs.end(), [&] (Arc* arc) {
+      //  if(auto tv = arc->timing_view(); tv[EARLY]) {
+      //    return tv[EARLY]->isomorphic(ltm);
+      //  }
+      //  else return false;
+      //});
+
+      //if(itr != gate._arcs.end()) {
+      //  (*itr)->_remap_timing(LATE, ltm);
+      //}
+      //else {
+
+        TimingView tv {nullptr, nullptr};
+        tv[LATE] = &ltm;
+        
+        auto& from_pin = _insert_pin(gname + ':' + ltm.related_pin);
+        auto& arc = _insert_arc(from_pin, to_pin, tv);
+
+        gate._arcs.push_back(&arc);
+        if(ltm.is_constraint()) {
+          auto& test = _insert_test(arc);
+          gate._tests.push_back(&test);
+        }
+      //}
+    }
+
+
+    /*assert(ecp.timings.size() == lcp.timings.size());
     for(size_t i=0; i<ecp.timings.size(); ++i) {
       auto& etiming = ecp.timings[i];
       auto& ltiming = lcp.timings[i];
       assert(etiming.related_pin == ltiming.related_pin);
-      auto& from_pin = _insert_pin(gate_name + ':' + etiming.related_pin);
-      auto& arc = _insert_arc(from_pin, to_pin, {etiming, ltiming});
+      auto& from_pin = _insert_pin(gname + ':' + etiming.related_pin);
+      auto& arc = _insert_arc(from_pin, to_pin, {&etiming, &ltiming});
       gate._arcs.push_back(&arc);
       if(etiming.is_constraint()) {
         assert(ltiming.is_constraint());
         auto& test = _insert_test(arc);
         gate._tests.push_back(&test);
       }
-    }
+    }*/
   }
 }
 
@@ -292,6 +337,8 @@ Timer& Timer::disconnect_pin(std::string name) {
 }
 
 // Procedure: disconnect_pin
+// TODO (twhuang)
+// try get rid of find_fanin which can be wrong under multiple arcs.
 void Timer::_disconnect_pin(Pin& pin) {
 
   auto net = pin._net;
@@ -398,6 +445,9 @@ Pin& Timer::_insert_pin(const std::string& name) {
     pin._idx = _pin_idx_gen.get();
     resize_to_fit(pin._idx + 1, _idx2pin);
     _idx2pin[pin._idx] = &pin;
+
+    // insert to frontier
+    _insert_frontier(pin);
 
     return pin;
   }
@@ -626,10 +676,10 @@ Arc& Timer::_insert_arc(Pin& from, Pin& to, Net& net) {
 
 // Function: _insert_arc (cell arc)
 // Insert a cell arc to the timing graph. A cell arc is a combinational link.
-Arc& Timer::_insert_arc(Pin& from, Pin& to, SplitView<Timing> timing) {
+Arc& Timer::_insert_arc(Pin& from, Pin& to, TimingView tv) {
 
   // Create a new arc
-  auto& arc = _arcs.emplace_front(from, to, timing);
+  auto& arc = _arcs.emplace_front(from, to, tv);
   arc._satellite = _arcs.begin();
   from._insert_fanout(arc);
   to._insert_fanin(arc);

@@ -29,14 +29,18 @@ CpprCache::~CpprCache() {
 // Function: _cppr_cache
 // Obtain a CPPR cache for a given test.
 CpprCache Timer::_cppr_cache(const Test& test, Split el, Tran rf) const {
-  
+
   // Create a cppr handle.
   auto cppr = CpprCache(_idx2pin.size() << 1);
+
+  // Find the timing
+  auto tv  = test._arc.timing_view();
+  assert(tv[el]);
 
   // Find the capture path
   auto v   = &(test._arc._from);
   auto vel = (el == EARLY) ? LATE : EARLY;
-  auto vrf = test._arc._timing().get(el).is_rising_edge_triggered() ? RISE : FALL;
+  auto vrf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
 
   cppr._cape = _encode_pin(*v, vrf);
 

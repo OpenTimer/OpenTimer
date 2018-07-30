@@ -38,6 +38,10 @@ struct Cellpin {
 
 std::ostream& operator << (std::ostream&, const Cellpin&);
 
+// ------------------------------------------------------------------------------------------------
+
+using CellpinView = std::array<const Cellpin*, MAX_SPLIT>;
+
 };  // end of namespace ot ------------------------------------------------------------------------
 
 

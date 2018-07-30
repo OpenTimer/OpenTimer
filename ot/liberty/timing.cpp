@@ -146,7 +146,7 @@ std::string to_string(TimingType t) {
 
 // ------------------------------------------------------------------------------------------------
 
-// Procedure: isomorphic
+// Function: isomorphic
 bool Timing::isomorphic(const Timing& rhs) const {
   
   if(related_pin != rhs.related_pin) return false;
@@ -160,73 +160,6 @@ bool Timing::isomorphic(const Timing& rhs) const {
   if(fall_constraint.has_value() != rhs.fall_constraint.has_value()) return false;
 
   return true;
-}
-
-// Procedure: merge
-void Timing::merge(Timing&& other) {
-
-  // Related pin must be the same.
-  if(related_pin != other.related_pin) {
-    OT_LOGF("related pin mismatched (", related_pin, " vs ", other.related_pin);
-  }
-  
-  // Merge the timing sense
-  if(sense != other.sense) {
-    sense = TimingSense::NON_UNATE;
-  }
-
-  // Merge the timing type
-  if(type != other.type) {
-    OT_LOGF("type mismatched (", to_string(type), " vs ", to_string(other.type), ')');
-  }
-
-  // Merge cell_rise
-  if(other.cell_rise) {
-    if(cell_rise) {
-      OT_LOGF("duplicate cell_rise (timing at ", related_pin, ')');
-    }
-    cell_rise = std::move(other.cell_rise);
-  }
-
-  // Merge cell_fall
-  if(other.cell_fall) {
-    if(cell_fall) {
-      OT_LOGF("duplicate cell_fall (timing at ", related_pin, ')');
-    }
-    cell_fall = std::move(other.cell_fall);
-  }
-  
-  // Merge rise_transition
-  if(other.rise_transition) {
-    if(rise_transition) {
-      OT_LOGF("duplicate rise_transition (timing at ", related_pin, ')');
-    }
-    rise_transition = std::move(other.rise_transition);
-  }
-  
-  // Merge fall_transition
-  if(other.fall_transition) {
-    if(fall_transition) {
-      OT_LOGF("duplicate fall_transition (timing at ", related_pin, ')');
-    }
-    fall_transition = std::move(other.fall_transition);
-  }
-  
-  // Merge rise_constraint
-  if(other.rise_constraint) {
-    if(rise_constraint) {
-      OT_LOGF("duplicate rise_constraint (timing at ", related_pin, ')');
-    }
-    rise_constraint = std::move(other.rise_constraint);
-  }
-  
-  // Merge fall_constraint
-  if(other.fall_constraint) {
-    if(fall_constraint) {
-      OT_LOGF("duplicate fall_constraint (timing at ", related_pin, ')');
-    }
-    fall_constraint = std::move(other.fall_constraint);
-  }
 }
 
 // Function: is_transition_defined

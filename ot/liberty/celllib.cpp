@@ -45,8 +45,28 @@ const LutTemplate* Celllib::lut_template(const std::string& name) const {
   }
 }
 
+// Function: lut_template
+LutTemplate* Celllib::lut_template(const std::string& name) {
+  if(auto itr = lut_templates.find(name); itr == lut_templates.end()) {
+    return nullptr;
+  }
+  else {
+    return &(itr->second);
+  }
+}
+
 // Function: cell
 const Cell* Celllib::cell(const std::string& name) const {
+  if(auto itr = cells.find(name); itr == cells.end()) {
+    return nullptr;
+  }
+  else {
+    return &(itr->second);
+  }
+}
+
+// Function: cell
+Cell* Celllib::cell(const std::string& name) {
   if(auto itr = cells.find(name); itr == cells.end()) {
     return nullptr;
   }
@@ -527,9 +547,10 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.original_pin = std::move(*itr);
     }
     else if(*itr == "timing") {
-      if(auto timing = _extract_timing(itr, end); !is_dummy_timing(timing)) {
-        cellpin.timings.push_back(std::move(timing));
-      }
+      //if(auto timing = _extract_timing(itr, end); !is_dummy_timing(timing)) {
+      //  cellpin.timings.push_back(std::move(timing));
+      //}
+      cellpin.timings.push_back(_extract_timing(itr, end));
     }
     else if(*itr == "}") {
       stack--;
@@ -891,19 +912,6 @@ std::ostream& operator << (std::ostream& os, const Celllib& c) {
   return os;
 }
 
-// Procedure: merge
-void Celllib::merge(Celllib& other) {  
-
-  //std::optional<VoltageUnit> voltage_unit;
-  //std::optional<CurrentUnit> current_unit;
-  //std::optional<ResistanceUnit> resistance_unit;
-  //std::optional<CapacitanceUnit> capacitance_unit;
-  //std::optional<PowerUnit> power_unit;
-  //std::optional<DelayModel> delay_model;
-
-  lut_templates.merge(std::move(other.lut_templates)); 
-  cells.merge(std::move(other.cells)); 
-}
 
 
 };  // namespace ot. ------------------------------------------------------------------------------

@@ -23,7 +23,7 @@ class Arc {
   public:
 
     Arc(Pin&, Pin&, Net&);
-    Arc(Pin&, Pin&, SplitView<Timing>);
+    Arc(Pin&, Pin&, TimingView);
 
     bool is_cell_arc() const;
     bool is_net_arc() const;
@@ -32,6 +32,8 @@ class Arc {
 
     size_t idx() const;
 
+    TimingView timing_view() const;
+
   private:
 
     Pin& _from;
@@ -39,7 +41,7 @@ class Arc {
 
     size_t _idx;
 
-    std::variant<Net*, SplitView<Timing>> _handle;
+    std::variant<Net*, TimingView> _handle;
 
     std::optional<std::list<Arc>::iterator> _satellite;
     std::optional<std::list<Arc*>::iterator> _fanout_satellite;
@@ -53,8 +55,6 @@ class Arc {
     void _reset_delay();
     void _fprop_delay();
     void _bprop_rat();
-
-    SplitView<Timing> _timing();
 }; 
 
 // Function: idx

@@ -45,10 +45,12 @@ struct Celllib {
   void to_resistance_unit(const ResistanceUnit&);
   void to_capacitance_unit(const CapacitanceUnit&);
   void to_power_unit(const PowerUnit&);
-  void merge(Celllib&);
 
   const LutTemplate* lut_template(const std::string&) const;
   const Cell* cell(const std::string&) const;
+  
+  LutTemplate* lut_template(const std::string&);
+  Cell* cell(const std::string&);
 
   bool is_dummy_timing(const Timing&) const;
 

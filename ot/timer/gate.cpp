@@ -7,24 +7,26 @@
 namespace ot {
 
 // Constructor
-Gate::Gate(const std::string& name, SplitView<Cell> cell) : 
+Gate::Gate(const std::string& name, CellView cell) : 
   _name {name},
   _cell {cell} {
 }
 
 // Procedure: _repower
-void Gate::_repower(SplitView<Cell> cell) {
+void Gate::_repower(CellView cell) {
+
+  assert(cell[EARLY] && cell[LATE]);
 
   // Remap the pin
   for(auto pin : _pins) {
     FOR_EACH_EL(el) {
       assert(pin->cellpin(el));
-      if(const auto cpin = cell.get(el).cellpin(pin->cellpin(el)->name)) {
+      if(const auto cpin = cell[el]->cellpin(pin->cellpin(el)->name)) {
         pin->_remap_cellpin(el, *cpin);
       }
       else {
         OT_LOGE(
-          "repower ", _name, " with ", cell[el].name, " failed (cellpin mismatched)"
+          "repower ", _name, " with ", cell[el]->name, " failed (cellpin mismatched)"
         );  
       }
     }
@@ -33,22 +35,23 @@ void Gate::_repower(SplitView<Cell> cell) {
   // Remap the arc
   for(auto arc : _arcs) {
 
-    auto oldtm = arc->_timing();
+    auto ptv = arc->timing_view();
     
-    FOR_EACH_EL(el) {
-      if(auto tcp = cell.get(el).cellpin(arc->_to.cellpin(el)->name); tcp) {
-        if(auto newtm = tcp->isomorphic_timing(oldtm.get(el)); newtm) {
-          arc->_remap_timing(el, *newtm);
+    FOR_EACH_EL_IF(el, ptv[el]) {
+
+      if(auto tcp = cell[el]->cellpin(arc->_to.cellpin(el)->name); tcp) {
+        if(auto ntm = tcp->isomorphic_timing(*ptv[el]); ntm) {
+          arc->_remap_timing(el, *ntm);
         }
         else {
           OT_LOGE(
-            "repower ", _name, " with ", cell[el].name, " failed (timing mismatched)"
+            "repower ", _name, " with ", cell[el]->name, " failed (timing mismatched)"
           );
         }
       }
       else {
         OT_LOGE(
-          "repower ", _name, " with ", cell[el].name, " failed (cellpin mismatched)"
+          "repower ", _name, " with ", cell[el]->name, " failed (cellpin mismatched)"
         );  
       }
     }

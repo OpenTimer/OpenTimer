@@ -123,7 +123,7 @@ bool Pin::is_rct_root() const {
     [] (PrimaryOutput*) {
       return false;
     },
-    [] (std::array<const Cellpin*, MAX_SPLIT> cp) {
+    [] (CellpinView cp) {
       return cp[EARLY]->direction == CellpinDirection::OUTPUT;
     }
   }, _handle);
@@ -254,7 +254,7 @@ float Pin::cap(Split el, Tran rf) const {
     [&] (PrimaryOutput* po) {
       return po->_load[el][rf];
     },
-    [&] (std::array<const Cellpin*, MAX_SPLIT> cp) {
+    [&] (CellpinView cp) {
       return cp[el]->capacitance ? cp[el]->capacitance.value() : 0.0f;
     }
   }, _handle);
@@ -359,7 +359,7 @@ void Pin::_relax_rat(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float v
 // Procedure: _remap_cellpin
 void Pin::_remap_cellpin(Split el, const Cellpin& cpin) {
   
-  (std::get<std::array<const Cellpin*, MAX_SPLIT>>(_handle))[el] = &cpin;
+  (std::get<CellpinView>(_handle))[el] = &cpin;
 
   if(_net) {
     _net->_rc_timing_updated = false;

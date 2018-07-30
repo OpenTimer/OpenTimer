@@ -85,7 +85,7 @@ class Timer {
     std::string dump_pin_cap() const;
     std::string dump_slack() const;
     std::string dump_timer() const;
-
+    
     inline auto time_unit() const;
     inline auto voltage_unit() const;
     inline auto current_unit() const;
@@ -108,14 +108,13 @@ class Timer {
 
     int _state {0};
     
-    // Unit field
+    std::optional<tf::Taskflow::Task> _lineage;
     std::optional<TimeUnit> _time_unit;
     std::optional<VoltageUnit> _voltage_unit;
     std::optional<CurrentUnit> _current_unit;
     std::optional<ResistanceUnit> _resistance_unit;
     std::optional<CapacitanceUnit> _capacitance_unit;
     std::optional<PowerUnit> _power_unit;
-    std::optional<tf::Taskflow::Task> _lineage;
     std::optional<Clock> _clocks;
     std::optional<CpprAnalysis> _cppr_analysis;
 
@@ -156,6 +155,7 @@ class Timer {
 
     bool _build_fprop_cands(Pin&);
     bool _build_bprop_cands(Pin&);
+    bool _is_redundant_timing(const Timing&, Split) const;
 
     void _update_timing();
     void _update_wns();
@@ -217,7 +217,7 @@ class Timer {
     void _to_power_unit(const PowerUnit&);
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
-    void _merge(Celllib&, Split);
+    void _merge_celllib(Celllib&, Split);
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
@@ -231,10 +231,8 @@ class Timer {
     Pin& _insert_pin(const std::string&);
     Arc& _insert_arc(Pin&, Pin&, Net&);
     Arc& _insert_arc(Pin&, Pin&, Test&);
-    Arc& _insert_arc(Pin&, Pin&, SplitView<Timing>);
+    Arc& _insert_arc(Pin&, Pin&, TimingView);
     Test& _insert_test(Arc&);
-
-    SplitView<Cell> _cell_split_view(const std::string&);
 
     std::optional<float> _at(const std::string&, Split, Tran);
     std::optional<float> _rat(const std::string&, Split, Tran);

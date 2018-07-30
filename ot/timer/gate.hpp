@@ -19,7 +19,7 @@ class Gate {
 
   public:
     
-    Gate(const std::string&, SplitView<Cell>);
+    Gate(const std::string&, CellView);
 
     inline const std::string& name() const;
 
@@ -27,13 +27,13 @@ class Gate {
 
     std::string _name;
 
-    SplitView<Cell> _cell;
-    
+    CellView _cell;
+
     std::vector<Pin*> _pins;
     std::vector<Arc*> _arcs;
     std::vector<Test*> _tests;
     
-    void _repower(SplitView<Cell>);
+    void _repower(CellView);
 }; 
 
 // Function: name

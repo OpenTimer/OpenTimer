@@ -12,7 +12,7 @@ Arc::Arc(Pin& from, Pin& to, Net& net) :
 }
 
 // Constructor
-Arc::Arc(Pin& from, Pin& to, SplitView<Timing> t) : 
+Arc::Arc(Pin& from, Pin& to, TimingView t) : 
   _from   {from},
   _to     {to},
   _handle {t} {
@@ -25,33 +25,36 @@ bool Arc::is_net_arc() const {
 
 // Function: is_cell_arc
 bool Arc::is_cell_arc() const {
-  return std::get_if<SplitView<Timing>>(&_handle) != nullptr;
+  return std::get_if<TimingView>(&_handle) != nullptr;
 }
 
 // Function: is_tseg
 bool Arc::is_tseg() const {
-  if(auto ptr = std::get_if<SplitView<Timing>>(&_handle); ptr) {
-    return ptr->get(EARLY).is_constraint();
+  if(auto ptr = std::get_if<TimingView>(&_handle); ptr) {
+    return (*ptr)[EARLY]->is_constraint();
   }
   else return false;
 }
 
 // Function: is_pseg
 bool Arc::is_pseg() const {
-  if(auto ptr = std::get_if<SplitView<Timing>>(&_handle); ptr) {
-    return !(ptr->get(EARLY).is_constraint());
+  if(auto ptr = std::get_if<TimingView>(&_handle); ptr) {
+    return !(*ptr)[EARLY]->is_constraint();
   }
   else return false;
 }
 
-// Function: _timing
-SplitView<Timing> Arc::_timing() {
-  return std::get<SplitView<Timing>>(_handle);
+// Function: timing_view
+TimingView Arc::timing_view() const {
+  if(auto tv = std::get_if<TimingView>(&_handle); tv) {
+    return *tv; 
+  }
+  else return {nullptr, nullptr};
 }
 
 // Procedure: _remap_timing
 void Arc::_remap_timing(Split el, const Timing& timing) {
-  std::get<SplitView<Timing>>(_handle).set(el, timing);
+  (std::get<TimingView>(_handle))[el] = &timing;
 }
 
 // Procedure: _reset_delay
@@ -76,10 +79,10 @@ void Arc::_fprop_slew() {
       }
     },
     // Case 2: Cell arc
-    [this] (SplitView<Timing> timing) {
-      FOR_EACH_EL_RF_RF_IF(el, frf, trf, _from._slew[el][frf]) {
+    [this] (TimingView tv) {
+      FOR_EACH_EL_RF_RF_IF(el, frf, trf, (tv[el] && _from._slew[el][frf])) {
         auto lc = (_to._net) ? _to._net->_load(el, trf) : 0.0f;
-        if(auto so = timing.get(el).slew(frf, trf, *_from._slew[el][frf], lc); so) {
+        if(auto so = tv[el]->slew(frf, trf, *_from._slew[el][frf], lc); so) {
           _to._relax_slew(this, el, frf, el, trf, *so);
         }
       }
@@ -98,11 +101,11 @@ void Arc::_fprop_delay() {
       }
     },
     // Case 2: Cell arc
-    [this] (SplitView<Timing> timing) {
-      FOR_EACH_EL_RF_RF_IF(el, frf, trf, _from._slew[el][frf]) {
+    [this] (TimingView tv) {
+      FOR_EACH_EL_RF_RF_IF(el, frf, trf, (tv[el] && _from._slew[el][frf])) {
         auto lc = (_to._net) ? _to._net->_load(el, trf) : 0.0f;
         auto si = *_from._slew[el][frf];
-        _delay[el][frf][trf] = timing.get(el).delay(frf, trf, si, lc);
+        _delay[el][frf][trf] = tv[el]->delay(frf, trf, si, lc);
       }
     }
   }, _handle);
@@ -126,9 +129,42 @@ void Arc::_bprop_rat() {
       }
     },
     // Case 2: Cell arc
-    [this] (SplitView<Timing> timing) {
+    [this] (TimingView tv) {
 
-      if(!timing.get(EARLY).is_constraint()) {
+      FOR_EACH_EL_RF_RF_IF(el, frf, trf, tv[el]) {
+        
+        // propagation arc
+        if(!tv[el]->is_constraint()) {
+          if(!_to._rat[el][trf] || !_delay[el][frf][trf]) {
+            continue;
+          }
+          _from._relax_rat(this, el, frf, el, trf, *_to._rat[el][trf] - *_delay[el][frf][trf]);
+        }
+        // constraint arc
+        else {
+          
+          if(!tv[el]->is_transition_defined(frf, trf)) {
+            continue;
+          }
+
+          if(el == EARLY) {
+            auto at = _from._at[LATE][frf];
+            auto slack = _to.slack(EARLY, trf);
+            if(at && slack) {
+              _from._relax_rat(this, LATE, frf, EARLY, trf, *at + *slack);
+            }
+          }
+          else {
+            auto at = _from._at[EARLY][frf];
+            auto slack = _to.slack(LATE, trf);
+            if(at && slack) {
+              _from._relax_rat(this, EARLY, frf, LATE, trf, *at - *slack);
+            }
+          }
+        }
+      }
+
+      /*if(!timing.get(EARLY).is_constraint()) {
         FOR_EACH_EL_RF_RF_IF(el, frf, trf, _to._rat[el][trf] && _delay[el][frf][trf]) {
           _from._relax_rat(this, el, frf, el, trf, *_to._rat[el][trf] - *_delay[el][frf][trf]);
         }
@@ -142,9 +178,9 @@ void Arc::_bprop_rat() {
         // From the corresponding test slack and arrival time, the clock required arrival time 
         // can be derived, and appropriately propagated.
 
-        FOR_EACH_EL_RF_RF(el, ck_rf, d_rf) {
+        FOR_EACH_EL_RF_RF_IF(el, ck_rf, d_rf, tv[el]) {
 
-          if(!timing.get(el).is_transition_defined(ck_rf, d_rf)) {
+          if(!tv[el]->is_transition_defined(ck_rf, d_rf)) {
             continue;
           }
 
@@ -163,7 +199,7 @@ void Arc::_bprop_rat() {
             }
           }
         }
-      }
+      }*/
     }
   }, _handle);
 }

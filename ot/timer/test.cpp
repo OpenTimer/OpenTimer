@@ -59,10 +59,10 @@ void Test::_reset() {
 // Procedure: _fprop_rat
 void Test::_fprop_rat(float period) {
 
-  auto& _timing = std::get<SplitView<Timing>>(_arc._handle);
+  auto tv = _arc.timing_view();
 
   // Clear rat and cppr
-  FOR_EACH_EL_RF(el, rf) {
+  FOR_EACH_EL_RF_IF(el, rf, tv[el]) {
 
     // SLEW not defined at the constrained pin.
     if(!(_arc._to._slew[el][rf])) {
@@ -70,7 +70,7 @@ void Test::_fprop_rat(float period) {
     }
 
     auto fel = (el == EARLY ? LATE : EARLY);
-    auto rrf = _timing.get(el).is_rising_edge_triggered() ? RISE : FALL;
+    auto rrf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
     
     // AT/SLEW not defined at the arc._from
     if(!(_arc._from._at[fel][rrf]) || !(_arc._from._slew[fel][rrf])) {
@@ -81,7 +81,7 @@ void Test::_fprop_rat(float period) {
     float from_slew = *(_arc._from._slew[fel][rrf]);
     float to_slew = *(_arc._to._slew[el][rf]);
 
-    if(auto v = _timing.get(el).constraint(rrf, rf, from_slew, to_slew); v) {
+    if(auto v = tv[el]->constraint(rrf, rf, from_slew, to_slew); v) {
       if(el == EARLY) {
         _rat[el][rf] = *v + from_at;
       }

@@ -148,7 +148,7 @@ class Pin {
 
     Net* _net {nullptr};
 
-    std::variant<PrimaryInput*, PrimaryOutput*, std::array<const Cellpin*, MAX_SPLIT>> _handle;
+    std::variant<PrimaryInput*, PrimaryOutput*, CellpinView> _handle;
 
     std::list<Arc*> _fanout;
     std::list<Arc*> _fanin;

@@ -161,45 +161,6 @@ constexpr std::initializer_list<std::tuple<Split, Tran, Tran>> SPLIT_TRANx2 = {
 
 // ------------------------------------------------------------------------------------------------  
 
-// Class: SplitView
-template <typename T>
-class SplitView {
-
-  public:
-    
-    SplitView(const SplitView&) = default;
-    SplitView(const T&, const T&);
-    
-    inline const T& get(Split) const;
-    inline void set(Split, const T&);
-
-    const T& operator [] (Split) const;
-
-  private:
-
-    std::array<std::reference_wrapper<const T>, MAX_SPLIT> _view;
-};
-
-template <typename T>
-SplitView<T>::SplitView(const T& e, const T& l) : _view {e, l} {
-}
-
-template <typename T>
-inline const T& SplitView<T>::get(Split m) const {
-  return _view[m];
-}
-
-template <typename T>
-inline const T& SplitView<T>::operator [] (Split m) const {
-  return _view[m];
-}
-
-template <typename T>
-inline void SplitView<T>::set(Split el, const T& t) {
-  _view[el] = t;
-}
-
-
 
 };  // End of namespace ot. -----------------------------------------------------------------------
 
