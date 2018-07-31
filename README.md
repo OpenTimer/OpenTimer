@@ -132,6 +132,8 @@ We use [CMake](https://cmake.org/) to manage the source and tests.
 We recommend using out-of-source build.
 
 ```bash
+~$ g++ -v
+gcc version 7.3.0  # must be at least 7.2
 ~$ git clone https://github.com/OpenTimer/OpenTimer.git
 ~$ cd OpenTimer
 ~$ mkdir build
