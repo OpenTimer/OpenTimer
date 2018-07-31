@@ -9,8 +9,19 @@ project(OpenTimer)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # CXX target properties
-set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_CXX_COMPILER "g++")
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
+  if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.2")
+    message(FATAL_ERROR "\nOpenTimer requires G++ at least v7.2 to build.")
+  endif()
+else()
+  message(FATAL_ERROR "\n\
+OpenTimer requires GNU compiler to build. Try the following:\n\
+~$ rm CMakeCache.txt\n\
+~$ cmake ../ -DCMAKE_CXX_COMPILER=g++\n\
+~$ make")
+endif()
+
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -58,7 +69,8 @@ find_package(Threads REQUIRED)
 # Tclsh module
 include(FindTclsh)
 if (NOT TCL_TCLSH)
-  message(FATAL_ERROR "tclsh is required: https://www.tcl.tk/software/tcltk/")
+  message(FATAL_ERROR "\n\
+OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
 
