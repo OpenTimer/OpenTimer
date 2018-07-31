@@ -136,7 +136,7 @@ We recommend using out-of-source build.
 ~$ cd OpenTimer
 ~$ mkdir build
 ~$ cd build
-~$ cmake ../
+~$ cmake ../ -DCMAKE_CXX_COMPILER=g++
 ~$ make 
 ```
 
