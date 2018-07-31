@@ -2,6 +2,70 @@
 
 namespace ot::spef {
 
+// Function: is_keyword
+bool is_keyword(const std::string& str) {
+  return keywords.find(str) != keywords.end();
+}
+
+// Function: to_string
+std::string to_string(ConnectionType t) {
+  switch(t) {
+    case ConnectionType::INTERNAL:
+      return "*I";
+    break;
+
+    case ConnectionType::EXTERNAL:
+      return "*P";
+    break;
+
+    default:
+      assert(false); 
+    break;
+  }
+}
+
+// Function: to_string
+std::string to_string(ConnectionDirection d) {
+  switch(d) {
+    case ConnectionDirection::INPUT:
+      return "I";
+    break;
+
+    case ConnectionDirection::OUTPUT:
+      return "O";
+    break;
+
+    case ConnectionDirection::INOUT:
+      return "B";
+    break;
+
+    default:
+      assert(false);
+    break;
+  }
+}
+
+// Function: unmap
+// TODO
+void unmap(const std::unordered_map<std::string, std::string>& map, std::string& name) {
+  
+  if(map.empty()) {
+    return;
+  }
+
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Constructor
+Connection::Connection(const std::string& n, ConnectionType t, ConnectionDirection d) :
+  name {n},
+  type {t},
+  direction {d}  {
+}
+
+// ------------------------------------------------------------------------------------------------
+
 // Procedure: scale_capacitance
 void Net::scale_capacitance(float s) {
   lcap *= s;
@@ -20,23 +84,27 @@ void Net::scale_resistance(float s) {
 // Operator <<
 std::ostream& operator << (std::ostream& os, const Net& net) {
     
-  os << net.name << ' ' << net.lcap << '\n';
+  os << "*D_NET " << net.name << ' ' << net.lcap << '\n';
   
   os << "*CONN\n";
-  for(const auto& p : net.pins) {
-    os << p << '\n';
+  for(const auto& c : net.connections) {
+    os << to_string(c.type) << ' ' 
+       << c.name << ' ' 
+       << to_string(c.direction) << '\n';
   }
   
+  auto cap_counter {0};
   os << "*CAP\n";
   for(const auto& [key, cap] : net.caps) {
-    os << key << " " << cap << '\n';
+    os << ++cap_counter << ' ' << key << ' ' << cap << '\n';
   }
 
+  auto res_counter {0};
   os << "*RES\n";
   for(const auto& [n1, n2, res] : net.ress) {
-    os << n1 << ' ' << n2 << ' ' << res << '\n';
+    os << ++res_counter << ' ' << n1 << ' ' << n2 << ' ' << res << '\n';
   }
-  os << '\n';
+  os << "*END\n";
 
   return os;
 }
@@ -45,8 +113,22 @@ std::ostream& operator << (std::ostream& os, const Net& net) {
 
 // Operator <<
 std::ostream& operator << (std::ostream& os, const Spef& spef) {
-  for(const auto& net : spef.nets) {
-    os << net;
+
+  // header
+
+  // Name map section
+  if(!spef.name_map.empty())  {
+    os << "*NAME_MAP\n";
+    for(const auto& [k, v] : spef.name_map) {
+      os << k << ' ' << v << '\n';
+    }
+    os << '\n';
+  }
+
+  // Internal section
+  for(size_t i=0; i<spef.nets.size(); ++i) {
+    if(i) os << '\n';
+    os << spef.nets[i];
   }
   return os;
 }
@@ -70,8 +152,25 @@ void Spef::read(const std::filesystem::path& path) {
 
   for(size_t i=0; i<tokens.size(); ++i) {
     
+    // divider
+    if(tokens[i] == "*DIVIDER") {
+      if(i+1 >= tokens.size() || tokens[i+1].size() != 1) {
+        OT_LOGF("syntax error in *DIVIDER section");
+      }
+      divider = tokens[i+1][0];
+      i += 1;
+    }
+    // delimiter
+    else if(tokens[i] == "*DELIMITER") {
+      if(i+1 >= tokens.size() || tokens[i+1].size() != 1) {
+        OT_LOGF("syntax error in *DELIMITER section");
+      }
+
+      delimiter = tokens[i+1][0];
+      i += 1;
+    }
     // time unit section
-    if(tokens[i] == "*T_UNIT") {
+    else if(tokens[i] == "*T_UNIT") {
       if(i+2 >= tokens.size()) {
         OT_LOGF("syntax error in *T_UNIT section");
       }
@@ -92,11 +191,21 @@ void Spef::read(const std::filesystem::path& path) {
       }
       resistance_unit = make_resistance_unit(tokens[i+1] + to_lower(tokens[i+2]));
     }
+    // name mapping section
+    else if(tokens[i] == "*NAME_MAP") {
+      while(i+2 < tokens.size()) {
+        if(is_keyword(tokens[i+1]) || is_keyword(tokens[i+2])) {
+          break;
+        }
+        name_map.try_emplace(std::move(tokens[i+1]), std::move(tokens[i+2]));
+        i += 2;
+      }
+    }
     // Net section
     else if(tokens[i] == "*D_NET") {
 
       if(i+2 >= tokens.size()) {
-        OT_LOGF("syntax error in *NET section");
+        OT_LOGF("syntax error in *D_NET section");
       }
 
       Net net {std::move(tokens[i+1]), std::stof(tokens[i+2])}; 
@@ -105,10 +214,13 @@ void Spef::read(const std::filesystem::path& path) {
 
       while(++i < tokens.size()) {
         // *CONN section
+        // *P external_connection direction {conn_attr} | 
+        // *I internal_connection direction {conn_attr}
         if(tokens[i] == "*CONN") {
           auto j = i;
           while(++i < tokens.size()) {
-            if(tokens[i][1] != 'P' && tokens[i][1] != 'I') {
+
+            if(tokens[i] != "*P" && tokens[i] != "*I") {
               i = j;
               break;
             }
@@ -116,9 +228,52 @@ void Spef::read(const std::filesystem::path& path) {
             if(i+2 >= tokens.size()) {
               OT_LOGF("syntax error in *CONN section");
             }
+            
+            auto t = (tokens[i] == "*P") ? ConnectionType::EXTERNAL : 
+                                           ConnectionType::INTERNAL ;
 
-            net.pins.push_back(std::move(tokens[++i]));
-            ++i;  // skip the pin direction
+            if(auto& k = tokens[i+2]; k != "I" && k != "O" && k != "B") {
+              OT_LOGF("syntax error in parsing direction ", k);
+            }
+            
+            auto d = (tokens[i+2] == "I") ? ConnectionDirection::INPUT  :
+                    ((tokens[i+2] == "O") ? ConnectionDirection::OUTPUT : 
+                                            ConnectionDirection::INOUT);
+            
+            net.connections.emplace_back(tokens[i+1], t, d);
+
+            i += 2;
+
+            // tyr to read attribute if any
+            if(i+1 < tokens.size()) {
+              while(tokens[i+1] == "*C" || tokens[i+1] == "*L" || tokens[i+1] == "*D") {
+                // coordinate
+                if(tokens[i+1] == "*C") {
+                  if(i+3 >= tokens.size()) {
+                    OT_LOGF("syntax error in parsing attribute *C");
+                  }
+                  // TODO
+                  i += 3;
+                }
+                // load capacitance
+                else if(tokens[i+1] == "*L") {
+                  if(i+2 >= tokens.size()) {
+                    OT_LOGF("syntax error in parsing attribute *L");
+                  }
+                  // TODO
+                  i += 2;
+                }
+                // driving cell
+                else {
+                  if(i+2 >= tokens.size()) {
+                    OT_LOGF("syntax error in parsing attribute *D");
+                  }
+                  // TODO
+                  i += 2;
+                }
+              }
+            }
+
             j = i;
           }
         }
@@ -171,9 +326,12 @@ void Spef::read(const std::filesystem::path& path) {
           break;
         }
         else {
-          OT_LOGF("unexpected token ", tokens[i], " in *NET section");
+          OT_LOGF("unexpected token ", tokens[i], " in *D_NET section");
         }
       }
+    }
+    else {
+      //OT_LOGW("unexpected token ", tokens[i]);
     }
   }
 }

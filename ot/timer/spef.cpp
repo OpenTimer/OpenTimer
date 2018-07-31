@@ -33,13 +33,13 @@ Timer& Timer::spef(std::filesystem::path path) {
 
 // Procedure: _spef
 void Timer::_spef(spef::Spef& spef) {
-  for(const auto& spefnet : spef.nets) {
-    if(auto itr = _nets.find(spefnet.name); itr == _nets.end()) {
-      OT_LOGW("ignore updating spef on net ", spefnet.name, " (net not found)");
+  for(auto& spef_net : spef.nets) {
+    if(auto itr = _nets.find(spef_net.name); itr == _nets.end()) {
+      OT_LOGW("ignore updating spef on net ", spef_net.name, " (net not found)");
       continue;
     }
     else {
-      itr->second._make_rct(spefnet);
+      itr->second._attach(spef_net);
       _insert_frontier(*itr->second._root);
     }
   }

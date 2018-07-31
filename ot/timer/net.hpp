@@ -169,6 +169,8 @@ class Net {
 
     std::variant<EmptyRct, Rct> _rct;
 
+    std::optional<spef::Net> _spef_net;
+
     bool _rc_timing_updated {false};
 
     float _load(Split, Tran) const;
@@ -177,7 +179,9 @@ class Net {
     std::optional<float> _delay(Split, Tran, Pin&) const;
     
     void _update_rc_timing();
-    void _make_rct(const spef::Net&);
+    void _attach(spef::Net&);
+    void _make_rct();
+    //void _make_rct(const spef::Net&);
     void _insert_pin(Pin&);
     void _remove_pin(Pin&);
     void _scale_capacitance(float);

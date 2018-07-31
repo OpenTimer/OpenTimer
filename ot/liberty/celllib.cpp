@@ -540,23 +540,9 @@ void Celllib::read(const std::filesystem::path& path, Split el) {
       if(++itr == end) {
         OT_LOGF("syntax error in delay_model");
       }
-      if(*itr == "generic_cmos") {
-        delay_model = DelayModel::GENERIC_CMOS;
-      }
-      else if(*itr == "table_lookup") {
-        delay_model = DelayModel::TABLE_LOOKUP;
-      }
-      else if(*itr == "cmos2") {
-        delay_model = DelayModel::CMOS2;
-      }
-      else if(*itr == "piecewise_cmos") {
-        delay_model = DelayModel::PIECEWISE_CMOS;
-      }
-      else if(*itr == "dcm") {
-        delay_model = DelayModel::DCM;
-      }
-      else if(*itr == "polynomial") {
-        delay_model = DelayModel::POLYNOMIAL;
+
+      if(auto ditr = delay_models.find(*itr); ditr != delay_models.end()) {
+        delay_model = ditr->second;
       }
       else {
         OT_LOGW("unexpected delay model ", *itr);

@@ -13,8 +13,16 @@ enum class DelayModel {
   CMOS2,
   PIECEWISE_CMOS,
   DCM,
-  POLYNOMIAL,
-  UNDEFINED
+  POLYNOMIAL
+};
+
+inline const std::unordered_map<std::string, DelayModel> delay_models {
+  {"generic_cmos",   DelayModel::GENERIC_CMOS},
+  {"table_lookup",   DelayModel::TABLE_LOOKUP},
+  {"cmos2",          DelayModel::CMOS2},
+  {"piecewise_cmos", DelayModel::PIECEWISE_CMOS},
+  {"dcm",            DelayModel::DCM},
+  {"polynomial",     DelayModel::POLYNOMIAL}
 };
 
 // Function: to_string

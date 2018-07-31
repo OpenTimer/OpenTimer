@@ -228,23 +228,32 @@ Net::Net(const std::string& name) :
   _name {name} {
 }
 
-// Procedure: _make_rct
-void Net::_make_rct(const spef::Net& spefnet) {
+// Procedure: _attach
+void Net::_attach(spef::Net& spef_net) {
+  assert(spef_net.name == _name && _root);
+  _spef_net = std::move(spef_net);
+  _rc_timing_updated = false;
+}
 
-  assert(spefnet.name == _name && _root);
+// Procedure: _make_rct
+void Net::_make_rct() {
+  
+  if(!_spef_net) return;
 
   // Step 1: create a new rctree object
   auto& rct = _rct.emplace<Rct>();
 
   // Step 2: insert the node and capacitance (*CAP section).
-  for(const auto& [node, cap] : spefnet.caps) {
+  for(const auto& [node, cap] : _spef_net->caps) {
     rct.insert_node(node, cap);
   }
 
   // Step 3: insert the segment (*RES section).
-  for(const auto& [node1, node2, res] : spefnet.ress) {
+  for(const auto& [node1, node2, res] : _spef_net->ress) {
     rct.insert_segment(node1, node2, res);
   }
+  
+  _spef_net.reset();
   
   _rc_timing_updated = false;
 }
@@ -285,7 +294,11 @@ void Net::_update_rc_timing() {
   if(_rc_timing_updated) {
     return;
   }
+
+  // Apply the spefnet if any
+  _make_rct();
   
+  // update the corresponding handle
   std::visit(Functors{
     [&] (EmptyRct& rct) {
       FOR_EACH_EL_RF(el, rf) {
