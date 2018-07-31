@@ -459,7 +459,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [TAU17]:                 https://sites.google.com/site/taucontest2017/
 [TAU19]:                 https://sites.google.com/view/tau-contest-2019/home
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
-[OpenDesign]:            https://dl.acm.org/citation.cfm?id=2980074
+[OpenDesign]:            https://github.com/jinwookjungs/open_design_flow
 [DARPA IDEA]:            https://www.darpa.mil/news-events/2017-09-13
   
 
