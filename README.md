@@ -390,22 +390,17 @@ Many industry and academic people are using OpenTimer in their projects:
 | :---: | :---: | :---: | :---: |
 
 
-To cite OpenTimer in your work, use:
-
-+ [OpenTimer: A High-performance Timing Analysis Tool][OpenTimerPaper], IEEE/ACM ICCAD 2015.
-+ [UI-Timer: An Ultra-fast Clock Network Pessimism Removal Algorithm][UI-TimerPaper], IEEE/ACM ICCAD 2014
-
-Please [let me know][email me] if I forgot your project! We are growing our users to contribute to open-source EDA ecosystems. 
-Feedback and suggestions are welcome.
+Please don't hesitate to [let me know][email me] if I forgot your project! 
 
 
 # Get Involved
 + Report bugs/issues by submitting a [Github issue][Github issues].
 + Submit contributions using [pull requests][Github pull requests].
 + See development status by visiting [OpenTimer Wiki][OpenTimer Wiki].
++ Read and cite our ACM/IEEE ICCAD [paper][OpenTimerPaper].
 
 
-# Contributors
+# Contributors & Acknowledgment
 OpenTimer is being actively developed and contributed by the following people:
 - [Tsung-Wei Huang][Tsung-Wei Huang] created the OpenTimer project is now the chief architect.
 - [Martin Wong][Martin Wong] supported the OpenTimer project through NSF and DARPA funding.
@@ -419,17 +414,25 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 - [Leslie Hwang][Leslie Hwang] reviewed the documentation and README.
 
+<!--
+
+| [<img src="image/twhuang.jpg" width="100px">][Tsung-Wei Huang] | [<img src="image/mdfwong.jpg" width="100px">][Martin Wong] | [<img src="image/cxlin.jpg" width="100px">][Chun-Xun Lin] | [<img src="image/kunal_ghosh.jpg" width="100px">][Kunal Ghosh] | [<img src="image/pei_yu_lee.jpg" width="100px">][Pei-Yu Lee] | [<img src="image/jin_hu.jpg" width="100px">][Jin Hu] | [<img src="image/myung_chul_kim.jpg" width="100px">][Myung-Chul Kim] |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="image/george_chen.jpg" width="100px">][George Chen]| [<img src="image/poyi.jpg" width="100px">][Pao-I Chen] |
+-->
+
 Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
 
-| [<img src="image/nsf.png" width="100px">](https://www.nsf.gov/) | [<img src="image/darpa.png" widht="100px">](https://www.darpa.mil/work-with-us/electronics-resurgence-initiative) |
+| [<img src="image/nsf.png" width="100px">](https://www.nsf.gov/) | [<img src="image/darpa.png" width="100px">](https://www.darpa.mil/work-with-us/electronics-resurgence-initiative) |
 | :---: | :---: |
 
 
 
 # License
 
-<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
+<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png" height="80px">
+<img align="right" src="image/uiuc.png" height="80px">
 
 OpenTimer is licensed under the [MIT License](./LICENSE):
 
