@@ -271,6 +271,7 @@ The following example installs OpenTimer to `/tmp`.
 ~$ cmake ../ -DCMAKE_INSTALL_PREFIX=/tmp
 ~$ make 
 ~$ make install
+~$ cd /tmp
 ~$ ls
 bin/  include/  lib/
 ```
