@@ -271,6 +271,7 @@ The following example installs OpenTimer to `/tmp`.
 ~$ cmake ../ -DCMAKE_INSTALL_PREFIX=/tmp
 ~$ make 
 ~$ make install
+~$ cd /tmp
 ~$ ls
 bin/  include/  lib/
 ```
@@ -385,6 +386,10 @@ Many industry and academic people are using OpenTimer in their projects:
 - [VSD][VSD], VLSI System Design Corporation
 - [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
 
+| [<img src="image/tau16.png" width="100px">](https://sites.google.com/site/taucontest2016/) | [<img src="image/tau17.png" width="100px">](https://sites.google.com/site/taucontest2017/) | [<img src="image/CAD-contest.png" width="100px">](http://cad-contest.el.cycu.edu.tw/problem_C/default.html) | [<img src="image/vsd.jpg" width="100px">](https://www.vlsisystemdesign.com/) |
+| :---: | :---: | :---: | :---: |
+
+
 To cite OpenTimer in your work, use:
 
 + [OpenTimer: A High-performance Timing Analysis Tool][OpenTimerPaper], IEEE/ACM ICCAD 2015.
@@ -417,7 +422,9 @@ OpenTimer is being actively developed and contributed by the following people:
 Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
 
-![](image/nsf.png) ![](image/darpa.png)
+| [<img src="image/nsf.png" width="100px">](https://www.nsf.gov/) | [<img src="image/darpa.png" widht="100px">](https://www.darpa.mil/work-with-us/electronics-resurgence-initiative) |
+| :---: | :---: |
+
 
 
 # License
