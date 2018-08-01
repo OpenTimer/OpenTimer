@@ -13,6 +13,7 @@ class RctNode;
 class Arc;
 class Pin;
 class Test;
+class SCC;
 
 // ------------------------------------------------------------------------------------------------
 
@@ -108,13 +109,12 @@ class Pin {
   friend class Test;
   friend class PrimaryOutput;
   friend class PrimaryInput;
-  friend class Path;
-  friend class Point;
 
-  constexpr static int FPROP_CAND     = 0x01;
-  constexpr static int IN_FPROP_STACK = 0x02;
-  constexpr static int BPROP_CAND     = 0x04;
-  constexpr static int IN_BPROP_STACK = 0x08;
+  friend struct Point;
+  friend struct Path;
+
+  constexpr static int FPROP_CAND = 0x01;
+  constexpr static int BPROP_CAND = 0x02;
 
   public:
     
@@ -154,6 +154,7 @@ class Pin {
     std::list<Arc*> _fanin;
     std::list<Test*> _tests;
 
+    std::optional<std::list<SCC>::iterator> _scc_satellite;
     std::optional<std::list<Pin*>::iterator> _frontier_satellite;
     std::optional<std::list<Pin*>::iterator> _net_satellite;
 

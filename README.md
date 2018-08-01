@@ -120,7 +120,7 @@ By default, OpenTimer performs parallel incremental timing to maintain slack int
 OpenTimer is very self-contained and has very few dependencies.
 To compile OpenTimer , you need:
 
-+ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with C++17 support
++ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with -std=c++1z
 + [Tcl/Tk](https://www.tcl.tk/about/language.html) packages
 (most Unix/Linux/OSX distributions already include Tcl/Tk)
 
@@ -415,7 +415,7 @@ Meanwhile, we appreciate the funding support from our sponsors to continue our d
 
 OpenTimer is licensed under the [MIT License](./LICENSE):
 
-Copyright &copy; 2018 [Tsung-Wei Huang][Tsung-Wei Huang] and [Martin Wong][Martin Wong]
+Copyright &copy; 2018 [Dr. Tsung-Wei Huang][Tsung-Wei Huang] and [Dr. Martin Wong][Martin Wong]
 
 The University of Illinois at Urbana-Champaign, IL, USA
 

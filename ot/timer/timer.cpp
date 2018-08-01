@@ -764,45 +764,72 @@ void Timer::_bprop_rat(Pin& pin) {
 
 // Procedure: _build_fprop_cands
 // Performs DFS to find all nodes in the fanout cone of frontiers.
-// Returns true if cycle is detected.
-bool Timer::_build_fprop_cands(Pin& from) {
+void Timer::_build_fprop_cands(Pin& from, std::stack<Pin*>& stack) {
   
-  assert(!from._has_state(Pin::FPROP_CAND) && !from._has_state(Pin::IN_FPROP_STACK));
+  assert(!from._has_state(Pin::FPROP_CAND));
 
   _fprop_cands.push_front(&from);
-  from._insert_state(Pin::FPROP_CAND | Pin::IN_FPROP_STACK);
+  from._insert_state(Pin::FPROP_CAND);
 
   for(auto arc : from._fanout) {
-    if(auto& to = arc->_to; !to._has_state(Pin::FPROP_CAND) && _build_fprop_cands(to)) {
-      return true;
-    }
-    else if (to._has_state(Pin::IN_FPROP_STACK)){
-      return true;
+    if(auto& to = arc->_to; !to._has_state(Pin::FPROP_CAND)) {
+      _build_fprop_cands(to, stack);
     }
   }
   
-  from._remove_state(Pin::IN_FPROP_STACK); 
-  return false;
+  stack.push(&from);
 }
 
-// Procedure: _build_fprop_tasks
-// Construct the task dependency graph for the following fprop tasks:
-// (1) propagate the rc timing
-// (2) propagate the slew 
-// (3) propagate the delay
-// (4) propagate the arrival time.
-void Timer::_build_fprop_tasks() {
+// Procedure: _build_bprop_cands
+// Perform the DFS to find all nodes in the fanin cone of fprop candidates.
+void Timer::_build_bprop_cands(Pin& to) {
+  
+  assert(!to._has_state(Pin::BPROP_CAND));
+
+  _bprop_cands.push_front(&to);
+  to._insert_state(Pin::BPROP_CAND);
+
+  for(auto arc : to._fanin) {
+    if(auto& from=arc->_from; !from._has_state(Pin::BPROP_CAND)) {
+      _build_bprop_cands(from);
+    }
+  }
+
+  // TODO: stack
+}
+
+// Procedure: _build_prop_cands
+void Timer::_build_prop_cands() {
+
+  std::stack<Pin*> stack;
 
   // Discover all fprop candidates.
   for(const auto& ftr : _frontiers) {
     if(!ftr->_has_state(Pin::FPROP_CAND)) {
-      if(_build_fprop_cands(*ftr)) {
-        OT_LOGF("timing graph contains a cycle");
-      }
+      _build_fprop_cands(*ftr, stack);
     }
   }
 
+  
+  // Discover all bprop candidates.
+  for(auto fcand : _fprop_cands) {
+    if(!fcand->_has_state(Pin::BPROP_CAND)) {
+      _build_bprop_cands(*fcand);
+    }
+  }
+}
+
+// Procedure: _build_prop_tasks
+void Timer::_build_prop_tasks() {
+  
+  // explore propagation candidates
+  _build_prop_cands();
+
   // Emplace the fprop task
+  // (1) propagate the rc timing
+  // (2) propagate the slew 
+  // (3) propagate the delay
+  // (4) propagate the arrival time.
   for(auto pin : _fprop_cands) {
     assert(!pin->_ftask);
     pin->_ftask = _taskflow.silent_emplace([this, pin] () {
@@ -822,59 +849,9 @@ void Timer::_build_fprop_tasks() {
       }
     }
   }
-}
 
-// Procedure: _clear_fprop_tasks
-void Timer::_clear_fprop_tasks() {
-  for(auto& pin : _fprop_cands) {
-    assert(pin->_has_no_state(Pin::IN_FPROP_STACK));
-    pin->_ftask.reset();
-    pin->_remove_state(Pin::FPROP_CAND);
-  }
-  _fprop_cands.clear();
-}
-
-// Procedure: _build_bprop_cands
-// Perform the DFS to find all nodes in the fanin cone of fprop candidates.
-// The function returns true if there contains a cycle.
-bool Timer::_build_bprop_cands(Pin& to) {
-  
-  assert(!to._has_state(Pin::BPROP_CAND) && !to._has_state(Pin::IN_BPROP_STACK));
-
-  _bprop_cands.push_front(&to);
-  to._insert_state(Pin::BPROP_CAND | Pin::IN_BPROP_STACK);
-
-  for(auto arc : to._fanin) {
-    if(auto& from=arc->_from; !from._has_state(Pin::BPROP_CAND) && _build_bprop_cands(from)) {
-      return true;
-    }
-    else if(from._has_state(Pin::IN_BPROP_STACK)) {
-      return true;
-    }
-  }
-
-  to._remove_state(Pin::IN_BPROP_STACK);
-  return false;
-}
-
-// Procedure: _build_bprop_tasks
-// Construct the task dependency graph for the following main bprop tasks:
-// (1) propagate the rc timing
-// (2) propagate the slew 
-// (3) propagate the delay
-// (4) propagate the arrival time.
-void Timer::_build_bprop_tasks() {
-
-  // Discover all bprop candidates.
-  for(auto fcand : _fprop_cands) {
-    if(!fcand->_has_state(Pin::BPROP_CAND)) {
-      if(_build_bprop_cands(*fcand)) {
-        OT_LOGF("timing graph contains a cycle");
-      }
-    }
-  }
-  
   // Emplace the bprop task
+  // (1) propagate the required arrival time
   for(auto pin : _bprop_cands) {
     assert(!pin->_btask);
     pin->_btask = _taskflow.silent_emplace([this, pin] () {
@@ -899,10 +876,18 @@ void Timer::_build_bprop_tasks() {
   }
 }
 
-// Procedure: _clear_bprop_tasks
-void Timer::_clear_bprop_tasks() {
+// Procedure: _clear_prop_tasks
+void Timer::_clear_prop_tasks() {
+  
+  // clear the fprop tasks
+  for(auto& pin : _fprop_cands) {
+    pin->_ftask.reset();
+    pin->_remove_state(Pin::FPROP_CAND);
+  }
+  _fprop_cands.clear();
+  
+  // clear the bprop tasks
   for(auto& pin : _bprop_cands) {
-    assert(pin->_has_no_state(Pin::IN_BPROP_STACK));
     pin->_remove_state(Pin::BPROP_CAND);
     pin->_btask.reset();
   }
@@ -929,34 +914,20 @@ void Timer::_update_timing() {
   
   // Check if full update is required
   if(_has_state(FULL_TIMING)) {
-
     OT_LOGI("perform full timing update");
-
-    // insert all zero-fanin pins to the frontier list
-    for(auto& kvp : _pins) {
-      if(auto& pin = kvp.second; pin.num_fanins() == 0) {
-        _insert_frontier(pin);
-      }
-    }
-
-    // clear the rc-net update flag
-    for(auto& kvp : _nets) {
-      kvp.second._rc_timing_updated = false;
-    }
+    _insert_full_timing_frontiers();
   }
 
-  // Build the propagation tasks.
-  _build_fprop_tasks();
-  _build_bprop_tasks();
-  
+  // build propagation tasks
+  _build_prop_tasks();
+
   //std::cout << _taskflow.dump() << '\n';
 
   // Execute the task
   _taskflow.wait_for_all();
   
   // Clear the propagation tasks.
-  _clear_fprop_tasks();
-  _clear_bprop_tasks();
+  _clear_prop_tasks();
 
   // Clear frontiers
   _clear_frontiers();
@@ -1107,11 +1078,30 @@ void Timer::_enable_full_timing_update() {
   _insert_state(FULL_TIMING);
 }
 
+// Procedure: _insert_full_timing_frontiers
+void Timer::_insert_full_timing_frontiers() {
+
+  // insert all zero-fanin pins to the frontier list
+  for(auto& kvp : _pins) {
+    if(auto& pin = kvp.second; pin.num_fanins() == 0) {
+      _insert_frontier(pin);
+    }
+  }
+
+  // clear the rc-net update flag
+  for(auto& kvp : _nets) {
+    kvp.second._rc_timing_updated = false;
+  }
+}
+
 // Procedure: _insert_frontier
 void Timer::_insert_frontier(Pin& pin) {
-  if(!pin._frontier_satellite) {
-    pin._frontier_satellite = _frontiers.insert(_frontiers.end(), &pin);
+  
+  if(pin._frontier_satellite) {
+    return;
   }
+
+  pin._frontier_satellite = _frontiers.insert(_frontiers.end(), &pin);
 }
 
 // Procedure: _remove_frontier

@@ -15,7 +15,7 @@ void dump_license(Timer& timer, std::istream& is, std::ostream& os, std::ostream
   static std::string_view license = "\n\
 MIT License\n\
 \n\
-Copyright (c) 2018 Tsung-Wei Huang and Martin D. F. Wong\n\
+Copyright (c) 2018 Dr. Tsung-Wei Huang and Dr. Martin Wong\n\
 \n\
 The University of Illinois at Urbana-Champaign, IL, USA\n\
 \n\

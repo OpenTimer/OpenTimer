@@ -3,68 +3,68 @@
 #include "doctest.h"
 #include <ot/utility/utility.hpp>
 
-// Testcase: Iterator.Zip
-TEST_CASE("Iterator.Zip") {
-
-  SUBCASE("Mutable") {
-
-    std::vector<int> ints = {0, 1, 2, 3};
-    std::vector<std::string> strs = {"a", "b", "c", "d"};
-
-    int k = 0;
-    for(const auto& [i, s] : ot::iter::zip(ints, strs)) {
-      static_assert(std::is_same_v<decltype(i), int&>);
-      static_assert(std::is_same_v<decltype(s), std::string&>);
-      REQUIRE(i == k);
-      REQUIRE(s[0] == 'a' + k); 
-      ++k;
-    }
-
-    k = 4;
-    for(const auto [i, s] : ot::iter::zip(ints, strs)) {
-      i = k;
-      s[0] = 'a' + k;
-      --k;
-    }
-    
-    k = 4;
-    for(auto [i, s] : ot::iter::zip(ints, strs)) {
-      REQUIRE(i == k);
-      REQUIRE(s[0] == 'a' + k);
-      --k;
-    }
-    
-    k = 0;
-    for(auto tuple : ot::iter::zip(ints, strs)) {
-      std::get<0>(tuple) = k;
-      std::get<1>(tuple)[0] = 'a' + k;
-      ++k;
-    }
-    
-    k = 0;
-    for(auto tuple : ot::iter::zip(ints, strs)) {
-      REQUIRE(std::get<0>(tuple) == k);
-      REQUIRE(std::get<1>(tuple)[0] == 'a' + k);
-      ++k;
-    }
-  }
-  
-  SUBCASE("Immutable") {
-    
-    const std::vector<int> ints = {0, 1, 2, 3};
-    const std::vector<std::string> strs = {"a", "b", "c", "d"};
-
-    int k = 0;
-    for(const auto& [i, s] : ot::iter::zip(ints, strs)) {
-      static_assert(std::is_same_v<decltype(i), const int&>);
-      static_assert(std::is_same_v<decltype(s), const std::string&>);
-      REQUIRE(i == k);
-      REQUIRE(s[0] == 'a' + k); 
-      ++k;
-    }
-  }
-  
-}
+//// Testcase: Iterator.Zip
+//TEST_CASE("Iterator.Zip") {
+//
+//  SUBCASE("Mutable") {
+//
+//    std::vector<int> ints = {0, 1, 2, 3};
+//    std::vector<std::string> strs = {"a", "b", "c", "d"};
+//
+//    int k = 0;
+//    for(const auto& [i, s] : ot::iter::zip(ints, strs)) {
+//      static_assert(std::is_same_v<decltype(i), int&>);
+//      static_assert(std::is_same_v<decltype(s), std::string&>);
+//      REQUIRE(i == k);
+//      REQUIRE(s[0] == 'a' + k); 
+//      ++k;
+//    }
+//
+//    k = 4;
+//    for(const auto [i, s] : ot::iter::zip(ints, strs)) {
+//      i = k;
+//      s[0] = 'a' + k;
+//      --k;
+//    }
+//    
+//    k = 4;
+//    for(auto [i, s] : ot::iter::zip(ints, strs)) {
+//      REQUIRE(i == k);
+//      REQUIRE(s[0] == 'a' + k);
+//      --k;
+//    }
+//    
+//    k = 0;
+//    for(auto tuple : ot::iter::zip(ints, strs)) {
+//      std::get<0>(tuple) = k;
+//      std::get<1>(tuple)[0] = 'a' + k;
+//      ++k;
+//    }
+//    
+//    k = 0;
+//    for(auto tuple : ot::iter::zip(ints, strs)) {
+//      REQUIRE(std::get<0>(tuple) == k);
+//      REQUIRE(std::get<1>(tuple)[0] == 'a' + k);
+//      ++k;
+//    }
+//  }
+//  
+//  SUBCASE("Immutable") {
+//    
+//    const std::vector<int> ints = {0, 1, 2, 3};
+//    const std::vector<std::string> strs = {"a", "b", "c", "d"};
+//
+//    int k = 0;
+//    for(const auto& [i, s] : ot::iter::zip(ints, strs)) {
+//      static_assert(std::is_same_v<decltype(i), const int&>);
+//      static_assert(std::is_same_v<decltype(s), const std::string&>);
+//      REQUIRE(i == k);
+//      REQUIRE(s[0] == 'a' + k); 
+//      ++k;
+//    }
+//  }
+//  
+//}
 
 // Testcase: Tokenizer.IsWord
 TEST_CASE("Tokenizer.IsWord") {

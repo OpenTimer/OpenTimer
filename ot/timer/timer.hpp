@@ -11,6 +11,7 @@
 #include <ot/timer/path.hpp>
 #include <ot/timer/sfxt.hpp>
 #include <ot/timer/cppr.hpp>
+#include <ot/timer/scc.hpp>
 #include <ot/static/logger.hpp>
 #include <ot/spef/spef.hpp>
 #include <ot/verilog/verilog.hpp>
@@ -129,6 +130,7 @@ class Timer {
     std::list<Test> _tests;
     std::list<Arc> _arcs;
     std::list<Pin*> _frontiers;
+    std::list<SCC> _sccs;
 
     std::array<std::array<std::vector<Endpoint>, MAX_TRAN>, MAX_SPLIT> _endpoints;
     std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _wns;
@@ -153,8 +155,6 @@ class Timer {
     
     std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
 
-    bool _build_fprop_cands(Pin&);
-    bool _build_bprop_cands(Pin&);
     bool _is_redundant_timing(const Timing&, Split) const;
 
     void _update_timing();
@@ -167,10 +167,11 @@ class Timer {
     void _fprop_at(Pin&);
     void _fprop_test(Pin&);
     void _bprop_rat(Pin&);
-    void _build_fprop_tasks();
-    void _clear_fprop_tasks();
-    void _build_bprop_tasks();
-    void _clear_bprop_tasks();
+    void _build_prop_cands();
+    void _build_fprop_cands(Pin&, std::stack<Pin*>&);
+    void _build_bprop_cands(Pin&);
+    void _build_prop_tasks();
+    void _clear_prop_tasks();
     void _spef(spef::Spef&);;
     void _verilog(vlog::Module&);
     void _timing(tau15::Timing&);
@@ -185,6 +186,7 @@ class Timer {
     void _disconnect_pin(Pin&);
     void _insert_frontier(Pin&);
     void _remove_frontier(Pin&);
+    void _remove_scc(SCC&);
     void _clear_frontiers();
     void _insert_primary_output(const std::string&);
     void _insert_primary_input(const std::string&);
@@ -218,6 +220,7 @@ class Timer {
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
+    void _insert_full_timing_frontiers();
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);

@@ -6,7 +6,7 @@
 #include <vector>
 #include <iterator>
 
-namespace ot::iter {
+/*namespace ot::iter {
 
 template <typename... T>
 class ZipHelper {
@@ -70,7 +70,7 @@ auto zip(T&&... seqs) {
   return ZipHelper<T...>(std::forward<T>(seqs)...);
 }
 
-};  // end of namespace ot::iter. -----------------------------------------------------------------
+};  // end of namespace ot::iter. ----------------------------------------------------------------- */
 
 #endif
 
