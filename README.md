@@ -120,7 +120,7 @@ By default, OpenTimer performs parallel incremental timing to maintain slack int
 OpenTimer is very self-contained and has very few dependencies.
 To compile OpenTimer , you need:
 
-+ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with -std=c++1z
++ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with C++17 support
 + [Tcl/Tk](https://www.tcl.tk/about/language.html) packages
 (most Unix/Linux/OSX distributions already include Tcl/Tk)
 
@@ -166,7 +166,7 @@ each timing operation is divided into three categories,
 | Action   | carry out builder operations to update the timing | update_timing, report_timing, report_slack | Algorithm-dependent |
 | Accessors| inspect the timer without changing any internal data structures | dump_timer, dump_slack, dump_net_load | Operation-dependent |
 
-## OpenTimer Lineage
+## Builder: OpenTimer Lineage
 
 OpenTimer maintains a lineage graph of *builder* operations 
 to create a *task execution plan* (TEP).
@@ -184,7 +184,7 @@ The cyan path is the main lineage line
 with additional tasks attached to enable parallel execution.
 OpenTimer use [Cpp-Taskflow][Cpp-Taskflow] to create dependency graphs.
 
-## Update Timing
+## Action: Update Timing
 
 A TEP is materialized and executed when the timer is requested to perform 
 an *action* operation.
@@ -203,7 +203,7 @@ to update the timing of the
 When an action call finishes, it cleans out the lineage graph
 with all timing up-to-date.
 
-## Inspect OpenTimer
+## Accessor: Inspect OpenTimer
 
 The *accessor* operations let you inspect the timer status and dump static information
 that can be helpful for debugging and turnaround.
@@ -271,7 +271,7 @@ The following example installs OpenTimer to `/tmp`.
 ~$ cmake ../ -DCMAKE_INSTALL_PREFIX=/tmp
 ~$ make 
 ~$ make install
-~$ cd /tmp
+~$ cd /tmp    # install OpenTimer to /tmp
 ~$ ls
 bin/  include/  lib/
 ```
@@ -323,7 +323,7 @@ The table below summarizes a list of commonly used methods.
 
 
 *All public methods are thread-safe* as a result of OpenTimer lineage.
-The example below shows an OpenTimer application and the use of builder, action, and dump API.
+The example below shows an OpenTimer application and the use of builder, action, and accessor API.
 
 ```cpp
 #include <ot/timer/timer.hpp>
