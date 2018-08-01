@@ -322,18 +322,29 @@ The table below summarizes a list of commonly used methods.
 
 
 *All public methods are thread-safe* as a result of OpenTimer lineage.
-Keep in mind the chronological order of calling each method does matter.
-It is users' responsibility to ensure a correct execution order to avoid errors.
-The example below demonstrates a correct execution to generate a netlist 
-on top of two cell libraries, while individual parsings are transparently parallelized.
+The example below shows an OpenTimer application and the use of builder, action, and dump API.
 
 ```cpp
-// analyze the timing of the simple design
-timer.celllib("simple_Early.lib", ot::EARLY)
-     .celllib("simple_Late.lib", ot::LATE)
-     .verilog("simple.v")
-     .spef   ("simple.spef")
-     .update_timing();
+#include <ot/timer/timer.hpp>
+
+int main(int argc, char *argv[]) {
+  
+  ot::Timer timer;
+  
+  timer.celllib("simple_Early.lib", ot::EARLY)  // read the library at early mode (builder)
+       .celllib("simple_Late.lib", ot::LATE)    // read the library at late  mode (builder)
+       .verilog("simple.v")                     // read the verilog netlist (builder)
+       .spef("simple.spef")                     // read the parasitics (builder)
+       .sdc("simple.sdc")                       // read the design constraints (builder)
+       .update_timing();                        // update timing (builder)
+
+  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action)
+  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action)
+
+  std::cout << timer.dump_timer();  // dump the timer details (dump)
+  
+  return 0;
+}
 ```
 
 To see the full API list, visit [OpenTimer Wiki][OpenTimer Wiki].
