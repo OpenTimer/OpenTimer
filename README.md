@@ -364,13 +364,6 @@ The folder [benchmark](./benchmark) contains more designs but they are mainly us
 and integration tests.
 
 
-# Roadmap
-
-In short term, OpenTimer aims to incorporate more features and broaden the input/output
-supports for industry standard formats.
-The long term goal is to help enable an open-source EDA flow 
-that can be tremendously beneficial for both academia and semiconductor industry.
-
 
 # Who is Using OpenTimer?
 
@@ -397,7 +390,7 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 + Report bugs/issues by submitting a [Github issue][Github issues].
 + Submit contributions using [pull requests][Github pull requests].
 + See development status by visiting [OpenTimer Wiki][OpenTimer Wiki].
-+ Read and cite our ACM/IEEE ICCAD [paper][OpenTimerPaper].
++ Read and cite our ACM/IEEE [ICCAD paper][OpenTimerPaper].
 
 
 # Contributors & Acknowledgment
