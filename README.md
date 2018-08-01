@@ -406,7 +406,9 @@ OpenTimer is being actively developed and contributed by the following people:
 Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
 
-![](image/nsf.png) ![](image/darpa.png)
+| [<img src="image/nsf.png">](https://www.nsf.gov/) | [<img src="image/darpa.png">](https://www.darpa.mil/work-with-us/electronics-resurgence-initiative) |
+| -- | -- |
+
 
 
 # License
