@@ -84,7 +84,7 @@ Slack        :   -23.5384
 
 The critical path originates from the primary input `inp1` all the way 
 to the data pin `f1:D` of the flip-flop `f1`.
-You can dump a dot format and use online tools like [GraphViz][GraphViz]
+<!--You can dump a dot format and use online tools like [GraphViz][GraphViz]
 to visualize the timing graph.
 The critical path is marked in red.
 
@@ -94,7 +94,7 @@ ot> dump_graph -o simple.dot  # dump the timing graph to the .dot format
 
 ![](image/simple_graph.png)
 
-<!--We have provided three command files, 
+We have provided three command files, 
 [simple.conf](./example/simple/simple.conf), 
 [unit.conf](./example/simple/unit.conf), and 
 [opt.conf](./example/simple/opt.conf)
