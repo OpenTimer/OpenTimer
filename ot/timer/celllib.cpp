@@ -27,20 +27,27 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 }
 
 // Function: celllib
-Timer& Timer::celllib(std::filesystem::path path, Split el) {
+Timer& Timer::celllib(std::filesystem::path path, std::optional<Split> el) {
   
   auto lib = std::make_shared<Celllib>();
   
   std::scoped_lock lock(_mutex);
   
   // Library reader
-  auto reader = _taskflow.silent_emplace([this, path=std::move(path), el, lib] () {
-    lib->read(path, el);
+  auto reader = _taskflow.silent_emplace([this, path=std::move(path), lib] () {
+    lib->read(path);
   });
 
   // Placeholder to add_lineage
   auto modifier = _taskflow.silent_emplace([this, lib, el] () {
-    _merge_celllib(*lib, el);
+    if(el) {
+      _merge_celllib(*lib, *el);
+    }
+    else {
+      auto cpy = *lib;
+      _merge_celllib(cpy, EARLY);
+      _merge_celllib(*lib, LATE);
+    }
   });
 
   // Reader -> modifier

@@ -41,7 +41,7 @@ class Timer {
     Timer& resistance_unit(ResistanceUnit);
     Timer& capacitance_unit(CapacitanceUnit);
     Timer& power_unit(PowerUnit);
-    Timer& celllib(std::filesystem::path, Split);
+    Timer& celllib(std::filesystem::path, std::optional<Split>);
     Timer& verilog(std::filesystem::path);
     Timer& spef(std::filesystem::path);
     Timer& sdc(std::filesystem::path);

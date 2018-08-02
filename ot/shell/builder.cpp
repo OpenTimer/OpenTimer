@@ -110,23 +110,22 @@ void read_timing(Timer& timer, std::istream& is, std::ostream& os, std::ostream&
 void read_celllib(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
 
   std::string token;
+  std::filesystem::path path;
+  std::optional<Split> el;
 
   while(is >> token) {
     if(token == "-early") {
-      if(std::filesystem::path path; is >> path) {
-        timer.celllib(std::move(path), EARLY);
-      }
+      el = EARLY;
     }
     else if(token == "-late") {
-      if(std::filesystem::path path; is >> path) {
-        timer.celllib(std::move(path), LATE);
-      }
+      el = LATE;
     }
     else {
-      timer.celllib(token, EARLY);
-      timer.celllib(token, LATE);
+      path = std::move(token);
     }
   }
+
+  timer.celllib(std::move(path), el);
 }
 
 // Procedure: read_sdc
