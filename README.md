@@ -386,11 +386,12 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 
 
 # Get Involved
+
 + Report bugs/issues by submitting a [Github issue][Github issues].
 + Submit contributions using [pull requests][Github pull requests].
 + See development status by visiting [OpenTimer Wiki][OpenTimer Wiki].
++ Stay tuned with our [project progress][Github projects].
 + Read and cite our ACM/IEEE [ICCAD paper][OpenTimerPaper].
-
 
 # Contributors & Acknowledgment
 OpenTimer is being actively developed and contributed by the following people:
@@ -456,6 +457,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [Github releases]:       https://github.com/OpenTimer/OpenTimer/releases
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
+[Github projects]:       https://github.com/OpenTimer/OpenTimer/projects
 [GraphViz]:              https://dreampuf.github.io/GraphvizOnline/
 [OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html
