@@ -332,12 +332,11 @@ int main(int argc, char *argv[]) {
   
   ot::Timer timer;
   
-  timer.celllib("simple_Early.lib", ot::EARLY)  // read the library at early mode (builder)
-       .celllib("simple_Late.lib", ot::LATE)    // read the library at late  mode (builder)
-       .verilog("simple.v")                     // read the verilog netlist (builder)
-       .spef("simple.spef")                     // read the parasitics (builder)
-       .sdc("simple.sdc")                       // read the design constraints (builder)
-       .update_timing();                        // update timing (builder)
+  timer.celllib("simple.lib", std::nullopt)  // read the library (builder)
+       .verilog("simple.v")                  // read the verilog netlist (builder)
+       .spef("simple.spef")                  // read the parasitics (builder)
+       .sdc("simple.sdc")                    // read the design constraints (builder)
+       .update_timing();                     // update timing (builder)
 
   if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action)
   if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action)
