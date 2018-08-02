@@ -109,15 +109,17 @@ class Pin {
   friend class Test;
   friend class PrimaryOutput;
   friend class PrimaryInput;
+  friend class SCC;
 
   friend struct Point;
   friend struct Path;
 
-  constexpr static int FPROP_CAND     = 0x01;
-  constexpr static int BPROP_CAND     = 0x02;
-  constexpr static int SCC_CAND       = 0x04;
-  constexpr static int IN_FPROP_STACK = 0x08;
-  constexpr static int IN_BPROP_STACK = 0x10;
+  constexpr static int FPROP_CAND       = 0x01;
+  constexpr static int BPROP_CAND       = 0x02;
+  constexpr static int IN_FPROP_STACK   = 0x04;
+  constexpr static int IN_BPROP_STACK   = 0x08;
+  constexpr static int UNLOOP_CAND      = 0x10;
+  constexpr static int IN_UNLOOP_STACK  = 0x20;
 
   public:
     
@@ -128,9 +130,13 @@ class Pin {
     inline const PrimaryOutput* po() const;
     inline const Cellpin* cellpin(Split) const;
     inline const Net* net() const;
-
+    
+    bool is_input() const;
+    bool is_output() const;
+    bool is_inout() const;
     bool is_rct_root() const;
     bool is_datapath_source() const;
+    bool has_self_loop() const;
     
     std::optional<float> slew(Split, Tran) const;
     std::optional<float> at(Split, Tran) const;
@@ -150,6 +156,7 @@ class Pin {
     size_t _idx;
 
     Net* _net {nullptr};
+    SCC* _scc {nullptr};
 
     std::variant<PrimaryInput*, PrimaryOutput*, CellpinView> _handle;
 
@@ -157,7 +164,6 @@ class Pin {
     std::list<Arc*> _fanin;
     std::list<Test*> _tests;
 
-    std::optional<std::list<SCC>::iterator> _scc_satellite;
     std::optional<std::list<Pin*>::iterator> _frontier_satellite;
     std::optional<std::list<Pin*>::iterator> _net_satellite;
 

@@ -85,6 +85,8 @@ class Timer {
     std::string dump_celllib(Split) const;
     std::string dump_net_load() const;
     std::string dump_pin_cap() const;
+    std::string dump_at() const;
+    std::string dump_slew() const;
     std::string dump_slack() const;
     std::string dump_timer() const;
     
@@ -101,6 +103,7 @@ class Timer {
     inline auto num_arcs() const;
     inline auto num_gates() const;
     inline auto num_tests() const;
+    inline auto num_sccs() const;
 
   private:
 
@@ -158,7 +161,7 @@ class Timer {
     Path _worst_path(const Endpoint&) const;
     
     std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
-
+    
     bool _is_redundant_timing(const Timing&, Split) const;
 
     void _update_timing();
@@ -190,7 +193,6 @@ class Timer {
     void _disconnect_pin(Pin&);
     void _insert_frontier(Pin&);
     void _remove_frontier(Pin&);
-    void _insert_scc();
     void _remove_scc(SCC&);
     void _clear_frontiers();
     void _insert_primary_output(const std::string&);
@@ -240,6 +242,7 @@ class Timer {
     Arc& _insert_arc(Pin&, Pin&, Net&);
     Arc& _insert_arc(Pin&, Pin&, Test&);
     Arc& _insert_arc(Pin&, Pin&, TimingView);
+    SCC& _insert_scc(std::vector<Pin*>&);
     Test& _insert_test(Arc&);
 
     std::optional<float> _at(const std::string&, Split, Tran);
@@ -254,6 +257,14 @@ class Timer {
 
     std::string _dump_graph() const;
     std::string _dump_lineage() const;
+    std::string _dump_cell(const std::string&, Split) const;
+    std::string _dump_celllib(Split) const;
+    std::string _dump_net_load() const;
+    std::string _dump_pin_cap() const;
+    std::string _dump_slew() const;
+    std::string _dump_slack() const;
+    std::string _dump_at() const;
+    std::string _dump_timer() const;
 
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;
@@ -341,6 +352,11 @@ inline auto Timer::num_gates() const {
 // Function: num_tests
 inline auto Timer::num_tests() const {
   return _tests.size();
+}
+
+// Function: num_sccs
+inline auto Timer::num_sccs() const {
+  return _sccs.size();
 }
 
 // Function: _encode_pin

@@ -33,7 +33,7 @@ struct Celllib {
   
   using token_iterator = std::vector<std::string>::iterator;
 
-  std::string name;
+  std::string name {"OpenTimer"};
   std::optional<Split> split;
   std::optional<TimeUnit> time_unit;
   std::optional<VoltageUnit> voltage_unit;

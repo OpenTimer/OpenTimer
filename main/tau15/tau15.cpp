@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
   while(std::getline(ifs, line)) {
     
-    auto tokens = ot::tokenize(line); 
+    auto tokens = ot::split(line); 
 
     if(tokens.empty()) break;
 

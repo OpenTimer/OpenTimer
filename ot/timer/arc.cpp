@@ -18,6 +18,21 @@ Arc::Arc(Pin& from, Pin& to, TimingView t) :
   _handle {t} {
 }
 
+// Function: name
+std::string Arc::name() const {
+  return _from._name + "->" + _to._name;
+}
+
+// Function: is_self_loop
+bool Arc::is_self_loop() const {
+  return &_from == &_to;
+}
+
+// Function: is_loop_breaker
+bool Arc::is_loop_breaker() const {
+  return _has_state(LOOP_BREAKER);
+}
+
 // Function: is_net_arc
 bool Arc::is_net_arc() const {
   return std::get_if<Net*>(&_handle) != nullptr;

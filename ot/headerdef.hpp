@@ -159,6 +159,9 @@ constexpr std::initializer_list<std::tuple<Split, Tran, Tran>> SPLIT_TRANx2 = {
 #define FOR_EACH_EL_RF_IF(el, rf, c) for(auto [el, rf] : SPLIT_TRAN) if(c)
 #define FOR_EACH_EL_RF_RF_IF(el, rf1, rf2, c) for(auto [el, rf1, rf2] : SPLIT_TRANx2) if(c)
 
+#define FOR_EACH(i, C) for(auto& i : C)
+#define FOR_EACH_IF(i, C, s) for(auto& i : C) if(s)
+
 // ------------------------------------------------------------------------------------------------  
 
 

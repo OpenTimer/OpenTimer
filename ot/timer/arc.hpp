@@ -19,18 +19,23 @@ class Arc {
   friend class Pin;
   friend class Gate;
   friend class Test;
+  friend class SCC;
   
-  constexpr static int SCC_BREAKER = 0x01;
+  constexpr static int LOOP_BREAKER = 0x01;
 
   public:
 
     Arc(Pin&, Pin&, Net&);
     Arc(Pin&, Pin&, TimingView);
 
+    std::string name() const;
+
     bool is_cell_arc() const;
     bool is_net_arc() const;
     bool is_pseg() const;
     bool is_tseg() const;
+    bool is_self_loop() const;
+    bool is_loop_breaker() const;
 
     size_t idx() const;
 

@@ -64,10 +64,8 @@ std::ostream& operator << (std::ostream& os, const Module& m) {
 
 // Function: info
 std::string Module::info() const {
-  return "verilog module \""s + name + "\" " +
-         "[inputs:" + std::to_string(inputs.size()) +
-         "|outputs:" + std::to_string(outputs.size()) +
-         "|gates:" + std::to_string(gates.size()) + "]";
+  return "verilog module \""s + name + "\" " + 
+         "[gates:" + std::to_string(gates.size()) + "]";
 }
 
 // Procedure: read_verilog

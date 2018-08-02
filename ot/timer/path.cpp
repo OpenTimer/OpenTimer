@@ -144,7 +144,7 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
   auto el = sfxt._el;
   auto [v, rf] = _decode_pin(idx);
 
-  assert(v->_at[el][rf] && v->num_fanins() <= 1);
+  assert(v->_at[el][rf]);
 
   if(auto arc = v->_at[el][rf]->pi_arc; arc) {
     _recover_prefix(path, sfxt, _encode_pin(arc->_from, v->_at[el][rf]->pi_rf));

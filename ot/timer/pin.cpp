@@ -113,6 +113,44 @@ void Pin::_reset_rat() {
   }
 }
 
+// Function: has_self_loop
+bool Pin::has_self_loop() const {
+  auto& arcs = num_fanins() < num_fanouts() ? _fanin : _fanout;
+  return std::find_if(arcs.begin(), arcs.end(), [] (auto arc) {
+    return arc->is_self_loop();
+  }) != arcs.end();
+}
+
+// Function: is_input
+bool Pin::is_input() const {
+  return std::visit(Functors{
+    [] (PrimaryInput*) {
+      return true;
+    },
+    [] (PrimaryOutput*) {
+      return false;
+    },
+    [] (CellpinView cp) {
+      return cp[EARLY]->direction == CellpinDirection::INPUT;
+    }
+  }, _handle);
+}
+
+// Function: is_output
+bool Pin::is_output() const {
+  return std::visit(Functors{
+    [] (PrimaryInput*) {
+      return false;
+    },
+    [] (PrimaryOutput*) {
+      return true;
+    },
+    [] (CellpinView cp) {
+      return cp[EARLY]->direction == CellpinDirection::OUTPUT;
+    }
+  }, _handle);
+}
+
 // Function: is_rct_root
 // Query if the pin is a rc root of a net.
 bool Pin::is_rct_root() const {

@@ -245,7 +245,7 @@ Timer& Timer::connect_pin(std::string pin, std::string net) {
 
 // Procedure: _connect_pin
 void Timer::_connect_pin(Pin& pin, Net& net) {
-
+      
   // Connect the pin to the net and construct the edge connections.
   net._insert_pin(pin);
   
@@ -609,7 +609,7 @@ void Timer::_remove_arc(Arc& arc) {
 // Insert an net arc to the timer.
 Arc& Timer::_insert_arc(Pin& from, Pin& to, Net& net) {
 
-  OT_LOGF_IF(&from == &to, "timing graph contains a self loop at ", to._name);
+  OT_LOGF_IF(&from == &to, "net arc is a self loop at ", to._name);
 
   // Create a new arc
   auto& arc = _arcs.emplace_front(from, to, net);
@@ -633,7 +633,7 @@ Arc& Timer::_insert_arc(Pin& from, Pin& to, Net& net) {
 // Insert a cell arc to the timing graph. A cell arc is a combinational link.
 Arc& Timer::_insert_arc(Pin& from, Pin& to, TimingView tv) {
   
-  OT_LOGF_IF(&from == &to, "timing graph contains a self loop at ", to._name);
+  //OT_LOGF_IF(&from == &to, "timing graph contains a self loop at ", to._name);
 
   // Create a new arc
   auto& arc = _arcs.emplace_front(from, to, tv);
@@ -796,8 +796,7 @@ void Timer::_build_bprop_cands(Pin& to) {
   to._insert_state(Pin::BPROP_CAND | Pin::IN_BPROP_STACK);
 
   // add pin to scc
-  if(_scc_analysis && to._has_state(Pin::FPROP_CAND) && !to._scc_satellite) {
-    to._insert_state(Pin::SCC_CAND);
+  if(_scc_analysis && to._has_state(Pin::FPROP_CAND) && !to._scc) {
     _scc_cands.push_back(&to);
   }
 
@@ -824,22 +823,28 @@ void Timer::_build_prop_cands() {
     _build_fprop_cands(*ftr);
   }
 
-  assert(_scc_cands.empty());
-
   // Discover all bprop candidates.
   for(auto fcand : _fprop_cands) {
+
     if(fcand->_has_state(Pin::BPROP_CAND)) {
       continue;
     }
+
+    _scc_cands.clear();
     _build_bprop_cands(*fcand);
+
+    if(!_scc_analysis) {
+      assert(_scc_cands.empty());
+    }
     
     // here dfs returns with exacly one scc if exists
-    _insert_scc();
+    if(auto& c = _scc_cands; c.size() >= 2 || (c.size() == 1 && c[0]->has_self_loop())) {
+      auto& scc = _insert_scc(c);
+      scc._unloop();
+    }
   }
 
-  //std::cout << _dump_graph() << std::endl;
-
-  OT_LOGF_IF(_scc_analysis, "graph contains cycles(s)");
+  //OT_LOGF_IF(_scc_analysis, "graph contains cycles(s)");
 }
 
 // Procedure: _build_prop_tasks
@@ -861,13 +866,13 @@ void Timer::_build_prop_tasks() {
       _fprop_delay(*pin);
       _fprop_at(*pin);
       _fprop_test(*pin);
-    }).name("fprop_"s + pin->_name);
+    })/*.name("fprop_"s + pin->_name)*/;
   }
   
   // Build the dependency
   for(auto to : _fprop_cands) {
     for(auto arc : to->_fanin) {
-      if(arc->_has_state(Arc::SCC_BREAKER)) {
+      if(arc->_has_state(Arc::LOOP_BREAKER)) {
         continue;
       }
       if(auto& from = arc->_from; from._has_state(Pin::FPROP_CAND)) {
@@ -882,13 +887,13 @@ void Timer::_build_prop_tasks() {
     assert(!pin->_btask);
     pin->_btask = _taskflow.silent_emplace([this, pin] () {
       _bprop_rat(*pin);
-    }).name("bprop_"s + pin->_name);
+    })/*.name("bprop_"s + pin->_name)*/;
   }
 
   // Build the task dependencies.
   for(auto to : _bprop_cands) {
     for(auto arc : to->_fanin) {
-      if(arc->_has_state(Arc::SCC_BREAKER)) {
+      if(arc->_has_state(Arc::LOOP_BREAKER)) {
         continue;
       }
       if(auto& from = arc->_from; from._has_state(Pin::BPROP_CAND)) {
@@ -914,25 +919,11 @@ void Timer::_clear_prop_tasks() {
   for(auto pin : _bprop_cands) {
     pin->_ftask.reset();
     pin->_btask.reset();
-    pin->_remove_state(Pin::FPROP_CAND | Pin::BPROP_CAND);
+    pin->_remove_state();
   }
 
   _fprop_cands.clear();
   _bprop_cands.clear();
-  
-  // clear the fprop tasks
-  //for(auto& pin : _fprop_cands) {
-  //  pin->_ftask.reset();
-  //  pin->_remove_state(Pin::FPROP_CAND | Pin::SCC_CAND);
-  //}
-  //_fprop_cands.clear();
-  //
-  //// clear the bprop tasks
-  //for(auto& pin : _bprop_cands) {
-  //  pin->_remove_state(Pin::BPROP_CAND | Pin::SCC_CAND);
-  //  pin->_btask.reset();
-  //}
-  //_bprop_cands.clear();
 }
 
 // Function: update_timing
@@ -1145,8 +1136,8 @@ void Timer::_insert_frontier(Pin& pin) {
   pin._frontier_satellite = _frontiers.insert(_frontiers.end(), &pin);
   
   // reset the scc.
-  if(pin._scc_satellite) {
-    _remove_scc(*(pin._scc_satellite.value()));
+  if(pin._scc) {
+    _remove_scc(*pin._scc);
   }
 }
 
@@ -1167,48 +1158,19 @@ void Timer::_clear_frontiers() {
 }
 
 // Procedure: _insert_scc
-void Timer::_insert_scc() {
+SCC& Timer::_insert_scc(std::vector<Pin*>& cands) {
   
   // create scc only of size at least two
-  if(_scc_cands.size() < 2) {
-    if(!_scc_cands.empty()) {
-      assert(_scc_cands[0]->_has_state(Pin::SCC_CAND));
-      _scc_cands[0]->_remove_state(Pin::SCC_CAND);
-      _scc_cands.clear();
-    }
-    return;
-  }
-
-  assert(_scc_analysis);
-  
-  auto& scc = _sccs.emplace_front(std::move(_scc_cands));
+  auto& scc = _sccs.emplace_front(std::move(cands));
   scc._satellite = _sccs.begin();
-  
-  for(auto pin : scc._pins) {
-    pin->_scc_satellite = scc._satellite;
-    pin->_remove_state(Pin::SCC_CAND);
-  }
+
+  return scc;
 }
 
 // Procedure: _remove_scc
 void Timer::_remove_scc(SCC& scc) {
-
   assert(scc._satellite);
-  
-  // unmark the scc pins and arcs
-  for(auto pin : scc._pins) {
-    
-    for(auto arc : pin->_fanin) {
-      arc->_remove_state(Arc::SCC_BREAKER);
-    }
-
-    for(auto arc : pin->_fanout) {
-      arc->_remove_state(Arc::SCC_BREAKER);
-    }
-
-    pin->_scc_satellite.reset();
-  }
-  
+  scc._clear();
   _sccs.erase(*scc._satellite); 
 }
 

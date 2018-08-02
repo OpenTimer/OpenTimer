@@ -137,6 +137,38 @@ std::string to_string(TimingType t) {
     case TimingType::MIN_CLOCK_TREE_PATH:
       return "min_clock_tree_path";
     break;
+  
+    case TimingType::NON_SEQ_SETUP_RISING:
+      return "non_seq_setup_rising";
+    break;
+
+    case TimingType::NON_SEQ_SETUP_FALLING:
+      return "non_seq_setup_falling";
+    break;
+
+    case TimingType::NON_SEQ_HOLD_RISING:
+      return "non_seq_hold_rising";
+    break;
+
+    case TimingType::NON_SEQ_HOLD_FALLING:
+      return "non_seq_hold_falling";
+    break;
+
+    case TimingType::NOCHANGE_HIGH_HIGH:
+      return "nochange_high_high";
+    break;
+
+    case TimingType::NOCHANGE_HIGH_LOW:
+      return "nochange_high_low";
+    break;
+
+    case TimingType::NOCHANGE_LOW_HIGH:
+      return "nochange_low_high";
+    break;
+
+    case TimingType::NOCHANGE_LOW_LOW:
+      return "nochange_low_low";
+    break;
 
     default:
       return "undefined";

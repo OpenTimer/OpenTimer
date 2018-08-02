@@ -39,8 +39,12 @@ std::string Timer::_dump_lineage() const {
 
 // Function: dump_timer
 std::string Timer::dump_timer() const {
-
   std::shared_lock lock(_mutex);
+  return _dump_timer();
+}
+
+// Function: _dump_timer
+std::string Timer::_dump_timer() const {
   
   std::ostringstream oss;
 
@@ -63,6 +67,7 @@ std::string Timer::dump_timer() const {
       << "# Gates    : " << _gates.size() << '\n'
       << "# Nets     : " << _nets.size()  << '\n'
       << "# Arcs     : " << _arcs.size()  << '\n'
+      << "# SCCs     : " << _sccs.size()  << '\n'
       << "# Tests    : " << _tests.size() << '\n'
       << "# Cells    : " << "[early:" << _celllib[EARLY].cells.size() << "|"
                          << "late:"   << _celllib[LATE ].cells.size() << "]\n";
@@ -72,8 +77,12 @@ std::string Timer::dump_timer() const {
 
 // Function: dump_net_load
 std::string Timer::dump_net_load() const {
-  
   std::shared_lock lock(_mutex);
+  return _dump_net_load();
+}
+
+// Function: _dump_net_load
+std::string Timer::_dump_net_load() const {
 
   std::ostringstream oss;
   
@@ -115,8 +124,12 @@ std::string Timer::dump_net_load() const {
 
 // Function: dump_pin_cap
 std::string Timer::dump_pin_cap() const {
-  
   std::shared_lock lock(_mutex);
+  return _dump_pin_cap();
+}
+
+// Function: _dump_pin_cap
+std::string Timer::_dump_pin_cap() const {
 
   std::ostringstream oss;
   
@@ -155,10 +168,63 @@ std::string Timer::dump_pin_cap() const {
   return oss.str();
 }
 
+// Function: dump_slew
+std::string Timer::dump_slew() const {
+  std::shared_lock lock(_mutex);
+  return _dump_slew();
+}
+
+// Function: _dump_slew
+std::string Timer::_dump_slew() const {
+
+  std::ostringstream oss;
+  
+  oss << "Slew [pins:" << _pins.size() 
+      << "|time:" 
+      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
+      << "]\n";
+
+  if(!_pins.empty())  {
+
+    // find the maximum pin name
+    auto plen = _max_pin_name_size();
+
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n'
+        << std::setfill(' ') << std::setw(10) << "E/R"  
+                             << std::setw(12) << "E/F"
+                             << std::setw(12) << "L/R"
+                             << std::setw(12) << "L/F" 
+                             << std::setw(2 + plen)  << "Pin"   << '\n'
+        << std::setfill('-') << std::setw(49 + plen) << '\n';
+
+    oss << std::setfill(' ') << std::setprecision(3);
+    for(const auto& kvp : _pins) {
+
+      const auto& pin = kvp.second;
+      
+      FOR_EACH_EL_RF(el, rf) {
+        oss << std::setw(10);
+        if(auto slew = pin.slew(el, rf); slew) oss << *slew;
+        else oss << "n/a";
+        oss << "  ";
+      }
+
+      oss << std::setw(plen) << pin._name << '\n';
+    }
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n';
+  }
+
+  return oss.str();
+}
+
 // Function: dump_slack
 std::string Timer::dump_slack() const {
-  
   std::shared_lock lock(_mutex);
+  return _dump_slack();
+}
+
+// Function: _dump_slack
+std::string Timer::_dump_slack() const {
 
   std::ostringstream oss;
   
@@ -200,9 +266,63 @@ std::string Timer::dump_slack() const {
   return oss.str();
 }
 
+// Function: dump_at
+std::string Timer::dump_at() const {
+  std::shared_lock lock(_mutex);
+  return _dump_at();
+}
+
+// Function: _dump_at
+std::string Timer::_dump_at() const {
+
+  std::ostringstream oss;
+  
+  oss << "Arrival time [pins:" << _pins.size() 
+      << "|time:" 
+      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
+      << "]\n";
+
+  if(!_pins.empty())  {
+
+    // find the maximum pin name
+    auto plen = _max_pin_name_size();
+
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n'
+        << std::setfill(' ') << std::setw(10) << "E/R"  
+                             << std::setw(12) << "E/F"
+                             << std::setw(12) << "L/R"
+                             << std::setw(12) << "L/F" 
+                             << std::setw(2 + plen)  << "Pin"   << '\n'
+        << std::setfill('-') << std::setw(49 + plen) << '\n';
+
+    oss << std::setfill(' ') << std::setprecision(3);
+    for(const auto& kvp : _pins) {
+
+      const auto& pin = kvp.second;
+      
+      FOR_EACH_EL_RF(el, rf) {
+        oss << std::setw(10);
+        if(auto at = pin.at(el, rf); at) oss << *at;
+        else oss << "n/a";
+        oss << "  ";
+      }
+
+      oss << std::setw(plen) << pin._name << '\n';
+    }
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n';
+  }
+
+  return oss.str();
+}
+
 // Function: dump_cell
 std::string Timer::dump_cell(const std::string& name, Split el) const {
   std::shared_lock lock(_mutex);
+  return _dump_cell(name, el);
+}
+
+// Function: _dump_cell
+std::string Timer::_dump_cell(const std::string& name, Split el) const {
   std::ostringstream oss;
   if(auto ptr = _celllib[el].cell(name); ptr) {
     oss << *ptr;
@@ -216,6 +336,11 @@ std::string Timer::dump_cell(const std::string& name, Split el) const {
 // Function: dump_celllib
 std::string Timer::dump_celllib(Split el) const {
   std::shared_lock lock(_mutex);
+  return _dump_celllib(el);
+}
+
+// Function: _dump_celllib
+std::string Timer::_dump_celllib(Split el) const {
   std::ostringstream oss;
   oss << _celllib[el];
   return oss.str();
