@@ -460,8 +460,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html
 [OpenTimerCitation]:     https://scholar.google.com/scholar?oi=bibs&hl=en&cites=142282068238605079
-[OpenTimerPaper]:        ./doc/iccad15.pdf
-[UI-TimerPaper]:         ./doc/iccad14.pdf
+[OpenTimerPaper]:        https://github.com/OpenTimer/OpenTimer/blob/master/doc/iccad15.pdf
+[UI-TimerPaper]:         https://github.com/OpenTimer/OpenTimer/blob/master/doc/iccad14.pdf
 [email me]:              mailto:twh760812@gmail.com
 [Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
 [VSD]:                   https://www.vlsisystemdesign.com/
