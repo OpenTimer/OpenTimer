@@ -257,7 +257,7 @@ To see the full command list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
 There are a number of ways to develop your project on top of OpenTimer.
 
-## Install OpenTimer
+## Install OpenTimer through CMake
 
 Our project [CMakeLists.txt](CMakeLists.txt) has defined the required files
 to install when you hit `make install`.
@@ -296,7 +296,7 @@ to use C++17 features and filesystem libraries.
 ~$ ./app.out
 ```
 
-## C++ API
+# OpenTimer C++ API
 
 OpenTimer is written in modern C++17.
 The class [Timer](ot/timer/timer.hpp) is the main entry you need to 
