@@ -86,6 +86,7 @@ class Timer {
     std::string dump_net_load() const;
     std::string dump_pin_cap() const;
     std::string dump_at() const;
+    std::string dump_rat() const;
     std::string dump_slew() const;
     std::string dump_slack() const;
     std::string dump_timer() const;
@@ -204,13 +205,9 @@ class Timer {
     void _remove_pin(Pin&);
     void _remove_arc(Arc&);
     void _remove_test(Test&);
-    void _at(const std::string&, Split, Tran, std::optional<float>);
     void _at(PrimaryInput&, Split, Tran, std::optional<float>);
-    void _slew(const std::string&, Split, Tran, std::optional<float>);
     void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
-    void _rat(const std::string&, Split, Tran, std::optional<float>);
     void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
-    void _load(const std::string&, Split, Tran, std::optional<float>);
     void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _clock(const std::string&, Pin&, float);
     void _cppr(bool);
@@ -264,8 +261,9 @@ class Timer {
     std::string _dump_slew() const;
     std::string _dump_slack() const;
     std::string _dump_at() const;
+    std::string _dump_rat() const;
     std::string _dump_timer() const;
-
+    
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;
 

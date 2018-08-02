@@ -843,8 +843,6 @@ void Timer::_build_prop_cands() {
       scc._unloop();
     }
   }
-
-  //OT_LOGF_IF(_scc_analysis, "graph contains cycles(s)");
 }
 
 // Procedure: _build_prop_tasks
@@ -909,7 +907,6 @@ void Timer::_build_prop_tasks() {
     }
   }
 
-  //assert(_taskflow.health_check() == true);
 }
 
 // Procedure: _clear_prop_tasks
@@ -946,7 +943,7 @@ void Timer::_update_timing() {
   
   // Check if full update is required
   if(_has_state(FULL_TIMING)) {
-    OT_LOGI("perform full timing update");
+    //OT_LOGI("perform full timing update");
     _insert_full_timing_frontiers();
   }
 
@@ -1259,23 +1256,18 @@ Timer& Timer::at(std::string name, Split m, Tran t, std::optional<float> v) {
   std::scoped_lock lock(_mutex);
 
   auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
-    _at(name, m, t, v);
+    if(auto itr = _pis.find(name); itr != _pis.end()) {
+      _at(itr->second, m, t, v);
+    }
+    else {
+      OT_LOGE("can't set at (PI ", name, " not found)");
+    }
   });
 
   // parent -> modifier
   _add_to_lineage(modifier);
 
   return *this;
-}
-
-// Procedure: _at
-void Timer::_at(const std::string& name, Split m, Tran t, std::optional<float> v) {
-  if(auto itr = _pis.find(name); itr != _pis.end()) {
-    _at(itr->second, m, t, v);
-  }
-  else {
-    OT_LOGW("can't assert arrival time (PI ", name, " not found)");
-  }
 }
 
 // Procedure: _at
@@ -1290,23 +1282,18 @@ Timer& Timer::rat(std::string name, Split m, Tran t, std::optional<float> v) {
   std::scoped_lock lock(_mutex);
 
   auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
-    _rat(name, m, t, v);
+    if(auto itr = _pos.find(name); itr != _pos.end()) {
+      _rat(itr->second, m, t, v);
+    }
+    else {
+      OT_LOGE("can't set rat (PO ", name, " not found)");
+    }
   });
 
   // parent -> modifier
   _add_to_lineage(modifier);
 
   return *this;
-}
-
-// Procedure: _rat
-void Timer::_rat(const std::string& name, Split m, Tran t, std::optional<float> v) {
-  if(auto itr = _pos.find(name); itr != _pos.end()) {
-    _rat(itr->second, m, t, v);
-  }
-  else {
-    OT_LOGW("can't assert required arrival time (PO ", name, " not found)");
-  }
 }
 
 // Procedure: _rat
@@ -1321,23 +1308,18 @@ Timer& Timer::slew(std::string name, Split m, Tran t, std::optional<float> v) {
   std::scoped_lock lock(_mutex);
 
   auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
-    _slew(name, m, t, v);
+    if(auto itr = _pis.find(name); itr != _pis.end()) {
+      _slew(itr->second, m, t, v);
+    }
+    else {
+      OT_LOGE("can't set slew (PI ", name, " not found)");
+    }
   });
 
   // parent -> modifier
   _add_to_lineage(modifier);
 
   return *this;
-}
-
-// Procedure: slew
-void Timer::_slew(const std::string& name, Split m, Tran t, std::optional<float> v) {
-  if(auto itr = _pis.find(name); itr != _pis.end()) {
-    _slew(itr->second, m, t, v);
-  }
-  else {
-    OT_LOGW("can't assert slew (PI ", name, " not found)");
-  }
 }
 
 // Procedure: _slew
@@ -1352,23 +1334,18 @@ Timer& Timer::load(std::string name, Split m, Tran t, std::optional<float> v) {
   std::scoped_lock lock(_mutex);
 
   auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
-    _load(name, m, t, v);
+    if(auto itr = _pos.find(name); itr != _pos.end()) {
+      _load(itr->second, m, t, v);
+    }
+    else {
+      OT_LOGE("can't set load (PO ", name, " not found)");
+    }
   });
 
   // parent -> modifier
   _add_to_lineage(modifier);
 
   return *this;
-}
-
-// Procedure: _load
-void Timer::_load(const std::string& name, Split m, Tran t, std::optional<float> v) {
-  if(auto itr = _pos.find(name); itr != _pos.end()) {
-    _load(itr->second, m, t, v);
-  }
-  else {
-    OT_LOGW("can't assert load to PO ", name, " (not found)");
-  }
 }
 
 // Procedure: _load

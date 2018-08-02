@@ -14,7 +14,7 @@ void Timing::read(const std::filesystem::path& path) {
   std::ifstream tfs(path);
 
   if(!tfs.good()) {
-    OT_LOGW("can't open ", path);
+    OT_LOGE("can't open timing assertions ", path);
     return;
   }
   
@@ -103,27 +103,47 @@ void Timer::_timing(tau15::Timing& timing) {
           _clock(itr->first, itr->second, clock.period);
         }
         else {
-          OT_LOGW("can't create clock (pin ", itr->first, " not found");
+          OT_LOGE("can't create clock (pin ", clock.pin, " not found)");
         }
       },
       [&] (tau15::AT& a) {
-        FOR_EACH_EL_RF(el, rf) {
-          _at(a.pin, el, rf, a.value[el][rf]);
+        if(auto itr = _pis.find(a.pin); itr != _pis.end()) {
+          FOR_EACH_EL_RF(el, rf) {
+            _at(itr->second, el, rf, a.value[el][rf]);
+          }
+        }
+        else {
+          OT_LOGE("can't set arrival time (PI ", a.pin, " not found)");
         }
       },
       [&] (tau15::Slew& s) {
-        FOR_EACH_EL_RF(el, rf) {
-          _slew(s.pin, el, rf, s.value[el][rf]);
+        if(auto itr = _pis.find(s.pin); itr != _pis.end()) {
+          FOR_EACH_EL_RF(el, rf) {
+            _slew(itr->second, el, rf, s.value[el][rf]);
+          }
+        }
+        else {
+          OT_LOGE("can't set slew (PI ", s.pin, " not found)");
         }
       },
       [&] (tau15::RAT& r) {
-        FOR_EACH_EL_RF(el, rf) {
-          _rat(r.pin, el, rf, r.value[el][rf]);
+        if(auto itr = _pos.find(r.pin); itr != _pos.end()) {
+          FOR_EACH_EL_RF(el, rf) {
+            _rat(itr->second, el, rf, r.value[el][rf]);
+          }
+        }
+        else {
+          OT_LOGE("can't set rat (PO ", r.pin, " not found)");
         }
       },
       [&] (tau15::Load& l) {
-        FOR_EACH_EL_RF(el, rf) {
-          _load(l.pin, el, rf, l.value);
+        if(auto itr = _pos.find(l.pin); itr != _pos.end()) {
+          FOR_EACH_EL_RF(el, rf) {
+            _load(itr->second, el, rf, l.value);
+          }
+        }
+        else {
+          OT_LOGE("can't set load (PO ", l.pin, " not found)");
         }
       }
     }, ast);

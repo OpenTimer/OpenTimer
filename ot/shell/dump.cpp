@@ -108,6 +108,7 @@ List of commonly used commands:\n\
   dump_pin_cap       [-o <file>]\n\
   dump_slew          [-o <file>]\n\
   dump_at            [-o <file>]\n\
+  dump_rat           [-o <file>]\n\
   dump_slack         [-o <file>]\n\
   dump_timer         [-o <file>]\n\n\
 For more information, consult the manual at\n\
@@ -266,6 +267,37 @@ void dump_slack(Timer& timer, std::istream& is, std::ostream& os, std::ostream& 
   else {
     if(std::ofstream ofs(output); ofs) {
       ofs << timer.dump_slack();
+    }
+    else {
+      es << "failed to open " << output << '\n';
+    }
+  }
+}
+
+// Procedure: dump_rat
+void dump_rat(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+
+  std::string token;
+  std::filesystem::path output;
+
+  while(is >> token) {
+    if(token == "-o") {
+      if(!(is >> output)){
+        es << "output file not given\n";
+        return;
+      }
+    }
+    else {
+      es << "unexpected token " << token << '\n';
+    }
+  }
+  
+  if(output.empty()) {
+    os << timer.dump_rat();
+  }
+  else {
+    if(std::ofstream ofs(output); ofs) {
+      ofs << timer.dump_rat();
     }
     else {
       es << "failed to open " << output << '\n';

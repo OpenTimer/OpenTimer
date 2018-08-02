@@ -315,6 +315,55 @@ std::string Timer::_dump_at() const {
   return oss.str();
 }
 
+// Function: dump_rat
+std::string Timer::dump_rat() const {
+  std::shared_lock lock(_mutex);
+  return _dump_rat();
+}
+
+// Function: _dump_rat
+std::string Timer::_dump_rat() const {
+
+  std::ostringstream oss;
+  
+  oss << "Required arrival time [pins:" << _pins.size() 
+      << "|time:" 
+      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
+      << "]\n";
+
+  if(!_pins.empty())  {
+
+    // find the maximum pin name
+    auto plen = _max_pin_name_size();
+
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n'
+        << std::setfill(' ') << std::setw(10) << "E/R"  
+                             << std::setw(12) << "E/F"
+                             << std::setw(12) << "L/R"
+                             << std::setw(12) << "L/F" 
+                             << std::setw(2 + plen)  << "Pin"   << '\n'
+        << std::setfill('-') << std::setw(49 + plen) << '\n';
+
+    oss << std::setfill(' ') << std::setprecision(3);
+    for(const auto& kvp : _pins) {
+
+      const auto& pin = kvp.second;
+      
+      FOR_EACH_EL_RF(el, rf) {
+        oss << std::setw(10);
+        if(auto rat = pin.rat(el, rf); rat) oss << *rat;
+        else oss << "n/a";
+        oss << "  ";
+      }
+
+      oss << std::setw(plen) << pin._name << '\n';
+    }
+    oss << std::setfill('-') << std::setw(49 + plen) << '\n';
+  }
+
+  return oss.str();
+}
+
 // Function: dump_cell
 std::string Timer::dump_cell(const std::string& name, Split el) const {
   std::shared_lock lock(_mutex);

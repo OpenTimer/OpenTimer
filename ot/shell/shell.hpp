@@ -47,6 +47,7 @@ void dump_celllib           (Timer&, std::istream&, std::ostream&, std::ostream&
 void dump_net_load          (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_pin_cap           (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_at                (Timer&, std::istream&, std::ostream&, std::ostream&);
+void dump_rat               (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_slew              (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_slack             (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_timer             (Timer&, std::istream&, std::ostream&, std::ostream&);
@@ -109,6 +110,7 @@ inline const std::unordered_map<
   {"dump_pin_cap",            dump_pin_cap},
   {"dump_slew",               dump_slew},
   {"dump_at",                 dump_at},
+  {"dump_rat",                dump_rat},
   {"dump_slack",              dump_slack},
   {"dump_timer",              dump_timer},
 
