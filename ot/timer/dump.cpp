@@ -4,8 +4,12 @@ namespace ot {
 
 // Function: dump_graph
 std::string Timer::dump_graph() const {
-  
   std::shared_lock lock(_mutex);
+  return _dump_graph(); 
+}
+
+// Function: _dump_graph
+std::string Timer::_dump_graph() const {
   
   std::ostringstream os;
 
@@ -25,6 +29,11 @@ std::string Timer::dump_graph() const {
 // Function: dump_lineage
 std::string Timer::dump_lineage() const {
   std::shared_lock lock(_mutex);
+  return _dump_lineage();
+}
+
+// Function: _dump_lineage
+std::string Timer::_dump_lineage() const {
   return _taskflow.dump();
 }
 

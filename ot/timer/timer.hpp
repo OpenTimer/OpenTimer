@@ -25,6 +25,7 @@ class Timer {
 
   friend class Shell;
   
+  constexpr static int INCREMENTAL  = 0x00;
   constexpr static int FULL_TIMING  = 0x01;
   constexpr static int TNS_UPDATED  = 0x02;
   constexpr static int WNS_UPDATED  = 0x04;
@@ -77,7 +78,7 @@ class Timer {
     std::vector<Path> worst_paths(Tran, size_t);
     std::vector<Path> worst_paths(Split, Tran, size_t);
 
-    // Dump / accessors
+    // Accessor
     std::string dump_graph() const;
     std::string dump_lineage() const;
     std::string dump_cell(const std::string&, Split) const;
@@ -109,6 +110,8 @@ class Timer {
 
     int _state {0};
     
+    bool _scc_analysis {false};
+
     std::optional<tf::Taskflow::Task> _lineage;
     std::optional<TimeUnit> _time_unit;
     std::optional<VoltageUnit> _voltage_unit;
@@ -136,12 +139,13 @@ class Timer {
     std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _wns;
     std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _tns;
 
-    std::forward_list<Pin*> _fprop_cands;
-    std::forward_list<Pin*> _bprop_cands;
+    std::deque<Pin*> _fprop_cands;
+    std::deque<Pin*> _bprop_cands;
 
     IndexGenerator<size_t> _pin_idx_gen {0u};
     IndexGenerator<size_t> _arc_idx_gen {0u};
-
+    
+    std::vector<Pin*> _scc_cands;
     std::vector<Pin*> _idx2pin;
     std::vector<Arc*> _idx2arc;
 
@@ -168,7 +172,7 @@ class Timer {
     void _fprop_test(Pin&);
     void _bprop_rat(Pin&);
     void _build_prop_cands();
-    void _build_fprop_cands(Pin&, std::stack<Pin*>&);
+    void _build_fprop_cands(Pin&);
     void _build_bprop_cands(Pin&);
     void _build_prop_tasks();
     void _clear_prop_tasks();
@@ -186,6 +190,7 @@ class Timer {
     void _disconnect_pin(Pin&);
     void _insert_frontier(Pin&);
     void _remove_frontier(Pin&);
+    void _insert_scc();
     void _remove_scc(SCC&);
     void _clear_frontiers();
     void _insert_primary_output(const std::string&);
@@ -246,6 +251,9 @@ class Timer {
     std::optional<float> _cppr_credit(const CpprCache&, Pin&, Split, Tran) const;
     std::optional<float> _cppr_offset(const CpprCache&, Pin&, Split, Tran) const;
     std::optional<float> _sfxt_offset(const SfxtCache&, size_t) const;
+
+    std::string _dump_graph() const;
+    std::string _dump_lineage() const;
 
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;

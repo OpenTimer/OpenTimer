@@ -19,6 +19,8 @@ class Arc {
   friend class Pin;
   friend class Gate;
   friend class Test;
+  
+  constexpr static int SCC_BREAKER = 0x01;
 
   public:
 
@@ -41,6 +43,8 @@ class Arc {
 
     size_t _idx;
 
+    int _state {0};
+
     std::variant<Net*, TimingView> _handle;
 
     std::optional<std::list<Arc>::iterator> _satellite;
@@ -55,6 +59,10 @@ class Arc {
     void _reset_delay();
     void _fprop_delay();
     void _bprop_rat();
+    void _insert_state(int);
+    void _remove_state(int = 0);
+
+    bool _has_state(int) const;
 }; 
 
 // Function: idx

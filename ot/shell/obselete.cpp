@@ -66,7 +66,7 @@ void set_timing_fpath(Timer& timer, std::istream& is, std::ostream& os, std::ost
 void report_timer(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
 
   OT_LOGW(
-    std::quoted("report_timer"), " is obselete; use ", std::quoted("report_timing")
+    std::quoted("report_timer"), " is obselete; use ", std::quoted("dump_timer")
   );
     
   if(auto paths = timer.worst_paths(1); !paths.empty()) {

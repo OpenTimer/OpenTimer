@@ -2,6 +2,7 @@
 #define OT_TIMER_SCC_HPP_
 
 #include <vector>
+#include <optional>
 
 namespace ot {
 
@@ -17,15 +18,17 @@ class SCC {
 
   public:
 
+    SCC(std::vector<Pin*>&&);
+
   private:
     
-    bool _valid {true};
+    std::optional<std::list<SCC>::iterator> _satellite;
 
-    std::vector<Pin*> pins;
-
-
+    std::vector<Pin*> _pins;
 };
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 
 #endif
+
+

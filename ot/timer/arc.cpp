@@ -204,6 +204,24 @@ void Arc::_bprop_rat() {
   }, _handle);
 }
 
+// Procedure: _remove_state
+void Arc::_remove_state(int s) {
+  if(s == 0) _state = 0;
+  else {
+    _state &= ~s;
+  }
+}
+
+// Procedure: _insert_state
+void Arc::_insert_state(int s) {
+  _state |= s;
+}
+
+// Function: _has_state
+bool Arc::_has_state(int s) const {
+  return _state & s;
+}
+
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

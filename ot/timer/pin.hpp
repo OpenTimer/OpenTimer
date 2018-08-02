@@ -113,8 +113,11 @@ class Pin {
   friend struct Point;
   friend struct Path;
 
-  constexpr static int FPROP_CAND = 0x01;
-  constexpr static int BPROP_CAND = 0x02;
+  constexpr static int FPROP_CAND     = 0x01;
+  constexpr static int BPROP_CAND     = 0x02;
+  constexpr static int SCC_CAND       = 0x04;
+  constexpr static int IN_FPROP_STACK = 0x08;
+  constexpr static int IN_BPROP_STACK = 0x10;
 
   public:
     
