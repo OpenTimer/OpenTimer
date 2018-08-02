@@ -82,6 +82,10 @@ void Arc::_reset_delay() {
 // Procedure: _fprop_slew
 void Arc::_fprop_slew() {
 
+  if(_has_state(LOOP_BREAKER)) {
+    return;
+  }
+
   std::visit(Functors{
     // Case 1: Net arc
     [this] (Net* net) {
@@ -107,6 +111,10 @@ void Arc::_fprop_slew() {
 
 // Procedure: _fprop_delay
 void Arc::_fprop_delay() {
+  
+  if(_has_state(LOOP_BREAKER)) {
+    return;
+  }
 
   std::visit(Functors{
     // Case 1: Net arc
@@ -128,6 +136,11 @@ void Arc::_fprop_delay() {
 
 // Procedure: _fprop_at
 void Arc::_fprop_at() {
+  
+  if(_has_state(LOOP_BREAKER)) {
+    return;
+  }
+
   FOR_EACH_EL_RF_RF_IF(el, frf, trf, _from._at[el][frf] && _delay[el][frf][trf]) {
     _to._relax_at(this, el, frf, el, trf, *_delay[el][frf][trf] + *_from._at[el][frf]);
   }
@@ -135,6 +148,10 @@ void Arc::_fprop_at() {
 
 // Procedure: _bprop_rat
 void Arc::_bprop_rat() {
+  
+  if(_has_state(LOOP_BREAKER)) {
+    return;
+  }
 
   std::visit(Functors{
     // Case 1: Net arc
@@ -178,43 +195,6 @@ void Arc::_bprop_rat() {
           }
         }
       }
-
-      /*if(!timing.get(EARLY).is_constraint()) {
-        FOR_EACH_EL_RF_RF_IF(el, frf, trf, _to._rat[el][trf] && _delay[el][frf][trf]) {
-          _from._relax_rat(this, el, frf, el, trf, *_to._rat[el][trf] - *_delay[el][frf][trf]);
-        }
-      }
-      else {
-
-        // For the clock pins of the flip-flop, the required arrival time 
-        // is derived from the test slack. 
-        // For the early mode, the slack at the clock pin is the setup or late test slack.
-        // For the late split, the slack at the clock pin is the hold or early test slack. 
-        // From the corresponding test slack and arrival time, the clock required arrival time 
-        // can be derived, and appropriately propagated.
-
-        FOR_EACH_EL_RF_RF_IF(el, ck_rf, d_rf, tv[el]) {
-
-          if(!tv[el]->is_transition_defined(ck_rf, d_rf)) {
-            continue;
-          }
-
-          if(el == EARLY) {
-            auto at = _from._at[LATE][ck_rf];
-            auto slack = _to.slack(EARLY, d_rf);
-            if(at && slack) {
-              _from._relax_rat(this, LATE, ck_rf, EARLY, d_rf, *at + *slack);
-            }
-          }
-          else {
-            auto at = _from._at[EARLY][ck_rf];
-            auto slack = _to.slack(LATE, d_rf);
-            if(at && slack) {
-              _from._relax_rat(this, EARLY, ck_rf, LATE, d_rf, *at - *slack);
-            }
-          }
-        }
-      }*/
     }
   }, _handle);
 }
