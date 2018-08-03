@@ -205,24 +205,23 @@ with all timing up-to-date.
 
 ## Accessor: Inspect OpenTimer
 
-The *accessor* operations let you inspect the timer status and dump static information
-that can be helpful for debugging and turnaround.
+The *accessor* operations let you inspect the timer status and dump timing information.
 All accessor operations are declared as *const methods* in the timer class. 
 Calling them promises not to alter any internal members.
+For example, you can dump the timing graph into a dot format and use tools like [GraphViz][GraphViz]
+for visualization.
+
+<img align="right" src="image/simple_graph_raw.png" width="70%">
 
 ```bash
-ot> dump_slack  # dump all slack values of the present state
-Slack [pins:17|time:1ns]
------------------------------------------------------------
-       E/R         E/F         L/R         L/F          Pin
------------------------------------------------------------
-       -22       -23.3        67.3          66         u1:A
-       n/a       0.328         n/a       -23.3  tau2015_clk
-       ...         ...         ...         ...          ...
-      25.8        26.5       -15.8       -16.5          out
-      26.5        25.8       -16.5       -15.8         u3:A
-     -22.5       -23.3          44        49.4         u4:Y
------------------------------------------------------------
+ot> dump_graph  
+digraph TimingGraph {
+  "inp1";
+  ...
+  "f1:CLK" -> "f1:Q";
+  "u1:B" -> "u1:Y";
+  "u1:A" -> "u1:Y";
+}
 ```
 
 # OpenTimer Shell
@@ -280,7 +279,7 @@ bin/  include/  lib/  # OpenTimer headers, libraries, and binaries
 
 To build your application on top of the OpenTimer headers and library,
 you need `-std=c++1z` and `-lstdc++fs` flags
-to enable C++17 standard and filesystem libraries.
+to enable C++17 standard and [filesystem](https://en.cppreference.com/w/cpp/experimental/fs) libraries.
 
 ```bash
 ~$ g++ app.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o app.out
@@ -406,17 +405,16 @@ OpenTimer is being actively developed and contributed by the following people:
 -->
 
 Please don't hesitate to [let me know][email me] if I forgot someone! 
-Meanwhile, we appreciate the funding support from our sponsors to continue our development of OpenTimer.
+Meanwhile, we appreciate the support from many organizations for our development of OpenTimer.
 
-| [<img src="image/nsf.png" width="100px">](https://www.nsf.gov/) | [<img src="image/darpa.png" width="100px">](https://www.darpa.mil/work-with-us/electronics-resurgence-initiative) |
-| :---: | :---: |
+| [<img src="image/uiuc.png" width="100px">][UIUC] | [<img src="image/nsf.png" width="100px">][NSF] | [<img src="image/darpa.png" width="100px">][DARPA IDEA] | [<img src="image/vsd.jpg" width="100px">][VSD] |
+| :---: | :---: | :---: | :---: |
 
 
 
 # License
 
-<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png" height="80px">
-<img align="right" src="image/uiuc.png" height="80px">
+<img align="right" src="http://opensource.org/trademarks/opensource/OSI-Approved-License-100x137.png">
 
 OpenTimer is licensed under the [MIT License](./LICENSE):
 
@@ -467,5 +465,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
 [OpenDesign]:            https://github.com/jinwookjungs/open_design_flow
 [DARPA IDEA]:            https://www.darpa.mil/news-events/2017-09-13
+[NSF]:                   https://www.nsf.gov/
+[UIUC]:                  https://illinois.edu/
   
 
