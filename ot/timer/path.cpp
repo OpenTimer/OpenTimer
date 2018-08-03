@@ -99,21 +99,21 @@ std::vector<Path> Timer::worst_paths(size_t K) {
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(Split el, size_t K) {
+std::vector<Path> Timer::worst_paths(size_t K, Split el) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(el, K), K);
+  return _worst_paths(_worst_endpoints(K, el), K);
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(Tran rf, size_t K) {
+std::vector<Path> Timer::worst_paths(size_t K, Tran rf) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(rf, K), K);
+  return _worst_paths(_worst_endpoints(K, rf), K);
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(Split el, Tran rf, size_t K) {
+std::vector<Path> Timer::worst_paths(size_t K, Split el, Tran rf) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(el, rf, K), K);
+  return _worst_paths(_worst_endpoints(K, el, rf), K);
 }
 
 // Function: _worst_paths
@@ -124,17 +124,15 @@ std::vector<Path> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t
   if(K == 0 || wepts.empty()) {
     return {};
   }
-  else { 
-    std::vector<Path> paths;
 
-    // No need to generate prefix tree
-    if(K == 1) {
-      paths.push_back(_worst_path(wepts[0]));
-    }
-    else {
-      OT_LOGW("unsupported yet");
-    }
-    return paths;
+  // No need to generate prefix tree
+  if(K == 1) {
+    return {_extract_path(wepts[0])};
+  }
+  // Generate the prefix tree
+  else {
+    OT_LOGF("unsupported yet");
+    return _extract_paths(wepts, K);
   }
 }
 
@@ -183,28 +181,36 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
 }
 
 // Function: _worst_path
-Path Timer::_worst_path(const SfxtCache& sfxt) const {
+Path Timer::_extract_path(const SfxtCache& sfxt) const {
 
   assert(sfxt.slack());
 
   Path path;
 
-  // extract the prefix
+  // extract the prefix (data part)
   _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
 
-  // extract the suffix
+  // extract the suffix (clock part)
   _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
 
   return path;
 }
 
 // Function: _worst_path
-Path Timer::_worst_path(const Endpoint& ept) const {
+Path Timer::_extract_path(const Endpoint& ept) const {
   //OT_LOGD("edpt: ", ept.is_test(), " ", ept.is_po(), " ", ept.slack());
   auto sfxt = _sfxt_cache(ept);
   //OT_LOGD("sfxt: ", *sfxt.slack());
-  return _worst_path(sfxt);
+  return _extract_path(sfxt);
 }
+
+// Function: _extract_paths
+std::vector<Path> Timer::_extract_paths(const std::vector<Endpoint>& epts, size_t K) {
+
+  assert(epts.size() <= K);
+
+}
+
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

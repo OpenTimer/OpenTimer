@@ -74,9 +74,9 @@ class Timer {
     std::optional<float> wns();
     
     std::vector<Path> worst_paths(size_t);
-    std::vector<Path> worst_paths(Split, size_t);
-    std::vector<Path> worst_paths(Tran, size_t);
-    std::vector<Path> worst_paths(Split, Tran, size_t);
+    std::vector<Path> worst_paths(size_t, Split);
+    std::vector<Path> worst_paths(size_t, Tran);
+    std::vector<Path> worst_paths(size_t, Split, Tran);
 
     // Accessor
     std::string dump_graph() const;
@@ -154,14 +154,16 @@ class Timer {
     std::vector<Arc*> _idx2arc;
 
     std::vector<Endpoint> _worst_endpoints(size_t);
-    std::vector<Endpoint> _worst_endpoints(Split, size_t);
-    std::vector<Endpoint> _worst_endpoints(Tran, size_t);
-    std::vector<Endpoint> _worst_endpoints(Split, Tran, size_t);
+    std::vector<Endpoint> _worst_endpoints(size_t, Split);
+    std::vector<Endpoint> _worst_endpoints(size_t, Tran);
+    std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
 
-    Path _worst_path(const SfxtCache&) const;
-    Path _worst_path(const Endpoint&) const;
-    
     std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
+    std::vector<Path> _extract_paths(const std::vector<Endpoint>&, size_t);
+    
+    Path _extract_path(const SfxtCache&) const;
+    Path _extract_path(const Endpoint&) const;
+
     
     bool _is_redundant_timing(const Timing&, Split) const;
 

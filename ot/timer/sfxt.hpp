@@ -5,8 +5,10 @@
 
 namespace ot {
 
-// SfxtCache: The internal thread-local storage to construct suffix tree
-// for path-based timing analysis.
+// Class: SfxtCache
+// The internal thread-local storage to construct suffix tree for 
+// path-based timing analysis. The suffix tree is a shortest path tree 
+// generated from an endpoint.
 class SfxtCache {
 
   friend class Timer;
@@ -31,8 +33,8 @@ class SfxtCache {
     inline thread_local static std::vector<std::optional<bool>>   __spfa;
 
     Split _el;
-    size_t _S;
-    size_t _T;
+    size_t _S;    // super source
+    size_t _T;    // root
 
     std::unordered_set<size_t> _pins;
     std::unordered_set<size_t> _srcs;

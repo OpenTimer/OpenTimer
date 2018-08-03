@@ -9,9 +9,7 @@ Endpoint::Endpoint(Split el, Tran rf, Test& test) :
   _rf  {rf},
   _handle {test} {
   
-  if(!test.slack(el, rf)) {
-    OT_LOGF("test slack not defined");
-  }
+  OT_LOGF_IF(!test.slack(el, rf), "test slack not defined");
 }
 
 // Constructor
@@ -20,9 +18,7 @@ Endpoint::Endpoint(Split el, Tran rf, PrimaryOutput& po) :
   _rf {rf},
   _handle {po} {
   
-  if(!po.slack(el, rf)) {
-    OT_LOGF("po slack not defined");
-  }
+  OT_LOGF_IF(!po.slack(el, rf), "PO slack not defined");
 }
 
 // Operator <
@@ -53,19 +49,11 @@ bool Endpoint::is_test() const {
 // Function: _test
 Test& Endpoint::_test() {
   return std::get<TestHandle>(_handle);
-  //if(auto ptr = std::get_if<Test*>(&_handle); ptr) {
-  //  return *ptr;
-  //}
-  //else return nullptr;
 }
 
 // Function: _po
 PrimaryOutput& Endpoint::_po() {
   return std::get<PrimaryOutputHandle>(_handle);
-  //if(auto ptr = std::get_if<PrimaryOutput*>(&_handle); ptr) {
-  //  return *ptr;
-  //}
-  //else return nullptr;
 }
 
 // Function: slack
@@ -73,10 +61,6 @@ float Endpoint::slack() const {
   return std::visit([this] (auto&& handle) {
     return *(handle.get().slack(_el, _rf));
   }, _handle);
-  //return std::visit(Functors{
-  //  [this] (TestHandle& test) { return *test.get().slack(_el, _rf); },
-  //  [this] (PrimaryOutputHandle& po) { return *po.get().slack(_el, _rf); }
-  //}, _handle);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -189,7 +173,7 @@ void EndpointHeap::_bubble_down(size_t idx, Endpoint& e) {
 // ------------------------------------------------------------------------------------------------
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(Split el, Tran rf, size_t K) {
+std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el, Tran rf) {
   _update_endpoints();
   auto beg = _endpoints[el][rf].begin();
   auto end = std::next(_endpoints[el][rf].begin(), std::min(K, _endpoints[el][rf].size()));
@@ -226,7 +210,7 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K) {
 }
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(Split el, size_t K) {
+std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el) {
 
   _update_endpoints();
 
@@ -253,7 +237,7 @@ std::vector<Endpoint> Timer::_worst_endpoints(Split el, size_t K) {
 }
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(Tran rf, size_t K) {
+std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Tran rf) {
 
   _update_endpoints();
 
@@ -278,6 +262,8 @@ std::vector<Endpoint> Timer::_worst_endpoints(Tran rf, size_t K) {
 
   return epts;
 }
+
+//
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

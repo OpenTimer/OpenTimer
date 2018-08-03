@@ -388,8 +388,8 @@ Many industry and academic people are using OpenTimer in their projects:
 - [VSD][VSD], VLSI System Design Corporation
 - [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
 
-| [<img src="image/tau16.png" width="100px">](https://sites.google.com/site/taucontest2016/) | [<img src="image/tau17.png" width="100px">](https://sites.google.com/site/taucontest2017/) | [<img src="image/CAD-contest.png" width="100px">](http://cad-contest.el.cycu.edu.tw/problem_C/default.html) | [<img src="image/vsd.jpg" width="100px">](https://www.vlsisystemdesign.com/) |
-| :---: | :---: | :---: | :---: |
+| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
+| :---: | :---: | :---: | :---: | :---: |
 
 
 Please don't hesitate to [let me know][email me] if I forgot your project! 
@@ -401,7 +401,7 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 + Submit contributions using [pull requests][Github pull requests].
 + See documentation and manual in [OpenTimer Wiki][OpenTimer Wiki].
 + Stay tuned with our [project progress][Github projects].
-+ Read and cite our ACM/IEEE [ICCAD paper][OpenTimerPaper].
++ Read and cite our [ICCAD15][OpenTimerPaper] and [TCAD16][UI-TimerPaper] papers.
 
 # Contributors & Acknowledgment
 OpenTimer is being actively developed and contributed by the following people:
@@ -471,8 +471,8 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html
 [OpenTimerCitation]:     https://scholar.google.com/scholar?oi=bibs&hl=en&cites=142282068238605079
-[OpenTimerPaper]:        https://github.com/OpenTimer/OpenTimer/blob/master/doc/iccad15.pdf
-[UI-TimerPaper]:         https://github.com/OpenTimer/OpenTimer/blob/master/doc/iccad14.pdf
+[OpenTimerPaper]:        doc/iccad15.pdf
+[UI-TimerPaper]:         doc/tcad16.pdf
 [email me]:              mailto:twh760812@gmail.com
 [Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
 [VSD]:                   https://www.vlsisystemdesign.com/

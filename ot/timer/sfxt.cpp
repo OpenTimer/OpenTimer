@@ -82,6 +82,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
 }
 
 // Function: _sfxt_cache
+// Find the suffix tree rooted at the primary output po.
 SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
   
   assert(po._rat[el][rf]);
@@ -114,6 +115,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
 }
 
 // Function: _sfxt_cache
+// Find the suffix tree rooted at the test
 SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
 
   assert(test._rat[el][rf]);
