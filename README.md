@@ -256,7 +256,29 @@ To see the full command list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
 There are a number of ways to develop your project on top of OpenTimer.
 
-## Install OpenTimer through CMake
+## Option 1: Add OpenTimer Subproject
+
+The easiest way to build an OpenTimer application is to include it as a subproject
+using CMake [add_subdirectory](https://cmake.org/cmake/help/latest/command/add_subdirectory.html).
+Copy OpenTimer to your project root directory and configure your CMakeLists 
+[as follows](doc/CMakeLists-Subproject.template):
+
+```bash
+cmake_minimum_required (VERSION 3.9)                  # CMake minimum version
+project(app)                                          # your OpenTimer application
+add_subdirectory(OpenTimer)                           # add OpenTimer project
+include_directories(${PROJECT_SOURCE_DIR}/OpenTimer)  # add OpenTimer include
+
+set(CMAKE_CXX_STANDARD 17)                            # enable c++17
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+find_package(Threads REQUIRED)                        # thread library (pthread)
+
+add_executable(app app.cpp)                           # executable and linkage
+target_link_libraries(app OpenTimer Threads::Threads stdc++fs)
+```
+
+## Option 2: Install OpenTimer 
 
 Our project [CMakeLists.txt](CMakeLists.txt) has defined the required files
 to install when you hit `make install`.
@@ -274,8 +296,6 @@ The following example installs OpenTimer to `/tmp`.
 ~$ ls
 bin/  include/  lib/  # OpenTimer headers, libraries, and binaries
 ```
-
-## Compile and Link
 
 To build your application on top of the OpenTimer headers and library,
 you need `-std=c++1z` and `-lstdc++fs` flags
@@ -315,11 +335,11 @@ The table below summarizes a list of commonly used methods.
 The example below shows an OpenTimer application and the use of builder, action, and accessor API.
 
 ```cpp
-#include <ot/timer/timer.hpp>
+#include <ot/timer/timer.hpp>                // top-level header to include
 
 int main(int argc, char *argv[]) {
   
-  ot::Timer timer;
+  ot::Timer timer;                           // create a timer instance (thread-safe)
   
   timer.celllib("simple.lib", std::nullopt)  // read the library (builder - O(1))
        .verilog("simple.v")                  // read the verilog netlist (builder - O(1))

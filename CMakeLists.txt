@@ -195,28 +195,28 @@ add_library(OpenTimer ${OT_CPP} ${OT_HPP})
 message(STATUS "Building executables ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
-list(APPEND OT_EXE_LINKER_FLAGS "")
-list(APPEND OT_EXE_LINKER_FLAGS OpenTimer)
-list(APPEND OT_EXE_LINKER_FLAGS Threads::Threads)
-list(APPEND OT_EXE_LINKER_FLAGS stdc++fs)
-message(STATUS "OT_EXE_LINKER_FLAGS: ${OT_EXE_LINKER_FLAGS}")
+list(APPEND OT_LINK_FLAGS "")
+list(APPEND OT_LINK_FLAGS OpenTimer)
+list(APPEND OT_LINK_FLAGS Threads::Threads)
+list(APPEND OT_LINK_FLAGS stdc++fs)
+message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15
 set(OT_TAU15 ${PROJECT_SOURCE_DIR}/bin/ot-tau15)
 add_executable(ot-tau15 main/tau15/tau15.cpp)
-target_link_libraries(ot-tau15 ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(ot-tau15 ${OT_LINK_FLAGS})
 message(STATUS "TAU15 executable: ${OT_TAU15}")
 
 # utility
 set(OT_UTILITY ${PROJECT_SOURCE_DIR}/bin/ot-utility)
 add_executable(ot-utility main/utility/utility.cpp)
-target_link_libraries(ot-utility ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(ot-utility ${OT_LINK_FLAGS})
 message(STATUS "Utility executable: ${OT_UTILITY}")
 
 # shell
 set(OT_SHELL ${PROJECT_SOURCE_DIR}/bin/ot-shell)
 add_executable(ot-shell main/shell/shell.cpp)
-target_link_libraries(ot-shell ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(ot-shell ${OT_LINK_FLAGS})
 message(STATUS "OpenTimer shell: ${OT_SHELL}")
 
 ###########################################################
@@ -226,12 +226,12 @@ message(STATUS "OpenTimer shell: ${OT_SHELL}")
 #s27
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/s27)
 add_executable(s27 example/s27/s27.cpp)
-target_link_libraries(s27 ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(s27 ${OT_LINK_FLAGS})
 
 #aes_cipher
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/aes_cipher)
 #add_executable(aes_cipher example/aes_cipher/aes_cipher.cpp)
-#target_link_libraries(aes_cipher ${OT_EXE_LINKER_FLAGS})
+#target_link_libraries(aes_cipher ${OT_LINK_FLAGS})
 
 ###########################################################
 # Install
@@ -265,10 +265,10 @@ message(STATUS "Building unit tests ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/unittest)
 
 add_executable(utility unittest/utility.cpp)
-target_link_libraries(utility ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(utility ${OT_LINK_FLAGS})
 
 add_executable(unit unittest/unit.cpp)
-target_link_libraries(unit ${OT_EXE_LINKER_FLAGS})
+target_link_libraries(unit ${OT_LINK_FLAGS})
 
 add_test(unittest.utility ${OT_UNITTEST_DIR}/utility -d yes)
 add_test(unittest.unit ${OT_UNITTEST_DIR}/unit -d yes)

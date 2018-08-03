@@ -1,0 +1,22 @@
+# CMake setup
+cmake_minimum_required (VERSION 3.9)
+
+# Project name
+project(app)
+
+# Add OpenTimer project as a dependent
+add_subdirectory(OpenTimer)
+
+# Add OpenTimer include directory
+include_directories(${PROJECT_SOURCE_DIR}/OpenTimer)
+
+# enable cxx
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Find pthread
+find_package(Threads REQUIRED)
+
+# add executable
+add_executable(app app.cpp)
+target_link_libraries(app OpenTimer Threads::Threads stdc++fs)
