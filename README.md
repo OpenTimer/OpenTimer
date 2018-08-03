@@ -424,11 +424,11 @@ OpenTimer is being actively developed and contributed by the following people:
 | [<img src="image/george_chen.jpg" width="100px">][George Chen]| [<img src="image/poyi.jpg" width="100px">][Pao-I Chen] |
 -->
 
-Please don't hesitate to [let me know][email me] if I forgot someone! 
 Meanwhile, we appreciate the support from many organizations for our development of OpenTimer.
+Please don't hesitate to [let me know][email me] if I forgot you! 
 
-| [<img src="image/uiuc.png" width="100px">][UIUC] | [<img src="image/nsf.png" width="100px">][NSF] | [<img src="image/darpa.png" width="100px">][DARPA IDEA] | [<img src="image/vsd.jpg" width="100px">][VSD] |
-| :---: | :---: | :---: | :---: |
+| [<img src="image/uiuc.png" width="100px">][UIUC] | [<img src="image/csl.png" width="100px">][CSL] | [<img src="image/nsf.png" width="100px">][NSF] | [<img src="image/darpa.png" width="100px">][DARPA IDEA] | [<img src="image/vsd.jpg" width="100px">][VSD] |
+| :---: | :---: | :---: | :---: | :---: |
 
 
 
@@ -487,5 +487,6 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [DARPA IDEA]:            https://www.darpa.mil/news-events/2017-09-13
 [NSF]:                   https://www.nsf.gov/
 [UIUC]:                  https://illinois.edu/
+[CSL]:                   https://csl.illinois.edu/
   
 

@@ -10,7 +10,6 @@ inline const std::string welcome = "\
 \\____/ .__/\\__/_//_/_/ /_/_/_/_/\\__/_/       v"s + OT_VERSION + "\n" + "\
     /_/                                     \n\
 MIT License: type \"license\" to see more details.\n\
-To see the contributor list, type \"contributors\".\n\
 For help, type \"help\".\n\
 For bug reports, issues, and manual, please see:\n\
 <https://github.com/OpenTimer/OpenTimer>.\n";

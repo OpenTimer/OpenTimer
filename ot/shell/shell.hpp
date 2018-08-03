@@ -41,7 +41,6 @@ void report_wns             (Timer&, std::istream&, std::ostream&, std::ostream&
 void dump_version           (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_help              (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_license           (Timer&, std::istream&, std::ostream&, std::ostream&);
-void dump_contributors      (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_graph             (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_celllib           (Timer&, std::istream&, std::ostream&, std::ostream&);
 void dump_net_load          (Timer&, std::istream&, std::ostream&, std::ostream&);
@@ -103,7 +102,6 @@ inline const std::unordered_map<
   {"help",                    dump_help},
   {"version",                 dump_version},
   {"license",                 dump_license},
-  {"contributors",            dump_contributors},
   {"dump_graph",              dump_graph},
   {"dump_celllib",            dump_celllib},
   {"dump_net_load",           dump_net_load},

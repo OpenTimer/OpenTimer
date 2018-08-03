@@ -42,29 +42,6 @@ SOFTWARE.\n";
 
 // ------------------------------------------------------------------------------------------------
 
-// Procedure: dump_contributors
-void dump_contributors(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-
-  // contributor list
-  static std::string_view contributors = "\n\
-OpenTimer contributor list:\n\n\
-  Tsung-Wei Huang    <twh760812@gmail.com>\n\
-  Martin Wong        <mdfwong@illinois.edu>\n\
-  Chun-Xun Lin       <clin99@illinois.edu>\n\
-  Kunal Ghosh        <kunalpghosh@gmail.com>\n\
-  Pei-Yu Lee         <palacedeforsaken@gmail.com>\n\
-  Tin-Yin Lai        <tinyinlai@gmail.com>\n\
-  Jin Hu             <jinhu@umich.edu>\n\
-  Myung-Chul Kim     <mckima@us.ibm.com>\n\
-  George Chen        <george@geochrist.com>\n\
-  Pao-I Chen         <poyipenny@gmail.com>\n\
-\nPlease let me know <twh760812@gmail.com> if I forgot someone!\n";
-  
-  os << contributors << '\n';
-}
-
-// ------------------------------------------------------------------------------------------------
-
 // Procedure: dump_help
 void dump_help(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
 
@@ -101,7 +78,6 @@ List of commonly used commands:\n\
 \n[Dump] operations to inspect the timer\n\n\
   help\n\
   version\n\
-  contributors\n\
   dump_graph         [-o <file>]\n\
   dump_celllib       [-o <file>] [-early|-late] [-cell <name>]\n\
   dump_net_load      [-o <file>]\n\
