@@ -271,25 +271,16 @@ The following example installs OpenTimer to `/tmp`.
 ~$ cmake ../ -DCMAKE_INSTALL_PREFIX=/tmp
 ~$ make 
 ~$ make install
-~$ cd /tmp    # install OpenTimer to /tmp
+~$ cd /tmp            # install OpenTimer to /tmp
 ~$ ls
-bin/  include/  lib/
+bin/  include/  lib/  # OpenTimer headers, libraries, and binaries
 ```
 
-Now create a `app.cpp` file under `/tmp` that does nothing but dumps the timer details.
+## Compile and Link
 
-```cpp
-#include <ot/timer/timer.hpp>
-int main(int argc, char* argv[]) {
-  ot::Timer timer;
-  std::cout << timer.dump_timer();
-  return 0;
-}
-```
-
-Compile your application together with the OpenTimer headers and library.
-You will need to specify the `-std=c++1z` and `-lstdc++fs` flags
-to use C++17 features and filesystem libraries.
+To build your application on top of the OpenTimer headers and library,
+you need `-std=c++1z` and `-lstdc++fs` flags
+to enable C++17 standard and filesystem libraries.
 
 ```bash
 ~$ g++ app.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o app.out
@@ -298,9 +289,8 @@ to use C++17 features and filesystem libraries.
 
 # OpenTimer C++ API
 
-OpenTimer is written in modern C++17.
 The class [Timer](ot/timer/timer.hpp) is the main entry you need to 
-use OpenTimer in your project. 
+call OpenTimer in your project. 
 The table below summarizes a list of commonly used methods.
 
 | Method | Type | Argument | Return | Description |
@@ -332,16 +322,17 @@ int main(int argc, char *argv[]) {
   
   ot::Timer timer;
   
-  timer.celllib("simple.lib", std::nullopt)  // read the library (builder)
-       .verilog("simple.v")                  // read the verilog netlist (builder)
-       .spef("simple.spef")                  // read the parasitics (builder)
-       .sdc("simple.sdc")                    // read the design constraints (builder)
-       .update_timing();                     // update timing (builder)
+  timer.celllib("simple.lib", std::nullopt)  // read the library (builder - O(1))
+       .verilog("simple.v")                  // read the verilog netlist (builder - O(1))
+       .spef("simple.spef")                  // read the parasitics (builder - O(1))
+       .sdc("simple.sdc")                    // read the design constraints (builder - O(1))
+       .update_timing();                     // update timing (builder - O(1))
 
-  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action)
-  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action)
+  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action - O(N))
+  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action - O(N))
 
-  std::cout << timer.dump_timer();  // dump the timer details (dump)
+  std::cout << timer.dump_timer()   // dump the timer details (accessor - O(1))
+            << timer.dump_slack();  // dump the slack (accessor - O(N))
   
   return 0;
 }
@@ -359,7 +350,7 @@ The folder [example](./example) contains several examples and is a great place t
 | [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| ot-shell < c17.conf |
 | [s27](./example/s27) | A C++ application using OpenTimer API to analyze the timing of a sequential circuit.| ./s27 |
 
-The folder [benchmark](./benchmark) contains more designs but they are mainly used for internal regression 
+The folder [benchmark](./benchmark) contains more designs and they are mainly used for internal regression 
 and integration tests.
 
 
@@ -389,7 +380,7 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 
 + Report bugs/issues by submitting a [Github issue][Github issues].
 + Submit contributions using [pull requests][Github pull requests].
-+ See development status by visiting [OpenTimer Wiki][OpenTimer Wiki].
++ See documentation and manual in [OpenTimer Wiki][OpenTimer Wiki].
 + Stay tuned with our [project progress][Github projects].
 + Read and cite our ACM/IEEE [ICCAD paper][OpenTimerPaper].
 
