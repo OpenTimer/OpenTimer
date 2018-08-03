@@ -244,6 +244,7 @@ target_link_libraries(s27 ${OT_EXE_LINKER_FLAGS})
 #  install(FILES ${file} DESTINATION include/${dir} )
 #endforeach()
 
+# include
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/ot DESTINATION include)
 
 # library
