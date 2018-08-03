@@ -401,7 +401,7 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 + Submit contributions using [pull requests][Github pull requests].
 + See documentation and manual in [OpenTimer Wiki][OpenTimer Wiki].
 + Stay tuned with our [project progress][Github projects].
-+ Read and cite our [ICCAD15][OpenTimerPaper] and [TCAD16][UI-TimerPaper] papers.
++ Read and cite our [ICCAD][OpenTimerPaper] and [TCAD][UI-TimerPaper] papers.
 
 # Contributors & Acknowledgment
 OpenTimer is being actively developed and contributed by the following people:
