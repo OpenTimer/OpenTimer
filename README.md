@@ -217,7 +217,7 @@ for visualization.
 ot> dump_graph  
 digraph TimingGraph {
   "inp1";
-  ...
+  ...  # skip for short
   "f1:CLK" -> "f1:Q";
   "u1:B" -> "u1:Y";
   "u1:A" -> "u1:Y";
