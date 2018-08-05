@@ -127,7 +127,11 @@ std::vector<Path> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t
 
   // No need to generate prefix tree
   if(K == 1) {
-    return {_extract_path(wepts[0])};
+    std::vector<Path> paths(1);
+    auto sfxt = _sfxt_cache(wepts[0]);
+    _recover_prefix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
+    _recover_suffix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
+    return paths;
   }
   // Generate the prefix tree
   else {

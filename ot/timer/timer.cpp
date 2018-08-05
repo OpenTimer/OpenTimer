@@ -936,7 +936,10 @@ void Timer::update_timing() {
 void Timer::_update_timing() {
   
   // Timing is update-to-date
-  if(!_lineage) return;
+  if(!_lineage) {
+    assert(_frontiers.size() == 0);
+    return;
+  }
 
   _taskflow.wait_for_all();
   _lineage.reset();
