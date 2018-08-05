@@ -263,7 +263,7 @@ using CMake [add_subdirectory](https://cmake.org/cmake/help/latest/command/add_s
 Copy OpenTimer to your project root directory and configure your CMakeLists 
 [as follows](doc/CMakeLists-Subproject.template):
 
-```bash
+```CMake
 cmake_minimum_required (VERSION 3.9)                  # CMake minimum version
 project(app)                                          # your OpenTimer application
 add_subdirectory(OpenTimer)                           # add OpenTimer project
@@ -382,14 +382,15 @@ and the [special price][LibreCores] from 2016 LibreCores Design Contest.
 Many industry and academic people are using OpenTimer in their projects:
 
 - [Golden Timer][TAU19], 2019 ACM TAU Timing Analysis Contest on Timing-driven Optimization
+- [Golden Timer][TAU18], 2018 ACM TAU Timing Analysis Contest on Timing Reports from an STA Graph
 - [Golden Timer][TAU17], 2017 ACM TAU Timing Analysis Contest on Micro Modeling
 - [Golden Timer][TAU16], 2016 ACM TAU Timing Analysis Contest on Micro Modeling
 - [Golden Timer][ICCAD15], 2015 ACM/IEEE ICCAD Incremental Timing-driven Placement Contest
 - [VSD][VSD], VLSI System Design Corporation
 - [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
 
-| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
-| :---: | :---: | :---: | :---: | :---: |
+| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
+| :---: | :---: | :---: | :---: | :---: | :---: |
 
 
 Please don't hesitate to [let me know][email me] if I forgot your project! 
@@ -481,6 +482,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [TAU15]:                 https://sites.google.com/site/taucontest2015/
 [TAU16]:                 https://sites.google.com/site/taucontest2016/
 [TAU17]:                 https://sites.google.com/site/taucontest2017/
+[TAU18]:                 https://sites.google.com/view/taucontest2018/
 [TAU19]:                 https://sites.google.com/view/tau-contest-2019/home
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
 [OpenDesign]:            https://github.com/jinwookjungs/open_design_flow

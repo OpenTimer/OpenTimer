@@ -5,6 +5,22 @@
 
 namespace ot {
 
+// Struct: SfxtMirror
+// Mirror of a suffix tree, i.e., a copy of the tree exported from SfxtCache.
+struct SfxtMirror {
+    
+  Split el;
+  size_t S;    // super source
+  size_t T;    // root
+
+  std::unordered_map<size_t, std::optional<float>>  dist;
+  std::unordered_map<size_t, std::optional<size_t>> tree;
+  std::unordered_map<size_t, std::optional<size_t>> link;
+  std::unordered_map<size_t, std::optional<float>>  srcs;
+};
+
+// ------------------------------------------------------------------------------------------------
+
 // Class: SfxtCache
 // The internal thread-local storage to construct suffix tree for 
 // path-based timing analysis. The suffix tree is a shortest path tree 
@@ -25,19 +41,21 @@ class SfxtCache {
 
     inline std::optional<float> slack() const;
 
+    SfxtMirror mirrorize() const;
+
   private:
-
-    inline thread_local static std::vector<std::optional<float>>  __dist;
-    inline thread_local static std::vector<std::optional<size_t>> __tree;
-    inline thread_local static std::vector<std::optional<size_t>> __link;
-    inline thread_local static std::vector<std::optional<bool>>   __spfa;
-
+    
     Split _el;
     size_t _S;    // super source
     size_t _T;    // root
 
     std::unordered_set<size_t> _pins;
-    std::unordered_set<size_t> _srcs;
+    std::unordered_map<size_t, std::optional<float>> _srcs;
+
+    inline thread_local static std::vector<std::optional<float>>  __dist;
+    inline thread_local static std::vector<std::optional<size_t>> __tree;
+    inline thread_local static std::vector<std::optional<size_t>> __link;
+    inline thread_local static std::vector<std::optional<bool>>   __spfa;
 
     bool _relax(size_t, size_t, std::optional<size_t>, float);
 };

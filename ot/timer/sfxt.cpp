@@ -22,7 +22,7 @@ SfxtCache::SfxtCache(SfxtCache&& rhs) :
 
 // Destructor
 SfxtCache::~SfxtCache() {
-  for(auto p : _pins) {
+  for(const auto& p : _pins) {
     __dist[p].reset();
     __tree[p].reset();
     __link[p].reset();
@@ -39,6 +39,22 @@ bool SfxtCache::_relax(size_t u, size_t v, std::optional<size_t> e, float d) {
     return true;
   }
   return false;
+}
+
+// Function: mirrorize
+SfxtMirror SfxtCache::mirrorize() const {
+
+  SfxtMirror mirror {_el, _S, _T};
+
+  for(const auto& p : _pins) {
+    mirror.dist[p] = __dist[p];
+    mirror.tree[p] = __tree[p];
+    mirror.link[p] = __link[p];
+  }
+
+  mirror.srcs = _srcs;
+  
+  return mirror;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -60,7 +76,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
 
     // Stop at the data source
     if(pin->is_datapath_source()) {
-      sfxt._srcs.insert(v);
+      sfxt._srcs.try_emplace(v, std::nullopt);
       continue;
     }
 
@@ -105,9 +121,9 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
   _spfa(sfxt, queue);
   
   // relax sources
-  for(auto s : sfxt._srcs) {
-    if(auto offset = _sfxt_offset(sfxt, s); offset) {
-      sfxt._relax(S, s, std::nullopt, *offset);
+  for(auto& [s, v] : sfxt._srcs) {
+    if(v = _sfxt_offset(sfxt, s); v) {
+      sfxt._relax(S, s, std::nullopt, *v);
     }
   }
 
@@ -138,17 +154,17 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
   // relaxation from the sources
   if(_cppr_analysis) {
     auto cppr = _cppr_cache(test, el, rf);
-    for(auto s : sfxt._srcs) {
+    for(auto& [s, v] : sfxt._srcs) {
       auto [pin, srf] = _decode_pin(s);
-      if(auto offset = _cppr_offset(cppr, *pin, el, srf); offset) {
-        sfxt._relax(S, s, std::nullopt, *offset);
+      if(v = _cppr_offset(cppr, *pin, el, srf); v) {
+        sfxt._relax(S, s, std::nullopt, *v);
       }
     }
   }
   else {
-    for(auto s : sfxt._srcs) {
-      if(auto offset = _sfxt_offset(sfxt, s); offset) {
-        sfxt._relax(S, s, std::nullopt, *offset);
+    for(auto& [s, v] : sfxt._srcs) {
+      if(v = _sfxt_offset(sfxt, s); v) {
+        sfxt._relax(S, s, std::nullopt, *v);
       }
     }
   }

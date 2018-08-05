@@ -209,6 +209,14 @@ std::vector<Path> Timer::_extract_paths(const std::vector<Endpoint>& epts, size_
 
   assert(epts.size() <= K);
 
+  // Generate a sufx mirror for each endpoint
+  //_taskflow.parallel_for(epts.begin(), epts.end(), [] (const auto& ept) {
+
+  //});
+
+  //_taskflow.wait_for_all();
+
+  return {};
 }
 
 
