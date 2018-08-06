@@ -42,8 +42,8 @@ void Timer::_to_time_unit(const TimeUnit& unit) {
   }
 
   // scale clock time
-  if(_clocks) {
-    _clocks->_scale_time(s);
+  for(auto& kvp : _clocks) {
+    kvp.second._scale_time(s);
   }
 
   // library time

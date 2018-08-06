@@ -326,6 +326,7 @@ The table below summarizes a list of commonly used methods.
 | slack | action | pin_name, split, transition | optional of float | update the timing and return the slack of a pin at a give split and transition, if exists |
 | tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
+| worst_paths | action | K | future of paths | update the timing and return a future to the path output |
 | dump_graph | accessor | n/a | string | dump the present timing graph to a dot format |
 | dump_timer | accessor | n/a | string | dump the present timer details |
 | dump_slack | accessor | n/a | string | dump the present slack values of all pins |
@@ -341,17 +342,19 @@ int main(int argc, char *argv[]) {
   
   ot::Timer timer;                           // create a timer instance (thread-safe)
   
-  timer.celllib("simple.lib", std::nullopt)  // read the library (builder - O(1))
-       .verilog("simple.v")                  // read the verilog netlist (builder - O(1))
-       .spef("simple.spef")                  // read the parasitics (builder - O(1))
-       .sdc("simple.sdc")                    // read the design constraints (builder - O(1))
-       .update_timing();                     // update timing (builder - O(1))
+  timer.celllib("simple.lib", std::nullopt)  // read the library (O(1) builder)
+       .verilog("simple.v")                  // read the verilog netlist (O(1) builder)
+       .spef("simple.spef")                  // read the parasitics (O(1) builder)
+       .sdc("simple.sdc")                    // read the design constraints (O(1) builder)
+       .update_timing();                     // update timing (O(1) builder)
 
-  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action - O(N))
-  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action - O(N))
+  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
+  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
 
-  std::cout << timer.dump_timer()   // dump the timer details (accessor - O(1))
-            << timer.dump_slack();  // dump the slack (accessor - O(N))
+  std::cout << timer.dump_timer();  // dump the timer details (O(1) accessor)
+
+  std::future<ot::Paths> fu = timer.worst_paths(1);  // find critical paths (O(NlogN) action)
+  std::cout << fu.get()[0];
   
   return 0;
 }

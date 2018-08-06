@@ -460,16 +460,16 @@ void Timer::_cppr(bool enable) {
 }
 
 // Function: clock
-Timer& Timer::clock(std::string name, float period) {
+Timer& Timer::clock(std::string c, std::string s, float p) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), period] () {
-    if(auto itr = _pins.find(name); itr != _pins.end()) {
-      _clock(itr->first, itr->second, period);
+  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), s=std::move(s), p] () {
+    if(auto itr = _pins.find(s); itr != _pins.end()) {
+      _insert_clock(c, itr->second, p);
     }
     else {
-      OT_LOGW("can't create clock (pin ", name, " not found");
+      OT_LOGW("can't create clock ", c, " (pin ", s, " not found");
     }
   });
   
@@ -479,10 +479,32 @@ Timer& Timer::clock(std::string name, float period) {
   return *this;
 }
 
-// Procedure: _clock
-void Timer::_clock(const std::string& name, Pin& pin, float period) {
-  _clocks.emplace(name, pin, period); 
+// Function: clock
+Timer& Timer::clock(std::string c, float p) {
+  
+  std::scoped_lock lock(_mutex);
+
+  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), p] () {
+    _insert_clock(c, p);
+  });
+  
+  // parent -> modifier
+  _add_to_lineage(modifier);
+
+  return *this;
+}
+
+// Procedure: _insert_clock
+Clock& Timer::_insert_clock(const std::string& name, Pin& pin, float period) {
+  auto& clock = _clocks.try_emplace(name, name, pin, period).first->second;
   _insert_frontier(pin);
+  return clock;
+}
+
+// Procedure: _insert_clock
+Clock& Timer::_insert_clock(const std::string& name, float period) {
+  auto& clock = _clocks.try_emplace(name, name, period).first->second;
+  return clock;
 }
 
 // Function: insert_primary_input
@@ -720,11 +742,12 @@ void Timer::_fprop_test(Pin& pin) {
   }
   
   // Obtain the rat
-  if(_clocks) {
+  if(!_clocks.empty()) {
 
     // Update the rat
     for(auto test : pin._tests) {
-      test->_fprop_rat(_clocks->_period);
+      // TODO: currently we assume a single clock...
+      test->_fprop_rat(_clocks.begin()->second._period);
       
       // compute the cppr credit if any
       if(_cppr_analysis) {
@@ -941,6 +964,10 @@ void Timer::_update_timing() {
     return;
   }
 
+  // wait until running topologies finish
+  _taskflow.wait_for_topologies();
+  
+  // run tasks on the lineage
   _taskflow.wait_for_all();
   _lineage.reset();
   

@@ -30,6 +30,8 @@ int main(int argc, char *argv[]) {
     std::cout << "WNS is not available\n";
   }
 
+  auto raw_path = timer.worst_paths(1);
+
   // apply design modifiers
   timer.repower_gate("inst_10", "INV_X16")
        .insert_gate("TAUGATE_1", "BUF_X2")
@@ -69,6 +71,13 @@ int main(int argc, char *argv[]) {
   // Dump the slack
   std::cout << timer.dump_slack();
   
+  // report the path after optimization
+  auto opt_path = timer.worst_paths(1);
+
+  // compare
+  std::cout << "Path before optimization: \n" << raw_path.get()[0];
+  std::cout << "Path after  optimization: \n" << opt_path.get()[0];
+
   return 0;
 }
 

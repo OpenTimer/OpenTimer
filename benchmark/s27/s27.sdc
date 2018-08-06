@@ -47,8 +47,8 @@ set_input_transition 5 -min -rise [get_ports G0] -clock clk_net
 set_input_transition 5 -min -fall [get_ports G0] -clock clk_net
 set_input_transition 5 -max -rise [get_ports G0] -clock clk_net
 set_input_transition 5 -max -fall [get_ports G0] -clock clk_net
-set_output_delay 2.1 -min -rise [get_ports G17] -clock clk_net
-set_output_delay 2.1 -min -fall [get_ports G17] -clock clk_net
-set_output_delay 2.2 -max -rise [get_ports G17] -clock clk_net
-set_output_delay 2.2 -max -fall [get_ports G17] -clock clk_net
+set_output_delay -2.1 -min -rise [get_ports G17] -clock clk_net
+set_output_delay -2.1 -min -fall [get_ports G17] -clock clk_net
+set_output_delay -1.2 -max -rise [get_ports G17] -clock clk_net
+set_output_delay -1.2 -max -fall [get_ports G17] -clock clk_net
 set_load -pin_load 4 [get_ports G17]

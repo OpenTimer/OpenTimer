@@ -1879,323 +1879,323 @@ set_input_transition 5 -min -rise [get_ports x5028] -clock x677
 set_input_transition 5 -min -fall [get_ports x5028] -clock x677
 set_input_transition 5 -max -rise [get_ports x5028] -clock x677
 set_input_transition 5 -max -fall [get_ports x5028] -clock x677
-set_output_delay 210 -min -rise [get_ports x54] -clock x677
-set_output_delay 210 -min -fall [get_ports x54] -clock x677
-set_output_delay 220 -max -rise [get_ports x54] -clock x677
-set_output_delay 220 -max -fall [get_ports x54] -clock x677
+set_output_delay -210 -min -rise [get_ports x54] -clock x677
+set_output_delay -210 -min -fall [get_ports x54] -clock x677
+set_output_delay -120 -max -rise [get_ports x54] -clock x677
+set_output_delay -120 -max -fall [get_ports x54] -clock x677
 set_load -pin_load 4 [get_ports x54]
-set_output_delay 210 -min -rise [get_ports x562] -clock x677
-set_output_delay 210 -min -fall [get_ports x562] -clock x677
-set_output_delay 220 -max -rise [get_ports x562] -clock x677
-set_output_delay 220 -max -fall [get_ports x562] -clock x677
+set_output_delay -210 -min -rise [get_ports x562] -clock x677
+set_output_delay -210 -min -fall [get_ports x562] -clock x677
+set_output_delay -120 -max -rise [get_ports x562] -clock x677
+set_output_delay -120 -max -fall [get_ports x562] -clock x677
 set_load -pin_load 4 [get_ports x562]
-set_output_delay 210 -min -rise [get_ports x625] -clock x677
-set_output_delay 210 -min -fall [get_ports x625] -clock x677
-set_output_delay 220 -max -rise [get_ports x625] -clock x677
-set_output_delay 220 -max -fall [get_ports x625] -clock x677
+set_output_delay -210 -min -rise [get_ports x625] -clock x677
+set_output_delay -210 -min -fall [get_ports x625] -clock x677
+set_output_delay -120 -max -rise [get_ports x625] -clock x677
+set_output_delay -120 -max -fall [get_ports x625] -clock x677
 set_load -pin_load 4 [get_ports x625]
-set_output_delay 210 -min -rise [get_ports x428] -clock x677
-set_output_delay 210 -min -fall [get_ports x428] -clock x677
-set_output_delay 220 -max -rise [get_ports x428] -clock x677
-set_output_delay 220 -max -fall [get_ports x428] -clock x677
+set_output_delay -210 -min -rise [get_ports x428] -clock x677
+set_output_delay -210 -min -fall [get_ports x428] -clock x677
+set_output_delay -120 -max -rise [get_ports x428] -clock x677
+set_output_delay -120 -max -fall [get_ports x428] -clock x677
 set_load -pin_load 4 [get_ports x428]
-set_output_delay 210 -min -rise [get_ports x279] -clock x677
-set_output_delay 210 -min -fall [get_ports x279] -clock x677
-set_output_delay 220 -max -rise [get_ports x279] -clock x677
-set_output_delay 220 -max -fall [get_ports x279] -clock x677
+set_output_delay -210 -min -rise [get_ports x279] -clock x677
+set_output_delay -210 -min -fall [get_ports x279] -clock x677
+set_output_delay -120 -max -rise [get_ports x279] -clock x677
+set_output_delay -120 -max -fall [get_ports x279] -clock x677
 set_load -pin_load 4 [get_ports x279]
-set_output_delay 210 -min -rise [get_ports x13] -clock x677
-set_output_delay 210 -min -fall [get_ports x13] -clock x677
-set_output_delay 220 -max -rise [get_ports x13] -clock x677
-set_output_delay 220 -max -fall [get_ports x13] -clock x677
+set_output_delay -210 -min -rise [get_ports x13] -clock x677
+set_output_delay -210 -min -fall [get_ports x13] -clock x677
+set_output_delay -120 -max -rise [get_ports x13] -clock x677
+set_output_delay -120 -max -fall [get_ports x13] -clock x677
 set_load -pin_load 4 [get_ports x13]
-set_output_delay 210 -min -rise [get_ports x512] -clock x677
-set_output_delay 210 -min -fall [get_ports x512] -clock x677
-set_output_delay 220 -max -rise [get_ports x512] -clock x677
-set_output_delay 220 -max -fall [get_ports x512] -clock x677
+set_output_delay -210 -min -rise [get_ports x512] -clock x677
+set_output_delay -210 -min -fall [get_ports x512] -clock x677
+set_output_delay -120 -max -rise [get_ports x512] -clock x677
+set_output_delay -120 -max -fall [get_ports x512] -clock x677
 set_load -pin_load 4 [get_ports x512]
-set_output_delay 210 -min -rise [get_ports x293] -clock x677
-set_output_delay 210 -min -fall [get_ports x293] -clock x677
-set_output_delay 220 -max -rise [get_ports x293] -clock x677
-set_output_delay 220 -max -fall [get_ports x293] -clock x677
+set_output_delay -210 -min -rise [get_ports x293] -clock x677
+set_output_delay -210 -min -fall [get_ports x293] -clock x677
+set_output_delay -120 -max -rise [get_ports x293] -clock x677
+set_output_delay -120 -max -fall [get_ports x293] -clock x677
 set_load -pin_load 4 [get_ports x293]
-set_output_delay 210 -min -rise [get_ports x663] -clock x677
-set_output_delay 210 -min -fall [get_ports x663] -clock x677
-set_output_delay 220 -max -rise [get_ports x663] -clock x677
-set_output_delay 220 -max -fall [get_ports x663] -clock x677
+set_output_delay -210 -min -rise [get_ports x663] -clock x677
+set_output_delay -210 -min -fall [get_ports x663] -clock x677
+set_output_delay -120 -max -rise [get_ports x663] -clock x677
+set_output_delay -120 -max -fall [get_ports x663] -clock x677
 set_load -pin_load 4 [get_ports x663]
-set_output_delay 210 -min -rise [get_ports x519] -clock x677
-set_output_delay 210 -min -fall [get_ports x519] -clock x677
-set_output_delay 220 -max -rise [get_ports x519] -clock x677
-set_output_delay 220 -max -fall [get_ports x519] -clock x677
+set_output_delay -210 -min -rise [get_ports x519] -clock x677
+set_output_delay -210 -min -fall [get_ports x519] -clock x677
+set_output_delay -120 -max -rise [get_ports x519] -clock x677
+set_output_delay -120 -max -fall [get_ports x519] -clock x677
 set_load -pin_load 4 [get_ports x519]
-set_output_delay 210 -min -rise [get_ports x239] -clock x677
-set_output_delay 210 -min -fall [get_ports x239] -clock x677
-set_output_delay 220 -max -rise [get_ports x239] -clock x677
-set_output_delay 220 -max -fall [get_ports x239] -clock x677
+set_output_delay -210 -min -rise [get_ports x239] -clock x677
+set_output_delay -210 -min -fall [get_ports x239] -clock x677
+set_output_delay -120 -max -rise [get_ports x239] -clock x677
+set_output_delay -120 -max -fall [get_ports x239] -clock x677
 set_load -pin_load 4 [get_ports x239]
-set_output_delay 210 -min -rise [get_ports x112] -clock x677
-set_output_delay 210 -min -fall [get_ports x112] -clock x677
-set_output_delay 220 -max -rise [get_ports x112] -clock x677
-set_output_delay 220 -max -fall [get_ports x112] -clock x677
+set_output_delay -210 -min -rise [get_ports x112] -clock x677
+set_output_delay -210 -min -fall [get_ports x112] -clock x677
+set_output_delay -120 -max -rise [get_ports x112] -clock x677
+set_output_delay -120 -max -fall [get_ports x112] -clock x677
 set_load -pin_load 4 [get_ports x112]
-set_output_delay 210 -min -rise [get_ports x644] -clock x677
-set_output_delay 210 -min -fall [get_ports x644] -clock x677
-set_output_delay 220 -max -rise [get_ports x644] -clock x677
-set_output_delay 220 -max -fall [get_ports x644] -clock x677
+set_output_delay -210 -min -rise [get_ports x644] -clock x677
+set_output_delay -210 -min -fall [get_ports x644] -clock x677
+set_output_delay -120 -max -rise [get_ports x644] -clock x677
+set_output_delay -120 -max -fall [get_ports x644] -clock x677
 set_load -pin_load 4 [get_ports x644]
-set_output_delay 210 -min -rise [get_ports x348] -clock x677
-set_output_delay 210 -min -fall [get_ports x348] -clock x677
-set_output_delay 220 -max -rise [get_ports x348] -clock x677
-set_output_delay 220 -max -fall [get_ports x348] -clock x677
+set_output_delay -210 -min -rise [get_ports x348] -clock x677
+set_output_delay -210 -min -fall [get_ports x348] -clock x677
+set_output_delay -120 -max -rise [get_ports x348] -clock x677
+set_output_delay -120 -max -fall [get_ports x348] -clock x677
 set_load -pin_load 4 [get_ports x348]
-set_output_delay 210 -min -rise [get_ports x359] -clock x677
-set_output_delay 210 -min -fall [get_ports x359] -clock x677
-set_output_delay 220 -max -rise [get_ports x359] -clock x677
-set_output_delay 220 -max -fall [get_ports x359] -clock x677
+set_output_delay -210 -min -rise [get_ports x359] -clock x677
+set_output_delay -210 -min -fall [get_ports x359] -clock x677
+set_output_delay -120 -max -rise [get_ports x359] -clock x677
+set_output_delay -120 -max -fall [get_ports x359] -clock x677
 set_load -pin_load 4 [get_ports x359]
-set_output_delay 210 -min -rise [get_ports x480] -clock x677
-set_output_delay 210 -min -fall [get_ports x480] -clock x677
-set_output_delay 220 -max -rise [get_ports x480] -clock x677
-set_output_delay 220 -max -fall [get_ports x480] -clock x677
+set_output_delay -210 -min -rise [get_ports x480] -clock x677
+set_output_delay -210 -min -fall [get_ports x480] -clock x677
+set_output_delay -120 -max -rise [get_ports x480] -clock x677
+set_output_delay -120 -max -fall [get_ports x480] -clock x677
 set_load -pin_load 4 [get_ports x480]
-set_output_delay 210 -min -rise [get_ports x615] -clock x677
-set_output_delay 210 -min -fall [get_ports x615] -clock x677
-set_output_delay 220 -max -rise [get_ports x615] -clock x677
-set_output_delay 220 -max -fall [get_ports x615] -clock x677
+set_output_delay -210 -min -rise [get_ports x615] -clock x677
+set_output_delay -210 -min -fall [get_ports x615] -clock x677
+set_output_delay -120 -max -rise [get_ports x615] -clock x677
+set_output_delay -120 -max -fall [get_ports x615] -clock x677
 set_load -pin_load 4 [get_ports x615]
-set_output_delay 210 -min -rise [get_ports x601] -clock x677
-set_output_delay 210 -min -fall [get_ports x601] -clock x677
-set_output_delay 220 -max -rise [get_ports x601] -clock x677
-set_output_delay 220 -max -fall [get_ports x601] -clock x677
+set_output_delay -210 -min -rise [get_ports x601] -clock x677
+set_output_delay -210 -min -fall [get_ports x601] -clock x677
+set_output_delay -120 -max -rise [get_ports x601] -clock x677
+set_output_delay -120 -max -fall [get_ports x601] -clock x677
 set_load -pin_load 4 [get_ports x601]
-set_output_delay 210 -min -rise [get_ports x225] -clock x677
-set_output_delay 210 -min -fall [get_ports x225] -clock x677
-set_output_delay 220 -max -rise [get_ports x225] -clock x677
-set_output_delay 220 -max -fall [get_ports x225] -clock x677
+set_output_delay -210 -min -rise [get_ports x225] -clock x677
+set_output_delay -210 -min -fall [get_ports x225] -clock x677
+set_output_delay -120 -max -rise [get_ports x225] -clock x677
+set_output_delay -120 -max -fall [get_ports x225] -clock x677
 set_load -pin_load 4 [get_ports x225]
-set_output_delay 210 -min -rise [get_ports x537] -clock x677
-set_output_delay 210 -min -fall [get_ports x537] -clock x677
-set_output_delay 220 -max -rise [get_ports x537] -clock x677
-set_output_delay 220 -max -fall [get_ports x537] -clock x677
+set_output_delay -210 -min -rise [get_ports x537] -clock x677
+set_output_delay -210 -min -fall [get_ports x537] -clock x677
+set_output_delay -120 -max -rise [get_ports x537] -clock x677
+set_output_delay -120 -max -fall [get_ports x537] -clock x677
 set_load -pin_load 4 [get_ports x537]
-set_output_delay 210 -min -rise [get_ports x320] -clock x677
-set_output_delay 210 -min -fall [get_ports x320] -clock x677
-set_output_delay 220 -max -rise [get_ports x320] -clock x677
-set_output_delay 220 -max -fall [get_ports x320] -clock x677
+set_output_delay -210 -min -rise [get_ports x320] -clock x677
+set_output_delay -210 -min -fall [get_ports x320] -clock x677
+set_output_delay -120 -max -rise [get_ports x320] -clock x677
+set_output_delay -120 -max -fall [get_ports x320] -clock x677
 set_load -pin_load 4 [get_ports x320]
-set_output_delay 210 -min -rise [get_ports x377] -clock x677
-set_output_delay 210 -min -fall [get_ports x377] -clock x677
-set_output_delay 220 -max -rise [get_ports x377] -clock x677
-set_output_delay 220 -max -fall [get_ports x377] -clock x677
+set_output_delay -210 -min -rise [get_ports x377] -clock x677
+set_output_delay -210 -min -fall [get_ports x377] -clock x677
+set_output_delay -120 -max -rise [get_ports x377] -clock x677
+set_output_delay -120 -max -fall [get_ports x377] -clock x677
 set_load -pin_load 4 [get_ports x377]
-set_output_delay 210 -min -rise [get_ports x196] -clock x677
-set_output_delay 210 -min -fall [get_ports x196] -clock x677
-set_output_delay 220 -max -rise [get_ports x196] -clock x677
-set_output_delay 220 -max -fall [get_ports x196] -clock x677
+set_output_delay -210 -min -rise [get_ports x196] -clock x677
+set_output_delay -210 -min -fall [get_ports x196] -clock x677
+set_output_delay -120 -max -rise [get_ports x196] -clock x677
+set_output_delay -120 -max -fall [get_ports x196] -clock x677
 set_load -pin_load 4 [get_ports x196]
-set_output_delay 210 -min -rise [get_ports x443] -clock x677
-set_output_delay 210 -min -fall [get_ports x443] -clock x677
-set_output_delay 220 -max -rise [get_ports x443] -clock x677
-set_output_delay 220 -max -fall [get_ports x443] -clock x677
+set_output_delay -210 -min -rise [get_ports x443] -clock x677
+set_output_delay -210 -min -fall [get_ports x443] -clock x677
+set_output_delay -120 -max -rise [get_ports x443] -clock x677
+set_output_delay -120 -max -fall [get_ports x443] -clock x677
 set_load -pin_load 4 [get_ports x443]
-set_output_delay 210 -min -rise [get_ports x472] -clock x677
-set_output_delay 210 -min -fall [get_ports x472] -clock x677
-set_output_delay 220 -max -rise [get_ports x472] -clock x677
-set_output_delay 220 -max -fall [get_ports x472] -clock x677
+set_output_delay -210 -min -rise [get_ports x472] -clock x677
+set_output_delay -210 -min -fall [get_ports x472] -clock x677
+set_output_delay -120 -max -rise [get_ports x472] -clock x677
+set_output_delay -120 -max -fall [get_ports x472] -clock x677
 set_load -pin_load 4 [get_ports x472]
-set_output_delay 210 -min -rise [get_ports x412] -clock x677
-set_output_delay 210 -min -fall [get_ports x412] -clock x677
-set_output_delay 220 -max -rise [get_ports x412] -clock x677
-set_output_delay 220 -max -fall [get_ports x412] -clock x677
+set_output_delay -210 -min -rise [get_ports x412] -clock x677
+set_output_delay -210 -min -fall [get_ports x412] -clock x677
+set_output_delay -120 -max -rise [get_ports x412] -clock x677
+set_output_delay -120 -max -fall [get_ports x412] -clock x677
 set_load -pin_load 4 [get_ports x412]
-set_output_delay 210 -min -rise [get_ports x134] -clock x677
-set_output_delay 210 -min -fall [get_ports x134] -clock x677
-set_output_delay 220 -max -rise [get_ports x134] -clock x677
-set_output_delay 220 -max -fall [get_ports x134] -clock x677
+set_output_delay -210 -min -rise [get_ports x134] -clock x677
+set_output_delay -210 -min -fall [get_ports x134] -clock x677
+set_output_delay -120 -max -rise [get_ports x134] -clock x677
+set_output_delay -120 -max -fall [get_ports x134] -clock x677
 set_load -pin_load 4 [get_ports x134]
-set_output_delay 210 -min -rise [get_ports x489] -clock x677
-set_output_delay 210 -min -fall [get_ports x489] -clock x677
-set_output_delay 220 -max -rise [get_ports x489] -clock x677
-set_output_delay 220 -max -fall [get_ports x489] -clock x677
+set_output_delay -210 -min -rise [get_ports x489] -clock x677
+set_output_delay -210 -min -fall [get_ports x489] -clock x677
+set_output_delay -120 -max -rise [get_ports x489] -clock x677
+set_output_delay -120 -max -fall [get_ports x489] -clock x677
 set_load -pin_load 4 [get_ports x489]
-set_output_delay 210 -min -rise [get_ports x589] -clock x677
-set_output_delay 210 -min -fall [get_ports x589] -clock x677
-set_output_delay 220 -max -rise [get_ports x589] -clock x677
-set_output_delay 220 -max -fall [get_ports x589] -clock x677
+set_output_delay -210 -min -rise [get_ports x589] -clock x677
+set_output_delay -210 -min -fall [get_ports x589] -clock x677
+set_output_delay -120 -max -rise [get_ports x589] -clock x677
+set_output_delay -120 -max -fall [get_ports x589] -clock x677
 set_load -pin_load 4 [get_ports x589]
-set_output_delay 210 -min -rise [get_ports x405] -clock x677
-set_output_delay 210 -min -fall [get_ports x405] -clock x677
-set_output_delay 220 -max -rise [get_ports x405] -clock x677
-set_output_delay 220 -max -fall [get_ports x405] -clock x677
+set_output_delay -210 -min -rise [get_ports x405] -clock x677
+set_output_delay -210 -min -fall [get_ports x405] -clock x677
+set_output_delay -120 -max -rise [get_ports x405] -clock x677
+set_output_delay -120 -max -fall [get_ports x405] -clock x677
 set_load -pin_load 4 [get_ports x405]
-set_output_delay 210 -min -rise [get_ports x497] -clock x677
-set_output_delay 210 -min -fall [get_ports x497] -clock x677
-set_output_delay 220 -max -rise [get_ports x497] -clock x677
-set_output_delay 220 -max -fall [get_ports x497] -clock x677
+set_output_delay -210 -min -rise [get_ports x497] -clock x677
+set_output_delay -210 -min -fall [get_ports x497] -clock x677
+set_output_delay -120 -max -rise [get_ports x497] -clock x677
+set_output_delay -120 -max -fall [get_ports x497] -clock x677
 set_load -pin_load 4 [get_ports x497]
-set_output_delay 210 -min -rise [get_ports x100] -clock x677
-set_output_delay 210 -min -fall [get_ports x100] -clock x677
-set_output_delay 220 -max -rise [get_ports x100] -clock x677
-set_output_delay 220 -max -fall [get_ports x100] -clock x677
+set_output_delay -210 -min -rise [get_ports x100] -clock x677
+set_output_delay -210 -min -fall [get_ports x100] -clock x677
+set_output_delay -120 -max -rise [get_ports x100] -clock x677
+set_output_delay -120 -max -fall [get_ports x100] -clock x677
 set_load -pin_load 4 [get_ports x100]
-set_output_delay 210 -min -rise [get_ports x154] -clock x677
-set_output_delay 210 -min -fall [get_ports x154] -clock x677
-set_output_delay 220 -max -rise [get_ports x154] -clock x677
-set_output_delay 220 -max -fall [get_ports x154] -clock x677
+set_output_delay -210 -min -rise [get_ports x154] -clock x677
+set_output_delay -210 -min -fall [get_ports x154] -clock x677
+set_output_delay -120 -max -rise [get_ports x154] -clock x677
+set_output_delay -120 -max -fall [get_ports x154] -clock x677
 set_load -pin_load 4 [get_ports x154]
-set_output_delay 210 -min -rise [get_ports x304] -clock x677
-set_output_delay 210 -min -fall [get_ports x304] -clock x677
-set_output_delay 220 -max -rise [get_ports x304] -clock x677
-set_output_delay 220 -max -fall [get_ports x304] -clock x677
+set_output_delay -210 -min -rise [get_ports x304] -clock x677
+set_output_delay -210 -min -fall [get_ports x304] -clock x677
+set_output_delay -120 -max -rise [get_ports x304] -clock x677
+set_output_delay -120 -max -fall [get_ports x304] -clock x677
 set_load -pin_load 4 [get_ports x304]
-set_output_delay 210 -min -rise [get_ports x504] -clock x677
-set_output_delay 210 -min -fall [get_ports x504] -clock x677
-set_output_delay 220 -max -rise [get_ports x504] -clock x677
-set_output_delay 220 -max -fall [get_ports x504] -clock x677
+set_output_delay -210 -min -rise [get_ports x504] -clock x677
+set_output_delay -210 -min -fall [get_ports x504] -clock x677
+set_output_delay -120 -max -rise [get_ports x504] -clock x677
+set_output_delay -120 -max -fall [get_ports x504] -clock x677
 set_load -pin_load 4 [get_ports x504]
-set_output_delay 210 -min -rise [get_ports x386] -clock x677
-set_output_delay 210 -min -fall [get_ports x386] -clock x677
-set_output_delay 220 -max -rise [get_ports x386] -clock x677
-set_output_delay 220 -max -fall [get_ports x386] -clock x677
+set_output_delay -210 -min -rise [get_ports x386] -clock x677
+set_output_delay -210 -min -fall [get_ports x386] -clock x677
+set_output_delay -120 -max -rise [get_ports x386] -clock x677
+set_output_delay -120 -max -fall [get_ports x386] -clock x677
 set_load -pin_load 4 [get_ports x386]
-set_output_delay 210 -min -rise [get_ports x656] -clock x677
-set_output_delay 210 -min -fall [get_ports x656] -clock x677
-set_output_delay 220 -max -rise [get_ports x656] -clock x677
-set_output_delay 220 -max -fall [get_ports x656] -clock x677
+set_output_delay -210 -min -rise [get_ports x656] -clock x677
+set_output_delay -210 -min -fall [get_ports x656] -clock x677
+set_output_delay -120 -max -rise [get_ports x656] -clock x677
+set_output_delay -120 -max -fall [get_ports x656] -clock x677
 set_load -pin_load 4 [get_ports x656]
-set_output_delay 210 -min -rise [get_ports x189] -clock x677
-set_output_delay 210 -min -fall [get_ports x189] -clock x677
-set_output_delay 220 -max -rise [get_ports x189] -clock x677
-set_output_delay 220 -max -fall [get_ports x189] -clock x677
+set_output_delay -210 -min -rise [get_ports x189] -clock x677
+set_output_delay -210 -min -fall [get_ports x189] -clock x677
+set_output_delay -120 -max -rise [get_ports x189] -clock x677
+set_output_delay -120 -max -fall [get_ports x189] -clock x677
 set_load -pin_load 4 [get_ports x189]
-set_output_delay 210 -min -rise [get_ports x93] -clock x677
-set_output_delay 210 -min -fall [get_ports x93] -clock x677
-set_output_delay 220 -max -rise [get_ports x93] -clock x677
-set_output_delay 220 -max -fall [get_ports x93] -clock x677
+set_output_delay -210 -min -rise [get_ports x93] -clock x677
+set_output_delay -210 -min -fall [get_ports x93] -clock x677
+set_output_delay -120 -max -rise [get_ports x93] -clock x677
+set_output_delay -120 -max -fall [get_ports x93] -clock x677
 set_load -pin_load 4 [get_ports x93]
-set_output_delay 210 -min -rise [get_ports x327] -clock x677
-set_output_delay 210 -min -fall [get_ports x327] -clock x677
-set_output_delay 220 -max -rise [get_ports x327] -clock x677
-set_output_delay 220 -max -fall [get_ports x327] -clock x677
+set_output_delay -210 -min -rise [get_ports x327] -clock x677
+set_output_delay -210 -min -fall [get_ports x327] -clock x677
+set_output_delay -120 -max -rise [get_ports x327] -clock x677
+set_output_delay -120 -max -fall [get_ports x327] -clock x677
 set_load -pin_load 4 [get_ports x327]
-set_output_delay 210 -min -rise [get_ports x394] -clock x677
-set_output_delay 210 -min -fall [get_ports x394] -clock x677
-set_output_delay 220 -max -rise [get_ports x394] -clock x677
-set_output_delay 220 -max -fall [get_ports x394] -clock x677
+set_output_delay -210 -min -rise [get_ports x394] -clock x677
+set_output_delay -210 -min -fall [get_ports x394] -clock x677
+set_output_delay -120 -max -rise [get_ports x394] -clock x677
+set_output_delay -120 -max -fall [get_ports x394] -clock x677
 set_load -pin_load 4 [get_ports x394]
-set_output_delay 210 -min -rise [get_ports x165] -clock x677
-set_output_delay 210 -min -fall [get_ports x165] -clock x677
-set_output_delay 220 -max -rise [get_ports x165] -clock x677
-set_output_delay 220 -max -fall [get_ports x165] -clock x677
+set_output_delay -210 -min -rise [get_ports x165] -clock x677
+set_output_delay -210 -min -fall [get_ports x165] -clock x677
+set_output_delay -120 -max -rise [get_ports x165] -clock x677
+set_output_delay -120 -max -fall [get_ports x165] -clock x677
 set_load -pin_load 4 [get_ports x165]
-set_output_delay 210 -min -rise [get_ports x272] -clock x677
-set_output_delay 210 -min -fall [get_ports x272] -clock x677
-set_output_delay 220 -max -rise [get_ports x272] -clock x677
-set_output_delay 220 -max -fall [get_ports x272] -clock x677
+set_output_delay -210 -min -rise [get_ports x272] -clock x677
+set_output_delay -210 -min -fall [get_ports x272] -clock x677
+set_output_delay -120 -max -rise [get_ports x272] -clock x677
+set_output_delay -120 -max -fall [get_ports x272] -clock x677
 set_load -pin_load 4 [get_ports x272]
-set_output_delay 210 -min -rise [get_ports x651] -clock x677
-set_output_delay 210 -min -fall [get_ports x651] -clock x677
-set_output_delay 220 -max -rise [get_ports x651] -clock x677
-set_output_delay 220 -max -fall [get_ports x651] -clock x677
+set_output_delay -210 -min -rise [get_ports x651] -clock x677
+set_output_delay -210 -min -fall [get_ports x651] -clock x677
+set_output_delay -120 -max -rise [get_ports x651] -clock x677
+set_output_delay -120 -max -fall [get_ports x651] -clock x677
 set_load -pin_load 4 [get_ports x651]
-set_output_delay 210 -min -rise [get_ports x569] -clock x677
-set_output_delay 210 -min -fall [get_ports x569] -clock x677
-set_output_delay 220 -max -rise [get_ports x569] -clock x677
-set_output_delay 220 -max -fall [get_ports x569] -clock x677
+set_output_delay -210 -min -rise [get_ports x569] -clock x677
+set_output_delay -210 -min -fall [get_ports x569] -clock x677
+set_output_delay -120 -max -rise [get_ports x569] -clock x677
+set_output_delay -120 -max -fall [get_ports x569] -clock x677
 set_load -pin_load 4 [get_ports x569]
-set_output_delay 210 -min -rise [get_ports x637] -clock x677
-set_output_delay 210 -min -fall [get_ports x637] -clock x677
-set_output_delay 220 -max -rise [get_ports x637] -clock x677
-set_output_delay 220 -max -fall [get_ports x637] -clock x677
+set_output_delay -210 -min -rise [get_ports x637] -clock x677
+set_output_delay -210 -min -fall [get_ports x637] -clock x677
+set_output_delay -120 -max -rise [get_ports x637] -clock x677
+set_output_delay -120 -max -fall [get_ports x637] -clock x677
 set_load -pin_load 4 [get_ports x637]
-set_output_delay 210 -min -rise [get_ports x232] -clock x677
-set_output_delay 210 -min -fall [get_ports x232] -clock x677
-set_output_delay 220 -max -rise [get_ports x232] -clock x677
-set_output_delay 220 -max -fall [get_ports x232] -clock x677
+set_output_delay -210 -min -rise [get_ports x232] -clock x677
+set_output_delay -210 -min -fall [get_ports x232] -clock x677
+set_output_delay -120 -max -rise [get_ports x232] -clock x677
+set_output_delay -120 -max -fall [get_ports x232] -clock x677
 set_load -pin_load 4 [get_ports x232]
-set_output_delay 210 -min -rise [get_ports x82] -clock x677
-set_output_delay 210 -min -fall [get_ports x82] -clock x677
-set_output_delay 220 -max -rise [get_ports x82] -clock x677
-set_output_delay 220 -max -fall [get_ports x82] -clock x677
+set_output_delay -210 -min -rise [get_ports x82] -clock x677
+set_output_delay -210 -min -fall [get_ports x82] -clock x677
+set_output_delay -120 -max -rise [get_ports x82] -clock x677
+set_output_delay -120 -max -fall [get_ports x82] -clock x677
 set_load -pin_load 4 [get_ports x82]
-set_output_delay 210 -min -rise [get_ports x313] -clock x677
-set_output_delay 210 -min -fall [get_ports x313] -clock x677
-set_output_delay 220 -max -rise [get_ports x313] -clock x677
-set_output_delay 220 -max -fall [get_ports x313] -clock x677
+set_output_delay -210 -min -rise [get_ports x313] -clock x677
+set_output_delay -210 -min -fall [get_ports x313] -clock x677
+set_output_delay -120 -max -rise [get_ports x313] -clock x677
+set_output_delay -120 -max -fall [get_ports x313] -clock x677
 set_load -pin_load 4 [get_ports x313]
-set_output_delay 210 -min -rise [get_ports x436] -clock x677
-set_output_delay 210 -min -fall [get_ports x436] -clock x677
-set_output_delay 220 -max -rise [get_ports x436] -clock x677
-set_output_delay 220 -max -fall [get_ports x436] -clock x677
+set_output_delay -210 -min -rise [get_ports x436] -clock x677
+set_output_delay -210 -min -fall [get_ports x436] -clock x677
+set_output_delay -120 -max -rise [get_ports x436] -clock x677
+set_output_delay -120 -max -fall [get_ports x436] -clock x677
 set_load -pin_load 4 [get_ports x436]
-set_output_delay 210 -min -rise [get_ports x421] -clock x677
-set_output_delay 210 -min -fall [get_ports x421] -clock x677
-set_output_delay 220 -max -rise [get_ports x421] -clock x677
-set_output_delay 220 -max -fall [get_ports x421] -clock x677
+set_output_delay -210 -min -rise [get_ports x421] -clock x677
+set_output_delay -210 -min -fall [get_ports x421] -clock x677
+set_output_delay -120 -max -rise [get_ports x421] -clock x677
+set_output_delay -120 -max -fall [get_ports x421] -clock x677
 set_load -pin_load 4 [get_ports x421]
-set_output_delay 210 -min -rise [get_ports x0] -clock x677
-set_output_delay 210 -min -fall [get_ports x0] -clock x677
-set_output_delay 220 -max -rise [get_ports x0] -clock x677
-set_output_delay 220 -max -fall [get_ports x0] -clock x677
+set_output_delay -210 -min -rise [get_ports x0] -clock x677
+set_output_delay -210 -min -fall [get_ports x0] -clock x677
+set_output_delay -120 -max -rise [get_ports x0] -clock x677
+set_output_delay -120 -max -fall [get_ports x0] -clock x677
 set_load -pin_load 4 [get_ports x0]
-set_output_delay 210 -min -rise [get_ports x633] -clock x677
-set_output_delay 210 -min -fall [get_ports x633] -clock x677
-set_output_delay 220 -max -rise [get_ports x633] -clock x677
-set_output_delay 220 -max -fall [get_ports x633] -clock x677
+set_output_delay -210 -min -rise [get_ports x633] -clock x677
+set_output_delay -210 -min -fall [get_ports x633] -clock x677
+set_output_delay -120 -max -rise [get_ports x633] -clock x677
+set_output_delay -120 -max -fall [get_ports x633] -clock x677
 set_load -pin_load 4 [get_ports x633]
-set_output_delay 210 -min -rise [get_ports x582] -clock x677
-set_output_delay 210 -min -fall [get_ports x582] -clock x677
-set_output_delay 220 -max -rise [get_ports x582] -clock x677
-set_output_delay 220 -max -fall [get_ports x582] -clock x677
+set_output_delay -210 -min -rise [get_ports x582] -clock x677
+set_output_delay -210 -min -fall [get_ports x582] -clock x677
+set_output_delay -120 -max -rise [get_ports x582] -clock x677
+set_output_delay -120 -max -fall [get_ports x582] -clock x677
 set_load -pin_load 4 [get_ports x582]
-set_output_delay 210 -min -rise [get_ports x366] -clock x677
-set_output_delay 210 -min -fall [get_ports x366] -clock x677
-set_output_delay 220 -max -rise [get_ports x366] -clock x677
-set_output_delay 220 -max -fall [get_ports x366] -clock x677
+set_output_delay -210 -min -rise [get_ports x366] -clock x677
+set_output_delay -210 -min -fall [get_ports x366] -clock x677
+set_output_delay -120 -max -rise [get_ports x366] -clock x677
+set_output_delay -120 -max -fall [get_ports x366] -clock x677
 set_load -pin_load 4 [get_ports x366]
-set_output_delay 210 -min -rise [get_ports x286] -clock x677
-set_output_delay 210 -min -fall [get_ports x286] -clock x677
-set_output_delay 220 -max -rise [get_ports x286] -clock x677
-set_output_delay 220 -max -fall [get_ports x286] -clock x677
+set_output_delay -210 -min -rise [get_ports x286] -clock x677
+set_output_delay -210 -min -fall [get_ports x286] -clock x677
+set_output_delay -120 -max -rise [get_ports x286] -clock x677
+set_output_delay -120 -max -fall [get_ports x286] -clock x677
 set_load -pin_load 4 [get_ports x286]
-set_output_delay 210 -min -rise [get_ports x146] -clock x677
-set_output_delay 210 -min -fall [get_ports x146] -clock x677
-set_output_delay 220 -max -rise [get_ports x146] -clock x677
-set_output_delay 220 -max -fall [get_ports x146] -clock x677
+set_output_delay -210 -min -rise [get_ports x146] -clock x677
+set_output_delay -210 -min -fall [get_ports x146] -clock x677
+set_output_delay -120 -max -rise [get_ports x146] -clock x677
+set_output_delay -120 -max -fall [get_ports x146] -clock x677
 set_load -pin_load 4 [get_ports x146]
-set_output_delay 210 -min -rise [get_ports x461] -clock x677
-set_output_delay 210 -min -fall [get_ports x461] -clock x677
-set_output_delay 220 -max -rise [get_ports x461] -clock x677
-set_output_delay 220 -max -fall [get_ports x461] -clock x677
+set_output_delay -210 -min -rise [get_ports x461] -clock x677
+set_output_delay -210 -min -fall [get_ports x461] -clock x677
+set_output_delay -120 -max -rise [get_ports x461] -clock x677
+set_output_delay -120 -max -fall [get_ports x461] -clock x677
 set_load -pin_load 4 [get_ports x461]
-set_output_delay 210 -min -rise [get_ports x74] -clock x677
-set_output_delay 210 -min -fall [get_ports x74] -clock x677
-set_output_delay 220 -max -rise [get_ports x74] -clock x677
-set_output_delay 220 -max -fall [get_ports x74] -clock x677
+set_output_delay -210 -min -rise [get_ports x74] -clock x677
+set_output_delay -210 -min -fall [get_ports x74] -clock x677
+set_output_delay -120 -max -rise [get_ports x74] -clock x677
+set_output_delay -120 -max -fall [get_ports x74] -clock x677
 set_load -pin_load 4 [get_ports x74]
-set_output_delay 210 -min -rise [get_ports x119] -clock x677
-set_output_delay 210 -min -fall [get_ports x119] -clock x677
-set_output_delay 220 -max -rise [get_ports x119] -clock x677
-set_output_delay 220 -max -fall [get_ports x119] -clock x677
+set_output_delay -210 -min -rise [get_ports x119] -clock x677
+set_output_delay -210 -min -fall [get_ports x119] -clock x677
+set_output_delay -120 -max -rise [get_ports x119] -clock x677
+set_output_delay -120 -max -fall [get_ports x119] -clock x677
 set_load -pin_load 4 [get_ports x119]
-set_output_delay 210 -min -rise [get_ports x47] -clock x677
-set_output_delay 210 -min -fall [get_ports x47] -clock x677
-set_output_delay 220 -max -rise [get_ports x47] -clock x677
-set_output_delay 220 -max -fall [get_ports x47] -clock x677
+set_output_delay -210 -min -rise [get_ports x47] -clock x677
+set_output_delay -210 -min -fall [get_ports x47] -clock x677
+set_output_delay -120 -max -rise [get_ports x47] -clock x677
+set_output_delay -120 -max -fall [get_ports x47] -clock x677
 set_load -pin_load 4 [get_ports x47]
-set_output_delay 210 -min -rise [get_ports x218] -clock x677
-set_output_delay 210 -min -fall [get_ports x218] -clock x677
-set_output_delay 220 -max -rise [get_ports x218] -clock x677
-set_output_delay 220 -max -fall [get_ports x218] -clock x677
+set_output_delay -210 -min -rise [get_ports x218] -clock x677
+set_output_delay -210 -min -fall [get_ports x218] -clock x677
+set_output_delay -120 -max -rise [get_ports x218] -clock x677
+set_output_delay -120 -max -fall [get_ports x218] -clock x677
 set_load -pin_load 4 [get_ports x218]
-set_output_delay 210 -min -rise [get_ports x608] -clock x677
-set_output_delay 210 -min -fall [get_ports x608] -clock x677
-set_output_delay 220 -max -rise [get_ports x608] -clock x677
-set_output_delay 220 -max -fall [get_ports x608] -clock x677
+set_output_delay -210 -min -rise [get_ports x608] -clock x677
+set_output_delay -210 -min -fall [get_ports x608] -clock x677
+set_output_delay -120 -max -rise [get_ports x608] -clock x677
+set_output_delay -120 -max -fall [get_ports x608] -clock x677
 set_load -pin_load 4 [get_ports x608]
-set_output_delay 210 -min -rise [get_ports x548] -clock x677
-set_output_delay 210 -min -fall [get_ports x548] -clock x677
-set_output_delay 220 -max -rise [get_ports x548] -clock x677
-set_output_delay 220 -max -fall [get_ports x548] -clock x677
+set_output_delay -210 -min -rise [get_ports x548] -clock x677
+set_output_delay -210 -min -fall [get_ports x548] -clock x677
+set_output_delay -120 -max -rise [get_ports x548] -clock x677
+set_output_delay -120 -max -fall [get_ports x548] -clock x677
 set_load -pin_load 4 [get_ports x548]

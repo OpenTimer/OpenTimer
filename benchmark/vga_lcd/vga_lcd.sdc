@@ -711,548 +711,548 @@ set_input_transition 5 -min -rise [get_ports x3432] -clock x2469
 set_input_transition 5 -min -fall [get_ports x3432] -clock x2469
 set_input_transition 5 -max -rise [get_ports x3432] -clock x2469
 set_input_transition 5 -max -fall [get_ports x3432] -clock x2469
-set_output_delay 210 -min -rise [get_ports x2294] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2294] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2294] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2294] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2294] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2294] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2294] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2294] -clock x2469
 set_load -pin_load 4 [get_ports x2294]
-set_output_delay 210 -min -rise [get_ports x508] -clock x2469
-set_output_delay 210 -min -fall [get_ports x508] -clock x2469
-set_output_delay 220 -max -rise [get_ports x508] -clock x2469
-set_output_delay 220 -max -fall [get_ports x508] -clock x2469
+set_output_delay -210 -min -rise [get_ports x508] -clock x2469
+set_output_delay -210 -min -fall [get_ports x508] -clock x2469
+set_output_delay -120 -max -rise [get_ports x508] -clock x2469
+set_output_delay -120 -max -fall [get_ports x508] -clock x2469
 set_load -pin_load 4 [get_ports x508]
-set_output_delay 210 -min -rise [get_ports x985] -clock x2469
-set_output_delay 210 -min -fall [get_ports x985] -clock x2469
-set_output_delay 220 -max -rise [get_ports x985] -clock x2469
-set_output_delay 220 -max -fall [get_ports x985] -clock x2469
+set_output_delay -210 -min -rise [get_ports x985] -clock x2469
+set_output_delay -210 -min -fall [get_ports x985] -clock x2469
+set_output_delay -120 -max -rise [get_ports x985] -clock x2469
+set_output_delay -120 -max -fall [get_ports x985] -clock x2469
 set_load -pin_load 4 [get_ports x985]
-set_output_delay 210 -min -rise [get_ports x217] -clock x2469
-set_output_delay 210 -min -fall [get_ports x217] -clock x2469
-set_output_delay 220 -max -rise [get_ports x217] -clock x2469
-set_output_delay 220 -max -fall [get_ports x217] -clock x2469
+set_output_delay -210 -min -rise [get_ports x217] -clock x2469
+set_output_delay -210 -min -fall [get_ports x217] -clock x2469
+set_output_delay -120 -max -rise [get_ports x217] -clock x2469
+set_output_delay -120 -max -fall [get_ports x217] -clock x2469
 set_load -pin_load 4 [get_ports x217]
-set_output_delay 210 -min -rise [get_ports x774] -clock x2469
-set_output_delay 210 -min -fall [get_ports x774] -clock x2469
-set_output_delay 220 -max -rise [get_ports x774] -clock x2469
-set_output_delay 220 -max -fall [get_ports x774] -clock x2469
+set_output_delay -210 -min -rise [get_ports x774] -clock x2469
+set_output_delay -210 -min -fall [get_ports x774] -clock x2469
+set_output_delay -120 -max -rise [get_ports x774] -clock x2469
+set_output_delay -120 -max -fall [get_ports x774] -clock x2469
 set_load -pin_load 4 [get_ports x774]
-set_output_delay 210 -min -rise [get_ports x344] -clock x2469
-set_output_delay 210 -min -fall [get_ports x344] -clock x2469
-set_output_delay 220 -max -rise [get_ports x344] -clock x2469
-set_output_delay 220 -max -fall [get_ports x344] -clock x2469
+set_output_delay -210 -min -rise [get_ports x344] -clock x2469
+set_output_delay -210 -min -fall [get_ports x344] -clock x2469
+set_output_delay -120 -max -rise [get_ports x344] -clock x2469
+set_output_delay -120 -max -fall [get_ports x344] -clock x2469
 set_load -pin_load 4 [get_ports x344]
-set_output_delay 210 -min -rise [get_ports x149] -clock x2469
-set_output_delay 210 -min -fall [get_ports x149] -clock x2469
-set_output_delay 220 -max -rise [get_ports x149] -clock x2469
-set_output_delay 220 -max -fall [get_ports x149] -clock x2469
+set_output_delay -210 -min -rise [get_ports x149] -clock x2469
+set_output_delay -210 -min -fall [get_ports x149] -clock x2469
+set_output_delay -120 -max -rise [get_ports x149] -clock x2469
+set_output_delay -120 -max -fall [get_ports x149] -clock x2469
 set_load -pin_load 4 [get_ports x149]
-set_output_delay 210 -min -rise [get_ports x40] -clock x2469
-set_output_delay 210 -min -fall [get_ports x40] -clock x2469
-set_output_delay 220 -max -rise [get_ports x40] -clock x2469
-set_output_delay 220 -max -fall [get_ports x40] -clock x2469
+set_output_delay -210 -min -rise [get_ports x40] -clock x2469
+set_output_delay -210 -min -fall [get_ports x40] -clock x2469
+set_output_delay -120 -max -rise [get_ports x40] -clock x2469
+set_output_delay -120 -max -fall [get_ports x40] -clock x2469
 set_load -pin_load 4 [get_ports x40]
-set_output_delay 210 -min -rise [get_ports x2452] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2452] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2452] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2452] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2452] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2452] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2452] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2452] -clock x2469
 set_load -pin_load 4 [get_ports x2452]
-set_output_delay 210 -min -rise [get_ports x1353] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1353] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1353] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1353] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1353] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1353] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1353] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1353] -clock x2469
 set_load -pin_load 4 [get_ports x1353]
-set_output_delay 210 -min -rise [get_ports x1283] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1283] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1283] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1283] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1283] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1283] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1283] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1283] -clock x2469
 set_load -pin_load 4 [get_ports x1283]
-set_output_delay 210 -min -rise [get_ports x673] -clock x2469
-set_output_delay 210 -min -fall [get_ports x673] -clock x2469
-set_output_delay 220 -max -rise [get_ports x673] -clock x2469
-set_output_delay 220 -max -fall [get_ports x673] -clock x2469
+set_output_delay -210 -min -rise [get_ports x673] -clock x2469
+set_output_delay -210 -min -fall [get_ports x673] -clock x2469
+set_output_delay -120 -max -rise [get_ports x673] -clock x2469
+set_output_delay -120 -max -fall [get_ports x673] -clock x2469
 set_load -pin_load 4 [get_ports x673]
-set_output_delay 210 -min -rise [get_ports x306] -clock x2469
-set_output_delay 210 -min -fall [get_ports x306] -clock x2469
-set_output_delay 220 -max -rise [get_ports x306] -clock x2469
-set_output_delay 220 -max -fall [get_ports x306] -clock x2469
+set_output_delay -210 -min -rise [get_ports x306] -clock x2469
+set_output_delay -210 -min -fall [get_ports x306] -clock x2469
+set_output_delay -120 -max -rise [get_ports x306] -clock x2469
+set_output_delay -120 -max -fall [get_ports x306] -clock x2469
 set_load -pin_load 4 [get_ports x306]
-set_output_delay 210 -min -rise [get_ports x86] -clock x2469
-set_output_delay 210 -min -fall [get_ports x86] -clock x2469
-set_output_delay 220 -max -rise [get_ports x86] -clock x2469
-set_output_delay 220 -max -fall [get_ports x86] -clock x2469
+set_output_delay -210 -min -rise [get_ports x86] -clock x2469
+set_output_delay -210 -min -fall [get_ports x86] -clock x2469
+set_output_delay -120 -max -rise [get_ports x86] -clock x2469
+set_output_delay -120 -max -fall [get_ports x86] -clock x2469
 set_load -pin_load 4 [get_ports x86]
-set_output_delay 210 -min -rise [get_ports x840] -clock x2469
-set_output_delay 210 -min -fall [get_ports x840] -clock x2469
-set_output_delay 220 -max -rise [get_ports x840] -clock x2469
-set_output_delay 220 -max -fall [get_ports x840] -clock x2469
+set_output_delay -210 -min -rise [get_ports x840] -clock x2469
+set_output_delay -210 -min -fall [get_ports x840] -clock x2469
+set_output_delay -120 -max -rise [get_ports x840] -clock x2469
+set_output_delay -120 -max -fall [get_ports x840] -clock x2469
 set_load -pin_load 4 [get_ports x840]
-set_output_delay 210 -min -rise [get_ports x2253] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2253] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2253] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2253] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2253] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2253] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2253] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2253] -clock x2469
 set_load -pin_load 4 [get_ports x2253]
-set_output_delay 210 -min -rise [get_ports x1819] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1819] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1819] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1819] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1819] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1819] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1819] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1819] -clock x2469
 set_load -pin_load 4 [get_ports x1819]
-set_output_delay 210 -min -rise [get_ports x1601] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1601] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1601] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1601] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1601] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1601] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1601] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1601] -clock x2469
 set_load -pin_load 4 [get_ports x1601]
-set_output_delay 210 -min -rise [get_ports x228] -clock x2469
-set_output_delay 210 -min -fall [get_ports x228] -clock x2469
-set_output_delay 220 -max -rise [get_ports x228] -clock x2469
-set_output_delay 220 -max -fall [get_ports x228] -clock x2469
+set_output_delay -210 -min -rise [get_ports x228] -clock x2469
+set_output_delay -210 -min -fall [get_ports x228] -clock x2469
+set_output_delay -120 -max -rise [get_ports x228] -clock x2469
+set_output_delay -120 -max -fall [get_ports x228] -clock x2469
 set_load -pin_load 4 [get_ports x228]
-set_output_delay 210 -min -rise [get_ports x298] -clock x2469
-set_output_delay 210 -min -fall [get_ports x298] -clock x2469
-set_output_delay 220 -max -rise [get_ports x298] -clock x2469
-set_output_delay 220 -max -fall [get_ports x298] -clock x2469
+set_output_delay -210 -min -rise [get_ports x298] -clock x2469
+set_output_delay -210 -min -fall [get_ports x298] -clock x2469
+set_output_delay -120 -max -rise [get_ports x298] -clock x2469
+set_output_delay -120 -max -fall [get_ports x298] -clock x2469
 set_load -pin_load 4 [get_ports x298]
-set_output_delay 210 -min -rise [get_ports x1889] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1889] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1889] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1889] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1889] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1889] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1889] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1889] -clock x2469
 set_load -pin_load 4 [get_ports x1889]
-set_output_delay 210 -min -rise [get_ports x128] -clock x2469
-set_output_delay 210 -min -fall [get_ports x128] -clock x2469
-set_output_delay 220 -max -rise [get_ports x128] -clock x2469
-set_output_delay 220 -max -fall [get_ports x128] -clock x2469
+set_output_delay -210 -min -rise [get_ports x128] -clock x2469
+set_output_delay -210 -min -fall [get_ports x128] -clock x2469
+set_output_delay -120 -max -rise [get_ports x128] -clock x2469
+set_output_delay -120 -max -fall [get_ports x128] -clock x2469
 set_load -pin_load 4 [get_ports x128]
-set_output_delay 210 -min -rise [get_ports x1093] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1093] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1093] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1093] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1093] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1093] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1093] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1093] -clock x2469
 set_load -pin_load 4 [get_ports x1093]
-set_output_delay 210 -min -rise [get_ports x1209] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1209] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1209] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1209] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1209] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1209] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1209] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1209] -clock x2469
 set_load -pin_load 4 [get_ports x1209]
-set_output_delay 210 -min -rise [get_ports x640] -clock x2469
-set_output_delay 210 -min -fall [get_ports x640] -clock x2469
-set_output_delay 220 -max -rise [get_ports x640] -clock x2469
-set_output_delay 220 -max -fall [get_ports x640] -clock x2469
+set_output_delay -210 -min -rise [get_ports x640] -clock x2469
+set_output_delay -210 -min -fall [get_ports x640] -clock x2469
+set_output_delay -120 -max -rise [get_ports x640] -clock x2469
+set_output_delay -120 -max -fall [get_ports x640] -clock x2469
 set_load -pin_load 4 [get_ports x640]
-set_output_delay 210 -min -rise [get_ports x1448] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1448] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1448] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1448] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1448] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1448] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1448] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1448] -clock x2469
 set_load -pin_load 4 [get_ports x1448]
-set_output_delay 210 -min -rise [get_ports x900] -clock x2469
-set_output_delay 210 -min -fall [get_ports x900] -clock x2469
-set_output_delay 220 -max -rise [get_ports x900] -clock x2469
-set_output_delay 220 -max -fall [get_ports x900] -clock x2469
+set_output_delay -210 -min -rise [get_ports x900] -clock x2469
+set_output_delay -210 -min -fall [get_ports x900] -clock x2469
+set_output_delay -120 -max -rise [get_ports x900] -clock x2469
+set_output_delay -120 -max -fall [get_ports x900] -clock x2469
 set_load -pin_load 4 [get_ports x900]
-set_output_delay 210 -min -rise [get_ports x1045] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1045] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1045] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1045] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1045] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1045] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1045] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1045] -clock x2469
 set_load -pin_load 4 [get_ports x1045]
-set_output_delay 210 -min -rise [get_ports x542] -clock x2469
-set_output_delay 210 -min -fall [get_ports x542] -clock x2469
-set_output_delay 220 -max -rise [get_ports x542] -clock x2469
-set_output_delay 220 -max -fall [get_ports x542] -clock x2469
+set_output_delay -210 -min -rise [get_ports x542] -clock x2469
+set_output_delay -210 -min -fall [get_ports x542] -clock x2469
+set_output_delay -120 -max -rise [get_ports x542] -clock x2469
+set_output_delay -120 -max -fall [get_ports x542] -clock x2469
 set_load -pin_load 4 [get_ports x542]
-set_output_delay 210 -min -rise [get_ports x113] -clock x2469
-set_output_delay 210 -min -fall [get_ports x113] -clock x2469
-set_output_delay 220 -max -rise [get_ports x113] -clock x2469
-set_output_delay 220 -max -fall [get_ports x113] -clock x2469
+set_output_delay -210 -min -rise [get_ports x113] -clock x2469
+set_output_delay -210 -min -fall [get_ports x113] -clock x2469
+set_output_delay -120 -max -rise [get_ports x113] -clock x2469
+set_output_delay -120 -max -fall [get_ports x113] -clock x2469
 set_load -pin_load 4 [get_ports x113]
-set_output_delay 210 -min -rise [get_ports x209] -clock x2469
-set_output_delay 210 -min -fall [get_ports x209] -clock x2469
-set_output_delay 220 -max -rise [get_ports x209] -clock x2469
-set_output_delay 220 -max -fall [get_ports x209] -clock x2469
+set_output_delay -210 -min -rise [get_ports x209] -clock x2469
+set_output_delay -210 -min -fall [get_ports x209] -clock x2469
+set_output_delay -120 -max -rise [get_ports x209] -clock x2469
+set_output_delay -120 -max -fall [get_ports x209] -clock x2469
 set_load -pin_load 4 [get_ports x209]
-set_output_delay 210 -min -rise [get_ports x142] -clock x2469
-set_output_delay 210 -min -fall [get_ports x142] -clock x2469
-set_output_delay 220 -max -rise [get_ports x142] -clock x2469
-set_output_delay 220 -max -fall [get_ports x142] -clock x2469
+set_output_delay -210 -min -rise [get_ports x142] -clock x2469
+set_output_delay -210 -min -fall [get_ports x142] -clock x2469
+set_output_delay -120 -max -rise [get_ports x142] -clock x2469
+set_output_delay -120 -max -fall [get_ports x142] -clock x2469
 set_load -pin_load 4 [get_ports x142]
-set_output_delay 210 -min -rise [get_ports x459] -clock x2469
-set_output_delay 210 -min -fall [get_ports x459] -clock x2469
-set_output_delay 220 -max -rise [get_ports x459] -clock x2469
-set_output_delay 220 -max -fall [get_ports x459] -clock x2469
+set_output_delay -210 -min -rise [get_ports x459] -clock x2469
+set_output_delay -210 -min -fall [get_ports x459] -clock x2469
+set_output_delay -120 -max -rise [get_ports x459] -clock x2469
+set_output_delay -120 -max -fall [get_ports x459] -clock x2469
 set_load -pin_load 4 [get_ports x459]
-set_output_delay 210 -min -rise [get_ports x1412] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1412] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1412] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1412] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1412] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1412] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1412] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1412] -clock x2469
 set_load -pin_load 4 [get_ports x1412]
-set_output_delay 210 -min -rise [get_ports x24] -clock x2469
-set_output_delay 210 -min -fall [get_ports x24] -clock x2469
-set_output_delay 220 -max -rise [get_ports x24] -clock x2469
-set_output_delay 220 -max -fall [get_ports x24] -clock x2469
+set_output_delay -210 -min -rise [get_ports x24] -clock x2469
+set_output_delay -210 -min -fall [get_ports x24] -clock x2469
+set_output_delay -120 -max -rise [get_ports x24] -clock x2469
+set_output_delay -120 -max -fall [get_ports x24] -clock x2469
 set_load -pin_load 4 [get_ports x24]
-set_output_delay 210 -min -rise [get_ports x1393] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1393] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1393] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1393] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1393] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1393] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1393] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1393] -clock x2469
 set_load -pin_load 4 [get_ports x1393]
-set_output_delay 210 -min -rise [get_ports x120] -clock x2469
-set_output_delay 210 -min -fall [get_ports x120] -clock x2469
-set_output_delay 220 -max -rise [get_ports x120] -clock x2469
-set_output_delay 220 -max -fall [get_ports x120] -clock x2469
+set_output_delay -210 -min -rise [get_ports x120] -clock x2469
+set_output_delay -210 -min -fall [get_ports x120] -clock x2469
+set_output_delay -120 -max -rise [get_ports x120] -clock x2469
+set_output_delay -120 -max -fall [get_ports x120] -clock x2469
 set_load -pin_load 4 [get_ports x120]
-set_output_delay 210 -min -rise [get_ports x174] -clock x2469
-set_output_delay 210 -min -fall [get_ports x174] -clock x2469
-set_output_delay 220 -max -rise [get_ports x174] -clock x2469
-set_output_delay 220 -max -fall [get_ports x174] -clock x2469
+set_output_delay -210 -min -rise [get_ports x174] -clock x2469
+set_output_delay -210 -min -fall [get_ports x174] -clock x2469
+set_output_delay -120 -max -rise [get_ports x174] -clock x2469
+set_output_delay -120 -max -fall [get_ports x174] -clock x2469
 set_load -pin_load 4 [get_ports x174]
-set_output_delay 210 -min -rise [get_ports x310] -clock x2469
-set_output_delay 210 -min -fall [get_ports x310] -clock x2469
-set_output_delay 220 -max -rise [get_ports x310] -clock x2469
-set_output_delay 220 -max -fall [get_ports x310] -clock x2469
+set_output_delay -210 -min -rise [get_ports x310] -clock x2469
+set_output_delay -210 -min -fall [get_ports x310] -clock x2469
+set_output_delay -120 -max -rise [get_ports x310] -clock x2469
+set_output_delay -120 -max -fall [get_ports x310] -clock x2469
 set_load -pin_load 4 [get_ports x310]
-set_output_delay 210 -min -rise [get_ports x2113] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2113] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2113] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2113] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2113] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2113] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2113] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2113] -clock x2469
 set_load -pin_load 4 [get_ports x2113]
-set_output_delay 210 -min -rise [get_ports x485] -clock x2469
-set_output_delay 210 -min -fall [get_ports x485] -clock x2469
-set_output_delay 220 -max -rise [get_ports x485] -clock x2469
-set_output_delay 220 -max -fall [get_ports x485] -clock x2469
+set_output_delay -210 -min -rise [get_ports x485] -clock x2469
+set_output_delay -210 -min -fall [get_ports x485] -clock x2469
+set_output_delay -120 -max -rise [get_ports x485] -clock x2469
+set_output_delay -120 -max -fall [get_ports x485] -clock x2469
 set_load -pin_load 4 [get_ports x485]
-set_output_delay 210 -min -rise [get_ports x156] -clock x2469
-set_output_delay 210 -min -fall [get_ports x156] -clock x2469
-set_output_delay 220 -max -rise [get_ports x156] -clock x2469
-set_output_delay 220 -max -fall [get_ports x156] -clock x2469
+set_output_delay -210 -min -rise [get_ports x156] -clock x2469
+set_output_delay -210 -min -fall [get_ports x156] -clock x2469
+set_output_delay -120 -max -rise [get_ports x156] -clock x2469
+set_output_delay -120 -max -fall [get_ports x156] -clock x2469
 set_load -pin_load 4 [get_ports x156]
-set_output_delay 210 -min -rise [get_ports x1164] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1164] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1164] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1164] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1164] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1164] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1164] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1164] -clock x2469
 set_load -pin_load 4 [get_ports x1164]
-set_output_delay 210 -min -rise [get_ports x1291] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1291] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1291] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1291] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1291] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1291] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1291] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1291] -clock x2469
 set_load -pin_load 4 [get_ports x1291]
-set_output_delay 210 -min -rise [get_ports x249] -clock x2469
-set_output_delay 210 -min -fall [get_ports x249] -clock x2469
-set_output_delay 220 -max -rise [get_ports x249] -clock x2469
-set_output_delay 220 -max -fall [get_ports x249] -clock x2469
+set_output_delay -210 -min -rise [get_ports x249] -clock x2469
+set_output_delay -210 -min -fall [get_ports x249] -clock x2469
+set_output_delay -120 -max -rise [get_ports x249] -clock x2469
+set_output_delay -120 -max -fall [get_ports x249] -clock x2469
 set_load -pin_load 4 [get_ports x249]
-set_output_delay 210 -min -rise [get_ports x558] -clock x2469
-set_output_delay 210 -min -fall [get_ports x558] -clock x2469
-set_output_delay 220 -max -rise [get_ports x558] -clock x2469
-set_output_delay 220 -max -fall [get_ports x558] -clock x2469
+set_output_delay -210 -min -rise [get_ports x558] -clock x2469
+set_output_delay -210 -min -fall [get_ports x558] -clock x2469
+set_output_delay -120 -max -rise [get_ports x558] -clock x2469
+set_output_delay -120 -max -fall [get_ports x558] -clock x2469
 set_load -pin_load 4 [get_ports x558]
-set_output_delay 210 -min -rise [get_ports x73] -clock x2469
-set_output_delay 210 -min -fall [get_ports x73] -clock x2469
-set_output_delay 220 -max -rise [get_ports x73] -clock x2469
-set_output_delay 220 -max -fall [get_ports x73] -clock x2469
+set_output_delay -210 -min -rise [get_ports x73] -clock x2469
+set_output_delay -210 -min -fall [get_ports x73] -clock x2469
+set_output_delay -120 -max -rise [get_ports x73] -clock x2469
+set_output_delay -120 -max -fall [get_ports x73] -clock x2469
 set_load -pin_load 4 [get_ports x73]
-set_output_delay 210 -min -rise [get_ports x1494] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1494] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1494] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1494] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1494] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1494] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1494] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1494] -clock x2469
 set_load -pin_load 4 [get_ports x1494]
-set_output_delay 210 -min -rise [get_ports x79] -clock x2469
-set_output_delay 210 -min -fall [get_ports x79] -clock x2469
-set_output_delay 220 -max -rise [get_ports x79] -clock x2469
-set_output_delay 220 -max -fall [get_ports x79] -clock x2469
+set_output_delay -210 -min -rise [get_ports x79] -clock x2469
+set_output_delay -210 -min -fall [get_ports x79] -clock x2469
+set_output_delay -120 -max -rise [get_ports x79] -clock x2469
+set_output_delay -120 -max -fall [get_ports x79] -clock x2469
 set_load -pin_load 4 [get_ports x79]
-set_output_delay 210 -min -rise [get_ports x452] -clock x2469
-set_output_delay 210 -min -fall [get_ports x452] -clock x2469
-set_output_delay 220 -max -rise [get_ports x452] -clock x2469
-set_output_delay 220 -max -fall [get_ports x452] -clock x2469
+set_output_delay -210 -min -rise [get_ports x452] -clock x2469
+set_output_delay -210 -min -fall [get_ports x452] -clock x2469
+set_output_delay -120 -max -rise [get_ports x452] -clock x2469
+set_output_delay -120 -max -fall [get_ports x452] -clock x2469
 set_load -pin_load 4 [get_ports x452]
-set_output_delay 210 -min -rise [get_ports x1011] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1011] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1011] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1011] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1011] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1011] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1011] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1011] -clock x2469
 set_load -pin_load 4 [get_ports x1011]
-set_output_delay 210 -min -rise [get_ports x1767] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1767] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1767] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1767] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1767] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1767] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1767] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1767] -clock x2469
 set_load -pin_load 4 [get_ports x1767]
-set_output_delay 210 -min -rise [get_ports x2015] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2015] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2015] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2015] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2015] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2015] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2015] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2015] -clock x2469
 set_load -pin_load 4 [get_ports x2015]
-set_output_delay 210 -min -rise [get_ports x1426] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1426] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1426] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1426] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1426] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1426] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1426] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1426] -clock x2469
 set_load -pin_load 4 [get_ports x1426]
-set_output_delay 210 -min -rise [get_ports x314] -clock x2469
-set_output_delay 210 -min -fall [get_ports x314] -clock x2469
-set_output_delay 220 -max -rise [get_ports x314] -clock x2469
-set_output_delay 220 -max -fall [get_ports x314] -clock x2469
+set_output_delay -210 -min -rise [get_ports x314] -clock x2469
+set_output_delay -210 -min -fall [get_ports x314] -clock x2469
+set_output_delay -120 -max -rise [get_ports x314] -clock x2469
+set_output_delay -120 -max -fall [get_ports x314] -clock x2469
 set_load -pin_load 4 [get_ports x314]
-set_output_delay 210 -min -rise [get_ports x197] -clock x2469
-set_output_delay 210 -min -fall [get_ports x197] -clock x2469
-set_output_delay 220 -max -rise [get_ports x197] -clock x2469
-set_output_delay 220 -max -fall [get_ports x197] -clock x2469
+set_output_delay -210 -min -rise [get_ports x197] -clock x2469
+set_output_delay -210 -min -fall [get_ports x197] -clock x2469
+set_output_delay -120 -max -rise [get_ports x197] -clock x2469
+set_output_delay -120 -max -fall [get_ports x197] -clock x2469
 set_load -pin_load 4 [get_ports x197]
-set_output_delay 210 -min -rise [get_ports x1278] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1278] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1278] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1278] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1278] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1278] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1278] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1278] -clock x2469
 set_load -pin_load 4 [get_ports x1278]
-set_output_delay 210 -min -rise [get_ports x190] -clock x2469
-set_output_delay 210 -min -fall [get_ports x190] -clock x2469
-set_output_delay 220 -max -rise [get_ports x190] -clock x2469
-set_output_delay 220 -max -fall [get_ports x190] -clock x2469
+set_output_delay -210 -min -rise [get_ports x190] -clock x2469
+set_output_delay -210 -min -fall [get_ports x190] -clock x2469
+set_output_delay -120 -max -rise [get_ports x190] -clock x2469
+set_output_delay -120 -max -fall [get_ports x190] -clock x2469
 set_load -pin_load 4 [get_ports x190]
-set_output_delay 210 -min -rise [get_ports x742] -clock x2469
-set_output_delay 210 -min -fall [get_ports x742] -clock x2469
-set_output_delay 220 -max -rise [get_ports x742] -clock x2469
-set_output_delay 220 -max -fall [get_ports x742] -clock x2469
+set_output_delay -210 -min -rise [get_ports x742] -clock x2469
+set_output_delay -210 -min -fall [get_ports x742] -clock x2469
+set_output_delay -120 -max -rise [get_ports x742] -clock x2469
+set_output_delay -120 -max -fall [get_ports x742] -clock x2469
 set_load -pin_load 4 [get_ports x742]
-set_output_delay 210 -min -rise [get_ports x1680] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1680] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1680] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1680] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1680] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1680] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1680] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1680] -clock x2469
 set_load -pin_load 4 [get_ports x1680]
-set_output_delay 210 -min -rise [get_ports x1330] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1330] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1330] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1330] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1330] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1330] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1330] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1330] -clock x2469
 set_load -pin_load 4 [get_ports x1330]
-set_output_delay 210 -min -rise [get_ports x1242] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1242] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1242] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1242] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1242] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1242] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1242] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1242] -clock x2469
 set_load -pin_load 4 [get_ports x1242]
-set_output_delay 210 -min -rise [get_ports x2393] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2393] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2393] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2393] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2393] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2393] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2393] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2393] -clock x2469
 set_load -pin_load 4 [get_ports x2393]
-set_output_delay 210 -min -rise [get_ports x524] -clock x2469
-set_output_delay 210 -min -fall [get_ports x524] -clock x2469
-set_output_delay 220 -max -rise [get_ports x524] -clock x2469
-set_output_delay 220 -max -fall [get_ports x524] -clock x2469
+set_output_delay -210 -min -rise [get_ports x524] -clock x2469
+set_output_delay -210 -min -fall [get_ports x524] -clock x2469
+set_output_delay -120 -max -rise [get_ports x524] -clock x2469
+set_output_delay -120 -max -fall [get_ports x524] -clock x2469
 set_load -pin_load 4 [get_ports x524]
-set_output_delay 210 -min -rise [get_ports x708] -clock x2469
-set_output_delay 210 -min -fall [get_ports x708] -clock x2469
-set_output_delay 220 -max -rise [get_ports x708] -clock x2469
-set_output_delay 220 -max -fall [get_ports x708] -clock x2469
+set_output_delay -210 -min -rise [get_ports x708] -clock x2469
+set_output_delay -210 -min -fall [get_ports x708] -clock x2469
+set_output_delay -120 -max -rise [get_ports x708] -clock x2469
+set_output_delay -120 -max -fall [get_ports x708] -clock x2469
 set_load -pin_load 4 [get_ports x708]
-set_output_delay 210 -min -rise [get_ports x2056] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2056] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2056] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2056] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2056] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2056] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2056] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2056] -clock x2469
 set_load -pin_load 4 [get_ports x2056]
-set_output_delay 210 -min -rise [get_ports x302] -clock x2469
-set_output_delay 210 -min -fall [get_ports x302] -clock x2469
-set_output_delay 220 -max -rise [get_ports x302] -clock x2469
-set_output_delay 220 -max -fall [get_ports x302] -clock x2469
+set_output_delay -210 -min -rise [get_ports x302] -clock x2469
+set_output_delay -210 -min -fall [get_ports x302] -clock x2469
+set_output_delay -120 -max -rise [get_ports x302] -clock x2469
+set_output_delay -120 -max -fall [get_ports x302] -clock x2469
 set_load -pin_load 4 [get_ports x302]
-set_output_delay 210 -min -rise [get_ports x93] -clock x2469
-set_output_delay 210 -min -fall [get_ports x93] -clock x2469
-set_output_delay 220 -max -rise [get_ports x93] -clock x2469
-set_output_delay 220 -max -fall [get_ports x93] -clock x2469
+set_output_delay -210 -min -rise [get_ports x93] -clock x2469
+set_output_delay -210 -min -fall [get_ports x93] -clock x2469
+set_output_delay -120 -max -rise [get_ports x93] -clock x2469
+set_output_delay -120 -max -fall [get_ports x93] -clock x2469
 set_load -pin_load 4 [get_ports x93]
-set_output_delay 210 -min -rise [get_ports x135] -clock x2469
-set_output_delay 210 -min -fall [get_ports x135] -clock x2469
-set_output_delay 220 -max -rise [get_ports x135] -clock x2469
-set_output_delay 220 -max -fall [get_ports x135] -clock x2469
+set_output_delay -210 -min -rise [get_ports x135] -clock x2469
+set_output_delay -210 -min -fall [get_ports x135] -clock x2469
+set_output_delay -120 -max -rise [get_ports x135] -clock x2469
+set_output_delay -120 -max -fall [get_ports x135] -clock x2469
 set_load -pin_load 4 [get_ports x135]
-set_output_delay 210 -min -rise [get_ports x1369] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1369] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1369] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1369] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1369] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1369] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1369] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1369] -clock x2469
 set_load -pin_load 4 [get_ports x1369]
-set_output_delay 210 -min -rise [get_ports x1934] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1934] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1934] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1934] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1934] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1934] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1934] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1934] -clock x2469
 set_load -pin_load 4 [get_ports x1934]
-set_output_delay 210 -min -rise [get_ports x1401] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1401] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1401] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1401] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1401] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1401] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1401] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1401] -clock x2469
 set_load -pin_load 4 [get_ports x1401]
-set_output_delay 210 -min -rise [get_ports x32] -clock x2469
-set_output_delay 210 -min -fall [get_ports x32] -clock x2469
-set_output_delay 220 -max -rise [get_ports x32] -clock x2469
-set_output_delay 220 -max -fall [get_ports x32] -clock x2469
+set_output_delay -210 -min -rise [get_ports x32] -clock x2469
+set_output_delay -210 -min -fall [get_ports x32] -clock x2469
+set_output_delay -120 -max -rise [get_ports x32] -clock x2469
+set_output_delay -120 -max -fall [get_ports x32] -clock x2469
 set_load -pin_load 4 [get_ports x32]
-set_output_delay 210 -min -rise [get_ports x569] -clock x2469
-set_output_delay 210 -min -fall [get_ports x569] -clock x2469
-set_output_delay 220 -max -rise [get_ports x569] -clock x2469
-set_output_delay 220 -max -fall [get_ports x569] -clock x2469
+set_output_delay -210 -min -rise [get_ports x569] -clock x2469
+set_output_delay -210 -min -fall [get_ports x569] -clock x2469
+set_output_delay -120 -max -rise [get_ports x569] -clock x2469
+set_output_delay -120 -max -fall [get_ports x569] -clock x2469
 set_load -pin_load 4 [get_ports x569]
-set_output_delay 210 -min -rise [get_ports x2321] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2321] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2321] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2321] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2321] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2321] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2321] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2321] -clock x2469
 set_load -pin_load 4 [get_ports x2321]
-set_output_delay 210 -min -rise [get_ports x1377] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1377] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1377] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1377] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1377] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1377] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1377] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1377] -clock x2469
 set_load -pin_load 4 [get_ports x1377]
-set_output_delay 210 -min -rise [get_ports x1127] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1127] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1127] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1127] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1127] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1127] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1127] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1127] -clock x2469
 set_load -pin_load 4 [get_ports x1127]
-set_output_delay 210 -min -rise [get_ports x99] -clock x2469
-set_output_delay 210 -min -fall [get_ports x99] -clock x2469
-set_output_delay 220 -max -rise [get_ports x99] -clock x2469
-set_output_delay 220 -max -fall [get_ports x99] -clock x2469
+set_output_delay -210 -min -rise [get_ports x99] -clock x2469
+set_output_delay -210 -min -fall [get_ports x99] -clock x2469
+set_output_delay -120 -max -rise [get_ports x99] -clock x2469
+set_output_delay -120 -max -fall [get_ports x99] -clock x2469
 set_load -pin_load 4 [get_ports x99]
-set_output_delay 210 -min -rise [get_ports x2357] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2357] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2357] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2357] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2357] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2357] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2357] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2357] -clock x2469
 set_load -pin_load 4 [get_ports x2357]
-set_output_delay 210 -min -rise [get_ports x1561] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1561] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1561] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1561] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1561] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1561] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1561] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1561] -clock x2469
 set_load -pin_load 4 [get_ports x1561]
-set_output_delay 210 -min -rise [get_ports x606] -clock x2469
-set_output_delay 210 -min -fall [get_ports x606] -clock x2469
-set_output_delay 220 -max -rise [get_ports x606] -clock x2469
-set_output_delay 220 -max -fall [get_ports x606] -clock x2469
+set_output_delay -210 -min -rise [get_ports x606] -clock x2469
+set_output_delay -210 -min -fall [get_ports x606] -clock x2469
+set_output_delay -120 -max -rise [get_ports x606] -clock x2469
+set_output_delay -120 -max -fall [get_ports x606] -clock x2469
 set_load -pin_load 4 [get_ports x606]
-set_output_delay 210 -min -rise [get_ports x0] -clock x2469
-set_output_delay 210 -min -fall [get_ports x0] -clock x2469
-set_output_delay 220 -max -rise [get_ports x0] -clock x2469
-set_output_delay 220 -max -fall [get_ports x0] -clock x2469
+set_output_delay -210 -min -rise [get_ports x0] -clock x2469
+set_output_delay -210 -min -fall [get_ports x0] -clock x2469
+set_output_delay -120 -max -rise [get_ports x0] -clock x2469
+set_output_delay -120 -max -fall [get_ports x0] -clock x2469
 set_load -pin_load 4 [get_ports x0]
-set_output_delay 210 -min -rise [get_ports x324] -clock x2469
-set_output_delay 210 -min -fall [get_ports x324] -clock x2469
-set_output_delay 220 -max -rise [get_ports x324] -clock x2469
-set_output_delay 220 -max -fall [get_ports x324] -clock x2469
+set_output_delay -210 -min -rise [get_ports x324] -clock x2469
+set_output_delay -210 -min -fall [get_ports x324] -clock x2469
+set_output_delay -120 -max -rise [get_ports x324] -clock x2469
+set_output_delay -120 -max -fall [get_ports x324] -clock x2469
 set_load -pin_load 4 [get_ports x324]
-set_output_delay 210 -min -rise [get_ports x11] -clock x2469
-set_output_delay 210 -min -fall [get_ports x11] -clock x2469
-set_output_delay 220 -max -rise [get_ports x11] -clock x2469
-set_output_delay 220 -max -fall [get_ports x11] -clock x2469
+set_output_delay -210 -min -rise [get_ports x11] -clock x2469
+set_output_delay -210 -min -fall [get_ports x11] -clock x2469
+set_output_delay -120 -max -rise [get_ports x11] -clock x2469
+set_output_delay -120 -max -fall [get_ports x11] -clock x2469
 set_load -pin_load 4 [get_ports x11]
-set_output_delay 210 -min -rise [get_ports x413] -clock x2469
-set_output_delay 210 -min -fall [get_ports x413] -clock x2469
-set_output_delay 220 -max -rise [get_ports x413] -clock x2469
-set_output_delay 220 -max -fall [get_ports x413] -clock x2469
+set_output_delay -210 -min -rise [get_ports x413] -clock x2469
+set_output_delay -210 -min -fall [get_ports x413] -clock x2469
+set_output_delay -120 -max -rise [get_ports x413] -clock x2469
+set_output_delay -120 -max -fall [get_ports x413] -clock x2469
 set_load -pin_load 4 [get_ports x413]
-set_output_delay 210 -min -rise [get_ports x106] -clock x2469
-set_output_delay 210 -min -fall [get_ports x106] -clock x2469
-set_output_delay 220 -max -rise [get_ports x106] -clock x2469
-set_output_delay 220 -max -fall [get_ports x106] -clock x2469
+set_output_delay -210 -min -rise [get_ports x106] -clock x2469
+set_output_delay -210 -min -fall [get_ports x106] -clock x2469
+set_output_delay -120 -max -rise [get_ports x106] -clock x2469
+set_output_delay -120 -max -fall [get_ports x106] -clock x2469
 set_load -pin_load 4 [get_ports x106]
-set_output_delay 210 -min -rise [get_ports x1983] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1983] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1983] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1983] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1983] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1983] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1983] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1983] -clock x2469
 set_load -pin_load 4 [get_ports x1983]
-set_output_delay 210 -min -rise [get_ports x1855] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1855] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1855] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1855] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1855] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1855] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1855] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1855] -clock x2469
 set_load -pin_load 4 [get_ports x1855]
-set_output_delay 210 -min -rise [get_ports x877] -clock x2469
-set_output_delay 210 -min -fall [get_ports x877] -clock x2469
-set_output_delay 220 -max -rise [get_ports x877] -clock x2469
-set_output_delay 220 -max -fall [get_ports x877] -clock x2469
+set_output_delay -210 -min -rise [get_ports x877] -clock x2469
+set_output_delay -210 -min -fall [get_ports x877] -clock x2469
+set_output_delay -120 -max -rise [get_ports x877] -clock x2469
+set_output_delay -120 -max -fall [get_ports x877] -clock x2469
 set_load -pin_load 4 [get_ports x877]
-set_output_delay 210 -min -rise [get_ports x1385] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1385] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1385] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1385] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1385] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1385] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1385] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1385] -clock x2469
 set_load -pin_load 4 [get_ports x1385]
-set_output_delay 210 -min -rise [get_ports x167] -clock x2469
-set_output_delay 210 -min -fall [get_ports x167] -clock x2469
-set_output_delay 220 -max -rise [get_ports x167] -clock x2469
-set_output_delay 220 -max -fall [get_ports x167] -clock x2469
+set_output_delay -210 -min -rise [get_ports x167] -clock x2469
+set_output_delay -210 -min -fall [get_ports x167] -clock x2469
+set_output_delay -120 -max -rise [get_ports x167] -clock x2469
+set_output_delay -120 -max -fall [get_ports x167] -clock x2469
 set_load -pin_load 4 [get_ports x167]
-set_output_delay 210 -min -rise [get_ports x1648] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1648] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1648] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1648] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1648] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1648] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1648] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1648] -clock x2469
 set_load -pin_load 4 [get_ports x1648]
-set_output_delay 210 -min -rise [get_ports x66] -clock x2469
-set_output_delay 210 -min -fall [get_ports x66] -clock x2469
-set_output_delay 220 -max -rise [get_ports x66] -clock x2469
-set_output_delay 220 -max -fall [get_ports x66] -clock x2469
+set_output_delay -210 -min -rise [get_ports x66] -clock x2469
+set_output_delay -210 -min -fall [get_ports x66] -clock x2469
+set_output_delay -120 -max -rise [get_ports x66] -clock x2469
+set_output_delay -120 -max -fall [get_ports x66] -clock x2469
 set_load -pin_load 4 [get_ports x66]
-set_output_delay 210 -min -rise [get_ports x491] -clock x2469
-set_output_delay 210 -min -fall [get_ports x491] -clock x2469
-set_output_delay 220 -max -rise [get_ports x491] -clock x2469
-set_output_delay 220 -max -fall [get_ports x491] -clock x2469
+set_output_delay -210 -min -rise [get_ports x491] -clock x2469
+set_output_delay -210 -min -fall [get_ports x491] -clock x2469
+set_output_delay -120 -max -rise [get_ports x491] -clock x2469
+set_output_delay -120 -max -fall [get_ports x491] -clock x2469
 set_load -pin_load 4 [get_ports x491]
-set_output_delay 210 -min -rise [get_ports x2188] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2188] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2188] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2188] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2188] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2188] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2188] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2188] -clock x2469
 set_load -pin_load 4 [get_ports x2188]
-set_output_delay 210 -min -rise [get_ports x2227] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2227] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2227] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2227] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2227] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2227] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2227] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2227] -clock x2469
 set_load -pin_load 4 [get_ports x2227]
-set_output_delay 210 -min -rise [get_ports x2145] -clock x2469
-set_output_delay 210 -min -fall [get_ports x2145] -clock x2469
-set_output_delay 220 -max -rise [get_ports x2145] -clock x2469
-set_output_delay 220 -max -fall [get_ports x2145] -clock x2469
+set_output_delay -210 -min -rise [get_ports x2145] -clock x2469
+set_output_delay -210 -min -fall [get_ports x2145] -clock x2469
+set_output_delay -120 -max -rise [get_ports x2145] -clock x2469
+set_output_delay -120 -max -fall [get_ports x2145] -clock x2469
 set_load -pin_load 4 [get_ports x2145]
-set_output_delay 210 -min -rise [get_ports x183] -clock x2469
-set_output_delay 210 -min -fall [get_ports x183] -clock x2469
-set_output_delay 220 -max -rise [get_ports x183] -clock x2469
-set_output_delay 220 -max -fall [get_ports x183] -clock x2469
+set_output_delay -210 -min -rise [get_ports x183] -clock x2469
+set_output_delay -210 -min -fall [get_ports x183] -clock x2469
+set_output_delay -120 -max -rise [get_ports x183] -clock x2469
+set_output_delay -120 -max -fall [get_ports x183] -clock x2469
 set_load -pin_load 4 [get_ports x183]
-set_output_delay 210 -min -rise [get_ports x318] -clock x2469
-set_output_delay 210 -min -fall [get_ports x318] -clock x2469
-set_output_delay 220 -max -rise [get_ports x318] -clock x2469
-set_output_delay 220 -max -fall [get_ports x318] -clock x2469
+set_output_delay -210 -min -rise [get_ports x318] -clock x2469
+set_output_delay -210 -min -fall [get_ports x318] -clock x2469
+set_output_delay -120 -max -rise [get_ports x318] -clock x2469
+set_output_delay -120 -max -fall [get_ports x318] -clock x2469
 set_load -pin_load 4 [get_ports x318]
-set_output_delay 210 -min -rise [get_ports x961] -clock x2469
-set_output_delay 210 -min -fall [get_ports x961] -clock x2469
-set_output_delay 220 -max -rise [get_ports x961] -clock x2469
-set_output_delay 220 -max -fall [get_ports x961] -clock x2469
+set_output_delay -210 -min -rise [get_ports x961] -clock x2469
+set_output_delay -210 -min -fall [get_ports x961] -clock x2469
+set_output_delay -120 -max -rise [get_ports x961] -clock x2469
+set_output_delay -120 -max -fall [get_ports x961] -clock x2469
 set_load -pin_load 4 [get_ports x961]
-set_output_delay 210 -min -rise [get_ports x1440] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1440] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1440] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1440] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1440] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1440] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1440] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1440] -clock x2469
 set_load -pin_load 4 [get_ports x1440]
-set_output_delay 210 -min -rise [get_ports x59] -clock x2469
-set_output_delay 210 -min -fall [get_ports x59] -clock x2469
-set_output_delay 220 -max -rise [get_ports x59] -clock x2469
-set_output_delay 220 -max -fall [get_ports x59] -clock x2469
+set_output_delay -210 -min -rise [get_ports x59] -clock x2469
+set_output_delay -210 -min -fall [get_ports x59] -clock x2469
+set_output_delay -120 -max -rise [get_ports x59] -clock x2469
+set_output_delay -120 -max -fall [get_ports x59] -clock x2469
 set_load -pin_load 4 [get_ports x59]
-set_output_delay 210 -min -rise [get_ports x931] -clock x2469
-set_output_delay 210 -min -fall [get_ports x931] -clock x2469
-set_output_delay 220 -max -rise [get_ports x931] -clock x2469
-set_output_delay 220 -max -fall [get_ports x931] -clock x2469
+set_output_delay -210 -min -rise [get_ports x931] -clock x2469
+set_output_delay -210 -min -fall [get_ports x931] -clock x2469
+set_output_delay -120 -max -rise [get_ports x931] -clock x2469
+set_output_delay -120 -max -fall [get_ports x931] -clock x2469
 set_load -pin_load 4 [get_ports x931]
-set_output_delay 210 -min -rise [get_ports x328] -clock x2469
-set_output_delay 210 -min -fall [get_ports x328] -clock x2469
-set_output_delay 220 -max -rise [get_ports x328] -clock x2469
-set_output_delay 220 -max -fall [get_ports x328] -clock x2469
+set_output_delay -210 -min -rise [get_ports x328] -clock x2469
+set_output_delay -210 -min -fall [get_ports x328] -clock x2469
+set_output_delay -120 -max -rise [get_ports x328] -clock x2469
+set_output_delay -120 -max -fall [get_ports x328] -clock x2469
 set_load -pin_load 4 [get_ports x328]
-set_output_delay 210 -min -rise [get_ports x803] -clock x2469
-set_output_delay 210 -min -fall [get_ports x803] -clock x2469
-set_output_delay 220 -max -rise [get_ports x803] -clock x2469
-set_output_delay 220 -max -fall [get_ports x803] -clock x2469
+set_output_delay -210 -min -rise [get_ports x803] -clock x2469
+set_output_delay -210 -min -fall [get_ports x803] -clock x2469
+set_output_delay -120 -max -rise [get_ports x803] -clock x2469
+set_output_delay -120 -max -fall [get_ports x803] -clock x2469
 set_load -pin_load 4 [get_ports x803]
-set_output_delay 210 -min -rise [get_ports x1717] -clock x2469
-set_output_delay 210 -min -fall [get_ports x1717] -clock x2469
-set_output_delay 220 -max -rise [get_ports x1717] -clock x2469
-set_output_delay 220 -max -fall [get_ports x1717] -clock x2469
+set_output_delay -210 -min -rise [get_ports x1717] -clock x2469
+set_output_delay -210 -min -fall [get_ports x1717] -clock x2469
+set_output_delay -120 -max -rise [get_ports x1717] -clock x2469
+set_output_delay -120 -max -fall [get_ports x1717] -clock x2469
 set_load -pin_load 4 [get_ports x1717]
-set_output_delay 210 -min -rise [get_ports x231] -clock x2469
-set_output_delay 210 -min -fall [get_ports x231] -clock x2469
-set_output_delay 220 -max -rise [get_ports x231] -clock x2469
-set_output_delay 220 -max -fall [get_ports x231] -clock x2469
+set_output_delay -210 -min -rise [get_ports x231] -clock x2469
+set_output_delay -210 -min -fall [get_ports x231] -clock x2469
+set_output_delay -120 -max -rise [get_ports x231] -clock x2469
+set_output_delay -120 -max -fall [get_ports x231] -clock x2469
 set_load -pin_load 4 [get_ports x231]
-set_output_delay 210 -min -rise [get_ports x50] -clock x2469
-set_output_delay 210 -min -fall [get_ports x50] -clock x2469
-set_output_delay 220 -max -rise [get_ports x50] -clock x2469
-set_output_delay 220 -max -fall [get_ports x50] -clock x2469
+set_output_delay -210 -min -rise [get_ports x50] -clock x2469
+set_output_delay -210 -min -fall [get_ports x50] -clock x2469
+set_output_delay -120 -max -rise [get_ports x50] -clock x2469
+set_output_delay -120 -max -fall [get_ports x50] -clock x2469
 set_load -pin_load 4 [get_ports x50]
-set_output_delay 210 -min -rise [get_ports x435] -clock x2469
-set_output_delay 210 -min -fall [get_ports x435] -clock x2469
-set_output_delay 220 -max -rise [get_ports x435] -clock x2469
-set_output_delay 220 -max -fall [get_ports x435] -clock x2469
+set_output_delay -210 -min -rise [get_ports x435] -clock x2469
+set_output_delay -210 -min -fall [get_ports x435] -clock x2469
+set_output_delay -120 -max -rise [get_ports x435] -clock x2469
+set_output_delay -120 -max -fall [get_ports x435] -clock x2469
 set_load -pin_load 4 [get_ports x435]

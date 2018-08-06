@@ -159,7 +159,7 @@ void report_wns(Timer& timer, std::istream& is, std::ostream& os, std::ostream& 
 
 // Procedure: report_timing
 void report_timing(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto paths = timer.worst_paths(1); !paths.empty()) {
+  if(auto paths = timer.worst_paths(1).get(); !paths.empty()) {
     os << paths[0];
   }
   else {

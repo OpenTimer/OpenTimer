@@ -83,11 +83,11 @@ constexpr int MAX_TRAN = 2;
 inline auto to_string(Split m) {
   switch(m) {
     case EARLY:
-      return "early"s;
+      return "min"s;
     break;
 
     case LATE:
-      return "late"s;
+      return "max"s;
     break;
 
     default:

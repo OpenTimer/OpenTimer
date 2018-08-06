@@ -61,7 +61,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
        << std::setfill('-') << std::setw(31 + max_plen) << '\n';
     
     // trace
-    os << std::setfill(' ');
+    os << std::setfill(' ') << std::setprecision(3);
     std::optional<float> pi_at;
     for(const auto& p : path) {
       // arrival time
@@ -93,51 +93,58 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
 
 // Function: worst_paths 
 // Report the top-k worst_paths
-std::vector<Path> Timer::worst_paths(size_t K) {
+std::future<Paths> Timer::worst_paths(size_t K) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K), K);
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Split el) {
+std::future<Paths> Timer::worst_paths(size_t K, Split el) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, el), K);
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Tran rf) {
+std::future<Paths> Timer::worst_paths(size_t K, Tran rf) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, rf), K);
 }
 
 // Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Split el, Tran rf) {
+std::future<Paths> Timer::worst_paths(size_t K, Split el, Tran rf) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, el, rf), K);
 }
 
 // Function: _worst_paths
 // Report the top-k worst_paths
-std::vector<Path> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t K) {
+std::future<Paths> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t K) {
   
   // No need to report anything.
   if(K == 0 || wepts.empty()) {
-    return {};
+    return std::async(std::launch::deferred, [] () -> Paths { return {}; });
   }
+
+  std::future<Paths> future;
 
   // No need to generate prefix tree
   if(K == 1) {
-    std::vector<Path> paths(1);
-    auto sfxt = _sfxt_cache(wepts[0]);
-    _recover_prefix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
-    _recover_suffix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
-    return paths;
+    future = _taskflow.emplace([this, ept=wepts[0]] () -> Paths {
+      Paths paths(1);
+      auto sfxt = _sfxt_cache(ept);
+      _recover_prefix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
+      _recover_suffix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
+      return paths;
+    }).second;
   }
   // Generate the prefix tree
   else {
     OT_LOGF("unsupported yet");
-    return _extract_paths(wepts, K);
   }
+    
+  _taskflow.silent_dispatch();
+
+  return future;
 }
 
 // Procedure: _recover_prefix
@@ -183,46 +190,6 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
 
   _recover_suffix(path, sfxt, v);
 }
-
-// Function: _worst_path
-Path Timer::_extract_path(const SfxtCache& sfxt) const {
-
-  assert(sfxt.slack());
-
-  Path path;
-
-  // extract the prefix (data part)
-  _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
-
-  // extract the suffix (clock part)
-  _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
-
-  return path;
-}
-
-// Function: _worst_path
-Path Timer::_extract_path(const Endpoint& ept) const {
-  //OT_LOGD("edpt: ", ept.is_test(), " ", ept.is_po(), " ", ept.slack());
-  auto sfxt = _sfxt_cache(ept);
-  //OT_LOGD("sfxt: ", *sfxt.slack());
-  return _extract_path(sfxt);
-}
-
-// Function: _extract_paths
-std::vector<Path> Timer::_extract_paths(const std::vector<Endpoint>& epts, size_t K) {
-
-  assert(epts.size() <= K);
-
-  // Generate a sufx mirror for each endpoint
-  //_taskflow.parallel_for(epts.begin(), epts.end(), [] (const auto& ept) {
-
-  //});
-
-  //_taskflow.wait_for_all();
-
-  return {};
-}
-
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

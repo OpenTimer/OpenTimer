@@ -60,6 +60,7 @@ class Timer {
     Timer& slew(std::string, Split, Tran, std::optional<float>);
     Timer& load(std::string, Split, Tran, std::optional<float>);
     Timer& clock(std::string, float);
+    Timer& clock(std::string, std::string, float);
     Timer& cppr(bool);
 
     // Action.
@@ -73,10 +74,10 @@ class Timer {
     std::optional<float> tns();
     std::optional<float> wns();
     
-    std::vector<Path> worst_paths(size_t);
-    std::vector<Path> worst_paths(size_t, Split);
-    std::vector<Path> worst_paths(size_t, Tran);
-    std::vector<Path> worst_paths(size_t, Split, Tran);
+    std::future<Paths> worst_paths(size_t);
+    std::future<Paths> worst_paths(size_t, Split);
+    std::future<Paths> worst_paths(size_t, Tran);
+    std::future<Paths> worst_paths(size_t, Split, Tran);
 
     // Accessor
     std::string dump_graph() const;
@@ -123,7 +124,6 @@ class Timer {
     std::optional<ResistanceUnit> _resistance_unit;
     std::optional<CapacitanceUnit> _capacitance_unit;
     std::optional<PowerUnit> _power_unit;
-    std::optional<Clock> _clocks;
     std::optional<CpprAnalysis> _cppr_analysis;
 
     std::array<Celllib, MAX_SPLIT> _celllib;
@@ -133,7 +133,8 @@ class Timer {
     std::unordered_map<std::string, Pin> _pins;
     std::unordered_map<std::string, Net> _nets;
     std::unordered_map<std::string, Gate> _gates;
-
+    std::unordered_map<std::string, Clock> _clocks;
+ 
     std::list<Test> _tests;
     std::list<Arc> _arcs;
     std::list<Pin*> _frontiers;
@@ -158,12 +159,9 @@ class Timer {
     std::vector<Endpoint> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
 
-    std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
-    std::vector<Path> _extract_paths(const std::vector<Endpoint>&, size_t);
-    
-    Path _extract_path(const SfxtCache&) const;
-    Path _extract_path(const Endpoint&) const;
+    std::future<Paths> _worst_paths(const std::vector<Endpoint>&, size_t);
 
+    //Paths _extract_paths(const std::vector<Endpoint>&, size_t) const;
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
@@ -211,7 +209,7 @@ class Timer {
     void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
     void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
-    void _clock(const std::string&, Pin&, float);
+
     void _cppr(bool);
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
@@ -243,6 +241,8 @@ class Timer {
     Arc& _insert_arc(Pin&, Pin&, TimingView);
     SCC& _insert_scc(std::vector<Pin*>&);
     Test& _insert_test(Arc&);
+    Clock& _insert_clock(const std::string&, Pin&, float);
+    Clock& _insert_clock(const std::string&, float);
 
     std::optional<float> _at(const std::string&, Split, Tran);
     std::optional<float> _rat(const std::string&, Split, Tran);

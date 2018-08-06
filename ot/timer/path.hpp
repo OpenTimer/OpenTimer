@@ -36,6 +36,13 @@ struct Path : std::list<Point> {
 // Operator << ostream
 std::ostream& operator << (std::ostream&, const Path&);
 
+// EmptyPath
+inline const Path empty_path;
+
+// ------------------------------------------------------------------------------------------------
+
+using Paths = std::vector<Path>;
+
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

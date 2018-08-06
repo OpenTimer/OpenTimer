@@ -211,10 +211,10 @@ int main(int argc, char* argv[]) {
       }
       timer.spef(std::move(tokens[1]));
     }
-    else if(tokens[0] == "report_worst_paths") {
-      auto paths = timer.worst_paths(1);
-      std::cout << paths[0];
-    }
+    //else if(tokens[0] == "report_worst_paths") {
+    //  auto paths = timer.worst_paths(1);
+    //  std::cout << paths[0];
+    //}
     else {
       throw std::runtime_error("unexpected operation "s + line);
       break;

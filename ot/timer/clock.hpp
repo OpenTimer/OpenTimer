@@ -12,8 +12,8 @@ class Clock {
 
   public:
 
+    Clock(const std::string&, float);
     Clock(const std::string&, Pin&, float);
-    Clock(const std::string&, Pin&, float, std::array<float, MAX_TRAN>);
 
     inline const std::string& name() const;
     inline const std::string& comment() const;
@@ -25,7 +25,7 @@ class Clock {
 
     std::string _name;
 
-    Pin& _root;
+    Pin* _source {nullptr};
 
     float _period {.0f};
 
