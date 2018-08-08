@@ -75,6 +75,9 @@ List of commonly used commands:\n\
   report_at          -pin name [-early|-late] [-rise|-fall]\n\
   report_rat         -pin name [-early|-late] [-rise|-fall]\n\
   report_slack       -pin name [-early|-late] [-rise|-fall]\n\
+  report_wns\n\
+  report_tns\n\
+  report_fep\n\
 \n[Dump] operations to inspect the timer\n\n\
   help\n\
   version\n\

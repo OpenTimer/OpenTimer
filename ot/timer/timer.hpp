@@ -27,9 +27,7 @@ class Timer {
   
   constexpr static int INCREMENTAL  = 0x00;
   constexpr static int FULL_TIMING  = 0x01;
-  constexpr static int TNS_UPDATED  = 0x02;
-  constexpr static int WNS_UPDATED  = 0x04;
-  constexpr static int EPTS_UPDATED = 0x08;
+  constexpr static int EPTS_UPDATED = 0x02;
 
   public:
     
@@ -73,6 +71,7 @@ class Timer {
     std::optional<float> load(const std::string&, Split, Tran);
     std::optional<float> tns();
     std::optional<float> wns();
+    std::optional<size_t> fep();
     
     std::future<Paths> worst_paths(size_t);
     std::future<Paths> worst_paths(size_t, Split);
@@ -141,8 +140,9 @@ class Timer {
     std::list<SCC> _sccs;
 
     std::array<std::array<std::vector<Endpoint>, MAX_TRAN>, MAX_SPLIT> _endpoints;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _wns;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _tns;
+    std::array<std::array<std::optional<float>,  MAX_TRAN>, MAX_SPLIT> _wns;
+    std::array<std::array<std::optional<float>,  MAX_TRAN>, MAX_SPLIT> _tns;
+    std::array<std::array<std::optional<size_t>, MAX_TRAN>, MAX_SPLIT> _fep;
 
     std::deque<Pin*> _fprop_cands;
     std::deque<Pin*> _bprop_cands;
@@ -160,14 +160,10 @@ class Timer {
     std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
 
     std::future<Paths> _worst_paths(const std::vector<Endpoint>&, size_t);
-
-    //Paths _extract_paths(const std::vector<Endpoint>&, size_t) const;
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
     void _update_timing();
-    void _update_wns();
-    void _update_tns();
     void _update_endpoints();
     void _fprop_rc_timing(Pin&);
     void _fprop_slew(Pin&);

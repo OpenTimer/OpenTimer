@@ -36,6 +36,7 @@ void report_rat             (Timer&, std::istream&, std::ostream&, std::ostream&
 void report_slack           (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_tns             (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_wns             (Timer&, std::istream&, std::ostream&, std::ostream&);
+void report_fep             (Timer&, std::istream&, std::ostream&, std::ostream&);
 
 // Dump
 void dump_version           (Timer&, std::istream&, std::ostream&, std::ostream&);
@@ -97,6 +98,7 @@ inline const std::unordered_map<
   {"report_slack",            report_slack},
   {"report_tns",              report_tns},
   {"report_wns",              report_wns},
+  {"report_fep",              report_fep},
 
   // Dump
   {"help",                    dump_help},

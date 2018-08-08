@@ -73,7 +73,7 @@ void report_timer(Timer& timer, std::istream& is, std::ostream& os, std::ostream
     os << paths[0];
   }
   else {
-    os << Path();
+    os << empty_path;
   }
 }
 
