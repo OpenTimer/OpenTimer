@@ -231,7 +231,7 @@ Timer& Timer::connect_pin(std::string pin, std::string net) {
     auto p = _pins.find(pin);
     auto n = _nets.find(net);
     OT_LOGE_RIF(p==_pins.end() || n == _nets.end(),
-      "can't connect pin ", pin,  " to net ", net, " (pin/net not found)");
+      "can't connect pin ", pin,  " to net ", net, " (pin/net not found)"
     )
     _connect_pin(p->second, n->second);
   });
