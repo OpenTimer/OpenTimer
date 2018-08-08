@@ -314,16 +314,11 @@ The table below summarizes a list of commonly used methods.
 
 | Method | Type | Argument | Return | Description |
 | ------ | ---- | -------- | ------ | ----------- |
-| num_threads | builder | unsigned | self | set the number of threads |
 | celllib| builder | path, split | self | read the cell library for early and late splits |
 | verilog| builder | path | self | read a verilog netlist |
 | spef   | builder | path | self | read parasitics in SPEF |
 | sdc    | builder | path | self | read a Synopsys Design Constraint file |
 | update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
-| at | action | pin_name, split, transition | optional of float | update the timing and return the arrival time of a pin, if exists, at a give split and transition |
-| slew | action | pin_name, split, transition | optional of float | update the timing and return the slew of a pin at a give split and transition, if exists |
-| rat | action | pin_name, split, transition | optional of float | update the timing and return the required arrival time of a pin at a give split and transition, if exists |
-| slack | action | pin_name, split, transition | optional of float | update the timing and return the slack of a pin at a give split and transition, if exists |
 | tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
 | worst_paths | action | K | future of paths | update the timing and return a future to the path output |

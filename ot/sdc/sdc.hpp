@@ -6,7 +6,7 @@
 
 namespace ot::sdc {
 
-// Function: sdc_home
+// Function: home
 std::filesystem::path home();
 
 // SetInputDelay
