@@ -468,7 +468,7 @@ Timer& Timer::clock(std::string c, std::string s, float p) {
       _insert_clock(c, itr->second, p);
     }
     else {
-      OT_LOGW("can't create clock ", c, " (pin ", s, " not found");
+      OT_LOGE("can't create clock ", c, " on source ", s, " (pin not found)");
     }
   });
   

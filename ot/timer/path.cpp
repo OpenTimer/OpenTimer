@@ -119,6 +119,8 @@ std::future<Paths> Timer::worst_paths(size_t K, Split el, Tran rf) {
 // Function: _worst_paths
 // Report the top-k worst_paths
 std::future<Paths> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t K) {
+
+  assert(wepts.size() <= K);
   
   // No need to report anything.
   if(K == 0 || wepts.empty()) {

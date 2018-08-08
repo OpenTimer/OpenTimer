@@ -132,61 +132,10 @@ set(OT_CPP
   ot/spef/spef.cpp
 )
 
-# OpenTimer hpp
-set(OT_HPP 
-  ot/unit/unit.hpp
-  ot/policy.hpp
-  ot/shell/shell.hpp
-  ot/shell/prompt.hpp
-  ot/traits.hpp
-  ot/timer/scc.hpp
-  ot/timer/cppr.hpp
-  ot/timer/gate.hpp
-  ot/timer/pin.hpp
-  ot/timer/sfxt.hpp
-  ot/timer/path.hpp
-  ot/timer/timer.hpp
-  ot/timer/test.hpp
-  ot/timer/clock.hpp
-  ot/timer/endpoint.hpp
-  ot/timer/net.hpp
-  ot/timer/arc.hpp
-  ot/config.hpp
-  ot/json/json.hpp
-  ot/headerdef.hpp
-  ot/liberty/lut.hpp
-  ot/liberty/timing.hpp
-  ot/liberty/cellpin.hpp
-  ot/liberty/cell.hpp
-  ot/liberty/celllib.hpp
-  ot/verilog/verilog.hpp
-  ot/static/logger.hpp
-  ot/static/thread.hpp
-  ot/sdc/object.hpp
-  ot/sdc/sdc.hpp
-  ot/sdc/mask.hpp
-  ot/sdc/tokenize.hpp
-  ot/taskflow/taskflow.hpp
-  ot/tau/tau15.hpp
-  ot/exception.hpp
-  ot/utility/logger.hpp
-  ot/utility/scope_guard.hpp
-  ot/utility/utility.hpp
-  ot/utility/index.hpp
-  ot/utility/lambda.hpp
-  ot/utility/tokenizer.hpp
-  ot/utility/CLI11.hpp
-  ot/utility/singleton.hpp
-  ot/utility/os.hpp
-  ot/utility/iterator.hpp
-  ot/spef/spef.hpp
-)
-
 #message(STATUS "OT_CPP: ${OT_CPP}")
-#message(STATUS "OT_HPP: ${OT_HPP}")
 
 # Add OpenTimer library
-add_library(OpenTimer ${OT_CPP} ${OT_HPP})
+add_library(OpenTimer ${OT_CPP})
 
 
 ###########################################################
