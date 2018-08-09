@@ -31,6 +31,13 @@ inline float Point::slack() const {
 
 // Struct: Path
 struct Path : std::list<Point> {
+  
+  Path() = default;
+  Path(const Path&) = delete;
+  Path(Path&&) = default; 
+
+  Path& operator = (const Path&) = delete;
+  Path& operator = (Path&&) = default;
 };
 
 // Operator << ostream
@@ -41,7 +48,18 @@ inline const Path empty_path;
 
 // ------------------------------------------------------------------------------------------------
 
-using Paths = std::vector<Path>;
+// Class: PathHeap
+class PathHeap {
+  
+  public:
+
+    void fit(size_t, std::vector<Path>&&);
+
+    std::vector<Path> sort_and_export();
+
+  private:
+};
+
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

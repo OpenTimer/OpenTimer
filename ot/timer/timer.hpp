@@ -10,6 +10,7 @@
 #include <ot/timer/endpoint.hpp>
 #include <ot/timer/path.hpp>
 #include <ot/timer/sfxt.hpp>
+#include <ot/timer/pfxt.hpp>
 #include <ot/timer/cppr.hpp>
 #include <ot/timer/scc.hpp>
 #include <ot/static/logger.hpp>
@@ -73,10 +74,10 @@ class Timer {
     std::optional<float> wns();
     std::optional<size_t> fep();
     
-    std::future<Paths> worst_paths(size_t);
-    std::future<Paths> worst_paths(size_t, Split);
-    std::future<Paths> worst_paths(size_t, Tran);
-    std::future<Paths> worst_paths(size_t, Split, Tran);
+    std::future<std::vector<Path>> worst_paths(size_t);
+    std::future<std::vector<Path>> worst_paths(size_t, Split);
+    std::future<std::vector<Path>> worst_paths(size_t, Tran);
+    std::future<std::vector<Path>> worst_paths(size_t, Split, Tran);
 
     // Accessor
     std::string dump_graph() const;
@@ -126,6 +127,7 @@ class Timer {
     std::optional<CpprAnalysis> _cppr_analysis;
 
     std::array<Celllib, MAX_SPLIT> _celllib;
+    std::array<float, MAX_SPLIT> _cutoff_slack {0.0f, 0.0f};
 
     std::unordered_map<std::string, PrimaryInput> _pis;
     std::unordered_map<std::string, PrimaryOutput> _pos; 
@@ -159,7 +161,7 @@ class Timer {
     std::vector<Endpoint> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
 
-    std::future<Paths> _worst_paths(const std::vector<Endpoint>&, size_t);
+    std::future<std::vector<Path>> _worst_paths(const std::vector<Endpoint>&, size_t);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
@@ -205,7 +207,6 @@ class Timer {
     void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
     void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
-
     void _cppr(bool);
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
@@ -221,6 +222,8 @@ class Timer {
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
+    void _spur(PfxtCache&, size_t);
+    void _spur(PfxtCache&, PfxtNode&);
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
@@ -229,6 +232,7 @@ class Timer {
     SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
     SfxtCache _sfxt_cache(const Test&, Split, Tran) const;
     CpprCache _cppr_cache(const Test&, Split, Tran) const;
+    PfxtCache _pfxt_cache(const SfxtCache&) const;
 
     Net& _insert_net(const std::string&);
     Pin& _insert_pin(const std::string&);

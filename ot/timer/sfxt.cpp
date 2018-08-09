@@ -16,6 +16,9 @@ SfxtCache::SfxtCache(Split el, size_t S, size_t T) : _el {el}, _S {S}, _T {T} {
 
 // Move constructor
 SfxtCache::SfxtCache(SfxtCache&& rhs) : 
+  _el   {rhs._el},
+  _S    {rhs._S},
+  _T    {rhs._T},
   _pins {std::move(rhs._pins)},
   _srcs {std::move(rhs._srcs)} {
 }

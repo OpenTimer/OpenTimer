@@ -109,6 +109,7 @@ set(OT_CPP
   ot/timer/endpoint.cpp
   ot/timer/net.cpp
   ot/timer/sfxt.cpp
+  ot/timer/pfxt.cpp
   ot/timer/unit.cpp
   ot/timer/path.cpp
   ot/timer/spef.cpp
