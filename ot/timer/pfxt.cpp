@@ -23,16 +23,30 @@ PfxtCache::PfxtCache(const SfxtCache& sfxt) : _sfxt {sfxt} {
 // Move constructor
 PfxtCache::PfxtCache(PfxtCache&& pfxt) : 
   _sfxt  {pfxt._sfxt},
+  _comp  {pfxt._comp},
   _nodes {std::move(pfxt._nodes)},
-  _paths {std::move(pfxt._paths)},
-  _heap  {std::move(pfxt._heap)} {
+  _paths {std::move(pfxt._paths)} {
 }
 
-// Procedure: insert
-PfxtNode& PfxtCache::_insert(float s, size_t f, size_t t, Arc* a, PfxtNode* p) {
-  auto& pfx = _nodes.emplace_back(std::make_unique<PfxtNode>(s, f, t, a, p));
-  _heap.push(pfx.get());
-  return *pfx;
+// Procedure: _push
+void PfxtCache::_push(float s, size_t f, size_t t, Arc* a, PfxtNode* p) {
+  _nodes.emplace_back(std::make_unique<PfxtNode>(s, f, t, a, p));
+  std::push_heap(_nodes.begin(), _nodes.end(), _comp);
+}
+
+// Procedure: _pop
+void PfxtCache::_pop() {
+  if(_nodes.empty()) {
+    return;
+  }
+  std::pop_heap(_nodes.begin(), _nodes.end(), _comp);
+  _paths.push_back(std::move(_nodes.back()));
+  _nodes.pop_back();
+}
+
+// Function: _top
+PfxtNode* PfxtCache::_top() const {
+  return _nodes.empty() ? nullptr : _nodes.front().get();
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -51,7 +65,7 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
       continue;
     }
     else if(auto s = *sfxt.__dist[k] + *v; s < 0.0f) {
-      pfxt._insert(s, sfxt._S, k, nullptr, nullptr);
+      pfxt._push(s, sfxt._S, k, nullptr, nullptr);
     }
   }
 
@@ -63,15 +77,17 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 // critical path and performs spur operation along the path to generate other candidates.
 void Timer::_spur(PfxtCache& pfxt, size_t K) {
 
-  for(size_t k=0; k<K && !pfxt._heap.empty(); ++k) {
-    
-    // create a new path
-    PfxtNode* pfx = pfxt._heap.top();
-    pfxt._heap.pop();
-    pfxt._paths.push_back(pfx);
-
-    // spur from the path
-    _spur(pfxt, *pfx);
+  for(size_t k=0; k<K; ++k) {
+    // no more path to spur
+    if(pfxt._nodes.empty()) {
+      break;
+    }
+    // rank a new path
+    else {
+      pfxt._pop();
+      // TODO: branch and bound
+      _spur(pfxt, *pfxt._paths.back());
+    }
   }
 }
 
@@ -96,6 +112,7 @@ void Timer::_spur(PfxtCache& pfxt, PfxtNode& pfx) {
       }
 
       FOR_EACH_RF_IF(vrf, arc->_delay[el][urf][vrf]) {
+
         auto v = _encode_pin(arc->_to, vrf);
 
         // skip if the edge goes outside the sfxt
@@ -107,7 +124,7 @@ void Timer::_spur(PfxtCache& pfxt, PfxtNode& pfx) {
         auto s = *pfxt._sfxt.__dist[v] + w - *pfxt._sfxt.__dist[u] + pfx.slack;
 
         if(s < 0.0f) {
-          pfxt._insert(s, u, v, arc, &pfx);
+          pfxt._push(s, u, v, arc, &pfx);
         }
       }
     }

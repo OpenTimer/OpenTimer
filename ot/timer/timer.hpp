@@ -156,12 +156,12 @@ class Timer {
     std::vector<Pin*> _idx2pin;
     std::vector<Arc*> _idx2arc;
 
-    std::vector<Endpoint> _worst_endpoints(size_t);
-    std::vector<Endpoint> _worst_endpoints(size_t, Split);
-    std::vector<Endpoint> _worst_endpoints(size_t, Tran);
-    std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
+    std::vector<Endpoint*> _worst_endpoints(size_t);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Split);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
 
-    std::future<std::vector<Path>> _worst_paths(const std::vector<Endpoint>&, size_t);
+    std::future<std::vector<Path>> _worst_paths(std::vector<Endpoint*>&&, size_t);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 

@@ -173,19 +173,23 @@ void EndpointHeap::_bubble_down(size_t idx, Endpoint& e) {
 // ------------------------------------------------------------------------------------------------
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el, Tran rf) {
+std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Split el, Tran rf) {
   _update_endpoints();
   auto beg = _endpoints[el][rf].begin();
   auto end = std::next(_endpoints[el][rf].begin(), std::min(K, _endpoints[el][rf].size()));
-  return std::vector<Endpoint>(beg, end);
+  std::vector<Endpoint*> epts;
+  std::transform(beg, end, std::back_inserter(epts), [] (Endpoint& ept) {
+    return &ept;
+  });
+  return epts;
 }
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(size_t K) {
+std::vector<Endpoint*> Timer::_worst_endpoints(size_t K) {
 
   _update_endpoints();
 
-  std::vector<Endpoint> epts;
+  std::vector<Endpoint*> epts;
   std::array<std::array<size_t, MAX_TRAN>, MAX_SPLIT> i {0, 0, 0, 0};
 
   for(size_t k=0; k<K; ++k) {
@@ -202,7 +206,7 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K) {
 
     if(!mel) break;
     
-    epts.push_back(_endpoints[*mel][*mrf][i[*mel][*mrf]]);
+    epts.push_back(&_endpoints[*mel][*mrf][i[*mel][*mrf]]);
     ++i[*mel][*mrf];
   }
 
@@ -210,11 +214,11 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K) {
 }
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el) {
+std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Split el) {
 
   _update_endpoints();
 
-  std::vector<Endpoint> epts;
+  std::vector<Endpoint*> epts;
   std::array<size_t, MAX_TRAN> i {0, 0};
 
   for(size_t k=0; k<K; ++k) {
@@ -229,7 +233,7 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el) {
 
     if(!mrf) break;
     
-    epts.push_back(_endpoints[el][*mrf][i[*mrf]]);
+    epts.push_back(&_endpoints[el][*mrf][i[*mrf]]);
     ++i[*mrf];
   }
 
@@ -237,11 +241,11 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Split el) {
 }
 
 // Function: _worst_endpoints
-std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Tran rf) {
+std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Tran rf) {
 
   _update_endpoints();
 
-  std::vector<Endpoint> epts;
+  std::vector<Endpoint*> epts;
   std::array<size_t, MAX_SPLIT> i {0, 0};
 
   for(size_t k=0; k<K; ++k) {
@@ -256,7 +260,7 @@ std::vector<Endpoint> Timer::_worst_endpoints(size_t K, Tran rf) {
 
     if(!mel) break;
     
-    epts.push_back(_endpoints[*mel][rf][i[*mel]]);
+    epts.push_back(&_endpoints[*mel][rf][i[*mel]]);
     ++i[*mel];
   }
 

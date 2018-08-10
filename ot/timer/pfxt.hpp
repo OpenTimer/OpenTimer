@@ -24,25 +24,24 @@ struct PfxtNode {
   PfxtNode(float, size_t, size_t, Arc*, PfxtNode*);
 };
 
-// Class: PfxtNodeComparator
-struct PfxtNodeComparator {
-  constexpr bool operator () (const PfxtNode* a, const PfxtNode* b) const {
-    return a->slack > b->slack;
-  }
-};
-
 // ------------------------------------------------------------------------------------------------
 
 // Class: PfxtCache
 class PfxtCache {
 
   friend class Timer;
+  
+  // Min-heap comparator
+  struct PfxtNodeComparator {
+    bool operator () (std::unique_ptr<PfxtNode>& a, std::unique_ptr<PfxtNode>& b) const {
+      return a->slack > b->slack;
+    }
+  };
 
   public:
     
     inline size_t num_nodes() const;
     inline size_t num_paths() const;
-    inline size_t num_cands() const;
 
     PfxtCache(const SfxtCache&);
 
@@ -56,11 +55,15 @@ class PfxtCache {
 
     const SfxtCache& _sfxt;
 
-    std::vector<std::unique_ptr<PfxtNode>> _nodes;
-    std::vector<PfxtNode*> _paths;
-    std::priority_queue<PfxtNode*, std::vector<PfxtNode*>, PfxtNodeComparator> _heap;
+    PfxtNodeComparator _comp;
 
-    PfxtNode& _insert(float, size_t, size_t, Arc*, PfxtNode*);
+    std::vector<std::unique_ptr<PfxtNode>> _nodes;
+    std::vector<std::unique_ptr<PfxtNode>> _paths;
+
+    void _push(float, size_t, size_t, Arc*, PfxtNode*);
+    void _pop();
+
+    PfxtNode* _top() const;
 };
 
 // Function: num_nodes
@@ -71,11 +74,6 @@ inline size_t PfxtCache::num_nodes() const {
 // Function: num_paths
 inline size_t PfxtCache::num_paths() const {
   return _paths.size();
-}
-
-// Function: num_cands
-inline size_t PfxtCache::num_cands() const {
-  return _heap.size();
 }
 
 };  // end of namespace ot. ----------------------------------------------------------------------
