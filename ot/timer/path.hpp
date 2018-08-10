@@ -12,7 +12,7 @@ struct Point {
 
   std::string pin;    // pin name
   Tran  tran;         // rise/fall
-  float at;           // arrival time
+  float at;           // delay
 
   Point(const std::string&, Tran, float);
 };

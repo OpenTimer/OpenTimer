@@ -247,11 +247,40 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
   _recover_suffix(path, sfxt, v);
 }
 
-// Procedure: _recover_suffix
-// Recover the path suffix from a given prefix node at a prefix tree.
-void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, const PfxtNode& node) const {
+// Procedure: _recover_data_path
+void Timer::_recover_data_path(
+  Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v
+) const {
 
-   
+  if(node == nullptr) {
+    return;
+  }
+
+  _recover_data_path(path, sfxt, node->parent, node->from);
+
+  auto u = node->to;
+  auto [upin, urf] = _decode_pin(u);
+  
+  // data path source
+  if(node->from == sfxt._S) {
+    assert(sfxt._srcs.find(u) != sfxt._srcs.end());
+    path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
+  }
+  // internal deviation
+  else {
+    assert(!path.empty());
+    auto at = path.back().at + *node->arc->_delay[sfxt._el][path.back().tran][urf];
+    path.emplace_back(upin->_name, urf, at);
+  }
+
+  while(u != v) {
+    assert(sfxt.__link[u]);
+    auto a = _idx2arc[*sfxt.__link[u]];
+    u = *sfxt.__tree[u];   
+    std::tie(upin, urf) = _decode_pin(u);
+    auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][urf]; 
+    path.emplace_back(upin->_name, urf, at);
+  }
 
 }
 

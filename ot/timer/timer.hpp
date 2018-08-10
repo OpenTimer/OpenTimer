@@ -210,7 +210,7 @@ class Timer {
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_suffix(Path&, const SfxtCache&, size_t) const;
-    void _recover_suffix(Path&, const SfxtCache&, const PfxtNode&) const;
+    void _recover_data_path(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _to_time_unit(const TimeUnit&);
     void _to_capacitance_unit(const CapacitanceUnit&);
@@ -265,6 +265,7 @@ class Timer {
     std::string _dump_at() const;
     std::string _dump_rat() const;
     std::string _dump_timer() const;
+    std::string _dump_timing() const;
     
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;
