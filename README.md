@@ -4,6 +4,8 @@
 [![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
 [![Version](image/version_badge.svg)](https://github.com/OpenTimer/OpenTimer/tree/master)
+[![AskMe](image/askme.svg)][Github issues]
+[![Insights](image/maintained.svg)][Github insights]
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
 A High-Performance Timing Analysis Tool for VLSI Systems
@@ -462,6 +464,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
 [Github projects]:       https://github.com/OpenTimer/OpenTimer/projects
+[Github insights]:       https://github.com/OpenTimer/OpenTimer/pulse
 [GraphViz]:              https://dreampuf.github.io/GraphvizOnline/
 [OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html

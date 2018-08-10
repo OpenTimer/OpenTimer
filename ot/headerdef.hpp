@@ -118,6 +118,8 @@ inline auto to_string(Tran from, Tran to) {
   return to_string(from) + "->" + to_string(to);
 }
 
+// ------------------------------------------------------------------------------------------------  
+
 constexpr std::initializer_list<Split> SPLIT = {EARLY, LATE};
 
 constexpr std::initializer_list<Tran> TRAN = {RISE, FALL};
@@ -147,6 +149,8 @@ constexpr std::initializer_list<std::tuple<Split, Tran, Tran>> SPLIT_TRANx2 = {
   {LATE, FALL, FALL}
 };
 
+// ------------------------------------------------------------------------------------------------  
+
 #define FOR_EACH_EL(el) for(auto el : SPLIT)
 #define FOR_EACH_RF(rf) for(auto rf : TRAN)
 #define FOR_EACH_RF_RF(irf, orf) for(auto [irf, orf] : TRANX2)
@@ -163,6 +167,25 @@ constexpr std::initializer_list<std::tuple<Split, Tran, Tran>> SPLIT_TRANx2 = {
 #define FOR_EACH_IF(i, C, s) for(auto& i : C) if(s)
 
 // ------------------------------------------------------------------------------------------------  
+
+// TimingData
+template <typename, size_t ...>
+struct TimingDataHelper;
+
+template <typename T, size_t D0, size_t ... Ds>
+struct TimingDataHelper<T, D0, Ds...> { 
+  using type = std::array<typename TimingDataHelper<T, Ds...>::type, D0>; 
+};
+
+template <typename T>
+struct TimingDataHelper<T>{ 
+  using type = T; 
+};
+
+template <typename T, size_t ... Ds>
+using TimingData = typename TimingDataHelper<T, Ds...>::type;
+
+
 
 
 };  // End of namespace ot. -----------------------------------------------------------------------

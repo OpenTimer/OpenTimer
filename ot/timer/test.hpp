@@ -35,8 +35,8 @@ class Test {
     
     std::optional<std::list<Test>::iterator> _satellite;
     
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _rat;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _cppr_credit;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _cppr_credit;
 
     void _reset();
     void _fprop_rat(float);

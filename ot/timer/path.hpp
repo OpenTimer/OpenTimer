@@ -44,6 +44,7 @@ inline const Path empty_path;
 // ------------------------------------------------------------------------------------------------
 
 // Class: PathHeap
+// A max-heap to maintain the top-k critical paths during the path ranking process.
 class PathHeap {
 
   friend class Timer;
@@ -57,8 +58,6 @@ class PathHeap {
   
   public:
 
-    void fit(size_t, std::vector<Path>&&);
-
     inline size_t num_paths() const;
 
   private:
@@ -70,6 +69,7 @@ class PathHeap {
     std::vector<Path> _extract();
 
     void _insert(std::unique_ptr<Path>);
+    void _fit(size_t);
     void _pop();
 
     Path* _top() const;

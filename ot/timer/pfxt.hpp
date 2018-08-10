@@ -18,10 +18,10 @@ struct PfxtNode {
   size_t from;
   size_t to;
 
-  Arc* arc {nullptr};
-  PfxtNode* parent {nullptr};
+  const Arc* arc {nullptr};
+  const PfxtNode* parent {nullptr};
 
-  PfxtNode(float, size_t, size_t, Arc*, PfxtNode*);
+  PfxtNode(float, size_t, size_t, const Arc*, const PfxtNode*);
 };
 
 // ------------------------------------------------------------------------------------------------
@@ -41,7 +41,6 @@ class PfxtCache {
   public:
     
     inline size_t num_nodes() const;
-    inline size_t num_paths() const;
 
     PfxtCache(const SfxtCache&);
 
@@ -57,23 +56,18 @@ class PfxtCache {
 
     PfxtNodeComparator _comp;
 
-    std::vector<std::unique_ptr<PfxtNode>> _nodes;
     std::vector<std::unique_ptr<PfxtNode>> _paths;
+    std::vector<std::unique_ptr<PfxtNode>> _nodes;
 
-    void _push(float, size_t, size_t, Arc*, PfxtNode*);
-    void _pop();
+    void _push(float, size_t, size_t, const Arc*, const PfxtNode*);
 
+    PfxtNode* _pop();
     PfxtNode* _top() const;
 };
 
 // Function: num_nodes
 inline size_t PfxtCache::num_nodes() const {
   return _nodes.size();
-}
-
-// Function: num_paths
-inline size_t PfxtCache::num_paths() const {
-  return _paths.size();
 }
 
 };  // end of namespace ot. ----------------------------------------------------------------------

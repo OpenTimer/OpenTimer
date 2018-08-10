@@ -126,8 +126,7 @@ class Timer {
     std::optional<PowerUnit> _power_unit;
     std::optional<CpprAnalysis> _cppr_analysis;
 
-    std::array<Celllib, MAX_SPLIT> _celllib;
-    std::array<float, MAX_SPLIT> _cutoff_slack {0.0f, 0.0f};
+    TimingData<Celllib, MAX_SPLIT> _celllib;
 
     std::unordered_map<std::string, PrimaryInput> _pis;
     std::unordered_map<std::string, PrimaryOutput> _pos; 
@@ -141,10 +140,10 @@ class Timer {
     std::list<Pin*> _frontiers;
     std::list<SCC> _sccs;
 
-    std::array<std::array<std::vector<Endpoint>, MAX_TRAN>, MAX_SPLIT> _endpoints;
-    std::array<std::array<std::optional<float>,  MAX_TRAN>, MAX_SPLIT> _wns;
-    std::array<std::array<std::optional<float>,  MAX_TRAN>, MAX_SPLIT> _tns;
-    std::array<std::array<std::optional<size_t>, MAX_TRAN>, MAX_SPLIT> _fep;
+    TimingData<std::vector<Endpoint>, MAX_SPLIT, MAX_TRAN> _endpoints;
+    TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _wns;
+    TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _tns;
+    TimingData<std::optional<size_t>, MAX_SPLIT, MAX_TRAN> _fep;
 
     std::deque<Pin*> _fprop_cands;
     std::deque<Pin*> _bprop_cands;
@@ -211,6 +210,7 @@ class Timer {
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_suffix(Path&, const SfxtCache&, size_t) const;
+    void _recover_suffix(Path&, const SfxtCache&, const PfxtNode&) const;
     void _enable_full_timing_update();
     void _to_time_unit(const TimeUnit&);
     void _to_capacitance_unit(const CapacitanceUnit&);
@@ -222,8 +222,8 @@ class Timer {
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
-    void _spur(PfxtCache&, size_t);
-    void _spur(PfxtCache&, PfxtNode&);
+    void _spur(PfxtCache&, size_t, PathHeap&);
+    void _spur(PfxtCache&, const PfxtNode&);
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);

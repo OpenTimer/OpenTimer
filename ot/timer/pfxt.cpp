@@ -1,12 +1,9 @@
-#include <ot/timer/pfxt.hpp>
-#include <ot/timer/sfxt.hpp>
-#include <ot/timer/arc.hpp>
 #include <ot/timer/timer.hpp>
 
 namespace ot {
   
 // Constructor
-PfxtNode::PfxtNode(float s, size_t f, size_t t, Arc* a, PfxtNode* p) :
+PfxtNode::PfxtNode(float s, size_t f, size_t t, const Arc* a, const PfxtNode* p) :
   slack  {s},
   from   {f},
   to     {t},
@@ -24,24 +21,25 @@ PfxtCache::PfxtCache(const SfxtCache& sfxt) : _sfxt {sfxt} {
 PfxtCache::PfxtCache(PfxtCache&& pfxt) : 
   _sfxt  {pfxt._sfxt},
   _comp  {pfxt._comp},
-  _nodes {std::move(pfxt._nodes)},
-  _paths {std::move(pfxt._paths)} {
+  _paths {std::move(pfxt._paths)},
+  _nodes {std::move(pfxt._nodes)} {
 }
 
 // Procedure: _push
-void PfxtCache::_push(float s, size_t f, size_t t, Arc* a, PfxtNode* p) {
+void PfxtCache::_push(float s, size_t f, size_t t, const Arc* a, const PfxtNode* p) {
   _nodes.emplace_back(std::make_unique<PfxtNode>(s, f, t, a, p));
   std::push_heap(_nodes.begin(), _nodes.end(), _comp);
 }
 
 // Procedure: _pop
-void PfxtCache::_pop() {
+PfxtNode* PfxtCache::_pop() {
   if(_nodes.empty()) {
-    return;
+    return nullptr;
   }
   std::pop_heap(_nodes.begin(), _nodes.end(), _comp);
   _paths.push_back(std::move(_nodes.back()));
   _nodes.pop_back();
+  return _paths.back().get();
 }
 
 // Function: _top
@@ -75,7 +73,7 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 // Procedure: _spur
 // Spur the path and expands the search space. The procedure iteratively scan the present
 // critical path and performs spur operation along the path to generate other candidates.
-void Timer::_spur(PfxtCache& pfxt, size_t K) {
+void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) {
 
   for(size_t k=0; k<K; ++k) {
     // no more path to spur
@@ -84,15 +82,29 @@ void Timer::_spur(PfxtCache& pfxt, size_t K) {
     }
     // rank a new path
     else {
-      pfxt._pop();
-      // TODO: branch and bound
-      _spur(pfxt, *pfxt._paths.back());
+
+      auto node = pfxt._pop();
+      
+      // If the maximum among the minimum is smaller than the current minimum,
+      // there is no need to do more.
+      if(heap.num_paths() >= K && heap._top()->slack <= node->slack) {
+        break;
+      }
+      
+      // push the path to the heap and maintain the top-k
+      auto path = std::make_unique<Path>(pfxt._sfxt._el, node->slack);
+
+      heap._insert(std::move(path));
+      heap._fit(K);
+
+      // expand the search space
+      _spur(pfxt, *node);
     }
   }
 }
 
 // Procedure: _spur
-void Timer::_spur(PfxtCache& pfxt, PfxtNode& pfx) {
+void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) {
   
   auto el = pfxt._sfxt._el;
   auto T  = pfxt._sfxt._T;

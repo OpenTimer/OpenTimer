@@ -1,5 +1,3 @@
-#include <ot/timer/path.hpp>
-#include <ot/timer/pin.hpp>
 #include <ot/timer/timer.hpp>
 
 namespace ot {
@@ -135,6 +133,13 @@ Path* PathHeap::_top() const {
   return _paths.empty() ? nullptr : _paths.front().get();
 }
 
+// Procedure: _fit
+void PathHeap::_fit(size_t K) {
+  while(_paths.size() > K) {
+    _pop();
+  }
+}
+
 // ------------------------------------------------------------------------------------------------
 
 // Function: worst_paths 
@@ -187,6 +192,9 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
   else {
     OT_LOGF("unsupported yet");
 
+    //size_t w = std::max(size_t{1}, num_workers());
+    //size_t g = std::max((epts.size() + w - 1) / w, size_t{2});
+
     //auto heap = std::make_shared<UniqueGuard<PathHeap>>();
 
     //auto [task, fu] = _taskflow.emplace([heap] () {
@@ -201,13 +209,12 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
     //future = std::move(fu);
     _taskflow.wait_for_all();
   }
-    
-
 
   return paths;
 }
 
 // Procedure: _recover_prefix
+// Recover the worst path prefix at a given pin.
 void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const {
   
   auto el = sfxt._el;
@@ -223,6 +230,7 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
 }
 
 // Procedure: _recover_suffix
+// Recover the worst path suffix from a given suffix tree.
 void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
   
   assert(!path.empty());
@@ -239,6 +247,13 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
   _recover_suffix(path, sfxt, v);
 }
 
+// Procedure: _recover_suffix
+// Recover the path suffix from a given prefix node at a prefix tree.
+void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, const PfxtNode& node) const {
+
+   
+
+}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 
