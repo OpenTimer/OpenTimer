@@ -75,8 +75,8 @@ int main(int argc, char *argv[]) {
   auto opt_path = timer.worst_paths(1);
 
   // compare
-  std::cout << "Path before optimization: \n" << raw_path.get()[0];
-  std::cout << "Path after  optimization: \n" << opt_path.get()[0];
+  std::cout << "Path before optimization: \n" << raw_path[0];
+  std::cout << "Path after  optimization: \n" << opt_path[0];
 
   return 0;
 }

@@ -139,75 +139,72 @@ Path* PathHeap::_top() const {
 
 // Function: worst_paths 
 // Report the top-k worst_paths
-std::future<std::vector<Path>> Timer::worst_paths(size_t K) {
+std::vector<Path> Timer::worst_paths(size_t K) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K), K);
 }
 
 // Function: worst_paths
-std::future<std::vector<Path>> Timer::worst_paths(size_t K, Split el) {
+std::vector<Path> Timer::worst_paths(size_t K, Split el) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, el), K);
 }
 
 // Function: worst_paths
-std::future<std::vector<Path>> Timer::worst_paths(size_t K, Tran rf) {
+std::vector<Path> Timer::worst_paths(size_t K, Tran rf) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, rf), K);
 }
 
 // Function: worst_paths
-std::future<std::vector<Path>> Timer::worst_paths(size_t K, Split el, Tran rf) {
+std::vector<Path> Timer::worst_paths(size_t K, Split el, Tran rf) {
   std::scoped_lock lock(_mutex);
   return _worst_paths(_worst_endpoints(K, el, rf), K);
 }
 
 // Function: _worst_paths
 // Report the top-k worst_paths
-std::future<std::vector<Path>> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
+std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
 
   assert(epts.size() <= K);
   
   // No need to report anything.
   if(K == 0 || epts.empty()) {
-    return std::async(std::launch::deferred, []()->std::vector<Path> { return {}; });
+    return {};
   }
 
-  std::future<std::vector<Path>> future;
+  std::vector<Path> paths;
 
   // No need to generate prefix tree
   if(K == 1) {
-    future = _taskflow.emplace([this, ept=epts[0]] () {
-      std::vector<Path> paths;
-      auto& path = paths.emplace_back(ept->split(), ept->slack());
-      auto sfxt = _sfxt_cache(*ept);
-      assert(std::fabs(*sfxt.slack() - *path.slack) < 1e-3);
-      _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
-      _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
-      return paths;
-    }).second;
+    auto& path = paths.emplace_back(epts[0]->split(), epts[0]->slack());
+    auto sfxt = _sfxt_cache(*epts[0]);
+    assert(std::fabs(*sfxt.slack() - *path.slack) < 1e-3);
+    _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
+    _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
   }
   // Generate the prefix tree
   else {
     OT_LOGF("unsupported yet");
 
-    auto heap = std::make_shared<UniqueGuard<PathHeap>>();
+    //auto heap = std::make_shared<UniqueGuard<PathHeap>>();
 
-    auto [task, fu] = _taskflow.emplace([heap] () {
-      return heap->get()->_extract(); 
-    });
+    //auto [task, fu] = _taskflow.emplace([heap] () {
+    //  return heap->get()->_extract(); 
+    //});
 
-    for(size_t i=0; i<epts.size(); ++i) {
-      _taskflow.silent_emplace([heap=heap.get(), ept=epts[i], K] () {
-      }).precede(task);
-    }
-    
-    future = std::move(fu);
+    //for(size_t i=0; i<epts.size(); ++i) {
+    //  _taskflow.silent_emplace([heap=heap.get(), ept=epts[i], K] () {
+    //  }).precede(task);
+    //}
+    //
+    //future = std::move(fu);
+    _taskflow.wait_for_all();
   }
     
-  _taskflow.silent_dispatch();
 
-  return future;
+
+  return paths;
 }
 
 // Procedure: _recover_prefix

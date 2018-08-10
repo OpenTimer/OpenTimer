@@ -69,7 +69,7 @@ void report_timer(Timer& timer, std::istream& is, std::ostream& os, std::ostream
     std::quoted("report_timer"), " is obselete; use ", std::quoted("dump_timer")
   );
     
-  if(auto paths = timer.worst_paths(1).get(); !paths.empty()) {
+  if(auto paths = timer.worst_paths(1); !paths.empty()) {
     os << paths[0];
   }
   else {

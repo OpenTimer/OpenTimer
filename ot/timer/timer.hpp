@@ -74,10 +74,10 @@ class Timer {
     std::optional<float> wns();
     std::optional<size_t> fep();
     
-    std::future<std::vector<Path>> worst_paths(size_t);
-    std::future<std::vector<Path>> worst_paths(size_t, Split);
-    std::future<std::vector<Path>> worst_paths(size_t, Tran);
-    std::future<std::vector<Path>> worst_paths(size_t, Split, Tran);
+    std::vector<Path> worst_paths(size_t);
+    std::vector<Path> worst_paths(size_t, Split);
+    std::vector<Path> worst_paths(size_t, Tran);
+    std::vector<Path> worst_paths(size_t, Split, Tran);
 
     // Accessor
     std::string dump_graph() const;
@@ -161,7 +161,7 @@ class Timer {
     std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
 
-    std::future<std::vector<Path>> _worst_paths(std::vector<Endpoint*>&&, size_t);
+    std::vector<Path> _worst_paths(std::vector<Endpoint*>&&, size_t);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 

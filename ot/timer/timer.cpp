@@ -963,9 +963,6 @@ void Timer::_update_timing() {
     return;
   }
 
-  // wait until running topologies finish
-  _taskflow.wait_for_topologies();
-  
   // run tasks on the lineage
   _taskflow.wait_for_all();
   _lineage.reset();
