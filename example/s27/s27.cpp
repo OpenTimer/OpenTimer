@@ -32,6 +32,9 @@ int main(int argc, char *argv[]) {
 
   auto raw_path = timer.worst_paths(1);
 
+
+  return 0;
+
   // apply design modifiers
   timer.repower_gate("inst_10", "INV_X16")
        .insert_gate("TAUGATE_1", "BUF_X2")

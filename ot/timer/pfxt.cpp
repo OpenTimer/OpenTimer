@@ -72,8 +72,8 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 
 // Procedure: _spur
 // Spur the top-k paths from the endpoint and prun the path with the path heap.
-void Timer::_spur(Endpoint* ept, size_t K, PathHeap& heap) const {
-  auto sfxt = _sfxt_cache(*ept);
+void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
+  auto sfxt = _sfxt_cache(ept);
   auto pfxt = _pfxt_cache(sfxt);
   _spur(pfxt, K, heap);
 }

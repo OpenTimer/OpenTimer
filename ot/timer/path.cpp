@@ -210,7 +210,8 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
 
   // No need to generate prefix tree
   if(K == 1) {
-    std::vector<Path> paths(1);
+    std::vector<Path> paths;
+    paths.emplace_back(epts[0]->_el, epts[0]->slack());
     auto sfxt = _sfxt_cache(*epts[0]);
     assert(std::fabs(*sfxt.slack() - *paths[0].slack) < 1e-3);
     _recover_suffix(paths[0], sfxt);
@@ -218,22 +219,22 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
   }
   
   // Generate the prefix tree
-  OT_LOGF("unsupported yet");
+  //OT_LOGD("generating prefix tree...");
 
   PathHeap heap;
 
   _taskflow.transform_reduce(epts.begin(), epts.end(), heap,
-    [&] (PathHeap h1, PathHeap h2) {
-      h1.merge_and_fit(std::move(h2), K);
-      return h1;
+    [&] (PathHeap l, PathHeap r) {
+      l.merge_and_fit(std::move(r), K);
+      return l;
     },
     [&] (PathHeap heap, Endpoint* ept) {
-      _spur(ept, K, heap);
+      _spur(*ept, K, heap);
       return heap;
     },
     [&] (Endpoint* ept) {
       PathHeap heap;
-      _spur(ept, K, heap);
+      _spur(*ept, K, heap);
       return heap;
     }
   );

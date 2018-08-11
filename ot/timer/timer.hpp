@@ -223,7 +223,7 @@ class Timer {
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
-    void _spur(Endpoint*,  size_t, PathHeap&) const;
+    void _spur(Endpoint&,  size_t, PathHeap&) const;
     void _spur(PfxtCache&, size_t, PathHeap&) const;
     void _spur(PfxtCache&, const PfxtNode&) const;
 
