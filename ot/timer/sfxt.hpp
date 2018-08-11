@@ -40,6 +40,7 @@ class SfxtCache {
     SfxtCache& operator = (SfxtCache&&) = delete;
 
     inline std::optional<float> slack() const;
+    inline Split split() const;
 
     SfxtMirror mirrorize() const;
 
@@ -63,6 +64,11 @@ class SfxtCache {
 // Function: slack
 inline std::optional<float> SfxtCache::slack() const {
   return __dist[_S];
+}
+
+// Function: split
+inline Split SfxtCache::split() const {
+  return _el;
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------

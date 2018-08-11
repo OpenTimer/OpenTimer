@@ -4,6 +4,8 @@
 [![Standard](image/cpp17.svg)](https://en.wikipedia.org/wiki/C%2B%2B#Standardization)
 [![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
 [![Version](image/version_badge.svg)](https://github.com/OpenTimer/OpenTimer/tree/master)
+[![AskMe](image/askme.svg)][Github issues]
+[![Insights](image/maintained.svg)][Github insights]
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
 A High-Performance Timing Analysis Tool for VLSI Systems
@@ -314,16 +316,11 @@ The table below summarizes a list of commonly used methods.
 
 | Method | Type | Argument | Return | Description |
 | ------ | ---- | -------- | ------ | ----------- |
-| num_threads | builder | unsigned | self | set the number of threads |
 | celllib| builder | path, split | self | read the cell library for early and late splits |
 | verilog| builder | path | self | read a verilog netlist |
 | spef   | builder | path | self | read parasitics in SPEF |
 | sdc    | builder | path | self | read a Synopsys Design Constraint file |
 | update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
-| at | action | pin_name, split, transition | optional of float | update the timing and return the arrival time of a pin, if exists, at a give split and transition |
-| slew | action | pin_name, split, transition | optional of float | update the timing and return the slew of a pin at a give split and transition, if exists |
-| rat | action | pin_name, split, transition | optional of float | update the timing and return the required arrival time of a pin at a give split and transition, if exists |
-| slack | action | pin_name, split, transition | optional of float | update the timing and return the slack of a pin at a give split and transition, if exists |
 | tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
 | dump_graph | accessor | n/a | string | dump the present timing graph to a dot format |
@@ -341,17 +338,16 @@ int main(int argc, char *argv[]) {
   
   ot::Timer timer;                           // create a timer instance (thread-safe)
   
-  timer.celllib("simple.lib", std::nullopt)  // read the library (builder - O(1))
-       .verilog("simple.v")                  // read the verilog netlist (builder - O(1))
-       .spef("simple.spef")                  // read the parasitics (builder - O(1))
-       .sdc("simple.sdc")                    // read the design constraints (builder - O(1))
-       .update_timing();                     // update timing (builder - O(1))
+  timer.celllib("simple.lib", std::nullopt)  // read the library (O(1) builder)
+       .verilog("simple.v")                  // read the verilog netlist (O(1) builder)
+       .spef("simple.spef")                  // read the parasitics (O(1) builder)
+       .sdc("simple.sdc")                    // read the design constraints (O(1) builder)
+       .update_timing();                     // update timing (O(1) builder)
 
-  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (action - O(N))
-  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (action - O(N))
+  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
+  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
 
-  std::cout << timer.dump_timer()   // dump the timer details (accessor - O(1))
-            << timer.dump_slack();  // dump the slack (accessor - O(N))
+  std::cout << timer.dump_timer();  // dump the timer details (O(1) accessor)
   
   return 0;
 }
@@ -468,6 +464,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
 [Github projects]:       https://github.com/OpenTimer/OpenTimer/projects
+[Github insights]:       https://github.com/OpenTimer/OpenTimer/pulse
 [GraphViz]:              https://dreampuf.github.io/GraphvizOnline/
 [OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html

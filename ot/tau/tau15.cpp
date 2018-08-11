@@ -100,7 +100,7 @@ void Timer::_timing(tau15::Timing& timing) {
     std::visit(Functors{
       [&] (tau15::Clock& clock) {
         if(auto itr = _pins.find(clock.pin); itr != _pins.end()) {
-          _clock(itr->first, itr->second, clock.period);
+          _insert_clock(itr->first, itr->second, clock.period);
         }
         else {
           OT_LOGE("can't create clock (pin ", clock.pin, " not found)");

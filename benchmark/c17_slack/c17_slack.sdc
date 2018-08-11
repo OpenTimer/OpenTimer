@@ -38,13 +38,14 @@ set_input_transition 5 -min -rise [get_ports nx6]
 set_input_transition 5 -min -fall [get_ports nx6]
 set_input_transition 5 -max -rise [get_ports nx6]
 set_input_transition 5 -max -fall [get_ports nx6]
-set_output_delay 9 -min -rise [get_ports nx23]
-set_output_delay 9 -min -fall [get_ports nx23]
-set_output_delay 11 -max -rise [get_ports nx23]
-set_output_delay 11 -max -fall [get_ports nx23]
+create_clock -period 100 -name virtual_clock
+set_output_delay -9 -min -rise [get_ports nx23] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports nx23] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports nx23] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports nx23] -clock virtual_clock
 set_load -pin_load 4 [get_ports nx23]
-set_output_delay 9 -min -rise [get_ports nx22]
-set_output_delay 9 -min -fall [get_ports nx22]
-set_output_delay 11 -max -rise [get_ports nx22]
-set_output_delay 11 -max -fall [get_ports nx22]
+set_output_delay -9 -min -rise [get_ports nx22] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports nx22] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports nx22] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports nx22] -clock virtual_clock
 set_load -pin_load 4 [get_ports nx22]

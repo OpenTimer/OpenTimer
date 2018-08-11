@@ -39,9 +39,6 @@ void Timer::_sdc(sdc::SDC& sdc) {
       }
     }, command);
   }
-
-
-  //
 }
 
 // Procedure: _sdc
@@ -116,7 +113,19 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
 // Sets output delay on pins or input ports relative to a clock signal.
 void Timer::_sdc(sdc::SetOutputDelay& obj) {
 
-  assert(obj.delay_value && obj.port_pin_list);
+  assert(obj.delay_value);
+
+  if(!obj.port_pin_list) {
+    OT_LOGW(obj.command, ": port_pin_list not found");
+    return;
+  }
+
+  if(_clocks.find(obj.clock) == _clocks.end()) {
+    OT_LOGE(obj.command, ": clock ", std::quoted(obj.clock), " not found");
+    return;
+  }
+
+  auto& clock = _clocks.at(obj.clock);
 
   auto mask = sdc::TimingMask(obj.min, obj.max, obj.rise, obj.fall);
 
@@ -124,7 +133,12 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
     [&] (sdc::AllOutputs&) {
       for(auto& kvp : _pos) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _rat(kvp.second, el, rf, obj.delay_value);
+          _rat(
+            kvp.second, 
+            el, 
+            rf, 
+            el == EARLY ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
+          );
         }
       }
     },
@@ -132,7 +146,12 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pos.find(port); itr != _pos.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _rat(itr->second, el, rf, obj.delay_value); 
+            _rat(
+              itr->second, 
+              el, 
+              rf, 
+              el == EARLY ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
+            ); 
           }
         }
         else {
@@ -184,29 +203,30 @@ void Timer::_sdc(sdc::SetLoad& obj) {
 // create a clock object and defines its waveform in the current design.
 void Timer::_sdc(sdc::CreateClock& obj) {
 
-  assert(obj.period && obj.port_pin_list && !obj.name.empty());
-
-  std::visit(Functors{
-    [&] (sdc::GetPorts& get_ports) {
-      auto& ports = get_ports.ports;
-      assert(ports.size() == 1);
-      if(auto itr = _pins.find(ports.front()); itr != _pins.end()) {
-        if(obj.waveform) {
-          _clocks.emplace(obj.name, itr->second, *obj.period);
+  assert(obj.period && !obj.name.empty());
+  
+  // create clock from given sources
+  if(obj.port_pin_list) {
+    std::visit(Functors{
+      [&] (sdc::GetPorts& get_ports) {
+        auto& ports = get_ports.ports;
+        assert(ports.size() == 1);
+        if(auto itr = _pins.find(ports.front()); itr != _pins.end()) {
+          _insert_clock(obj.name, itr->second, *obj.period);
         }
         else {
-          _clocks.emplace(obj.name, itr->second, *obj.period, *obj.waveform);
+          OT_LOGE(obj.command, ": port ", std::quoted(ports.front()), " not found");
         }
+      },
+      [] (auto&&) {
+        assert(false);
       }
-      else {
-        OT_LOGW(obj.command, ": port ", std::quoted(ports.front()), " not found");
-      }
-    },
-    [] (auto&&) {
-      assert(false);
-    }
-  }, *obj.port_pin_list);
-
+    }, *obj.port_pin_list);
+  }
+  // create virtual clock
+  else {
+    _insert_clock(obj.name, *obj.period);
+  }
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------

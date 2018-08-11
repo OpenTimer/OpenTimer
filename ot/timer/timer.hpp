@@ -10,6 +10,7 @@
 #include <ot/timer/endpoint.hpp>
 #include <ot/timer/path.hpp>
 #include <ot/timer/sfxt.hpp>
+#include <ot/timer/pfxt.hpp>
 #include <ot/timer/cppr.hpp>
 #include <ot/timer/scc.hpp>
 #include <ot/static/logger.hpp>
@@ -27,9 +28,7 @@ class Timer {
   
   constexpr static int INCREMENTAL  = 0x00;
   constexpr static int FULL_TIMING  = 0x01;
-  constexpr static int TNS_UPDATED  = 0x02;
-  constexpr static int WNS_UPDATED  = 0x04;
-  constexpr static int EPTS_UPDATED = 0x08;
+  constexpr static int EPTS_UPDATED = 0x02;
 
   public:
     
@@ -60,6 +59,7 @@ class Timer {
     Timer& slew(std::string, Split, Tran, std::optional<float>);
     Timer& load(std::string, Split, Tran, std::optional<float>);
     Timer& clock(std::string, float);
+    Timer& clock(std::string, std::string, float);
     Timer& cppr(bool);
 
     // Action.
@@ -72,6 +72,7 @@ class Timer {
     std::optional<float> load(const std::string&, Split, Tran);
     std::optional<float> tns();
     std::optional<float> wns();
+    std::optional<size_t> fep();
     
     std::vector<Path> worst_paths(size_t);
     std::vector<Path> worst_paths(size_t, Split);
@@ -123,25 +124,26 @@ class Timer {
     std::optional<ResistanceUnit> _resistance_unit;
     std::optional<CapacitanceUnit> _capacitance_unit;
     std::optional<PowerUnit> _power_unit;
-    std::optional<Clock> _clocks;
     std::optional<CpprAnalysis> _cppr_analysis;
 
-    std::array<Celllib, MAX_SPLIT> _celllib;
+    TimingData<Celllib, MAX_SPLIT> _celllib;
 
     std::unordered_map<std::string, PrimaryInput> _pis;
     std::unordered_map<std::string, PrimaryOutput> _pos; 
     std::unordered_map<std::string, Pin> _pins;
     std::unordered_map<std::string, Net> _nets;
     std::unordered_map<std::string, Gate> _gates;
-
+    std::unordered_map<std::string, Clock> _clocks;
+ 
     std::list<Test> _tests;
     std::list<Arc> _arcs;
     std::list<Pin*> _frontiers;
     std::list<SCC> _sccs;
 
-    std::array<std::array<std::vector<Endpoint>, MAX_TRAN>, MAX_SPLIT> _endpoints;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _wns;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _tns;
+    TimingData<std::vector<Endpoint>, MAX_SPLIT, MAX_TRAN> _endpoints;
+    TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _wns;
+    TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _tns;
+    TimingData<std::optional<size_t>, MAX_SPLIT, MAX_TRAN> _fep;
 
     std::deque<Pin*> _fprop_cands;
     std::deque<Pin*> _bprop_cands;
@@ -153,23 +155,16 @@ class Timer {
     std::vector<Pin*> _idx2pin;
     std::vector<Arc*> _idx2arc;
 
-    std::vector<Endpoint> _worst_endpoints(size_t);
-    std::vector<Endpoint> _worst_endpoints(size_t, Split);
-    std::vector<Endpoint> _worst_endpoints(size_t, Tran);
-    std::vector<Endpoint> _worst_endpoints(size_t, Split, Tran);
+    std::vector<Endpoint*> _worst_endpoints(size_t);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Split);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
+    std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
 
-    std::vector<Path> _worst_paths(const std::vector<Endpoint>&, size_t);
-    std::vector<Path> _extract_paths(const std::vector<Endpoint>&, size_t);
-    
-    Path _extract_path(const SfxtCache&) const;
-    Path _extract_path(const Endpoint&) const;
-
+    std::vector<Path> _worst_paths(std::vector<Endpoint*>&&, size_t);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
     void _update_timing();
-    void _update_wns();
-    void _update_tns();
     void _update_endpoints();
     void _fprop_rc_timing(Pin&);
     void _fprop_slew(Pin&);
@@ -211,11 +206,11 @@ class Timer {
     void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
     void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
-    void _clock(const std::string&, Pin&, float);
     void _cppr(bool);
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_suffix(Path&, const SfxtCache&, size_t) const;
+    void _recover_data_path(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _to_time_unit(const TimeUnit&);
     void _to_capacitance_unit(const CapacitanceUnit&);
@@ -227,6 +222,8 @@ class Timer {
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
+    void _spur(PfxtCache&, size_t, PathHeap&);
+    void _spur(PfxtCache&, const PfxtNode&);
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
@@ -235,6 +232,7 @@ class Timer {
     SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
     SfxtCache _sfxt_cache(const Test&, Split, Tran) const;
     CpprCache _cppr_cache(const Test&, Split, Tran) const;
+    PfxtCache _pfxt_cache(const SfxtCache&) const;
 
     Net& _insert_net(const std::string&);
     Pin& _insert_pin(const std::string&);
@@ -243,6 +241,8 @@ class Timer {
     Arc& _insert_arc(Pin&, Pin&, TimingView);
     SCC& _insert_scc(std::vector<Pin*>&);
     Test& _insert_test(Arc&);
+    Clock& _insert_clock(const std::string&, Pin&, float);
+    Clock& _insert_clock(const std::string&, float);
 
     std::optional<float> _at(const std::string&, Split, Tran);
     std::optional<float> _rat(const std::string&, Split, Tran);
@@ -265,6 +265,7 @@ class Timer {
     std::string _dump_at() const;
     std::string _dump_rat() const;
     std::string _dump_timer() const;
+    std::string _dump_timing() const;
     
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;

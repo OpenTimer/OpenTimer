@@ -228,13 +228,12 @@ Timer& Timer::connect_pin(std::string pin, std::string net) {
   std::scoped_lock lock(_mutex);
 
   auto modifier = _taskflow.silent_emplace([this, pin=std::move(pin), net=std::move(net)] () {
-    auto pin_itr = _pins.find(pin);
-    auto net_itr = _nets.find(net);
-    if(pin_itr == _pins.end() || net_itr == _nets.end()) {
-      OT_LOGW("ignore connecting pin ", pin,  " to net ", net, " (pin/net not found)");
-      return;
-    }
-    _connect_pin(pin_itr->second, net_itr->second);
+    auto p = _pins.find(pin);
+    auto n = _nets.find(net);
+    OT_LOGE_RIF(p==_pins.end() || n == _nets.end(),
+      "can't connect pin ", pin,  " to net ", net, " (pin/net not found)"
+    )
+    _connect_pin(p->second, n->second);
   });
 
   // parent -> modifier
@@ -460,16 +459,16 @@ void Timer::_cppr(bool enable) {
 }
 
 // Function: clock
-Timer& Timer::clock(std::string name, float period) {
+Timer& Timer::clock(std::string c, std::string s, float p) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), period] () {
-    if(auto itr = _pins.find(name); itr != _pins.end()) {
-      _clock(itr->first, itr->second, period);
+  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), s=std::move(s), p] () {
+    if(auto itr = _pins.find(s); itr != _pins.end()) {
+      _insert_clock(c, itr->second, p);
     }
     else {
-      OT_LOGW("can't create clock (pin ", name, " not found");
+      OT_LOGE("can't create clock ", c, " on source ", s, " (pin not found)");
     }
   });
   
@@ -479,10 +478,32 @@ Timer& Timer::clock(std::string name, float period) {
   return *this;
 }
 
-// Procedure: _clock
-void Timer::_clock(const std::string& name, Pin& pin, float period) {
-  _clocks.emplace(name, pin, period); 
+// Function: clock
+Timer& Timer::clock(std::string c, float p) {
+  
+  std::scoped_lock lock(_mutex);
+
+  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), p] () {
+    _insert_clock(c, p);
+  });
+  
+  // parent -> modifier
+  _add_to_lineage(modifier);
+
+  return *this;
+}
+
+// Procedure: _insert_clock
+Clock& Timer::_insert_clock(const std::string& name, Pin& pin, float period) {
+  auto& clock = _clocks.try_emplace(name, name, pin, period).first->second;
   _insert_frontier(pin);
+  return clock;
+}
+
+// Procedure: _insert_clock
+Clock& Timer::_insert_clock(const std::string& name, float period) {
+  auto& clock = _clocks.try_emplace(name, name, period).first->second;
+  return clock;
 }
 
 // Function: insert_primary_input
@@ -720,11 +741,12 @@ void Timer::_fprop_test(Pin& pin) {
   }
   
   // Obtain the rat
-  if(_clocks) {
+  if(!_clocks.empty()) {
 
     // Update the rat
     for(auto test : pin._tests) {
-      test->_fprop_rat(_clocks->_period);
+      // TODO: currently we assume a single clock...
+      test->_fprop_rat(_clocks.begin()->second._period);
       
       // compute the cppr credit if any
       if(_cppr_analysis) {
@@ -941,12 +963,12 @@ void Timer::_update_timing() {
     return;
   }
 
+  // run tasks on the lineage
   _taskflow.wait_for_all();
   _lineage.reset();
   
   // Check if full update is required
   if(_has_state(FULL_TIMING)) {
-    //OT_LOGI("perform full timing update");
     _insert_full_timing_frontiers();
   }
 
@@ -966,66 +988,6 @@ void Timer::_update_timing() {
 
   // clear the state
   _remove_state();
-}
-
-// Procedure: _update_wns
-void Timer::_update_wns() {
-    
-  _update_timing();
-
-  if(_has_state(WNS_UPDATED)) {
-    return;
-  } 
-
-  FOR_EACH_EL_RF(el, rf) {
-    _wns[el][rf].reset();
-    _taskflow.transform_reduce(_idx2pin.begin(), _idx2pin.end(),
-      _wns[el][rf],
-      [] (std::optional<float> l, std::optional<float> r) {
-        return (!l || (r && *r < *l)) ? r : l;
-      },
-      [el, rf] (Pin* pin) -> std::optional<float> {
-        return pin ? pin->slack(el, rf) : std::nullopt;
-      }
-    );
-  } 
-
-  _taskflow.wait_for_all();
-
-  _insert_state(WNS_UPDATED);
-}
-
-// Procedure: _update_tns
-void Timer::_update_tns() {
-    
-  _update_timing();
-
-  if(_has_state(TNS_UPDATED)) {
-    return;
-  }
-
-  FOR_EACH_EL_RF(el, rf) {
-    _tns[el][rf].reset();
-    _taskflow.transform_reduce(_idx2pin.begin(), _idx2pin.end(),
-      _tns[el][rf],
-      [] (std::optional<float> l, std::optional<float> r) {
-        return (l && r) ? *l + *r : (l ? l : r);
-      },
-      [el, rf] (Pin* pin) -> std::optional<float> {
-        if(!pin) return std::nullopt;
-        if(auto slack = pin->slack(el, rf); slack && *slack < 0.0f) {
-          return slack;
-        }
-        else {
-          return std::nullopt;
-        }
-      }
-    );
-  }
-
-  _taskflow.wait_for_all();
-
-  _insert_state(TNS_UPDATED);
 }
 
 // Procedure: _update_endpoints
@@ -1060,6 +1022,30 @@ void Timer::_update_endpoints() {
       
       // sort endpoints
       std::sort(_endpoints[el][rf].begin(), _endpoints[el][rf].end());
+
+      // update the worst negative slack (wns)
+      if(!_endpoints[el][rf].empty()) {
+        _wns[el][rf] = _endpoints[el][rf].front().slack();
+      }
+      else {
+        _wns[el][rf] = std::nullopt;
+      }
+
+      // update the tns, and fep
+      if(!_endpoints[el][rf].empty()) {
+        _tns[el][rf] = 0.0f;
+        _fep[el][rf] = 0;
+        for(const auto& ept : _endpoints[el][rf]) {
+          if(auto slack = ept.slack(); slack < 0.0f) {
+            _tns[el][rf] = *_tns[el][rf] + slack;
+            _fep[el][rf] = *_fep[el][rf] + 1; 
+          }
+        }
+      }
+      else {
+        _tns[el][rf] = std::nullopt;
+        _fep[el][rf] = std::nullopt;
+      }
     });
   }
 
@@ -1076,7 +1062,7 @@ std::optional<float> Timer::tns() {
 
   std::scoped_lock lock(_mutex);
 
-  _update_tns();
+  _update_endpoints();
 
   std::optional<float> v;
 
@@ -1094,12 +1080,29 @@ std::optional<float> Timer::wns() {
 
   std::scoped_lock lock(_mutex);
 
-  _update_wns();
+  _update_endpoints();
 
   std::optional<float> v;
 
   FOR_EACH_EL_RF_IF(el, rf, _wns[el][rf]) {
     v = !v ? _wns[el][rf] : std::min(*v, *(_wns[el][rf]));
+  }
+
+  return v;
+}
+
+// Function: fep
+// Update the failing end points
+std::optional<size_t> Timer::fep() {
+  
+  std::scoped_lock lock(_mutex);
+
+  _update_endpoints();
+
+  std::optional<size_t> v;
+
+  FOR_EACH_EL_RF_IF(el, rf, _fep[el][rf]) {
+    v = !v ? _fep[el][rf] : *_fep[el][rf] + *v;
   }
 
   return v;

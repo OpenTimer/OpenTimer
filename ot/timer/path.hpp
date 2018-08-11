@@ -11,30 +11,74 @@ namespace ot {
 struct Point {
 
   std::string pin;    // pin name
-  Split split;        // min/max (early/late)
   Tran  tran;         // rise/fall
-  float at;           // arrival time
-  float rat;          // required arrival time
+  float at;           // delay
 
-  Point() = default;
-  Point(const std::string&, Split, Tran, float, float);
-
-  inline float slack() const;
+  Point(const std::string&, Tran, float);
 };
-
-// Function: slack
-inline float Point::slack() const {
-  return split == EARLY ? at - rat : rat - at;
-}
 
 // ------------------------------------------------------------------------------------------------
 
 // Struct: Path
 struct Path : std::list<Point> {
+  
+  Path() = default;
+  Path(Split, float);
+
+  Path(const Path&) = delete;
+  Path(Path&&) = default; 
+
+  Path& operator = (const Path&) = delete;
+  Path& operator = (Path&&) = default;
+
+  std::optional<Split> split;
+  std::optional<float> slack;
 };
 
 // Operator << ostream
 std::ostream& operator << (std::ostream&, const Path&);
+
+// EmptyPath
+inline const Path empty_path;
+
+// ------------------------------------------------------------------------------------------------
+
+// Class: PathHeap
+// A max-heap to maintain the top-k critical paths during the path ranking process.
+class PathHeap {
+
+  friend class Timer;
+  
+  // max heap
+  struct PathComparator {
+    bool operator () (std::unique_ptr<Path>& a, std::unique_ptr<Path>& b) const {
+      return a->slack < b->slack;
+    }
+  };
+  
+  public:
+
+    inline size_t num_paths() const;
+
+  private:
+
+    PathComparator _comp;
+
+    std::vector<std::unique_ptr<Path>> _paths;
+
+    std::vector<Path> _extract();
+
+    void _insert(std::unique_ptr<Path>);
+    void _fit(size_t);
+    void _pop();
+
+    Path* _top() const;
+};
+
+// Function: num_paths
+inline size_t PathHeap::num_paths() const {
+  return _paths.size();
+}
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

@@ -31,8 +31,8 @@ class PrimaryInput {
 
     Pin& _pin;
 
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _slew;
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _at;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _slew;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _at;
 
     void _scale_time(float s);
     void _scale_capacitance(float s);
@@ -57,8 +57,8 @@ class PrimaryOutput {
 
     Pin& _pin;
     
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _load {.0f, .0f, .0f, .0f};
-    std::array<std::array<std::optional<float>, MAX_TRAN>, MAX_SPLIT> _rat;
+    TimingData<float, MAX_SPLIT, MAX_TRAN> _load {.0f, .0f, .0f, .0f};
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
 
     void _scale_time(float);
     void _scale_capacitance(float);
@@ -167,9 +167,9 @@ class Pin {
     std::optional<std::list<Pin*>::iterator> _frontier_satellite;
     std::optional<std::list<Pin*>::iterator> _net_satellite;
 
-    std::array<std::array<std::optional<Slew>, MAX_TRAN>, MAX_SPLIT> _slew;
-    std::array<std::array<std::optional<Rat>, MAX_TRAN>, MAX_SPLIT> _rat;
-    std::array<std::array<std::optional<At>, MAX_TRAN>, MAX_SPLIT> _at;
+    TimingData<std::optional<Slew>, MAX_SPLIT, MAX_TRAN> _slew;
+    TimingData<std::optional<Rat >, MAX_SPLIT, MAX_TRAN> _rat;
+    TimingData<std::optional<At  >, MAX_SPLIT, MAX_TRAN> _at;
 
     int _state {0};
 
@@ -287,7 +287,7 @@ inline const PrimaryOutput* Pin::po() const {
 
 // Function: cellpin
 inline const Cellpin* Pin::cellpin(Split m) const {
-  if(auto cp = std::get_if<std::array<const Cellpin*, MAX_SPLIT>>(&_handle); cp) {
+  if(auto cp = std::get_if<CellpinView>(&_handle); cp) {
     return (*cp)[m];
   } 
   return nullptr;

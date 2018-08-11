@@ -1,16 +1,20 @@
-#include <ot/timer/path.hpp>
-#include <ot/timer/pin.hpp>
 #include <ot/timer/timer.hpp>
 
 namespace ot {
 
 // Constructor
-Point::Point(const std::string& name, Split el, Tran rf, float in_at, float in_rat) :
+Point::Point(const std::string& name, Tran rf, float in_at) :
   pin   {name},
-  split {el},
   tran  {rf},
-  at    {in_at},
-  rat   {in_rat} {
+  at    {in_at} {
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Constructor
+Path::Path(Split el, float slk) :
+  split {el},
+  slack {slk} {
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -28,11 +32,17 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
   os << '\n';
 
   os << "Path type    :   ";
-  if(path.empty()) os << "n/a"; else os << to_string(path.back().split);
+  if(!path.split) os << "n/a"; else os << to_string(*path.split);
   os << '\n';
 
   os << "Required Time:   ";
-  if(path.empty()) os << "n/a"; else os << path.back().rat;
+  if(path.empty() || !path.split || !path.slack) {
+    os << "n/a"; 
+  } 
+  else {
+    os << (*path.split == EARLY ? path.back().at - *path.slack :
+                                  path.back().at + *path.slack );
+  }
   os << '\n';
 
   os << "Arrival Time :   ";
@@ -40,7 +50,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
   os << '\n';
 
   os << "Slack        :   ";
-  if(path.empty()) os << "n/a"; else os << path.back().slack();
+  if(!path.slack) os << "n/a"; else os << *path.slack;
   os << '\n';
   
   // Print the body
@@ -61,7 +71,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
        << std::setfill('-') << std::setw(31 + max_plen) << '\n';
     
     // trace
-    os << std::setfill(' ');
+    os << std::setfill(' ') << std::setprecision(3);
     std::optional<float> pi_at;
     for(const auto& p : path) {
       // arrival time
@@ -87,6 +97,47 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
   }
   
   return os;
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Functoin: _extract
+// Extract the path in ascending order.
+std::vector<Path> PathHeap::_extract() {
+  std::sort_heap(_paths.begin(), _paths.end(), _comp);
+  std::vector<Path> P;
+  P.reserve(_paths.size());
+  std::transform(_paths.begin(), _paths.end(), std::back_inserter(P), [] (auto& ptr) {
+    return std::move(*ptr);
+  });
+  return P;
+}
+
+// Procedure: _insert
+void PathHeap::_insert(std::unique_ptr<Path> path) {
+  _paths.push_back(std::move(path));
+  std::push_heap(_paths.begin(), _paths.end(), _comp);
+}
+
+// Procedure: _pop
+void PathHeap::_pop() {
+  if(_paths.empty()) {
+    return;
+  }
+  std::pop_heap(_paths.begin(), _paths.end(), _comp);
+  _paths.pop_back();
+}
+
+// Function: _top
+Path* PathHeap::_top() const {
+  return _paths.empty() ? nullptr : _paths.front().get();
+}
+
+// Procedure: _fit
+void PathHeap::_fit(size_t K) {
+  while(_paths.size() > K) {
+    _pop();
+  }
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -118,50 +169,68 @@ std::vector<Path> Timer::worst_paths(size_t K, Split el, Tran rf) {
 
 // Function: _worst_paths
 // Report the top-k worst_paths
-std::vector<Path> Timer::_worst_paths(const std::vector<Endpoint>& wepts, size_t K) {
+std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
+
+  assert(epts.size() <= K);
   
   // No need to report anything.
-  if(K == 0 || wepts.empty()) {
+  if(K == 0 || epts.empty()) {
     return {};
   }
 
+  std::vector<Path> paths;
+
   // No need to generate prefix tree
   if(K == 1) {
-    std::vector<Path> paths(1);
-    auto sfxt = _sfxt_cache(wepts[0]);
-    _recover_prefix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
-    _recover_suffix(paths[0], sfxt, *sfxt.__tree[sfxt._S]);
-    return paths;
+    auto& path = paths.emplace_back(epts[0]->split(), epts[0]->slack());
+    auto sfxt = _sfxt_cache(*epts[0]);
+    assert(std::fabs(*sfxt.slack() - *path.slack) < 1e-3);
+    _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
+    _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
   }
   // Generate the prefix tree
   else {
     OT_LOGF("unsupported yet");
-    return _extract_paths(wepts, K);
+
+    //size_t w = std::max(size_t{1}, num_workers());
+    //size_t g = std::max((epts.size() + w - 1) / w, size_t{2});
+
+    //auto heap = std::make_shared<UniqueGuard<PathHeap>>();
+
+    //auto [task, fu] = _taskflow.emplace([heap] () {
+    //  return heap->get()->_extract(); 
+    //});
+
+    //for(size_t i=0; i<epts.size(); ++i) {
+    //  _taskflow.silent_emplace([heap=heap.get(), ept=epts[i], K] () {
+    //  }).precede(task);
+    //}
+    //
+    //future = std::move(fu);
+    _taskflow.wait_for_all();
   }
+
+  return paths;
 }
 
 // Procedure: _recover_prefix
+// Recover the worst path prefix at a given pin.
 void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const {
   
   auto el = sfxt._el;
   auto [v, rf] = _decode_pin(idx);
 
   assert(v->_at[el][rf]);
+  
+  path.emplace_front(v->_name, rf, *v->_at[el][rf]);
 
   if(auto arc = v->_at[el][rf]->pi_arc; arc) {
     _recover_prefix(path, sfxt, _encode_pin(arc->_from, v->_at[el][rf]->pi_rf));
   }
-    
-  path.emplace_back(
-    v->_name, 
-    el, 
-    rf, 
-    *v->_at[el][rf],
-    el == EARLY ? *v->_at[el][rf] - *sfxt.slack() : *sfxt.slack() + *v->_at[el][rf]
-  );
 }
 
 // Procedure: _recover_suffix
+// Recover the worst path suffix from a given suffix tree.
 void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
   
   assert(!path.empty());
@@ -173,57 +242,47 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
   auto [pin, rf] = _decode_pin(v);
   auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][rf]; 
 
-  path.emplace_back(
-    pin->_name, 
-    sfxt._el, 
-    rf, 
-    at,
-    sfxt._el == EARLY ? at - *sfxt.slack() : *sfxt.slack() + at
-  );
+  path.emplace_back(pin->_name, rf, at);
 
   _recover_suffix(path, sfxt, v);
 }
 
-// Function: _worst_path
-Path Timer::_extract_path(const SfxtCache& sfxt) const {
+// Procedure: _recover_data_path
+void Timer::_recover_data_path(
+  Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v
+) const {
 
-  assert(sfxt.slack());
+  if(node == nullptr) {
+    return;
+  }
 
-  Path path;
+  _recover_data_path(path, sfxt, node->parent, node->from);
 
-  // extract the prefix (data part)
-  _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
+  auto u = node->to;
+  auto [upin, urf] = _decode_pin(u);
+  
+  // data path source
+  if(node->from == sfxt._S) {
+    assert(sfxt._srcs.find(u) != sfxt._srcs.end());
+    path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
+  }
+  // internal deviation
+  else {
+    assert(!path.empty());
+    auto at = path.back().at + *node->arc->_delay[sfxt._el][path.back().tran][urf];
+    path.emplace_back(upin->_name, urf, at);
+  }
 
-  // extract the suffix (clock part)
-  _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
+  while(u != v) {
+    assert(sfxt.__link[u]);
+    auto a = _idx2arc[*sfxt.__link[u]];
+    u = *sfxt.__tree[u];   
+    std::tie(upin, urf) = _decode_pin(u);
+    auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][urf]; 
+    path.emplace_back(upin->_name, urf, at);
+  }
 
-  return path;
 }
-
-// Function: _worst_path
-Path Timer::_extract_path(const Endpoint& ept) const {
-  //OT_LOGD("edpt: ", ept.is_test(), " ", ept.is_po(), " ", ept.slack());
-  auto sfxt = _sfxt_cache(ept);
-  //OT_LOGD("sfxt: ", *sfxt.slack());
-  return _extract_path(sfxt);
-}
-
-// Function: _extract_paths
-std::vector<Path> Timer::_extract_paths(const std::vector<Endpoint>& epts, size_t K) {
-
-  assert(epts.size() <= K);
-
-  // Generate a sufx mirror for each endpoint
-  //_taskflow.parallel_for(epts.begin(), epts.end(), [] (const auto& ept) {
-
-  //});
-
-  //_taskflow.wait_for_all();
-
-  return {};
-}
-
-
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

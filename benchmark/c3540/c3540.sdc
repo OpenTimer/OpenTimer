@@ -398,113 +398,114 @@ set_input_transition 5 -min -rise [get_ports n124]
 set_input_transition 5 -min -fall [get_ports n124]
 set_input_transition 5 -max -rise [get_ports n124]
 set_input_transition 5 -max -fall [get_ports n124]
-set_output_delay 9 -min -rise [get_ports n399]
-set_output_delay 9 -min -fall [get_ports n399]
-set_output_delay 11 -max -rise [get_ports n399]
-set_output_delay 11 -max -fall [get_ports n399]
+create_clock -period 100 -name virtual_clock
+set_output_delay -9 -min -rise [get_ports n399] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n399] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n399] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n399] -clock virtual_clock
 set_load -pin_load 4 [get_ports n399]
-set_output_delay 9 -min -rise [get_ports n361]
-set_output_delay 9 -min -fall [get_ports n361]
-set_output_delay 11 -max -rise [get_ports n361]
-set_output_delay 11 -max -fall [get_ports n361]
+set_output_delay -9 -min -rise [get_ports n361] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n361] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n361] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n361] -clock virtual_clock
 set_load -pin_load 4 [get_ports n361]
-set_output_delay 9 -min -rise [get_ports n369]
-set_output_delay 9 -min -fall [get_ports n369]
-set_output_delay 11 -max -rise [get_ports n369]
-set_output_delay 11 -max -fall [get_ports n369]
+set_output_delay -9 -min -rise [get_ports n369] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n369] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n369] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n369] -clock virtual_clock
 set_load -pin_load 4 [get_ports n369]
-set_output_delay 9 -min -rise [get_ports n364]
-set_output_delay 9 -min -fall [get_ports n364]
-set_output_delay 11 -max -rise [get_ports n364]
-set_output_delay 11 -max -fall [get_ports n364]
+set_output_delay -9 -min -rise [get_ports n364] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n364] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n364] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n364] -clock virtual_clock
 set_load -pin_load 4 [get_ports n364]
-set_output_delay 9 -min -rise [get_ports n407]
-set_output_delay 9 -min -fall [get_ports n407]
-set_output_delay 11 -max -rise [get_ports n407]
-set_output_delay 11 -max -fall [get_ports n407]
+set_output_delay -9 -min -rise [get_ports n407] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n407] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n407] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n407] -clock virtual_clock
 set_load -pin_load 4 [get_ports n407]
-set_output_delay 9 -min -rise [get_ports n367]
-set_output_delay 9 -min -fall [get_ports n367]
-set_output_delay 11 -max -rise [get_ports n367]
-set_output_delay 11 -max -fall [get_ports n367]
+set_output_delay -9 -min -rise [get_ports n367] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n367] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n367] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n367] -clock virtual_clock
 set_load -pin_load 4 [get_ports n367]
-set_output_delay 9 -min -rise [get_ports n409]
-set_output_delay 9 -min -fall [get_ports n409]
-set_output_delay 11 -max -rise [get_ports n409]
-set_output_delay 11 -max -fall [get_ports n409]
+set_output_delay -9 -min -rise [get_ports n409] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n409] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n409] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n409] -clock virtual_clock
 set_load -pin_load 4 [get_ports n409]
-set_output_delay 9 -min -rise [get_ports n384]
-set_output_delay 9 -min -fall [get_ports n384]
-set_output_delay 11 -max -rise [get_ports n384]
-set_output_delay 11 -max -fall [get_ports n384]
+set_output_delay -9 -min -rise [get_ports n384] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n384] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n384] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n384] -clock virtual_clock
 set_load -pin_load 4 [get_ports n384]
-set_output_delay 9 -min -rise [get_ports n351]
-set_output_delay 9 -min -fall [get_ports n351]
-set_output_delay 11 -max -rise [get_ports n351]
-set_output_delay 11 -max -fall [get_ports n351]
+set_output_delay -9 -min -rise [get_ports n351] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n351] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n351] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n351] -clock virtual_clock
 set_load -pin_load 4 [get_ports n351]
-set_output_delay 9 -min -rise [get_ports n372]
-set_output_delay 9 -min -fall [get_ports n372]
-set_output_delay 11 -max -rise [get_ports n372]
-set_output_delay 11 -max -fall [get_ports n372]
+set_output_delay -9 -min -rise [get_ports n372] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n372] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n372] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n372] -clock virtual_clock
 set_load -pin_load 4 [get_ports n372]
-set_output_delay 9 -min -rise [get_ports n375]
-set_output_delay 9 -min -fall [get_ports n375]
-set_output_delay 11 -max -rise [get_ports n375]
-set_output_delay 11 -max -fall [get_ports n375]
+set_output_delay -9 -min -rise [get_ports n375] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n375] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n375] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n375] -clock virtual_clock
 set_load -pin_load 4 [get_ports n375]
-set_output_delay 9 -min -rise [get_ports n358]
-set_output_delay 9 -min -fall [get_ports n358]
-set_output_delay 11 -max -rise [get_ports n358]
-set_output_delay 11 -max -fall [get_ports n358]
+set_output_delay -9 -min -rise [get_ports n358] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n358] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n358] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n358] -clock virtual_clock
 set_load -pin_load 4 [get_ports n358]
-set_output_delay 9 -min -rise [get_ports n387]
-set_output_delay 9 -min -fall [get_ports n387]
-set_output_delay 11 -max -rise [get_ports n387]
-set_output_delay 11 -max -fall [get_ports n387]
+set_output_delay -9 -min -rise [get_ports n387] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n387] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n387] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n387] -clock virtual_clock
 set_load -pin_load 4 [get_ports n387]
-set_output_delay 9 -min -rise [get_ports n381]
-set_output_delay 9 -min -fall [get_ports n381]
-set_output_delay 11 -max -rise [get_ports n381]
-set_output_delay 11 -max -fall [get_ports n381]
+set_output_delay -9 -min -rise [get_ports n381] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n381] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n381] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n381] -clock virtual_clock
 set_load -pin_load 4 [get_ports n381]
-set_output_delay 9 -min -rise [get_ports n390]
-set_output_delay 9 -min -fall [get_ports n390]
-set_output_delay 11 -max -rise [get_ports n390]
-set_output_delay 11 -max -fall [get_ports n390]
+set_output_delay -9 -min -rise [get_ports n390] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n390] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n390] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n390] -clock virtual_clock
 set_load -pin_load 4 [get_ports n390]
-set_output_delay 9 -min -rise [get_ports n355]
-set_output_delay 9 -min -fall [get_ports n355]
-set_output_delay 11 -max -rise [get_ports n355]
-set_output_delay 11 -max -fall [get_ports n355]
+set_output_delay -9 -min -rise [get_ports n355] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n355] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n355] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n355] -clock virtual_clock
 set_load -pin_load 4 [get_ports n355]
-set_output_delay 9 -min -rise [get_ports n393]
-set_output_delay 9 -min -fall [get_ports n393]
-set_output_delay 11 -max -rise [get_ports n393]
-set_output_delay 11 -max -fall [get_ports n393]
+set_output_delay -9 -min -rise [get_ports n393] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n393] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n393] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n393] -clock virtual_clock
 set_load -pin_load 4 [get_ports n393]
-set_output_delay 9 -min -rise [get_ports n378]
-set_output_delay 9 -min -fall [get_ports n378]
-set_output_delay 11 -max -rise [get_ports n378]
-set_output_delay 11 -max -fall [get_ports n378]
+set_output_delay -9 -min -rise [get_ports n378] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n378] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n378] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n378] -clock virtual_clock
 set_load -pin_load 4 [get_ports n378]
-set_output_delay 9 -min -rise [get_ports n402]
-set_output_delay 9 -min -fall [get_ports n402]
-set_output_delay 11 -max -rise [get_ports n402]
-set_output_delay 11 -max -fall [get_ports n402]
+set_output_delay -9 -min -rise [get_ports n402] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n402] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n402] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n402] -clock virtual_clock
 set_load -pin_load 4 [get_ports n402]
-set_output_delay 9 -min -rise [get_ports n405]
-set_output_delay 9 -min -fall [get_ports n405]
-set_output_delay 11 -max -rise [get_ports n405]
-set_output_delay 11 -max -fall [get_ports n405]
+set_output_delay -9 -min -rise [get_ports n405] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n405] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n405] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n405] -clock virtual_clock
 set_load -pin_load 4 [get_ports n405]
-set_output_delay 9 -min -rise [get_ports n396]
-set_output_delay 9 -min -fall [get_ports n396]
-set_output_delay 11 -max -rise [get_ports n396]
-set_output_delay 11 -max -fall [get_ports n396]
+set_output_delay -9 -min -rise [get_ports n396] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n396] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n396] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n396] -clock virtual_clock
 set_load -pin_load 4 [get_ports n396]
-set_output_delay 9 -min -rise [get_ports n353]
-set_output_delay 9 -min -fall [get_ports n353]
-set_output_delay 11 -max -rise [get_ports n353]
-set_output_delay 11 -max -fall [get_ports n353]
+set_output_delay -9 -min -rise [get_ports n353] -clock virtual_clock
+set_output_delay -9 -min -fall [get_ports n353] -clock virtual_clock
+set_output_delay 89 -max -rise [get_ports n353] -clock virtual_clock
+set_output_delay 89 -max -fall [get_ports n353] -clock virtual_clock
 set_load -pin_load 4 [get_ports n353]

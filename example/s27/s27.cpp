@@ -4,6 +4,8 @@
 #include <ot/timer/timer.hpp>
 
 int main(int argc, char *argv[]) {
+
+  return 0;
   
   ot::Timer timer;
   
@@ -29,6 +31,8 @@ int main(int argc, char *argv[]) {
   else {
     std::cout << "WNS is not available\n";
   }
+
+  auto raw_path = timer.worst_paths(1);
 
   // apply design modifiers
   timer.repower_gate("inst_10", "INV_X16")
@@ -69,6 +73,13 @@ int main(int argc, char *argv[]) {
   // Dump the slack
   std::cout << timer.dump_slack();
   
+  // report the path after optimization
+  auto opt_path = timer.worst_paths(1);
+
+  // compare
+  std::cout << "Path before optimization: \n" << raw_path[0];
+  std::cout << "Path after  optimization: \n" << opt_path[0];
+
   return 0;
 }
 

@@ -87,58 +87,58 @@ set_input_transition 5 -min -rise [get_ports B2] -clock blif_clk_net
 set_input_transition 5 -min -fall [get_ports B2] -clock blif_clk_net
 set_input_transition 5 -max -rise [get_ports B2] -clock blif_clk_net
 set_input_transition 5 -max -fall [get_ports B2] -clock blif_clk_net
-set_output_delay 2.1 -min -rise [get_ports P7] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P7] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P7] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P7] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P7] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P7] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P7] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P7] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P7]
-set_output_delay 2.1 -min -rise [get_ports P5] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P5] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P5] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P5] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P5] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P5] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P5] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P5] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P5]
-set_output_delay 2.1 -min -rise [get_ports CNTVCON2] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports CNTVCON2] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports CNTVCON2] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports CNTVCON2] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports CNTVCON2] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports CNTVCON2] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports CNTVCON2] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports CNTVCON2] -clock blif_clk_net
 set_load -pin_load 4 [get_ports CNTVCON2]
-set_output_delay 2.1 -min -rise [get_ports P2] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P2] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P2] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P2] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P2] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P2] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P2] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P2] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P2]
-set_output_delay 2.1 -min -rise [get_ports P1] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P1] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P1] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P1] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P1] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P1] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P1] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P1] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P1]
-set_output_delay 2.1 -min -rise [get_ports CNTVCO2] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports CNTVCO2] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports CNTVCO2] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports CNTVCO2] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports CNTVCO2] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports CNTVCO2] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports CNTVCO2] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports CNTVCO2] -clock blif_clk_net
 set_load -pin_load 4 [get_ports CNTVCO2]
-set_output_delay 2.1 -min -rise [get_ports P0] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P0] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P0] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P0] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P0] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P0] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P0] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P0] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P0]
-set_output_delay 2.1 -min -rise [get_ports P6] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P6] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P6] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P6] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P6] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P6] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P6] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P6] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P6]
-set_output_delay 2.1 -min -rise [get_ports READY] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports READY] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports READY] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports READY] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports READY] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports READY] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports READY] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports READY] -clock blif_clk_net
 set_load -pin_load 4 [get_ports READY]
-set_output_delay 2.1 -min -rise [get_ports P3] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P3] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P3] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P3] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P3] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P3] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P3] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P3] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P3]
-set_output_delay 2.1 -min -rise [get_ports P4] -clock blif_clk_net
-set_output_delay 2.1 -min -fall [get_ports P4] -clock blif_clk_net
-set_output_delay 2.2 -max -rise [get_ports P4] -clock blif_clk_net
-set_output_delay 2.2 -max -fall [get_ports P4] -clock blif_clk_net
+set_output_delay -2.1 -min -rise [get_ports P4] -clock blif_clk_net
+set_output_delay -2.1 -min -fall [get_ports P4] -clock blif_clk_net
+set_output_delay -1.2 -max -rise [get_ports P4] -clock blif_clk_net
+set_output_delay -1.2 -max -fall [get_ports P4] -clock blif_clk_net
 set_load -pin_load 4 [get_ports P4]
