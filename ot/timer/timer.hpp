@@ -209,8 +209,9 @@ class Timer {
     void _cppr(bool);
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
-    void _recover_suffix(Path&, const SfxtCache&, size_t) const;
-    void _recover_data_path(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
+    void _recover_suffix(Path&, const SfxtCache&) const;
+    void _recover_suffix(Path&, const PfxtCache&, const PfxtNode*) const;
+    void _recover_suffix(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _to_time_unit(const TimeUnit&);
     void _to_capacitance_unit(const CapacitanceUnit&);
@@ -222,8 +223,9 @@ class Timer {
     void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
-    void _spur(PfxtCache&, size_t, PathHeap&);
-    void _spur(PfxtCache&, const PfxtNode&);
+    void _spur(Endpoint*,  size_t, PathHeap&) const;
+    void _spur(PfxtCache&, size_t, PathHeap&) const;
+    void _spur(PfxtCache&, const PfxtNode&) const;
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);

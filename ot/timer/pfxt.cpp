@@ -71,9 +71,17 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 }
 
 // Procedure: _spur
+// Spur the top-k paths from the endpoint and prun the path with the path heap.
+void Timer::_spur(Endpoint* ept, size_t K, PathHeap& heap) const {
+  auto sfxt = _sfxt_cache(*ept);
+  auto pfxt = _pfxt_cache(sfxt);
+  _spur(pfxt, K, heap);
+}
+
+// Procedure: _spur
 // Spur the path and expands the search space. The procedure iteratively scan the present
 // critical path and performs spur operation along the path to generate other candidates.
-void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) {
+void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) const {
 
   for(size_t k=0; k<K; ++k) {
     // no more path to spur
@@ -87,15 +95,16 @@ void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) {
       
       // If the maximum among the minimum is smaller than the current minimum,
       // there is no need to do more.
-      if(heap.num_paths() >= K && heap._top()->slack <= node->slack) {
+      if(heap.num_paths() >= K && heap.top()->slack <= node->slack) {
         break;
       }
       
       // push the path to the heap and maintain the top-k
       auto path = std::make_unique<Path>(pfxt._sfxt._el, node->slack);
+      _recover_suffix(*path, pfxt, node);
 
-      heap._insert(std::move(path));
-      heap._fit(K);
+      heap.insert(std::move(path));
+      heap.fit(K);
 
       // expand the search space
       _spur(pfxt, *node);
@@ -104,13 +113,12 @@ void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) {
 }
 
 // Procedure: _spur
-void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) {
+void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
   
   auto el = pfxt._sfxt._el;
-  auto T  = pfxt._sfxt._T;
   auto u  = pfx.to;
 
-  while(u != T) {
+  while(u != pfxt._sfxt._T) {
 
     assert(pfxt._sfxt.__link[u]);
 

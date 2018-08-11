@@ -103,7 +103,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
 
 // Functoin: _extract
 // Extract the path in ascending order.
-std::vector<Path> PathHeap::_extract() {
+std::vector<Path> PathHeap::extract() {
   std::sort_heap(_paths.begin(), _paths.end(), _comp);
   std::vector<Path> P;
   P.reserve(_paths.size());
@@ -113,14 +113,14 @@ std::vector<Path> PathHeap::_extract() {
   return P;
 }
 
-// Procedure: _insert
-void PathHeap::_insert(std::unique_ptr<Path> path) {
+// Procedure: insert
+void PathHeap::insert(std::unique_ptr<Path> path) {
   _paths.push_back(std::move(path));
   std::push_heap(_paths.begin(), _paths.end(), _comp);
 }
 
-// Procedure: _pop
-void PathHeap::_pop() {
+// Procedure: pop
+void PathHeap::pop() {
   if(_paths.empty()) {
     return;
   }
@@ -128,16 +128,46 @@ void PathHeap::_pop() {
   _paths.pop_back();
 }
 
-// Function: _top
-Path* PathHeap::_top() const {
+// Function: top
+Path* PathHeap::top() const {
   return _paths.empty() ? nullptr : _paths.front().get();
 }
 
-// Procedure: _fit
-void PathHeap::_fit(size_t K) {
+// Procedure: fit
+void PathHeap::fit(size_t K) {
   while(_paths.size() > K) {
-    _pop();
+    pop();
   }
+}
+
+// Procedure: heapify
+void PathHeap::heapify() {
+  std::make_heap(_paths.begin(), _paths.end(), _comp);   
+}
+
+// Procedure: merge_and_fit
+void PathHeap::merge_and_fit(PathHeap&& rhs, size_t K) {
+
+  if(_paths.capacity() < rhs._paths.capacity()) {
+    _paths.swap(rhs._paths);
+  }
+
+  std::sort_heap(_paths.begin(), _paths.end(), _comp);
+  std::sort_heap(rhs._paths.begin(), rhs._paths.end(), _comp);
+
+  auto mid = _paths.insert(
+    _paths.end(), 
+    std::make_move_iterator(rhs._paths.begin()),
+    std::make_move_iterator(rhs._paths.end())
+  ); 
+
+  std::inplace_merge(_paths.begin(), mid, _paths.end());
+  
+  if(_paths.size() > K) {
+    _paths.resize(K);
+  }
+  
+  heapify(); 
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -178,39 +208,39 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
     return {};
   }
 
-  std::vector<Path> paths;
-
   // No need to generate prefix tree
   if(K == 1) {
-    auto& path = paths.emplace_back(epts[0]->split(), epts[0]->slack());
+    std::vector<Path> paths(1);
     auto sfxt = _sfxt_cache(*epts[0]);
-    assert(std::fabs(*sfxt.slack() - *path.slack) < 1e-3);
-    _recover_prefix(path, sfxt, *sfxt.__tree[sfxt._S]);
-    _recover_suffix(path, sfxt, *sfxt.__tree[sfxt._S]);
+    assert(std::fabs(*sfxt.slack() - *paths[0].slack) < 1e-3);
+    _recover_suffix(paths[0], sfxt);
+    return paths;
   }
+  
   // Generate the prefix tree
-  else {
-    OT_LOGF("unsupported yet");
+  OT_LOGF("unsupported yet");
 
-    //size_t w = std::max(size_t{1}, num_workers());
-    //size_t g = std::max((epts.size() + w - 1) / w, size_t{2});
+  PathHeap heap;
 
-    //auto heap = std::make_shared<UniqueGuard<PathHeap>>();
+  _taskflow.transform_reduce(epts.begin(), epts.end(), heap,
+    [&] (PathHeap h1, PathHeap h2) {
+      h1.merge_and_fit(std::move(h2), K);
+      return h1;
+    },
+    [&] (PathHeap heap, Endpoint* ept) {
+      _spur(ept, K, heap);
+      return heap;
+    },
+    [&] (Endpoint* ept) {
+      PathHeap heap;
+      _spur(ept, K, heap);
+      return heap;
+    }
+  );
 
-    //auto [task, fu] = _taskflow.emplace([heap] () {
-    //  return heap->get()->_extract(); 
-    //});
+  _taskflow.wait_for_all();
 
-    //for(size_t i=0; i<epts.size(); ++i) {
-    //  _taskflow.silent_emplace([heap=heap.get(), ept=epts[i], K] () {
-    //  }).precede(task);
-    //}
-    //
-    //future = std::move(fu);
-    _taskflow.wait_for_all();
-  }
-
-  return paths;
+  return heap.extract();
 }
 
 // Procedure: _recover_prefix
@@ -230,40 +260,52 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
 }
 
 // Procedure: _recover_suffix
-// Recover the worst path suffix from a given suffix tree.
-void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, size_t u) const {
+// Recover the worst data path from a given suffix tree.
+void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt) const {
   
-  assert(!path.empty());
+  if(!sfxt.__tree[sfxt._S]) {
+    return;
+  }
+
+  auto u = *sfxt.__tree[sfxt._S];
+  auto [upin, urf] = _decode_pin(u);
+
+  // data path source
+  assert(upin->_at[sfxt._el][urf]);
+  path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
   
-  if(!sfxt.__link[u]) return;
-
-  auto a = _idx2arc[*sfxt.__link[u]];
-  auto v = *sfxt.__tree[u];
-  auto [pin, rf] = _decode_pin(v);
-  auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][rf]; 
-
-  path.emplace_back(pin->_name, rf, at);
-
-  _recover_suffix(path, sfxt, v);
+  // recursive
+  while(u != sfxt._T) {
+    assert(sfxt.__link[u]);
+    auto a = _idx2arc[*sfxt.__link[u]];
+    u = *sfxt.__tree[u];
+    std::tie(upin, urf) = _decode_pin(u);
+    auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][urf];
+    path.emplace_back(upin->_name, urf, at);
+  }
 }
 
-// Procedure: _recover_data_path
-void Timer::_recover_data_path(
-  Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v
-) const {
+// Procedure: _recover_suffix
+void Timer::_recover_suffix(Path& path, const PfxtCache& pfxt, const PfxtNode* node) const {
+  _recover_suffix(path, pfxt._sfxt, node, pfxt._sfxt._T);
+}
+
+// Procedure: _recover_suffix
+// recover the data path from a given prefix tree node w.r.t. a suffix tree
+void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v) const {
 
   if(node == nullptr) {
     return;
   }
 
-  _recover_data_path(path, sfxt, node->parent, node->from);
+  _recover_suffix(path, sfxt, node->parent, node->from);
 
   auto u = node->to;
   auto [upin, urf] = _decode_pin(u);
   
   // data path source
   if(node->from == sfxt._S) {
-    assert(sfxt._srcs.find(u) != sfxt._srcs.end());
+    assert(upin->_at[sfxt._el][urf]);
     path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
   }
   // internal deviation

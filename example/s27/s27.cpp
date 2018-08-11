@@ -5,8 +5,6 @@
 
 int main(int argc, char *argv[]) {
 
-  return 0;
-  
   ot::Timer timer;
   
   // Read design

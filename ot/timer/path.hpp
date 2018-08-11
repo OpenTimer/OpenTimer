@@ -57,22 +57,31 @@ class PathHeap {
   };
   
   public:
+    
+    PathHeap() = default;
+    PathHeap(PathHeap&&) = default;
+    PathHeap(const PathHeap&) = delete;
 
+    PathHeap& operator = (PathHeap&&) = default;
+    PathHeap& operator = (const PathHeap&) = delete;
+    
     inline size_t num_paths() const;
+    
+    std::vector<Path> extract();
+
+    void insert(std::unique_ptr<Path>);
+    void fit(size_t);
+    void pop();
+    void merge_and_fit(PathHeap&&, size_t);
+    void heapify();
+
+    Path* top() const;
 
   private:
 
     PathComparator _comp;
 
     std::vector<std::unique_ptr<Path>> _paths;
-
-    std::vector<Path> _extract();
-
-    void _insert(std::unique_ptr<Path>);
-    void _fit(size_t);
-    void _pop();
-
-    Path* _top() const;
 };
 
 // Function: num_paths

@@ -110,14 +110,13 @@ void SDC::read(const std::filesystem::path& path) {
       else {
         OT_LOGW("sdc command ", c, " not supported yet");
       }
+    }
 
-      try {
-        std::filesystem::remove(sdc_json);
-      }
-      catch(const std::exception& e) {
-        OT_LOGW("can't remove ", sdc_json, ": ", e.what());
-      }
-      
+    try {
+      std::filesystem::remove(sdc_json);
+    }
+    catch(const std::exception& e) {
+      OT_LOGW("can't remove ", sdc_json, ": ", e.what());
     }
   }
 }
