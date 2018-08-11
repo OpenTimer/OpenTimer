@@ -274,7 +274,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Threads REQUIRED)                        # thread library (pthread)
 
-add_executable(app app.cpp)                           # executable and linkage
+add_executable(app app.cpp)                           # link to your app.cpp
 target_link_libraries(app OpenTimer Threads::Threads stdc++fs)
 ```
 
