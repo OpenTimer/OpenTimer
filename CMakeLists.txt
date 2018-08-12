@@ -220,8 +220,12 @@ target_link_libraries(utility ${OT_LINK_FLAGS})
 add_executable(unit unittest/unit.cpp)
 target_link_libraries(unit ${OT_LINK_FLAGS})
 
+add_executable(path unittest/path.cpp)
+target_link_libraries(path ${OT_LINK_FLAGS})
+
 add_test(unittest.utility ${OT_UNITTEST_DIR}/utility -d yes)
 add_test(unittest.unit ${OT_UNITTEST_DIR}/unit -d yes)
+add_test(unittest.path ${OT_UNITTEST_DIR}/path -d yes)
 
 # Integration test for shell
 message(STATUS "Building Shell integration tests ...")

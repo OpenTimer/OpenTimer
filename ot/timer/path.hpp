@@ -51,7 +51,7 @@ class PathHeap {
   
   // max heap
   struct PathComparator {
-    bool operator () (std::unique_ptr<Path>& a, std::unique_ptr<Path>& b) const {
+    bool operator () (const std::unique_ptr<Path>& a, const std::unique_ptr<Path>& b) const {
       return a->slack < b->slack;
     }
   };
@@ -66,16 +66,20 @@ class PathHeap {
     PathHeap& operator = (const PathHeap&) = delete;
     
     inline size_t num_paths() const;
+    inline size_t size() const;
+    inline bool empty() const;
     
     std::vector<Path> extract();
 
-    void insert(std::unique_ptr<Path>);
+    void push(std::unique_ptr<Path>);
     void fit(size_t);
     void pop();
     void merge_and_fit(PathHeap&&, size_t);
     void heapify();
 
     Path* top() const;
+
+    std::string dump() const;
 
   private:
 
@@ -89,6 +93,15 @@ inline size_t PathHeap::num_paths() const {
   return _paths.size();
 }
 
+// Function: size
+inline size_t PathHeap::size() const {
+  return _paths.size();
+}
+
+// Function: empty
+inline bool PathHeap::empty() const {
+  return _paths.empty();
+}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

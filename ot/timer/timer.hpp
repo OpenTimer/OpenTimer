@@ -209,9 +209,8 @@ class Timer {
     void _cppr(bool);
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
-    void _recover_suffix(Path&, const SfxtCache&) const;
-    void _recover_suffix(Path&, const PfxtCache&, const PfxtNode*) const;
-    void _recover_suffix(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
+    void _recover_datapath(Path&, const SfxtCache&) const;
+    void _recover_datapath(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _to_time_unit(const TimeUnit&);
     void _to_capacitance_unit(const CapacitanceUnit&);

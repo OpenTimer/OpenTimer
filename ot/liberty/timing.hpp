@@ -127,7 +127,7 @@ struct Timing {
 std::ostream& operator << (std::ostream&, const Timing&);
 
 // Alias
-using TimingView = std::array<const Timing*, MAX_SPLIT>;
+using TimingView = TimingData<const Timing*, MAX_SPLIT>;
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

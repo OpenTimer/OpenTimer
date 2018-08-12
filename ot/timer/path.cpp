@@ -71,7 +71,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
        << std::setfill('-') << std::setw(31 + max_plen) << '\n';
     
     // trace
-    os << std::setfill(' ') << std::setprecision(3);
+    os << std::setfill(' ') << std::fixed << std::setprecision(3);
     std::optional<float> pi_at;
     for(const auto& p : path) {
       // arrival time
@@ -110,11 +110,12 @@ std::vector<Path> PathHeap::extract() {
   std::transform(_paths.begin(), _paths.end(), std::back_inserter(P), [] (auto& ptr) {
     return std::move(*ptr);
   });
+  _paths.clear();
   return P;
 }
 
-// Procedure: insert
-void PathHeap::insert(std::unique_ptr<Path> path) {
+// Procedure: push
+void PathHeap::push(std::unique_ptr<Path> path) {
   _paths.push_back(std::move(path));
   std::push_heap(_paths.begin(), _paths.end(), _comp);
 }
@@ -161,13 +162,24 @@ void PathHeap::merge_and_fit(PathHeap&& rhs, size_t K) {
     std::make_move_iterator(rhs._paths.end())
   ); 
 
-  std::inplace_merge(_paths.begin(), mid, _paths.end());
+  rhs._paths.clear();
+
+  std::inplace_merge(_paths.begin(), mid, _paths.end(), _comp);
   
   if(_paths.size() > K) {
     _paths.resize(K);
   }
   
   heapify(); 
+}
+
+// Function: dump
+std::string PathHeap::dump() const {
+  std::ostringstream oss;
+  for(const auto& path : _paths) {
+    oss << path->slack.value() << ' ';
+  }
+  return oss.str();
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -214,13 +226,11 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
     paths.emplace_back(epts[0]->_el, epts[0]->slack());
     auto sfxt = _sfxt_cache(*epts[0]);
     assert(std::fabs(*sfxt.slack() - *paths[0].slack) < 1e-3);
-    _recover_suffix(paths[0], sfxt);
+    _recover_datapath(paths[0], sfxt);
     return paths;
   }
   
   // Generate the prefix tree
-  //OT_LOGD("generating prefix tree...");
-
   PathHeap heap;
 
   _taskflow.transform_reduce(epts.begin(), epts.end(), heap,
@@ -260,9 +270,9 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
   }
 }
 
-// Procedure: _recover_suffix
+// Procedure: _recover_datapath
 // Recover the worst data path from a given suffix tree.
-void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt) const {
+void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
   
   if(!sfxt.__tree[sfxt._S]) {
     return;
@@ -286,20 +296,17 @@ void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt) const {
   }
 }
 
-// Procedure: _recover_suffix
-void Timer::_recover_suffix(Path& path, const PfxtCache& pfxt, const PfxtNode* node) const {
-  _recover_suffix(path, pfxt._sfxt, node, pfxt._sfxt._T);
-}
-
-// Procedure: _recover_suffix
+// Procedure: _recover_datapath
 // recover the data path from a given prefix tree node w.r.t. a suffix tree
-void Timer::_recover_suffix(Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v) const {
+void Timer::_recover_datapath(
+  Path& path, const SfxtCache& sfxt, const PfxtNode* node, size_t v
+) const {
 
   if(node == nullptr) {
     return;
   }
 
-  _recover_suffix(path, sfxt, node->parent, node->from);
+  _recover_datapath(path, sfxt, node->parent, node->from);
 
   auto u = node->to;
   auto [upin, urf] = _decode_pin(u);

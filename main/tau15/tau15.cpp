@@ -25,7 +25,7 @@ int main(int argc, char* argv[]) {
   }
 
   ot::Timer timer;
-  
+
   // Initialize the timer.
   timer.celllib(early_celllib, ot::EARLY)
        .celllib(late_celllib, ot::LATE)
@@ -211,10 +211,24 @@ int main(int argc, char* argv[]) {
       }
       timer.spef(std::move(tokens[1]));
     }
-    //else if(tokens[0] == "report_worst_paths") {
-    //  auto paths = timer.worst_paths(1);
-    //  std::cout << paths[0];
-    //}
+    else if(tokens[0] == "report_worst_paths") {
+
+      size_t K {0};
+
+      for(size_t i=1; i<tokens.size(); ++i) {
+        if(tokens[i] == "-numPaths") {
+          if(i+1 >= tokens.size()) {
+            throw std::runtime_error("syntax error in -numPaths");
+          }
+          K = std::stoul(tokens[i+1]);
+        }
+      }
+      auto paths = timer.worst_paths(K);
+      std::cout << "report_worst_paths " << paths.size() << '\n';
+      for(auto& path : paths) {
+        std::cout << *path.slack << '\n';
+      }
+    }
     else {
       throw std::runtime_error("unexpected operation "s + line);
       break;

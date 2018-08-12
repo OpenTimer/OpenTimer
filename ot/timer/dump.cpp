@@ -105,7 +105,7 @@ std::string Timer::_dump_net_load() const {
                              << std::setw(2 + nlen)  << "Net"   << '\n'
         << std::setfill('-') << std::setw(49 + nlen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _nets) {
 
       const auto& net = kvp.second;
@@ -151,7 +151,7 @@ std::string Timer::_dump_pin_cap() const {
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
@@ -197,7 +197,7 @@ std::string Timer::_dump_slew() const {
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
@@ -246,7 +246,7 @@ std::string Timer::_dump_slack() const {
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
@@ -295,7 +295,7 @@ std::string Timer::_dump_at() const {
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
@@ -344,7 +344,7 @@ std::string Timer::_dump_rat() const {
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
-    oss << std::setfill(' ') << std::setprecision(3);
+    oss << std::setfill(' ') << std::fixed << std::setprecision(3);
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;

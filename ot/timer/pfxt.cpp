@@ -32,6 +32,8 @@ void PfxtCache::_push(float s, size_t f, size_t t, const Arc* a, const PfxtNode*
 }
 
 // Procedure: _pop
+// Pop a path from the min-heap to the path vector. Here we need to keep the pointer
+// ownership since the later path peeling process need access to the prefix tree node.
 PfxtNode* PfxtCache::_pop() {
   if(_nodes.empty()) {
     return nullptr;
@@ -84,31 +86,29 @@ void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
 void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) const {
 
   for(size_t k=0; k<K; ++k) {
-    // no more path to spur
-    if(pfxt._nodes.empty()) {
+
+    auto node = pfxt._pop();
+    
+    // no more path to generate
+    if(node == nullptr) {
       break;
     }
-    // rank a new path
-    else {
 
-      auto node = pfxt._pop();
-      
-      // If the maximum among the minimum is smaller than the current minimum,
-      // there is no need to do more.
-      if(heap.num_paths() >= K && heap.top()->slack <= node->slack) {
-        break;
-      }
-      
-      // push the path to the heap and maintain the top-k
-      auto path = std::make_unique<Path>(pfxt._sfxt._el, node->slack);
-      _recover_suffix(*path, pfxt, node);
-
-      heap.insert(std::move(path));
-      heap.fit(K);
-
-      // expand the search space
-      _spur(pfxt, *node);
+    // If the maximum among the minimum is smaller than the current minimum,
+    // there is no need to do more.
+    if(heap.num_paths() >= K && heap.top()->slack <= node->slack) {
+      break;
     }
+    
+    // push the path to the heap and maintain the top-k
+    auto path = std::make_unique<Path>(pfxt._sfxt._el, node->slack);
+    _recover_datapath(*path, pfxt._sfxt, node, pfxt._sfxt._T);
+
+    heap.push(std::move(path));
+    heap.fit(K);
+
+    // expand the search space
+    _spur(pfxt, *node);
   }
 }
 
@@ -120,7 +120,7 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
 
   while(u != pfxt._sfxt._T) {
 
-    assert(pfxt._sfxt.__link[u]);
+    assert(pfxt._sfxt.__dist[u]);
 
     auto [upin, urf] = _decode_pin(u);
 
