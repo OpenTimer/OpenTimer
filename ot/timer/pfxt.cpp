@@ -51,7 +51,7 @@ PfxtNode* PfxtCache::_top() const {
 
 // ------------------------------------------------------------------------------------------------
 
-// Function: _pfxt_cacheS
+// Function: _pfxt_cache
 // Construct a prefix tree from a given suffix tree.
 PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 
@@ -73,17 +73,12 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 }
 
 // Procedure: _spur
-// Spur the top-k paths from the endpoint and prun the path with the path heap.
-void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
-  auto sfxt = _sfxt_cache(ept);
-  auto pfxt = _pfxt_cache(sfxt);
-  _spur(pfxt, K, heap);
-}
-
-// Procedure: _spur
 // Spur the path and expands the search space. The procedure iteratively scan the present
 // critical path and performs spur operation along the path to generate other candidates.
-void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) const {
+void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
+
+  auto sfxt = _sfxt_cache(ept);
+  auto pfxt = _pfxt_cache(sfxt);
 
   for(size_t k=0; k<K; ++k) {
 
@@ -101,8 +96,8 @@ void Timer::_spur(PfxtCache& pfxt, size_t K, PathHeap& heap) const {
     }
     
     // push the path to the heap and maintain the top-k
-    auto path = std::make_unique<Path>(pfxt._sfxt._el, node->slack);
-    _recover_datapath(*path, pfxt._sfxt, node, pfxt._sfxt._T);
+    auto path = std::make_unique<Path>(node->slack, &ept);
+    _recover_datapath(*path, sfxt, node, sfxt._T);
 
     heap.push(std::move(path));
     heap.fit(K);

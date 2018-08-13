@@ -178,7 +178,7 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
 // Function: _sfxt_cache
 SfxtCache Timer::_sfxt_cache(const Endpoint& ept) const {
   return std::visit([this, &ept] (auto&& handle) {
-    return _sfxt_cache(handle, ept._el, ept._rf);
+    return _sfxt_cache(*handle, ept._el, ept._rf);
   }, ept._handle);
 }
 

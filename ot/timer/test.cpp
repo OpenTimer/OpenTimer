@@ -53,6 +53,7 @@ void Test::_reset() {
   FOR_EACH_EL_RF(el, rf) {
     _rat[el][rf].reset();
     _cppr_credit[el][rf].reset();
+    _constraint[el][rf].reset();
   }
 }
 
@@ -81,12 +82,12 @@ void Test::_fprop_rat(float period) {
     float from_slew = *(_arc._from._slew[fel][rrf]);
     float to_slew = *(_arc._to._slew[el][rf]);
 
-    if(auto v = tv[el]->constraint(rrf, rf, from_slew, to_slew); v) {
+    if(_constraint[el][rf] = tv[el]->constraint(rrf, rf, from_slew, to_slew)) {
       if(el == EARLY) {
-        _rat[el][rf] = *v + from_at;
+        _rat[el][rf] = *_constraint[el][rf] + from_at;
       }
       else {
-        _rat[el][rf] = from_at + period - *v;
+        _rat[el][rf] = from_at + period - *_constraint[el][rf];
       }
     }
   }

@@ -126,10 +126,11 @@ class Pin {
     Pin(const std::string&);
 
     inline const std::string& name() const;
-    inline const PrimaryInput* pi() const;
-    inline const PrimaryOutput* po() const;
+    inline const PrimaryInput* primary_input() const;
+    inline const PrimaryOutput* primary_output() const;
     inline const Cellpin* cellpin(Split) const;
     inline const Net* net() const;
+    inline const Gate* gate() const;
     
     bool is_input() const;
     bool is_output() const;
@@ -155,8 +156,9 @@ class Pin {
 
     size_t _idx;
 
-    Net* _net {nullptr};
-    SCC* _scc {nullptr};
+    Net*  _net  {nullptr};
+    SCC*  _scc  {nullptr};
+    Gate* _gate {nullptr};
 
     std::variant<PrimaryInput*, PrimaryOutput*, CellpinView> _handle;
 
@@ -197,8 +199,8 @@ class Pin {
     Arc* _find_fanin(Pin&);
     Arc* _find_fanout(Pin&);
     
-    inline PrimaryOutput* _po();
-    inline PrimaryInput* _pi();
+    inline PrimaryOutput* _primary_output();
+    inline PrimaryInput* _primary_input();
     
     std::optional<float> _delta_at(Split, Tran, Split, Tran) const;
     std::optional<float> _delta_slew(Split, Tran, Split, Tran) const;
@@ -254,7 +256,7 @@ inline size_t Pin::idx() const {
 }
 
 // Function: _pi
-inline PrimaryInput* Pin::_pi() {
+inline PrimaryInput* Pin::_primary_input() {
   if(auto ptr = std::get_if<PrimaryInput*>(&_handle)) {
     return *ptr; 
   }
@@ -262,7 +264,7 @@ inline PrimaryInput* Pin::_pi() {
 }
 
 // Function: pi
-inline const PrimaryInput* Pin::pi() const {
+inline const PrimaryInput* Pin::primary_input() const {
   if(auto ptr = std::get_if<PrimaryInput*>(&_handle)) {
     return *ptr; 
   }
@@ -270,7 +272,7 @@ inline const PrimaryInput* Pin::pi() const {
 }
 
 // Function: _po
-inline PrimaryOutput* Pin::_po() {
+inline PrimaryOutput* Pin::_primary_output() {
   if(auto ptr = std::get_if<PrimaryOutput*>(&_handle)) {
     return *ptr;
   }
@@ -278,11 +280,16 @@ inline PrimaryOutput* Pin::_po() {
 }
 
 // Function: po
-inline const PrimaryOutput* Pin::po() const {
+inline const PrimaryOutput* Pin::primary_output() const {
   if(auto ptr = std::get_if<PrimaryOutput*>(&_handle)) {
     return *ptr;
   }
   return nullptr;
+}
+
+// Function: gate
+inline const Gate* Pin::gate() const {
+  return _gate;
 }
 
 // Function: cellpin

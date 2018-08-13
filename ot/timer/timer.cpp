@@ -139,6 +139,7 @@ void Timer::_insert_gate(const std::string& gname, const std::string& cname) {
 
     auto& pin = _insert_pin(gname + ':' + cpname);
     pin._handle = cpv;
+    pin._gate = &gate;
     
     gate._pins.push_back(&pin);
   }
@@ -687,7 +688,7 @@ void Timer::_fprop_slew(Pin& pin) {
   pin._reset_slew();
 
   // PI
-  if(auto pi = pin.pi(); pi) {
+  if(auto pi = pin.primary_input(); pi) {
     FOR_EACH_EL_RF_IF(el, rf, pi->_slew[el][rf]) {
       pin._relax_slew(nullptr, el, rf, el, rf, *(pi->_slew[el][rf]));
     }
@@ -720,7 +721,7 @@ void Timer::_fprop_at(Pin& pin) {
   pin._reset_at();
 
   // PI
-  if(auto pi = pin.pi(); pi) {
+  if(auto pi = pin.primary_input(); pi) {
     FOR_EACH_EL_RF_IF(el, rf, pi->_at[el][rf]) {
       pin._relax_at(nullptr, el, rf, el, rf, *(pi->_at[el][rf]));
     }
@@ -764,7 +765,7 @@ void Timer::_bprop_rat(Pin& pin) {
   pin._reset_rat();
 
   // PO
-  if(auto po = pin.po(); po) {
+  if(auto po = pin.primary_output(); po) {
     FOR_EACH_EL_RF_IF(el, rf, po->_rat[el][rf]) {
       pin._relax_rat(nullptr, el, rf, el, rf, *(po->_rat[el][rf]));
     }
@@ -773,11 +774,13 @@ void Timer::_bprop_rat(Pin& pin) {
   // Test
   for(auto test : pin._tests) {
     FOR_EACH_EL_RF_IF(el, rf, test->_rat[el][rf]) {
-      if(!_cppr_analysis) {
-        pin._relax_rat(&test->_arc, el, rf, el, rf, *test->_rat[el][rf]);
+      if(test->_cppr_credit[el][rf]) {
+        pin._relax_rat(
+          &test->_arc, el, rf, el, rf, *test->_rat[el][rf] + *test->_cppr_credit[el][rf]
+        );
       }
       else {
-        pin._relax_rat(&test->_arc, el, rf, el, rf, *test->_rat[el][rf] + *test->_cppr_credit[el][rf]);
+        pin._relax_rat(&test->_arc, el, rf, el, rf, *test->_rat[el][rf]);
       }
     }
   }

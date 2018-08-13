@@ -3,98 +3,79 @@
 namespace ot {
 
 // Constructor
-Point::Point(const std::string& name, Tran rf, float in_at) :
-  pin   {name},
-  tran  {rf},
-  at    {in_at} {
+Point::Point(const Pin& p, Tran t, float v) :
+  pin        {p},
+  transition {t},
+  at         {v} {
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Constructor
-Path::Path(Split el, float slk) :
-  split {el},
-  slack {slk} {
+Path::Path(float slk, const Endpoint* ept) :
+  slack    {slk},
+  endpoint {ept} {
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Operator <<
 std::ostream& operator << (std::ostream& os, const Path& path) {
+
+  if(path.empty()) {
+    os << "empty path\n";
+  }
+
+  auto split = path.endpoint->split();
   
   // Print the head
-  os << "Endpoint     :   ";
-  if(path.empty()) os << "n/a"; else os << path.back().pin;
-  os << '\n';
-
-  os << "Startpoint   :   ";
-  if(path.empty()) os << "n/a"; else os << path.front().pin;
-  os << '\n';
-
-  os << "Path type    :   ";
-  if(!path.split) os << "n/a"; else os << to_string(*path.split);
-  os << '\n';
-
-  os << "Required Time:   ";
-  if(path.empty() || !path.split || !path.slack) {
-    os << "n/a"; 
-  } 
-  else {
-    os << (*path.split == EARLY ? path.back().at - *path.slack :
-                                  path.back().at + *path.slack );
-  }
-  os << '\n';
-
-  os << "Arrival Time :   ";
-  if(path.empty()) os << "n/a"; else os << path.back().at;
-  os << '\n';
-
-  os << "Slack        :   ";
-  if(!path.slack) os << "n/a"; else os << *path.slack;
-  os << '\n';
+  os << "Endpoint     :   " << path.back().pin.name()  << '\n';
+  os << "Startpoint   :   " << path.front().pin.name() << '\n';
+  os << "Analysis type:   " << to_string(split) << '\n';
+  os << "Required Time:   " << (split == EARLY ? path.back().at - path.slack :
+                                                 path.back().at + path.slack) 
+                            << '\n';
+  os << "Arrival Time :   " << path.back().at << '\n';
+  os << "Slack        :   " << path.slack << '\n';
   
-  // Print the body
-  if(!path.empty()) {
-
-    // find the maximum pin name
-    auto max_plen = std::max_element(path.begin(), path.end(), 
-      [] (const Point& lp, const Point& rp) {
-        return lp.pin.size() < rp.pin.size();
-      }
-    )->pin.size();
-
-    os << std::setfill('-') << std::setw(31 + max_plen) << '\n'
-       << std::setfill(' ') << std::setw(10) << "Arrival"  
-                            << std::setw(12) << "Delay"
-                            << std::setw(6)  << "Dir" 
-                            << std::setw(2  + max_plen)  << "Pin"   << '\n'
-       << std::setfill('-') << std::setw(31 + max_plen) << '\n';
-    
-    // trace
-    os << std::setfill(' ') << std::fixed << std::setprecision(3);
-    std::optional<float> pi_at;
-    for(const auto& p : path) {
-      // arrival time
-      os << std::setw(10) << p.at << "  ";
-      
-      // delay
-      os << std::setw(10);
-      if(pi_at) os << p.at - *pi_at;
-      else os << "n/a";
-      os << "  ";
-
-      // transition
-      os << std::setw(4) << to_string(p.tran) << "  ";
-
-      // pin name
-      os << std::setw(max_plen) << p.pin << '\n';
-      
-      // cursor
-      pi_at = p.at;
+  // find the maximum pin name
+  auto max_plen = std::max_element(path.begin(), path.end(), 
+    [] (const Point& lp, const Point& rp) {
+      return lp.pin.name().size() < rp.pin.name().size();
     }
+  )->pin.name().size();
+
+  os << std::setfill('-') << std::setw(31 + max_plen) << '\n'
+     << std::setfill(' ') << std::setw(10) << "Arrival"  
+                          << std::setw(12) << "Delay"
+                          << std::setw(6)  << "Dir" 
+                          << std::setw(2  + max_plen)  << "Pin"   << '\n'
+     << std::setfill('-') << std::setw(31 + max_plen) << '\n';
+  
+  // trace
+  os << std::setfill(' ') << std::fixed << std::setprecision(3);
+  std::optional<float> pi_at;
+  for(const auto& p : path) {
+    // arrival time
+    os << std::setw(10) << p.at << "  ";
     
-    os << std::setfill('-') << std::setw(31 + max_plen) << '\n';
+    // delay
+    os << std::setw(10);
+    if(pi_at) os << p.at - *pi_at;
+    else os << "n/a";
+    os << "  ";
+
+    // transition
+    os << std::setw(4) << to_string(p.transition) << "  ";
+
+    // pin name
+    os << std::setw(max_plen) << p.pin.name() << '\n';
+    
+    // cursor
+    pi_at = p.at;
   }
+  
+  os << std::setfill('-') << std::setw(31 + max_plen) << '\n';
   
   return os;
 }
@@ -176,8 +157,9 @@ void PathHeap::merge_and_fit(PathHeap&& rhs, size_t K) {
 // Function: dump
 std::string PathHeap::dump() const {
   std::ostringstream oss;
-  for(const auto& path : _paths) {
-    oss << path->slack.value() << ' ';
+  oss << "# Paths: " << _paths.size() << '\n';
+  for(size_t i=0; i<_paths.size(); ++i) {
+    oss << "slack[" << i << "]: " << _paths[i]->slack << '\n'; 
   }
   return oss.str();
 }
@@ -223,9 +205,9 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
   // No need to generate prefix tree
   if(K == 1) {
     std::vector<Path> paths;
-    paths.emplace_back(epts[0]->_el, epts[0]->slack());
+    paths.emplace_back(epts[0]->slack(), epts[0]);
     auto sfxt = _sfxt_cache(*epts[0]);
-    assert(std::fabs(*sfxt.slack() - *paths[0].slack) < 1e-3);
+    assert(std::fabs(*sfxt.slack() - paths[0].slack) < 1e-3);
     _recover_datapath(paths[0], sfxt);
     return paths;
   }
@@ -263,7 +245,7 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
 
   assert(v->_at[el][rf]);
   
-  path.emplace_front(v->_name, rf, *v->_at[el][rf]);
+  path.emplace_front(*v, rf, *v->_at[el][rf]);
 
   if(auto arc = v->_at[el][rf]->pi_arc; arc) {
     _recover_prefix(path, sfxt, _encode_pin(arc->_from, v->_at[el][rf]->pi_rf));
@@ -283,7 +265,7 @@ void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
 
   // data path source
   assert(upin->_at[sfxt._el][urf]);
-  path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
+  path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf]);
   
   // recursive
   while(u != sfxt._T) {
@@ -291,8 +273,8 @@ void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
     auto a = _idx2arc[*sfxt.__link[u]];
     u = *sfxt.__tree[u];
     std::tie(upin, urf) = _decode_pin(u);
-    auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][urf];
-    path.emplace_back(upin->_name, urf, at);
+    auto at = path.back().at + *a->_delay[sfxt._el][path.back().transition][urf];
+    path.emplace_back(*upin, urf, at);
   }
 }
 
@@ -314,13 +296,13 @@ void Timer::_recover_datapath(
   // data path source
   if(node->from == sfxt._S) {
     assert(upin->_at[sfxt._el][urf]);
-    path.emplace_back(upin->_name, urf, *upin->_at[sfxt._el][urf]);
+    path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf]);
   }
   // internal deviation
   else {
     assert(!path.empty());
-    auto at = path.back().at + *node->arc->_delay[sfxt._el][path.back().tran][urf];
-    path.emplace_back(upin->_name, urf, at);
+    auto at = path.back().at + *node->arc->_delay[sfxt._el][path.back().transition][urf];
+    path.emplace_back(*upin, urf, at);
   }
 
   while(u != v) {
@@ -328,8 +310,8 @@ void Timer::_recover_datapath(
     auto a = _idx2arc[*sfxt.__link[u]];
     u = *sfxt.__tree[u];   
     std::tie(upin, urf) = _decode_pin(u);
-    auto at = path.back().at + *a->_delay[sfxt._el][path.back().tran][urf]; 
-    path.emplace_back(upin->_name, urf, at);
+    auto at = path.back().at + *a->_delay[sfxt._el][path.back().transition][urf]; 
+    path.emplace_back(*upin, urf, at);
   }
 
 }

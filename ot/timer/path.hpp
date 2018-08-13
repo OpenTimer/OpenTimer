@@ -5,41 +5,44 @@
 
 namespace ot {
 
+class Pin;
+class Endpoint;
+
 // ------------------------------------------------------------------------------------------------
   
 // Struct: Point
 struct Point {
 
-  std::string pin;    // pin name
-  Tran  tran;         // rise/fall
-  float at;           // delay
+  const Pin& pin;     // pin reference
+  Tran  transition;   // rise/fall
+  float at;           // arrival
 
-  Point(const std::string&, Tran, float);
+  Point(const Pin&, Tran, float);
 };
 
 // ------------------------------------------------------------------------------------------------
 
 // Struct: Path
 struct Path : std::list<Point> {
-  
-  Path() = default;
-  Path(Split, float);
 
+  Path() = default;
+  Path(float, const Endpoint*);
   Path(const Path&) = delete;
   Path(Path&&) = default; 
 
   Path& operator = (const Path&) = delete;
   Path& operator = (Path&&) = default;
 
-  std::optional<Split> split;
-  std::optional<float> slack;
+  float slack {std::numeric_limits<float>::quiet_NaN()};
+  
+  const Endpoint* endpoint {nullptr};
 };
 
 // Operator << ostream
 std::ostream& operator << (std::ostream&, const Path&);
 
 // EmptyPath
-inline const Path empty_path;
+inline const Path empty_path {0.0f, nullptr};
 
 // ------------------------------------------------------------------------------------------------
 

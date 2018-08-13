@@ -180,7 +180,7 @@ bool Pin::is_datapath_source() const {
     return (cp->is_clock && cp->is_clock.value() == true);
   }
   // Primary input
-  else if(pi()) {
+  else if(primary_input()) {
     return true;
   }
   // Otherwise

@@ -42,6 +42,8 @@ int main(int argc, char* argv[]) {
   std::ofstream ofs(output);
   std::ifstream ifs(ops);
 
+  ofs << std::fixed << std::setprecision(3);
+
   while(std::getline(ifs, line)) {
     
     auto tokens = ot::split(line); 
@@ -223,10 +225,29 @@ int main(int argc, char* argv[]) {
           K = std::stoul(tokens[i+1]);
         }
       }
+
+      if(K == 0) {
+        continue;
+      }
+
       auto paths = timer.worst_paths(K);
-      std::cout << "report_worst_paths " << paths.size() << '\n';
-      for(auto& path : paths) {
-        std::cout << *path.slack << '\n';
+      ofs << "report_worst_paths " << paths.size() << '\n';
+
+      for(size_t i=0; i<paths.size(); ++i) {
+        ofs << "Path " << i+1 << ": ";
+        if(paths[i].endpoint->primary_output()) {
+          ofs << "RAT";
+        }
+        else {
+          ofs << (paths[i].endpoint->split() == ot::EARLY ? "HOLD" : "SETUP");
+        }
+        ofs << ' ' << paths[i].slack << ' ' << paths[i].size() 
+                  << ' ' << (paths[i].endpoint->split() == ot::EARLY ? "E" : "L") << '\n';
+        
+        for(auto itr = paths[i].rbegin(); itr != paths[i].rend(); ++itr) {
+          ofs << itr->pin.name() << ' ' 
+                    << (itr->transition == ot::RISE ? 'R' : 'F') << '\n';
+        }
       }
     }
     else {

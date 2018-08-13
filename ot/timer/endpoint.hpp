@@ -20,9 +20,6 @@ class Endpoint {
 
   friend class Timer;
 
-  using TestHandle = std::reference_wrapper<Test>;
-  using PrimaryOutputHandle = std::reference_wrapper<PrimaryOutput>;
-
   public:
     
     Endpoint(Split, Tran, Test&);
@@ -31,24 +28,21 @@ class Endpoint {
     float slack() const;
 
     inline Split split() const;
-    inline Tran tran() const;
+    inline Tran transition() const;
 
-    bool is_po() const;
-    bool is_test() const;
+    inline const Test* test() const;
+    inline const PrimaryOutput* primary_output() const;
 
-    bool operator <  (const Endpoint&) const;
-    bool operator >  (const Endpoint&) const;
-    bool operator == (const Endpoint&) const;
+    inline bool operator <  (const Endpoint&) const;
+    inline bool operator >  (const Endpoint&) const;
+    inline bool operator == (const Endpoint&) const;
 
   private:
 
     Split _el;
     Tran _rf;
 
-    std::variant<TestHandle, PrimaryOutputHandle> _handle;
-
-    Test& _test();
-    PrimaryOutput& _po();
+    std::variant<Test*, PrimaryOutput*> _handle;
 };
 
 // Function: split
@@ -56,38 +50,35 @@ inline Split Endpoint::split() const {
   return _el;
 }
 
-// Function: tran
-inline Tran Endpoint::tran() const {
+// Function: transition
+inline Tran Endpoint::transition() const {
   return _rf;
 }
 
-// ------------------------------------------------------------------------------------------------
+// Function: test
+inline const Test* Endpoint::test() const {
+  return std::get<Test*>(_handle);
+}
 
-/*// Class: EndpointHeap
-class EndpointHeap {
-  
-  public:
+// Function: primary_output
+inline const PrimaryOutput* Endpoint::primary_output() const {
+  return std::get<PrimaryOutput*>(_handle);
+}
 
-    void clear();
-    void remove(Endpoint&);
-    void insert(Endpoint&);
+// Operator <
+inline bool Endpoint::operator < (const Endpoint& rhs) const {
+  return slack() < rhs.slack();
+}
 
-    bool empty() const;
-    
-    size_t size() const;
+// Operator >
+inline bool Endpoint::operator > (const Endpoint& rhs) const {
+  return slack() > rhs.slack();
+}
 
-    Endpoint* pop();
-    Endpoint* top() const;
-
-  private:
-    
-    std::vector<Endpoint*> _array;
-
-    bool _cmp_slack(const Endpoint&, const Endpoint&) const;
-    void _bubble_up(size_t, Endpoint&);
-    void _bubble_down(size_t, Endpoint&);
-};
-*/
+// Operator ==
+inline bool Endpoint::operator == (const Endpoint& rhs) const {
+  return slack() == rhs.slack();
+}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 
