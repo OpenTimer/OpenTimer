@@ -1,0 +1,69 @@
+clock tau_clk 400.0 50
+at phy_tx_mode 0.0 0.0 0.0 0.0
+slew phy_tx_mode 0.0 0.0 0.0 0.0
+at DataOut_i_3_ 0.0 0.0 0.0 0.0
+slew DataOut_i_3_ 0.0 0.0 0.0 0.0
+at tau_clk 0.0 0.0 0.0 0.0
+slew tau_clk 0.0 0.0 0.0 0.0
+at DataOut_i_1_ 0.0 0.0 0.0 0.0
+slew DataOut_i_1_ 0.0 0.0 0.0 0.0
+at DataOut_i_7_ 0.0 0.0 0.0 0.0
+slew DataOut_i_7_ 0.0 0.0 0.0 0.0
+at DataOut_i_5_ 0.0 0.0 0.0 0.0
+slew DataOut_i_5_ 0.0 0.0 0.0 0.0
+at rxd 0.0 0.0 0.0 0.0
+slew rxd 0.0 0.0 0.0 0.0
+at rst 0.0 0.0 0.0 0.0
+slew rst 0.0 0.0 0.0 0.0
+at TxValid_i 0.0 0.0 0.0 0.0
+slew TxValid_i 0.0 0.0 0.0 0.0
+at rxdp 0.0 0.0 0.0 0.0
+slew rxdp 0.0 0.0 0.0 0.0
+at rxdn 0.0 0.0 0.0 0.0
+slew rxdn 0.0 0.0 0.0 0.0
+at DataOut_i_2_ 0.0 0.0 0.0 0.0
+slew DataOut_i_2_ 0.0 0.0 0.0 0.0
+at DataOut_i_0_ 0.0 0.0 0.0 0.0
+slew DataOut_i_0_ 0.0 0.0 0.0 0.0
+at DataOut_i_4_ 0.0 0.0 0.0 0.0
+slew DataOut_i_4_ 0.0 0.0 0.0 0.0
+at DataOut_i_6_ 0.0 0.0 0.0 0.0
+slew DataOut_i_6_ 0.0 0.0 0.0 0.0
+rat DataIn_o_2_ 0.0 0.0 0.0 0.0
+load DataIn_o_2_ 4.0
+rat txdn 0.0 0.0 0.0 0.0
+load txdn 4.0
+rat txdp 0.0 0.0 0.0 0.0
+load txdp 4.0
+rat LineState_o_0_ 0.0 0.0 0.0 0.0
+load LineState_o_0_ 4.0
+rat RxValid_o 0.0 0.0 0.0 0.0
+load RxValid_o 4.0
+rat txoe 0.0 0.0 0.0 0.0
+load txoe 4.0
+rat LineState_o_1_ 0.0 0.0 0.0 0.0
+load LineState_o_1_ 4.0
+rat DataIn_o_7_ 0.0 0.0 0.0 0.0
+load DataIn_o_7_ 4.0
+rat DataIn_o_4_ 0.0 0.0 0.0 0.0
+load DataIn_o_4_ 4.0
+rat usb_rst 0.0 0.0 0.0 0.0
+load usb_rst 4.0
+rat DataIn_o_5_ 0.0 0.0 0.0 0.0
+load DataIn_o_5_ 4.0
+rat DataIn_o_3_ 0.0 0.0 0.0 0.0
+load DataIn_o_3_ 4.0
+rat RxError_o 0.0 0.0 0.0 0.0
+load RxError_o 4.0
+rat g1897_u0_o 0.0 0.0 0.0 0.0
+load g1897_u0_o 4.0
+rat DataIn_o_1_ 0.0 0.0 0.0 0.0
+load DataIn_o_1_ 4.0
+rat TxReady_o 0.0 0.0 0.0 0.0
+load TxReady_o 4.0
+rat DataIn_o_0_ 0.0 0.0 0.0 0.0
+load DataIn_o_0_ 4.0
+rat RxActive_o 0.0 0.0 0.0 0.0
+load RxActive_o 4.0
+rat DataIn_o_6_ 0.0 0.0 0.0 0.0
+load DataIn_o_6_ 4.0

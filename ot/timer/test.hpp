@@ -34,6 +34,7 @@ class Test {
     Arc& _arc;
     
     std::optional<std::list<Test>::iterator> _satellite;
+    std::optional<std::list<Test*>::iterator> _pin_satellite;
     
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _cppr_credit;

@@ -231,6 +231,7 @@ int main(int argc, char* argv[]) {
       }
 
       auto paths = timer.worst_paths(K);
+      
       ofs << "report_worst_paths " << paths.size() << '\n';
 
       for(size_t i=0; i<paths.size(); ++i) {
@@ -239,7 +240,7 @@ int main(int argc, char* argv[]) {
           ofs << "RAT";
         }
         else {
-          ofs << (paths[i].endpoint->split() == ot::EARLY ? "HOLD" : "SETUP");
+          ofs << (paths[i].endpoint->split() == ot::EARLY ? "Hold" : "Setup");
         }
         ofs << ' ' << paths[i].slack << ' ' << paths[i].size() 
                   << ' ' << (paths[i].endpoint->split() == ot::EARLY ? "E" : "L") << '\n';

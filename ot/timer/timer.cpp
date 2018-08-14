@@ -81,9 +81,62 @@ void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
     OT_LOGE_RIF(!cell[EARLY] || !cell[LATE], "cell ", cname, " not found");
 
     auto& gate = gitr->second;
-    
-    // Remap the cell
-    gate._repower(cell);
+
+    // Remap the cellpin
+    for(auto pin : gate._pins) {
+      FOR_EACH_EL(el) {
+        assert(pin->cellpin(el));
+        if(const auto cpin = cell[el]->cellpin(pin->cellpin(el)->name)) {
+          pin->_remap_cellpin(el, *cpin);
+        }
+        else {
+          OT_LOGE(
+            "repower ", gname, " with ", cname, " failed (cellpin mismatched)"
+          );  
+        }
+      }
+    }
+
+    // reconstruct the timing and tests
+    for(auto test : gate._tests) {
+      _remove_test(*test);
+    }
+    gate._tests.clear();
+
+    for(auto arc : gate._arcs) {
+      _remove_arc(*arc);
+    }
+    gate._arcs.clear();
+  
+    // Insert arcs
+    FOR_EACH_EL(el) {
+
+      for(const auto& [cpname, cp] : cell[el]->cellpins) {
+        auto& to_pin = _insert_pin(gname + ':' + cpname);
+
+        for(const auto& tm : cp.timings) {
+          if(_is_redundant_timing(tm, el)) {
+            continue;
+          }
+
+          TimingView tv{nullptr, nullptr};
+          tv[el] = &tm;
+
+          auto& from_pin = _insert_pin(gname + ':' + tm.related_pin);
+          auto& arc = _insert_arc(from_pin, to_pin, tv);
+          
+          gate._arcs.push_back(&arc);
+          if(tm.is_constraint()) {
+            auto& test = _insert_test(arc);
+            gate._tests.push_back(&test);
+          }
+        }
+      }
+    }
+
+    gate._cell = cell;
+
+    //gate._repower(cell);
 
     // Insert the gate to the frontier
     for(auto pin : gate._pins) {
@@ -201,16 +254,16 @@ void Timer::_remove_gate(Gate& gate) {
     _disconnect_pin(*pin);
   }
 
+  // Remove associated test
+  for(auto test : gate._tests) {
+    _remove_test(*test);
+  }
+
   // Remove associated arcs
   for(auto arc : gate._arcs) {
     _remove_arc(*arc);
   }
 
-  // Remove associated test
-  for(auto test : gate._tests) {
-    _remove_test(*test);
-  }
-  
   // Disconnect the gate and remove the pins from the gate
   for(auto pin : gate._pins) {
     _remove_pin(*pin);
@@ -595,13 +648,16 @@ void Timer::_insert_primary_output(const std::string& name) {
 Test& Timer::_insert_test(Arc& arc) {
   auto& test = _tests.emplace_front(arc);
   test._satellite = _tests.begin();
-  arc._to._tests.push_front(&test);
+  test._pin_satellite = arc._to._tests.insert(arc._to._tests.end(), &test);
   return test;
 }
 
 // Procedure: _remove_test
 void Timer::_remove_test(Test& test) {
   assert(test._satellite);
+  if(test._pin_satellite) {
+    test._arc._to._tests.erase(*test._pin_satellite);
+  }
   _tests.erase(*test._satellite);
 }
 

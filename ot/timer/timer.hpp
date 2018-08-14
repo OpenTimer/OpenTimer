@@ -272,6 +272,8 @@ class Timer {
 
     inline auto _encode_pin(Pin&, Tran) const;
     inline auto _decode_pin(size_t) const;
+    inline auto _encode_arc(Arc&, Tran, Tran) const;
+    inline auto _decode_arc(size_t) const;
     
     constexpr auto _has_state(int) const;
     constexpr auto _insert_state(int);
@@ -368,6 +370,32 @@ inline auto Timer::_encode_pin(Pin& pin, Tran rf) const {
 // Function: _decode_pin
 inline auto Timer::_decode_pin(size_t idx) const {
   return std::make_tuple(_idx2pin[idx%_idx2pin.size()], idx<_idx2pin.size() ? RISE : FALL);
+}
+
+// Function: _encode_arc
+inline auto Timer::_encode_arc(Arc& arc, Tran frf, Tran trf) const {
+  if(frf == RISE) {
+    return arc._idx + (trf == RISE ? 0 : _idx2arc.size());
+  }
+  else {
+    return arc._idx + (trf == RISE ? _idx2arc.size()*2 : _idx2arc.size()*3);
+  }
+}
+
+// Function: _decode_arc
+inline auto Timer::_decode_arc(size_t idx) const {
+  if(auto s = _idx2arc.size(); idx < s) {
+    return std::make_tuple(_idx2arc[idx % s], RISE, RISE);
+  }
+  else if(idx < 2*s) {
+    return std::make_tuple(_idx2arc[idx % s], RISE, FALL);
+  }
+  else if(idx < 3*s) {
+    return std::make_tuple(_idx2arc[idx % s], FALL, RISE);
+  }
+  else {
+    return std::make_tuple(_idx2arc[idx % s], FALL, FALL);
+  }
 }
 
 // Function: _has_state

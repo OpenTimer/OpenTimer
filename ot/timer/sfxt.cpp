@@ -88,7 +88,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
       FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
         auto u = _encode_pin(arc->_from, urf);
         auto d = (el == EARLY) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
-        if(sfxt._relax(u, v, arc->_idx, d)) {
+        if(sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d)) {
           if(!sfxt.__spfa[u] || *sfxt.__spfa[u] == false) {
             queue.push(u);
             sfxt.__spfa[u] = true;

@@ -1,0 +1,89 @@
+*SPEF "IEEE 1481-1998"
+*DESIGN "c3_path"
+*DATE "Tue Nov 25 16:54:43 2014"
+*VENDOR "TAU 2015 Contest"
+*PROGRAM "Benchmark Parasitic Generator"
+*VERSION "0.0"
+*DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+*DIVIDER /
+*DELIMITER :
+*BUS_DELIMITER [ ]
+*T_UNIT 1 PS
+*C_UNIT 1 FF
+*R_UNIT 1 KOHM
+*L_UNIT 1 UH
+
+*D_NET nx1 0.0020
+*CONN
+*P nx1 I
+*I inst_0:A1 I
+*CAP
+1 nx1 0.0010
+2 inst_0:A1 0.0010
+*RES
+2 nx1 inst_0:A1 0.0010
+*END
+
+*D_NET nx3 0.0020
+*CONN
+*P nx3 I
+*I inst_1:A I
+*CAP
+1 nx3 0.0010
+2 inst_1:A 0.0010
+*RES
+2 nx3 inst_1:A 0.0010
+*END
+
+*D_NET nx33 10.0000
+*CONN
+*I inst_1:ZN O
+*P nx33 O
+*CAP
+1 inst_1:ZN 10.0000
+*RES
+2 inst_1:ZN nx33 0.5000
+*END
+
+*D_NET nx44 0.0010
+*CONN
+*I inst_2:Z O
+*P nx44 O
+*CAP
+1 inst_2:Z 0.0010
+*RES
+2 inst_2:Z nx44 0.0010
+*END
+
+*D_NET nx12 0.0010
+*CONN
+*I inst_0:ZN O
+*P nx12 O
+*CAP
+1 inst_0:ZN 0.0010
+*RES
+2 inst_0:ZN nx12 0.0010
+*END
+
+*D_NET nx2 0.0020
+*CONN
+*P nx2 I
+*I inst_0:A2 I
+*CAP
+1 nx2 0.0010
+2 inst_0:A2 0.0010
+*RES
+2 nx2 inst_0:A2 0.0010
+*END
+
+*D_NET nx4 10.0000
+*CONN
+*P nx4 I
+*I inst_2:A I
+*CAP
+1 nx4 5.0000
+2 inst_2:A 5.0000
+*RES
+2 nx4 inst_2:A 0.2000
+*END
+

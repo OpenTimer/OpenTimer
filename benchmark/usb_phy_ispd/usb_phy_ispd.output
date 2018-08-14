@@ -1,0 +1,1436 @@
+report_worst_paths 3
+Path 1: RAT -6368.375 58 L
+g1897_u0_o R
+g1897_u0:o R
+g1897_u0:a F
+g2511_u0:o F
+g2511_u0:a R
+g2512_u0:o R
+g2512_u0:a F
+g2513_u0:o F
+g2513_u0:a R
+g2122_u0:o R
+g2122_u0:b F
+g2225_u0:o F
+g2225_u0:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -6368.375 58 L
+g1897_u0_o F
+g1897_u0:o F
+g1897_u0:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:a R
+g2513_u0:o R
+g2513_u0:a F
+g2122_u0:o F
+g2122_u0:b R
+g2225_u0:o R
+g2225_u0:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: RAT -6140.202 52 L
+DataIn_o_7_ R
+i_rx_phy_hold_reg_reg_7__u0:o R
+i_rx_phy_hold_reg_reg_7__u0:ck R
+newInst_248:o R
+newInst_248:a F
+newInst_247:o F
+newInst_247:a R
+newInst_246:o R
+newInst_246:a F
+newInst_245:o F
+newInst_245:a R
+newInst_204:o R
+newInst_204:a F
+newInst_203:o F
+newInst_203:a R
+newInst_202:o R
+newInst_202:a F
+newInst_189:o F
+newInst_189:a R
+newInst_188:o R
+newInst_188:a F
+newInst_158:o F
+newInst_158:a R
+newInst_157:o R
+newInst_157:a F
+newInst_156:o F
+newInst_156:a R
+newInst_63:o R
+newInst_63:a F
+newInst_31:o F
+newInst_31:a R
+newInst_30:o R
+newInst_30:a F
+newInst_29:o F
+newInst_29:a R
+newInst_28:o R
+newInst_28:a F
+newInst_22:o F
+newInst_22:a R
+newInst_21:o R
+newInst_21:a F
+newInst_20:o F
+newInst_20:a R
+newInst_19:o R
+newInst_19:a F
+newInst_3:o F
+newInst_3:a R
+newInst_1:o R
+newInst_1:a F
+newInst_0:o F
+newInst_0:a R
+tau_clk R
+report_worst_paths 3
+Path 1: RAT -6368.375 58 L
+g1897_u0_o R
+g1897_u0:o R
+g1897_u0:a F
+g2511_u0:o F
+g2511_u0:a R
+g2512_u0:o R
+g2512_u0:a F
+g2513_u0:o F
+g2513_u0:a R
+g2122_u0:o R
+g2122_u0:b F
+g2225_u0:o F
+g2225_u0:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -6368.375 58 L
+g1897_u0_o F
+g1897_u0:o F
+g1897_u0:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:a R
+g2513_u0:o R
+g2513_u0:a F
+g2122_u0:o F
+g2122_u0:b R
+g2225_u0:o R
+g2225_u0:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: RAT -6140.202 52 L
+DataIn_o_7_ R
+i_rx_phy_hold_reg_reg_7__u0:o R
+i_rx_phy_hold_reg_reg_7__u0:ck R
+newInst_248:o R
+newInst_248:a F
+newInst_247:o F
+newInst_247:a R
+newInst_246:o R
+newInst_246:a F
+newInst_245:o F
+newInst_245:a R
+newInst_204:o R
+newInst_204:a F
+newInst_203:o F
+newInst_203:a R
+newInst_202:o R
+newInst_202:a F
+newInst_189:o F
+newInst_189:a R
+newInst_188:o R
+newInst_188:a F
+newInst_158:o F
+newInst_158:a R
+newInst_157:o R
+newInst_157:a F
+newInst_156:o F
+newInst_156:a R
+newInst_63:o R
+newInst_63:a F
+newInst_31:o F
+newInst_31:a R
+newInst_30:o R
+newInst_30:a F
+newInst_29:o F
+newInst_29:a R
+newInst_28:o R
+newInst_28:a F
+newInst_22:o F
+newInst_22:a R
+newInst_21:o R
+newInst_21:a F
+newInst_20:o F
+newInst_20:a R
+newInst_19:o R
+newInst_19:a F
+newInst_3:o F
+newInst_3:a R
+newInst_1:o R
+newInst_1:a F
+newInst_0:o F
+newInst_0:a R
+tau_clk R
+report_worst_paths 3
+Path 1: RAT -9491.133 58 L
+g1897_u0_o R
+g1897_u0:o R
+g1897_u0:a F
+g2511_u0:o F
+g2511_u0:a R
+g2512_u0:o R
+g2512_u0:a F
+g2513_u0:o F
+g2513_u0:a R
+g2122_u0:o R
+g2122_u0:b F
+g2225_u0:o F
+g2225_u0:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -9491.133 58 L
+g1897_u0_o F
+g1897_u0:o F
+g1897_u0:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:a R
+g2513_u0:o R
+g2513_u0:a F
+g2122_u0:o F
+g2122_u0:b R
+g2225_u0:o R
+g2225_u0:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: RAT -8978.606 38 L
+g1897_u0_o F
+g1897_u0:o F
+g1897_u0:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:b R
+i_rx_phy_fs_ce_reg_u0:o R
+i_rx_phy_fs_ce_reg_u0:ck R
+newInst_284:o R
+newInst_284:a F
+newInst_176:o F
+newInst_176:a R
+newInst_175:o R
+newInst_175:a F
+newInst_174:o F
+newInst_174:a R
+newInst_38:o R
+newInst_38:a F
+newInst_37:o F
+newInst_37:a R
+newInst_36:o R
+newInst_36:a F
+newInst_26:o F
+newInst_26:a R
+newInst_25:o R
+newInst_25:a F
+newInst_24:o F
+newInst_24:a R
+newInst_23:o R
+newInst_23:a F
+newInst_15:o F
+newInst_15:a R
+newInst_14:o R
+newInst_14:a F
+newInst_0:o F
+newInst_0:a R
+tau_clk R
+report_worst_paths 3
+Path 1: RAT -11131.188 62 L
+g1897_u0_o R
+TAUGATE_15:o R
+TAUGATE_15:a F
+g1897_u0:o F
+g1897_u0:a R
+TAUGATE_44:o R
+TAUGATE_44:a F
+g2511_u0:o F
+g2511_u0:a R
+g2512_u0:o R
+g2512_u0:a F
+g2513_u0:o F
+g2513_u0:a R
+g2122_u0:o R
+g2122_u0:b F
+g2225_u0:o F
+g2225_u0:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -11131.188 62 L
+g1897_u0_o F
+TAUGATE_15:o F
+TAUGATE_15:a R
+g1897_u0:o R
+g1897_u0:a F
+TAUGATE_44:o F
+TAUGATE_44:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:a R
+g2513_u0:o R
+g2513_u0:a F
+g2122_u0:o F
+g2122_u0:b R
+g2225_u0:o R
+g2225_u0:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: RAT -9218.566 44 L
+g1897_u0_o F
+TAUGATE_15:o F
+TAUGATE_15:a R
+g1897_u0:o R
+g1897_u0:a F
+TAUGATE_44:o F
+TAUGATE_44:a R
+g2511_u0:o R
+g2511_u0:a F
+g2512_u0:o F
+g2512_u0:a R
+g2513_u0:o R
+g2513_u0:b F
+g2278_u0:o F
+g2278_u0:a R
+i_rx_phy_one_cnt_reg_0__u0:o R
+i_rx_phy_one_cnt_reg_0__u0:ck R
+newInst_244:o R
+newInst_244:a F
+newInst_243:o F
+newInst_243:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+report_worst_paths 3
+Path 1: RAT -4467.015 80 L
+g1897_u0_o R
+TAUGATE_522:o R
+TAUGATE_522:a F
+TAUGATE_15:o F
+TAUGATE_15:a R
+TAUGATE_526:o R
+TAUGATE_526:a F
+g1897_u0:o F
+g1897_u0:a R
+TAUGATE_708:o R
+TAUGATE_708:a F
+TAUGATE_44:o F
+TAUGATE_44:a R
+TAUGATE_690:o R
+TAUGATE_690:a F
+g2511_u0:o F
+g2511_u0:a R
+TAUGATE_434:o R
+TAUGATE_434:a F
+g2512_u0:o F
+g2512_u0:a R
+TAUGATE_249:o R
+TAUGATE_249:a F
+g2513_u0:o F
+g2513_u0:a R
+TAUGATE_335:o R
+TAUGATE_335:a F
+g2122_u0:o F
+g2122_u0:b R
+TAUGATE_693:o R
+TAUGATE_693:a F
+g2225_u0:o F
+g2225_u0:a R
+TAUGATE_116:o R
+TAUGATE_116:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -4467.015 80 L
+g1897_u0_o F
+TAUGATE_522:o F
+TAUGATE_522:a R
+TAUGATE_15:o R
+TAUGATE_15:a F
+TAUGATE_526:o F
+TAUGATE_526:a R
+g1897_u0:o R
+g1897_u0:a F
+TAUGATE_708:o F
+TAUGATE_708:a R
+TAUGATE_44:o R
+TAUGATE_44:a F
+TAUGATE_690:o F
+TAUGATE_690:a R
+g2511_u0:o R
+g2511_u0:a F
+TAUGATE_434:o F
+TAUGATE_434:a R
+g2512_u0:o R
+g2512_u0:a F
+TAUGATE_249:o F
+TAUGATE_249:a R
+g2513_u0:o R
+g2513_u0:a F
+TAUGATE_335:o F
+TAUGATE_335:a R
+g2122_u0:o R
+g2122_u0:b F
+TAUGATE_693:o F
+TAUGATE_693:a R
+g2225_u0:o R
+g2225_u0:a F
+TAUGATE_116:o F
+TAUGATE_116:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: Setup -4347.644 48 L
+i_tx_phy_hold_reg_reg_2__u0:d R
+TAUGATE_597:o R
+TAUGATE_597:a F
+TAUGATE_59:o F
+TAUGATE_59:a R
+TAUGATE_452:o R
+TAUGATE_452:a F
+g1739_u1:o F
+g1739_u1:a R
+TAUGATE_679:o R
+TAUGATE_679:a F
+g1739_u0:o F
+g1739_u0:b R
+TAUGATE_278:o R
+TAUGATE_278:a F
+g2660_u0:o F
+g2660_u0:a R
+TAUGATE_566:o R
+TAUGATE_566:a F
+g2661_u0:o F
+g2661_u0:a R
+TAUGATE_390:o R
+TAUGATE_390:a F
+g2662_u0:o F
+g2662_u0:a R
+TAUGATE_120:o R
+TAUGATE_120:a F
+g2648_u0:o F
+g2648_u0:a R
+TAUGATE_429:o R
+TAUGATE_429:a F
+i_tx_phy_state_reg_1__u0:o F
+i_tx_phy_state_reg_1__u0:ck R
+newInst_47:o R
+newInst_47:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+report_worst_paths 3
+Path 1: RAT -4398.225 78 L
+g1897_u0_o R
+TAUGATE_522:o R
+TAUGATE_522:a F
+TAUGATE_15:o F
+TAUGATE_15:a R
+TAUGATE_526:o R
+TAUGATE_526:a F
+g1897_u0:o F
+g1897_u0:a R
+TAUGATE_44:o R
+TAUGATE_44:a F
+TAUGATE_690:o F
+TAUGATE_690:a R
+g2511_u0:o R
+g2511_u0:a F
+TAUGATE_434:o F
+TAUGATE_434:a R
+g2512_u0:o R
+g2512_u0:a F
+TAUGATE_249:o F
+TAUGATE_249:a R
+g2513_u0:o R
+g2513_u0:a F
+TAUGATE_335:o F
+TAUGATE_335:a R
+g2122_u0:o R
+g2122_u0:b F
+TAUGATE_693:o F
+TAUGATE_693:a R
+g2225_u0:o R
+g2225_u0:a F
+TAUGATE_116:o F
+TAUGATE_116:a R
+i_rx_phy_one_cnt_reg_2__u0:o R
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: RAT -4398.225 78 L
+g1897_u0_o F
+TAUGATE_522:o F
+TAUGATE_522:a R
+TAUGATE_15:o R
+TAUGATE_15:a F
+TAUGATE_526:o F
+TAUGATE_526:a R
+g1897_u0:o R
+g1897_u0:a F
+TAUGATE_44:o F
+TAUGATE_44:a R
+TAUGATE_690:o R
+TAUGATE_690:a F
+g2511_u0:o F
+g2511_u0:a R
+TAUGATE_434:o R
+TAUGATE_434:a F
+g2512_u0:o F
+g2512_u0:a R
+TAUGATE_249:o R
+TAUGATE_249:a F
+g2513_u0:o F
+g2513_u0:a R
+TAUGATE_335:o R
+TAUGATE_335:a F
+g2122_u0:o F
+g2122_u0:b R
+TAUGATE_693:o R
+TAUGATE_693:a F
+g2225_u0:o F
+g2225_u0:a R
+TAUGATE_116:o R
+TAUGATE_116:a F
+i_rx_phy_one_cnt_reg_2__u0:o F
+i_rx_phy_one_cnt_reg_2__u0:ck R
+newInst_239:o R
+newInst_239:a F
+newInst_204:o F
+newInst_204:a R
+newInst_203:o R
+newInst_203:a F
+newInst_202:o F
+newInst_202:a R
+newInst_189:o R
+newInst_189:a F
+newInst_188:o F
+newInst_188:a R
+newInst_158:o R
+newInst_158:a F
+newInst_157:o F
+newInst_157:a R
+newInst_156:o R
+newInst_156:a F
+newInst_63:o F
+newInst_63:a R
+newInst_31:o R
+newInst_31:a F
+newInst_30:o F
+newInst_30:a R
+newInst_29:o R
+newInst_29:a F
+newInst_28:o F
+newInst_28:a R
+newInst_22:o R
+newInst_22:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: Setup -4347.644 48 L
+i_tx_phy_hold_reg_reg_2__u0:d R
+TAUGATE_597:o R
+TAUGATE_597:a F
+TAUGATE_59:o F
+TAUGATE_59:a R
+TAUGATE_452:o R
+TAUGATE_452:a F
+g1739_u1:o F
+g1739_u1:a R
+TAUGATE_679:o R
+TAUGATE_679:a F
+g1739_u0:o F
+g1739_u0:b R
+TAUGATE_278:o R
+TAUGATE_278:a F
+g2660_u0:o F
+g2660_u0:a R
+TAUGATE_566:o R
+TAUGATE_566:a F
+g2661_u0:o F
+g2661_u0:a R
+TAUGATE_390:o R
+TAUGATE_390:a F
+g2662_u0:o F
+g2662_u0:a R
+TAUGATE_120:o R
+TAUGATE_120:a F
+g2648_u0:o F
+g2648_u0:a R
+TAUGATE_429:o R
+TAUGATE_429:a F
+i_tx_phy_state_reg_1__u0:o F
+i_tx_phy_state_reg_1__u0:ck R
+newInst_47:o R
+newInst_47:a F
+newInst_21:o F
+newInst_21:a R
+newInst_20:o R
+newInst_20:a F
+newInst_19:o F
+newInst_19:a R
+newInst_3:o R
+newInst_3:a F
+newInst_1:o F
+newInst_1:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+report_worst_paths 3
+Path 1: Setup -5813.505 42 L
+i_tx_phy_state_reg_0__u0:d R
+g1695_u0:o R
+g1695_u0:b F
+TAUGATE_444:o F
+TAUGATE_444:a R
+g2460_u0:o R
+g2460_u0:a F
+g36_u0:o F
+g36_u0:a R
+TAUGATE_101:o R
+TAUGATE_101:a F
+g39_u0:o F
+g39_u0:a R
+g2664_u0:o R
+g2664_u0:a F
+g2660_u0:o F
+g2660_u0:b R
+TAUGATE_616:o R
+TAUGATE_616:a F
+TAUGATE_472:o F
+TAUGATE_472:a R
+i_tx_phy_state_reg_0__u0:o R
+i_tx_phy_state_reg_0__u0:ck R
+newInst_51:o R
+newInst_51:a F
+newInst_50:o F
+newInst_50:a R
+newInst_49:o R
+newInst_49:a F
+newInst_48:o F
+newInst_48:a R
+newInst_24:o R
+newInst_24:a F
+newInst_23:o F
+newInst_23:a R
+newInst_15:o R
+newInst_15:a F
+newInst_14:o F
+newInst_14:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 2: Setup -5301.905 36 L
+i_tx_phy_hold_reg_reg_2__u0:d F
+TAUGATE_59:o F
+TAUGATE_59:a R
+TAUGATE_452:o R
+TAUGATE_452:a F
+g1739_u1:o F
+g1739_u1:a R
+g1739_u0:o R
+g1739_u0:b F
+g2660_u0:o F
+g2660_u0:b R
+TAUGATE_616:o R
+TAUGATE_616:a F
+TAUGATE_472:o F
+TAUGATE_472:a R
+i_tx_phy_state_reg_0__u0:o R
+i_tx_phy_state_reg_0__u0:ck R
+newInst_51:o R
+newInst_51:a F
+newInst_50:o F
+newInst_50:a R
+newInst_49:o R
+newInst_49:a F
+newInst_48:o F
+newInst_48:a R
+newInst_24:o R
+newInst_24:a F
+newInst_23:o F
+newInst_23:a R
+newInst_15:o R
+newInst_15:a F
+newInst_14:o F
+newInst_14:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+Path 3: Setup -5216.935 32 L
+i_tx_phy_hold_reg_reg_0__u0:d F
+TAUGATE_606:o F
+TAUGATE_606:a R
+g1737_u0:o R
+g1737_u0:b F
+g2660_u0:o F
+g2660_u0:b R
+TAUGATE_616:o R
+TAUGATE_616:a F
+TAUGATE_472:o F
+TAUGATE_472:a R
+i_tx_phy_state_reg_0__u0:o R
+i_tx_phy_state_reg_0__u0:ck R
+newInst_51:o R
+newInst_51:a F
+newInst_50:o F
+newInst_50:a R
+newInst_49:o R
+newInst_49:a F
+newInst_48:o F
+newInst_48:a R
+newInst_24:o R
+newInst_24:a F
+newInst_23:o F
+newInst_23:a R
+newInst_15:o R
+newInst_15:a F
+newInst_14:o F
+newInst_14:a R
+newInst_0:o R
+newInst_0:a F
+tau_clk F
+913.232
+913.232
+954.461
+954.461
+0.000
+0.000
+0.000
+0.000
+913.232
+913.232
+-954.461
+-954.461
+2159.758
+2159.758
+2319.471
+2319.471
+0.000
+0.000
+0.000
+0.000
+2159.758
+2159.758
+-2319.471
+-2319.471
+527.195
+527.195
+553.252
+553.252
+0.000
+0.000
+0.000
+0.000
+527.195
+527.195
+-553.252
+-553.252
+722.494
+722.494
+767.527
+767.527
+0.000
+0.000
+0.000
+0.000
+722.494
+722.494
+-767.527
+-767.527
+967.604
+967.604
+1024.047
+1024.047
+0.000
+0.000
+0.000
+0.000
+967.604
+967.604
+-1024.047
+-1024.047
+1294.560
+1294.560
+1360.799
+1360.799
+0.000
+0.000
+0.000
+0.000
+1294.560
+1294.560
+-1360.799
+-1360.799
+1038.669
+1038.669
+1091.568
+1091.568
+0.000
+0.000
+0.000
+0.000
+1038.669
+1038.669
+-1091.568
+-1091.568
+2688.556
+2688.556
+2883.925
+2883.925
+0.000
+0.000
+0.000
+0.000
+2688.556
+2688.556
+-2883.925
+-2883.925
+2652.013
+2652.013
+2835.539
+2835.539
+0.000
+0.000
+0.000
+0.000
+2652.013
+2652.013
+-2835.539
+-2835.539
+1261.673
+1261.673
+1324.188
+1324.188
+0.000
+0.000
+0.000
+0.000
+1261.673
+1261.673
+-1324.188
+-1324.188
+1439.853
+1439.853
+1522.318
+1522.318
+0.000
+0.000
+0.000
+0.000
+1439.853
+1439.853
+-1522.318
+-1522.318
+1289.143
+1289.143
+1353.411
+1353.411
+0.000
+0.000
+0.000
+0.000
+1289.143
+1289.143
+-1353.411
+-1353.411
+1105.688
+1098.602
+2317.488
+2309.580
+0.000
+0.000
+0.000
+0.000
+1105.688
+1098.602
+-2317.488
+-2309.580
+2655.376
+2655.376
+4751.308
+4751.308
+0.000
+0.000
+0.000
+0.000
+2655.376
+2655.376
+-4751.308
+-4751.308
+687.078
+687.078
+710.166
+710.166
+0.000
+0.000
+0.000
+0.000
+687.078
+687.078
+-710.166
+-710.166
+1382.929
+1382.929
+1467.608
+1467.608
+0.000
+0.000
+0.000
+0.000
+1382.929
+1382.929
+-1467.608
+-1467.608
+1336.652
+1336.652
+1416.514
+1416.514
+0.000
+0.000
+0.000
+0.000
+1336.652
+1336.652
+-1416.514
+-1416.514
+708.116
+708.116
+747.611
+747.611
+0.000
+0.000
+0.000
+0.000
+708.116
+708.116
+-747.611
+-747.611
+2535.126
+2535.126
+2731.046
+2731.046
+0.000
+0.000
+0.000
+0.000
+2535.126
+2535.126
+-2731.046
+-2731.046

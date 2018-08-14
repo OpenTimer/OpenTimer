@@ -115,23 +115,22 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
 
   while(u != pfxt._sfxt._T) {
 
-    assert(pfxt._sfxt.__dist[u]);
+    assert(pfxt._sfxt.__link[u]);
 
     auto [upin, urf] = _decode_pin(u);
 
     for(auto arc : upin->_fanout) {
-      
-      // skip if the edge belongs to the suffix tree
-      if(*pfxt._sfxt.__link[u] == arc->_idx) {
-        continue;
-      }
-
+        
       FOR_EACH_RF_IF(vrf, arc->_delay[el][urf][vrf]) {
 
-        auto v = _encode_pin(arc->_to, vrf);
-
         // skip if the edge goes outside the sfxt
+        auto v = _encode_pin(arc->_to, vrf);
         if(!pfxt._sfxt.__dist[v]) {
+          continue;
+        }
+
+        // skip if the edge belongs to the suffix tree
+        if(_encode_arc(*arc, urf, vrf) == *pfxt._sfxt.__link[u]) {
           continue;
         }
 

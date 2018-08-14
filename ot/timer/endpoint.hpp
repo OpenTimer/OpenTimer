@@ -57,12 +57,18 @@ inline Tran Endpoint::transition() const {
 
 // Function: test
 inline const Test* Endpoint::test() const {
-  return std::get<Test*>(_handle);
+  if(auto ptr = std::get_if<Test*>(&_handle)) {
+    return *ptr;
+  }
+  else return nullptr;
 }
 
 // Function: primary_output
 inline const PrimaryOutput* Endpoint::primary_output() const {
-  return std::get<PrimaryOutput*>(_handle);
+  if(auto ptr = std::get_if<PrimaryOutput*>(&_handle)){
+    return *ptr;
+  }
+  else return nullptr;
 }
 
 // Operator <

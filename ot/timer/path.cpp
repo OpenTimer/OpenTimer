@@ -270,10 +270,11 @@ void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
   // recursive
   while(u != sfxt._T) {
     assert(sfxt.__link[u]);
-    auto a = _idx2arc[*sfxt.__link[u]];
+    auto [arc, frf, trf] = _decode_arc(*sfxt.__link[u]);
     u = *sfxt.__tree[u];
     std::tie(upin, urf) = _decode_pin(u);
-    auto at = path.back().at + *a->_delay[sfxt._el][path.back().transition][urf];
+    assert(path.back().transition == frf && urf == trf);
+    auto at = path.back().at + *arc->_delay[sfxt._el][frf][trf];
     path.emplace_back(*upin, urf, at);
   }
 }
@@ -307,10 +308,11 @@ void Timer::_recover_datapath(
 
   while(u != v) {
     assert(sfxt.__link[u]);
-    auto a = _idx2arc[*sfxt.__link[u]];
+    auto [arc, frf, trf] = _decode_arc(*sfxt.__link[u]);
     u = *sfxt.__tree[u];   
     std::tie(upin, urf) = _decode_pin(u);
-    auto at = path.back().at + *a->_delay[sfxt._el][path.back().transition][urf]; 
+    assert(path.back().transition == frf && urf == trf);
+    auto at = path.back().at + *arc->_delay[sfxt._el][frf][trf]; 
     path.emplace_back(*upin, urf, at);
   }
 

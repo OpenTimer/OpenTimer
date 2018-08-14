@@ -7,14 +7,32 @@ import os
 # compare the two timing outputs (numerics)
 def compare_timing(output, golden):
 
-  with open(golden, 'r') as f:
-    golden_timing = [float(line.rstrip()) for line in f]
+  O = [line.strip() for line in open(output)]
+  G = [line.strip() for line in open(golden)]
+
+  output_timing = []
+  golden_timing = []
   
-  with open(output, 'r') as f:
-    output_timing = [float(line.rstrip()) for line in f]
-  
+  # extract the output data
+  for line in O:
+    token = line.split();
+    if len(token) == 1:
+      output_timing.append(float(token[0]))
+    elif len(token) == 6:
+      output_timing.append(float(token[3]))
+
+  # extract the golden data
+  for line in G:
+    token = line.split();
+    if len(token) == 1:
+      golden_timing.append(float(token[0]))
+    elif len(token) == 6:
+      golden_timing.append(float(token[3]))
+
+  # extract the path data
+
   if len(output_timing) != len(golden_timing):
-    print("output length doesn't match golden")
+    print("output timing length doesn't match golden")
     sys.exit(1)
   
   for i in range(len(output_timing)):
