@@ -21,7 +21,7 @@ Timer& Timer::spef(std::filesystem::path path) {
   // Spef update task (this has to be after reader)
   auto modifier = _taskflow.silent_emplace([this, spef] () {
     if(!spef->error) {
-      _rebase_unit(*spef);
+      //_rebase_unit(*spef);
       _spef(*spef);
       OT_LOGI("added ", spef->nets.size(), " spef nets");
     }

@@ -64,9 +64,7 @@ int main(int argc, char *argv[]) {
   std::cout << timer.dump_slack();
 
   // change from pico seconds to nano seconds
-  timer.time_unit(ot::nanoseconds(1))
-       .capacitance_unit(ot::picofarads(1))
-       .update_timing();
+  timer.update_timing();
   
   // Dump the slack
   std::cout << timer.dump_slack();

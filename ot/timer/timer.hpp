@@ -34,12 +34,6 @@ class Timer {
     
     // Builder
     Timer& num_threads(unsigned);
-    Timer& time_unit(TimeUnit);
-    Timer& voltage_unit(VoltageUnit);
-    Timer& current_unit(CurrentUnit);
-    Timer& resistance_unit(ResistanceUnit);
-    Timer& capacitance_unit(CapacitanceUnit);
-    Timer& power_unit(PowerUnit);
     Timer& celllib(std::filesystem::path, std::optional<Split>);
     Timer& verilog(std::filesystem::path);
     Timer& spef(std::filesystem::path);
@@ -92,12 +86,6 @@ class Timer {
     std::string dump_slack() const;
     std::string dump_timer() const;
     
-    inline auto time_unit() const;
-    inline auto voltage_unit() const;
-    inline auto current_unit() const;
-    inline auto resistance_unit() const;
-    inline auto capacitance_unit() const;
-    inline auto power_unit() const;
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;
     inline auto num_pins() const;
@@ -118,12 +106,6 @@ class Timer {
     bool _scc_analysis {false};
 
     std::optional<tf::Taskflow::Task> _lineage;
-    std::optional<TimeUnit> _time_unit;
-    std::optional<VoltageUnit> _voltage_unit;
-    std::optional<CurrentUnit> _current_unit;
-    std::optional<ResistanceUnit> _resistance_unit;
-    std::optional<CapacitanceUnit> _capacitance_unit;
-    std::optional<PowerUnit> _power_unit;
     std::optional<CpprAnalysis> _cppr_analysis;
 
     TimingData<Celllib, MAX_SPLIT> _celllib;
@@ -214,14 +196,6 @@ class Timer {
     void _recover_datapath(Path&, const SfxtCache&) const;
     void _recover_datapath(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
-    void _to_time_unit(const TimeUnit&);
-    void _to_capacitance_unit(const CapacitanceUnit&);
-    void _to_voltage_unit(const VoltageUnit&);
-    void _to_current_unit(const CurrentUnit&);
-    void _to_resistance_unit(const ResistanceUnit&);
-    void _to_power_unit(const PowerUnit&);
-    void _rebase_unit(Celllib&);
-    void _rebase_unit(spef::Spef&);
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
     void _spur(Endpoint&, size_t, PathHeap&) const;
@@ -288,42 +262,6 @@ void Timer::_insert_frontier(T&&... pins) {
   (_insert_frontier(pins), ...);
 }
     
-// Function: time_unit
-inline auto Timer::time_unit() const {
-  std::shared_lock lock(_mutex);
-  return _time_unit;
-}
-
-// Function: voltage_unit
-inline auto Timer::voltage_unit() const {
-  std::shared_lock lock(_mutex);
-  return _voltage_unit;
-}
-
-// Function: current_unit
-inline auto Timer::current_unit() const {
-  std::shared_lock lock(_mutex);
-  return _current_unit;
-}
-
-// Function: resistance_unit
-inline auto Timer::resistance_unit() const {
-  std::shared_lock lock(_mutex);
-  return _resistance_unit;
-}
-
-// Function: capacitance_unit
-inline auto Timer::capacitance_unit() const {
-  std::shared_lock lock(_mutex);
-  return _capacitance_unit;
-}
-
-// Function: power_unit
-inline auto Timer::power_unit() const {
-  std::shared_lock lock(_mutex);
-  return _power_unit;
-}
-
 // Function: num_primary_inputs
 inline auto Timer::num_primary_inputs() const {
   return _pis.size();

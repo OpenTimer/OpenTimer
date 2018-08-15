@@ -49,7 +49,6 @@ void dump_help(Timer& timer, std::istream& is, std::ostream& os, std::ostream& e
   static std::string_view help = "\n\
 List of commonly used commands:\n\
 \n[Builder] operations to build the timer\n\n\
-  set_units          -[time|power|resistance|capacitance|voltage|current] <unit>\n\
   set_num_threads    <N>\n\
   read_celllib       [-early|-late] <file>\n\
   read_verilog       <file>\n\

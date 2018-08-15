@@ -49,18 +49,18 @@ std::string Timer::_dump_timer() const {
   std::ostringstream oss;
 
   oss << "OpenTimer " << OT_VERSION << '\n'
-      << "Time       : " 
-      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s) << '\n'
-      << "Capacitance: " 
-      << (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s) << '\n'
-      << "Voltage    : "
-      << (_voltage_unit ? dump_voltage_unit(*_voltage_unit) : "n/a"s) << '\n'
-      << "Resistance : " 
-      << (_resistance_unit ? dump_resistance_unit(*_resistance_unit) : "n/a"s) << '\n'
-      << "Current    : " 
-      << (_current_unit ? dump_current_unit(*_current_unit) : "n/a"s) << '\n'
-      << "Power      : " 
-      << (_power_unit ? dump_power_unit(*_power_unit) : "n/a"s) << '\n'
+      //<< "Time       : " 
+      //<< (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s) << '\n'
+      //<< "Capacitance: " 
+      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s) << '\n'
+      //<< "Voltage    : "
+      //<< (_voltage_unit ? dump_voltage_unit(*_voltage_unit) : "n/a"s) << '\n'
+      //<< "Resistance : " 
+      //<< (_resistance_unit ? dump_resistance_unit(*_resistance_unit) : "n/a"s) << '\n'
+      //<< "Current    : " 
+      //<< (_current_unit ? dump_current_unit(*_current_unit) : "n/a"s) << '\n'
+      //<< "Power      : " 
+      //<< (_power_unit ? dump_power_unit(*_power_unit) : "n/a"s) << '\n'
       << "# Pins     : " << _pins.size()  << '\n'
       << "# POs      : " << _pos.size()   << '\n'
       << "# PIs      : " << _pis.size()   << '\n'
@@ -87,8 +87,8 @@ std::string Timer::_dump_net_load() const {
   std::ostringstream oss;
   
   oss << "Net Load [nets:" << _nets.size() 
-      << "|capacitance:" 
-      << (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
+      //<< "|capacitance:" 
+      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
       << "]\n";
 
 
@@ -134,8 +134,8 @@ std::string Timer::_dump_pin_cap() const {
   std::ostringstream oss;
   
   oss << "Pin Capacitance [pins:" << _pins.size() 
-      << "|capacitance:" 
-      << (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
+      //<< "|capacitance:" 
+      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
       << "]\n";
 
   if(!_pins.empty())  {
@@ -179,10 +179,7 @@ std::string Timer::_dump_slew() const {
 
   std::ostringstream oss;
   
-  oss << "Slew [pins:" << _pins.size() 
-      << "|time:" 
-      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
-      << "]\n";
+  oss << "Slew [pins:" << _pins.size() << "]\n";
 
   if(!_pins.empty())  {
 
@@ -228,10 +225,7 @@ std::string Timer::_dump_slack() const {
 
   std::ostringstream oss;
   
-  oss << "Slack [pins:" << _pins.size() 
-      << "|time:" 
-      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
-      << "]\n";
+  oss << "Slack [pins:" << _pins.size() << "]\n";
 
   if(!_pins.empty())  {
 
@@ -277,10 +271,7 @@ std::string Timer::_dump_at() const {
 
   std::ostringstream oss;
   
-  oss << "Arrival time [pins:" << _pins.size() 
-      << "|time:" 
-      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
-      << "]\n";
+  oss << "Arrival time [pins:" << _pins.size() << "]\n";
 
   if(!_pins.empty())  {
 
@@ -327,8 +318,6 @@ std::string Timer::_dump_rat() const {
   std::ostringstream oss;
   
   oss << "Required arrival time [pins:" << _pins.size() 
-      << "|time:" 
-      << (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s)
       << "]\n";
 
   if(!_pins.empty())  {

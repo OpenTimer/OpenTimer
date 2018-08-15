@@ -2,7 +2,7 @@
 
 namespace ot {
 
-// Procedure: set_units
+/*// Procedure: set_units
 void set_units(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
 
   std::string token;
@@ -66,7 +66,7 @@ void set_units(Timer& timer, std::istream& is, std::ostream& os, std::ostream& e
       es << "unexpected token " << std::quoted(token) << '\n';
     }
   }
-}
+}*/
 
 // ------------------------------------------------------------------------------------------------
 
