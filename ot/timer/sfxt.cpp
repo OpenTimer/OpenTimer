@@ -62,6 +62,10 @@ SfxtMirror SfxtCache::mirrorize() const {
 
 // ------------------------------------------------------------------------------------------------
 
+// Function: _prune
+//bool Timer::_prune(SfxtCache& sfxt, size_t v) const {
+//}
+
 // Procedure: _spfa
 // Perform shortest path fast algorithm (SPFA) to build up the suffix tree.
 void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
@@ -76,7 +80,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
     sfxt._pins.insert(v);
 
     auto [pin, vrf] = _decode_pin(v);
-
+    
     // Stop at the data source
     if(pin->is_datapath_source()) {
       sfxt._srcs.try_emplace(v, std::nullopt);

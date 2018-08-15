@@ -71,6 +71,7 @@ List of commonly used commands:\n\
 \n[Action] operations to update the timer\n\n\
   update_timing\n\
   report_timing\n\
+  report_path        -num_paths <N>\n\
   report_slew        -pin name [-early|-late] [-rise|-fall]\n\
   report_at          -pin name [-early|-late] [-rise|-fall]\n\
   report_rat         -pin name [-early|-late] [-rise|-fall]\n\

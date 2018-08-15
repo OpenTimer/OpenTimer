@@ -30,6 +30,7 @@ void cppr                   (Timer&, std::istream&, std::ostream&, std::ostream&
 // Action
 void update_timing          (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_timing          (Timer&, std::istream&, std::ostream&, std::ostream&);
+void report_path            (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_at              (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_slew            (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_rat             (Timer&, std::istream&, std::ostream&, std::ostream&);
@@ -92,6 +93,7 @@ inline const std::unordered_map<
   // Action
   {"update_timing",           update_timing},
   {"report_timing",           report_timing},
+  {"report_path",             report_path},
   {"report_at",               report_at},
   {"report_slew",             report_slew},
   {"report_rat",              report_rat},

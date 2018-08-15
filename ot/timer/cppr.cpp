@@ -78,10 +78,6 @@ std::optional<float> Timer::_cppr_credit(const Test& test, Split el, Tran rf) co
 
   assert(_cppr_analysis);
 
-  if(!test._rat[el][rf] || !test._arc._to._at[el][rf]) {
-    return std::nullopt;
-  }
-  
   // Create a suffix tree
   auto sfxt = _sfxt_cache(test, el, rf);
 

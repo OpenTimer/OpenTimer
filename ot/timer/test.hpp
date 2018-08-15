@@ -25,6 +25,7 @@ class Test {
 
     std::optional<float> rat(Split, Tran) const;
     std::optional<float> slack(Split, Tran) const;
+    std::optional<float> raw_slack(Split, Tran) const;
 
     const Pin& constrained_pin() const;
     const Pin& related_pin() const;

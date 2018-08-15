@@ -28,6 +28,17 @@ std::optional<float> Test::slack(Split el, Tran rf) const {
   else return std::nullopt;
 }
 
+// Function: raw_slack
+std::optional<float> Test::raw_slack(Split el, Tran rf) const {
+  if(_arc._to._at[el][rf] && _rat[el][rf]) {
+    return (
+      el == EARLY ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
+                    *_rat[el][rf] - *_arc._to._at[el][rf]
+    );
+  }
+  else return std::nullopt;
+}
+
 // Function: constrained_pin
 const Pin& Test::constrained_pin() const {
   return _arc._to;

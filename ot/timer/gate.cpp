@@ -12,7 +12,7 @@ Gate::Gate(const std::string& name, CellView cell) :
   _cell {cell} {
 }
 
-// Procedure: _repower
+/*// Procedure: _repower
 void Gate::_repower(CellView cell) {
 
   assert(cell[EARLY] && cell[LATE]);
@@ -59,7 +59,7 @@ void Gate::_repower(CellView cell) {
   
   // remap to the new cell.
   _cell = cell;
-}
+}*/
 
 
 

@@ -33,7 +33,7 @@ class Gate {
     std::vector<Arc*> _arcs;
     std::vector<Test*> _tests;
 
-    void _repower(CellView);
+    //void _repower(CellView);
 }; 
 
 // Function: name

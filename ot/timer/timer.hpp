@@ -196,6 +196,8 @@ class Timer {
     void _insert_primary_output(const std::string&);
     void _insert_primary_input(const std::string&);
     void _insert_gate(const std::string&, const std::string&);
+    void _insert_gate_arcs(Gate&);
+    void _remove_gate_arcs(Gate&);
     void _repower_gate(const std::string&, const std::string&);
     void _remove_gate(Gate&);
     void _remove_net(Net&);

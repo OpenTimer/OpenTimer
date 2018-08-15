@@ -179,6 +179,30 @@ void report_timing(Timer& timer, std::istream& is, std::ostream& os, std::ostrea
   }
 }
 
+// ------------------------------------------------------------------------------------------------
+
+// Procedure: report_path
+void report_path(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+
+  std::string token;
+  size_t K {1};
+
+  while(is >> token) {
+    if(token == "-num_paths") {
+      is >> K;
+    }
+    else {
+      es << "failed to parse " << std::quoted(token) << '\n';
+    }
+  }
+
+  auto paths = timer.worst_paths(K);
+
+  for(const auto& path : paths) {
+    os << path;
+  }
+}
+
 };  // end of namespace ot. -----------------------------------------------------------------------
 
 

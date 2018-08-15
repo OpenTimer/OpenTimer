@@ -80,6 +80,8 @@ if (NOT TCL_TCLSH)
 OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
+# CTest
+include(CTest)
 
 # configure a header file to pass some of the CMake settins
 configure_file(
