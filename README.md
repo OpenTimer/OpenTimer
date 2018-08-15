@@ -239,13 +239,13 @@ The table below shows a list of commonly used commands.
 
 | Command | type | Arguments | Description | Example |
 | ------- | ---- | --------- | ----------- | ------- |
-| set_num_threads | builder | N | set the number of threads | set_num_threads 4 |
 | read_celllib | builder | [-early \| -late] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
 | read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
 | read_spef | builder | file | read parasitics in SPEF | read_spef myrc.spef |
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
 | update_timing | action | n/a | update the timing | update_timing |
 | report_timing | action | n/a | report the timing | report_timing |
+| report_path | action | [-num_paths k] | report the top-k critical paths | report_path -num_paths 10 |
 | report_tns | action | n/a | report the total negative slack | report_tns |
 | report_wns | action | n/a | report the worst negative slack | report_wns |
 | dump_graph | accessor | [-o file] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
