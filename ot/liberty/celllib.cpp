@@ -551,31 +551,26 @@ void Celllib::read(const std::filesystem::path& path) {
       if(++itr == end) {
         OT_LOGF("time_unit syntax error");
       }
-      time_unit = make_time_unit(*itr);
     }
     else if(*itr == "voltage_unit") {
       if(++itr == end) {
         OT_LOGF("voltage_unit syntax error");
       }
-      voltage_unit = make_voltage_unit(*itr);
     }
     else if(*itr == "current_unit") {
       if(++itr == end) {
         OT_LOGF("current_unit syntax error");
       }
-      current_unit = make_current_unit(*itr);
     }
     else if(*itr == "pulling_resistance_unit") {
       if(++itr == end) {
         OT_LOGF("pulling_resistance_unit syntax error");
       }
-      resistance_unit = make_resistance_unit(*itr);
     }
     else if(*itr == "leakage_power_unit") {
       if(++itr == end) {
         OT_LOGF("leakage_power_unit syntax error");
       }   
-      power_unit = make_power_unit(*itr);
     }
     else if(*itr == "capacitive_load_unit") {
       std::string unit;
@@ -585,7 +580,6 @@ void Celllib::read(const std::filesystem::path& path) {
         [&] (auto& str) mutable { unit += str; }); itr == end) {
         OT_LOGF("capacitive_load_unit syntax error");
       }
-      capacitance_unit = make_capacitance_unit(unit);
     }
     else if(*itr == "cell") { 
       auto cell = _extract_cell(itr, end);
@@ -607,82 +601,82 @@ void Celllib::read(const std::filesystem::path& path) {
 
 }
 
-// Procedure: to_time_unit
-// Convert the numerics to the new unit
-void Celllib::to_time_unit(const TimeUnit& unit) {
-  
-  float s = (time_unit) ? divide_time_unit(*time_unit, unit) : 1.0f;
-
-  if(time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  for(auto& c : cells) {
-    c.second.scale_time(s);
-  }
-}
-
-// Procedure: to_capacitance_unit
-void Celllib::to_capacitance_unit(const CapacitanceUnit& unit) {
-  
-  float s = (capacitance_unit) ? divide_capacitance_unit(*capacitance_unit, unit) : 1.0f;
-
-  if(capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  for(auto& c : cells) {
-    c.second.scale_capacitance(s);
-  }
-}
-
-// Procedure: to_voltage_unit
-void Celllib::to_voltage_unit(const VoltageUnit& unit) {
-
-  float s = (voltage_unit) ? divide_voltage_unit(*voltage_unit, unit) : 1.0f;
-
-  if(voltage_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  // TODO
-}
-
-// Procedure: to_current_unit
-void Celllib::to_current_unit(const CurrentUnit& unit) {
-
-  float s = (current_unit) ? divide_current_unit(*current_unit, unit) : 1.0f;
-
-  if(current_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  // TODO
-}
-
-// Procedure: to_resistance_unit
-void Celllib::to_resistance_unit(const ResistanceUnit& unit) {
-
-  float s = (resistance_unit) ? divide_resistance_unit(*resistance_unit, unit) : 1.0f;
-
-  if(resistance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  // TODO
-}
-
-// Procedure: to_power_unit
-void Celllib::to_power_unit(const PowerUnit& unit) {
-
-  float s = (power_unit) ? divide_power_unit(*power_unit, unit) : 1.0f;
-
-  if(power_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
-
-  // TODO
-}
+//// Procedure: to_time_unit
+//// Convert the numerics to the new unit
+//void Celllib::to_time_unit(const TimeUnit& unit) {
+//  
+//  float s = (time_unit) ? divide_time_unit(*time_unit, unit) : 1.0f;
+//
+//  if(time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  for(auto& c : cells) {
+//    c.second.scale_time(s);
+//  }
+//}
+//
+//// Procedure: to_capacitance_unit
+//void Celllib::to_capacitance_unit(const CapacitanceUnit& unit) {
+//  
+//  float s = (capacitance_unit) ? divide_capacitance_unit(*capacitance_unit, unit) : 1.0f;
+//
+//  if(capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  for(auto& c : cells) {
+//    c.second.scale_capacitance(s);
+//  }
+//}
+//
+//// Procedure: to_voltage_unit
+//void Celllib::to_voltage_unit(const VoltageUnit& unit) {
+//
+//  float s = (voltage_unit) ? divide_voltage_unit(*voltage_unit, unit) : 1.0f;
+//
+//  if(voltage_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  // TODO
+//}
+//
+//// Procedure: to_current_unit
+//void Celllib::to_current_unit(const CurrentUnit& unit) {
+//
+//  float s = (current_unit) ? divide_current_unit(*current_unit, unit) : 1.0f;
+//
+//  if(current_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  // TODO
+//}
+//
+//// Procedure: to_resistance_unit
+//void Celllib::to_resistance_unit(const ResistanceUnit& unit) {
+//
+//  float s = (resistance_unit) ? divide_resistance_unit(*resistance_unit, unit) : 1.0f;
+//
+//  if(resistance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  // TODO
+//}
+//
+//// Procedure: to_power_unit
+//void Celllib::to_power_unit(const PowerUnit& unit) {
+//
+//  float s = (power_unit) ? divide_power_unit(*power_unit, unit) : 1.0f;
+//
+//  if(power_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+//    return;
+//  }
+//
+//  // TODO
+//}
 
 // Operator: <<
 std::ostream& operator << (std::ostream& os, const Celllib& c) {
@@ -696,46 +690,6 @@ std::ostream& operator << (std::ostream& os, const Celllib& c) {
   // Delay modeA
   if(c.delay_model) {
     os << "delay_model : " << to_string(*(c.delay_model)) << ";\n";
-  }
-
-  // time unit
-  if(c.time_unit) {
-    os << "time_unit : " 
-       << std::quoted(dump_time_unit(*c.time_unit)) << ";\n";
-  }
-  
-  // voltage unit
-  if(c.voltage_unit) {
-    os << "voltage_unit : " 
-       << std::quoted(dump_voltage_unit(*c.voltage_unit)) << ";\n";
-  }
-
-  // current unit
-  if(c.current_unit) {
-    os << "current_unit : " 
-      << std::quoted(dump_current_unit(*c.current_unit)) << ";\n";
-  }
-  
-  // pulling resistance unit
-  if(c.resistance_unit) {
-    os << "resistance_unit : " 
-       << std::quoted(dump_resistance_unit(*c.resistance_unit)) << ";\n";
-  }
-
-  // power unit
-  if(c.power_unit) {
-    os << "power_unit : "
-       << std::quoted(dump_power_unit(*c.power_unit)) << ";\n";
-  }
-  
-  // load unit
-  if(c.capacitance_unit) {
-    os << "capacitance_unit (";
-    std::visit(Functors{
-      [&] (const picofarads& d)  { os << d.count() << ",pf"; },
-      [&] (const femtofarads& d) { os << d.count() << ",ff"; }
-    }, *c.capacitance_unit);
-    os << ")\n";
   }
 
   // Write the lut templates

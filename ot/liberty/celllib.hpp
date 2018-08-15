@@ -34,24 +34,12 @@ struct Celllib {
   using token_iterator = std::vector<std::string>::iterator;
 
   std::string name {"OpenTimer"};
-  std::optional<TimeUnit> time_unit;
-  std::optional<VoltageUnit> voltage_unit;
-  std::optional<CurrentUnit> current_unit;
-  std::optional<ResistanceUnit> resistance_unit;
-  std::optional<CapacitanceUnit> capacitance_unit;
-  std::optional<PowerUnit> power_unit;
   std::optional<DelayModel> delay_model;
 
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
 
   void read(const std::filesystem::path&);
-  void to_time_unit(const TimeUnit&);
-  void to_voltage_unit(const VoltageUnit&);
-  void to_current_unit(const CurrentUnit&);
-  void to_resistance_unit(const ResistanceUnit&);
-  void to_capacitance_unit(const CapacitanceUnit&);
-  void to_power_unit(const PowerUnit&);
 
   const LutTemplate* lut_template(const std::string&) const;
   const Cell* cell(const std::string&) const;
