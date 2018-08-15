@@ -229,7 +229,7 @@ Net::Net(const std::string& name) :
 }
 
 // Procedure: _attach
-void Net::_attach(spef::Net& spef_net) {
+void Net::_attach(spef::Net&& spef_net) {
   assert(spef_net.name == _name && _root);
   _spef_net = std::move(spef_net);
   _rc_timing_updated = false;
@@ -244,8 +244,9 @@ void Net::_make_rct() {
   auto& rct = _rct.emplace<Rct>();
 
   // Step 2: insert the node and capacitance (*CAP section).
-  for(const auto& [node, cap] : _spef_net->caps) {
-    rct.insert_node(node, cap);
+  for(const auto& [node1, node2, cap] : _spef_net->caps) {
+    assert(node2.empty());
+    rct.insert_node(node1, cap);
   }
 
   // Step 3: insert the segment (*RES section).

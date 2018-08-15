@@ -1,6 +1,6 @@
 #include <ot/spef/spef.hpp>
 
-namespace ot::spef {
+/*namespace ot::spef {
 
 // Function: is_keyword
 bool is_keyword(const std::string& str) {
@@ -364,7 +364,7 @@ void Spef::to_resistance_unit(const ResistanceUnit& unit) {
   }
 }
 
-};  // end of namespace ot. -----------------------------------------------------------------------
+};  // end of namespace ot. ----------------------------------------------------------------------- */
 
 
 

@@ -12,14 +12,19 @@ Timer& Timer::spef(std::filesystem::path path) {
 
   // Reader task
   auto reader = _taskflow.silent_emplace([path=std::move(path), spef] () {
-    spef->read(path);
+    if(spef->read(path); spef->error) {
+      OT_LOGD("Parser-SPEF error:\n", *spef->error);
+    }
+    spef->expand_name();
   });
   
   // Spef update task (this has to be after reader)
   auto modifier = _taskflow.silent_emplace([this, spef] () {
-    _rebase_unit(*spef);
-    _spef(*spef);
-    OT_LOGI("added ", spef->nets.size(), " spef nets");
+    if(!spef->error) {
+      _rebase_unit(*spef);
+      _spef(*spef);
+      OT_LOGI("added ", spef->nets.size(), " spef nets");
+    }
   });
   
   // Build the task dependency.
@@ -35,11 +40,11 @@ Timer& Timer::spef(std::filesystem::path path) {
 void Timer::_spef(spef::Spef& spef) {
   for(auto& spef_net : spef.nets) {
     if(auto itr = _nets.find(spef_net.name); itr == _nets.end()) {
-      OT_LOGW("ignore updating spef on net ", spef_net.name, " (net not found)");
+      OT_LOGW("spef net ", spef_net.name, " not found");
       continue;
     }
     else {
-      itr->second._attach(spef_net);
+      itr->second._attach(std::move(spef_net));
       _insert_frontier(*itr->second._root);
     }
   }

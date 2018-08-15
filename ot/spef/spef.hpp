@@ -6,7 +6,7 @@
 #include <ot/utility/utility.hpp>
 #include <ot/unit/unit.hpp>
 
-namespace ot::spef {
+/*namespace ot::spef {
 
 // keywords
 inline const std::unordered_set<std::string> keywords = {
@@ -124,8 +124,7 @@ struct Spef {
 // Operator: <<
 std::ostream& operator << (std::ostream&, const Spef&);
 
-
 };  // end of namespace ot. -----------------------------------------------------------------------
-
+*/
 
 #endif

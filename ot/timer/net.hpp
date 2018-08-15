@@ -179,7 +179,7 @@ class Net {
     std::optional<float> _delay(Split, Tran, Pin&) const;
     
     void _update_rc_timing();
-    void _attach(spef::Net&);
+    void _attach(spef::Net&&);
     void _make_rct();
     //void _make_rct(const spef::Net&);
     void _insert_pin(Pin&);

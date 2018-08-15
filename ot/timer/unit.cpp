@@ -317,7 +317,7 @@ void Timer::_rebase_unit(Celllib& lib) {
 // Procedure: _rebase_unit
 void Timer::_rebase_unit(spef::Spef& spef) {
       
-  // Convert the capacitive load unit
+  /*// Convert the capacitive load unit
   if(!_capacitance_unit) {
     if(_capacitance_unit = spef.capacitance_unit) {
       OT_LOGI(
@@ -341,7 +341,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
   }
   else {
     spef.to_resistance_unit(*_resistance_unit);
-  }
+  }*/
 }
 
 }; // end of namespace ot -------------------------------------------------------------------------

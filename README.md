@@ -323,7 +323,6 @@ The table below summarizes a list of commonly used methods.
 | update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
 | tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
-| dump_graph | accessor | n/a | string | dump the present timing graph to a dot format |
 | dump_timer | accessor | n/a | string | dump the present timer details |
 | dump_slack | accessor | n/a | string | dump the present slack values of all pins |
 
