@@ -203,7 +203,35 @@ void report_path(Timer& timer, std::istream& is, std::ostream& os, std::ostream&
   }
 }
 
+// ------------------------------------------------------------------------------------------------
+
+// Procedure: report_area
+void report_area(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+  if(auto area = timer.area(); area) {
+    os << *area << '\n';
+  }
+  else {
+    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Procedure: report_leakage_power
+void report_leakage_power(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+  if(auto lp = timer.leakage_power(); lp) {
+    os << *lp << '\n';
+  }
+  else {
+    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+  }
+}
+
 };  // end of namespace ot. -----------------------------------------------------------------------
+
+
+
+
 
 
 

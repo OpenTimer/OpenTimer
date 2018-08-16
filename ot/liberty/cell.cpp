@@ -31,7 +31,15 @@ std::ostream& operator << (std::ostream& os, const Cell& c) {
   os << "cell (\"" << c.name << "\") {\n";
 
   if(!c.cell_footprint.empty()) {
-    os << "  cell_footprint : " << c.cell_footprint << "\n";
+    os << "  cell_footprint : " << c.cell_footprint << ";\n";
+  }
+
+  if(c.leakage_power) {
+    os << "  cell_leakage_power : " << *c.leakage_power << ";\n";
+  }
+
+  if(c.area) {
+    os << "  area : " << *c.area << ";\n";
   }
 
   // Write the cellpins.

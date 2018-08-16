@@ -49,8 +49,8 @@ std::ostream& operator << (std::ostream& os, const LutTemplate&);
 
 // ------------------------------------------------------------------------------------------------
 
-// Struct: TimingLut
-struct TimingLut {
+// Struct: Lut
+struct Lut {
   
   std::string name;
 
@@ -69,7 +69,7 @@ struct TimingLut {
   void scale_capacitance(float);
 };
 
-std::ostream& operator << (std::ostream& os, const TimingLut&);
+std::ostream& operator << (std::ostream& os, const Lut&);
 
 };  // end of namespace ot ------------------------------------------------------------------------
 

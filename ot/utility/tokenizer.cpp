@@ -61,7 +61,7 @@ std::vector<std::string> split(const std::string& str, std::string_view dels) {
 
   for(size_t i=0; i<str.size(); ++i) {
     bool is_del = (dels.find(str[i]) != std::string_view::npos);
-    if(is_del || str[i] == ' ' || str[i] == '\n' || str[i] == '\r' || str[i] == '\t') {
+    if(is_del || std::isspace(str[i])) {
       if(!token.empty()) {                            // Add the current token.
         tokens.push_back(std::move(token));
       }
@@ -151,7 +151,7 @@ std::vector<std::string> tokenize(
     auto c = buffer[i];
     bool is_del = (dels.find(c) != std::string_view::npos);
 
-    if(is_del || c == ' ' || c == '\n' || c == '\r' || c == '\t') {
+    if(is_del || std::isspace(c)) {
       if(!token.empty()) {                            // Add the current token.
         tokens.push_back(std::move(token));
         token.clear();

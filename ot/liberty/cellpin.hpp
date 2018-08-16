@@ -2,6 +2,7 @@
 #define OT_LIBERTY_CELLPIN_HPP_
 
 #include <ot/liberty/timing.hpp>
+#include <ot/liberty/power.hpp>
 
 namespace ot {
 
@@ -33,6 +34,8 @@ struct Cellpin {
   std::optional<float> min_capacitance;  // Min pin capacitance (output pin).
   std::optional<float> max_transition;   // Max transition.
   std::optional<float> min_transition;   // Min transition.
+  std::optional<float> fall_capacitance; 
+  std::optional<float> rise_capacitance;
   std::optional<bool> is_clock;          // Is clock pin.
 
   std::vector<Timing> timings;

@@ -102,6 +102,14 @@ std::ostream& operator << (std::ostream& os, const Cellpin& p) {
     os << "    min_capacitance : " << *(p.min_capacitance) << ";\n";
   }
 
+  if(p.rise_capacitance) {
+    os << "    rise_capacitance : " << *p.rise_capacitance << ";\n";
+  }
+  
+  if(p.fall_capacitance) {
+    os << "    fall_capacitance : " << *p.fall_capacitance << ";\n";
+  }
+
   if(p.max_transition) {
     os << "    max_transition : " << *(p.max_transition) << ";\n";
   }

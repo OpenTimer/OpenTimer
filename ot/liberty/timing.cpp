@@ -379,7 +379,7 @@ std::optional<float> Timing::delay(Tran irf, Tran orf, float slew, float load) c
     return std::nullopt;
   }
   
-  const TimingLut* lut {nullptr};
+  const Lut* lut {nullptr};
 
   switch(orf) {
     case RISE:
@@ -452,7 +452,7 @@ std::optional<float> Timing::slew(Tran irf, Tran orf, float slew, float load) co
     return std::nullopt;
   }
   
-  const TimingLut* lut {nullptr};
+  const Lut* lut {nullptr};
 
   switch(orf) {
 
@@ -532,7 +532,7 @@ std::optional<float> Timing::constraint(
     return std::nullopt;
   }
   
-  const TimingLut* lut {nullptr};
+  const Lut* lut {nullptr};
 
   switch(orf) {
 

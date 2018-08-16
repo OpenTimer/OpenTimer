@@ -152,9 +152,9 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
 }
 
 // Function: _extract_lut
-TimingLut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
+Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   
-  TimingLut lut;
+  Lut lut;
   
   if(itr=on_next_parentheses(
     itr, 
@@ -274,9 +274,7 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
     }
     else if(*itr == "timing_sense") {               // Read the timing sense.
 
-      if(++itr == end) {
-        OT_LOGF("syntax error in timing_sense");
-      }
+      OT_LOGF_IF(++itr == end, "syntex error in timing_sense");
 
       if(*itr == "negative_unate") {
         timing.sense = TimingSense::NEGATIVE_UNATE;       // Negative unate.
@@ -366,45 +364,39 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       }
     }
     else if(*itr == "capacitance") {
-      if(++itr == end) {
-        OT_LOGF("can't get the capacitance in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get the capacitance in cellpin ", cellpin.name);
       cellpin.capacitance = std::stof(*itr);
     }
     else if(*itr == "max_capacitance") {
-      if(++itr == end) {
-        OT_LOGF("can't get the max_capacitance in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get the max_capacitance in cellpin ", cellpin.name);
       cellpin.max_capacitance = std::stof(*itr);
     }
     else if(*itr == "min_capacitance") {  
-      if(++itr == end) {
-        OT_LOGF("can't get the min_capacitance in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get the min_capacitance in cellpin ", cellpin.name);
       cellpin.min_capacitance = std::stof(*itr);
     }
     else if(*itr == "max_transition") {        
-      if(++itr == end) {
-        OT_LOGF("can't get the max_transition in cellpin ", cellpin.name);
-      }
+      OT_LOGF(++itr == end, "can't get the max_transition in cellpin ", cellpin.name);
       cellpin.max_transition = std::stof(*itr);
     }
     else if(*itr == "min_transition") {          
-      if(++itr == end) {
-        OT_LOGF("can't get the min_transition in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get the min_transition in cellpin ", cellpin.name);
       cellpin.min_transition = std::stof(*itr);
     }
+    else if(*itr == "fall_capacitance") {
+      OT_LOGF_IF(++itr == end, "can't get fall_capacitance in cellpin ", cellpin.name);
+      cellpin.fall_capacitance = std::stof(*itr);
+    }
+    else if(*itr == "rise_capacitance") {
+      OT_LOGF_IF(++itr == end, "can't get rise_capacitance in cellpin ", cellpin.name);
+      cellpin.rise_capacitance = std::stof(*itr);
+    }
     else if(*itr == "clock") {  
-      if(++itr == end) {
-        OT_LOGF("can't get the clock status in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get the clock status in cellpin ", cellpin.name);
       cellpin.is_clock = (*itr == "true") ? true : false;
     }
     else if(*itr == "original_pin") {
-      if(++itr == end) {
-        OT_LOGF("can't get the original pin in cellpin ", cellpin.name);
-      }
+      OT_LOGF_IF(++itr ==end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = std::move(*itr);
     }
     else if(*itr == "timing") {
@@ -450,23 +442,16 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   
   while(stack && ++itr != end) {
     
-    if(*itr == "cell_power") {               // Read the leakage power.
-      // TODO
-      if(++itr == end) {
-        OT_LOGF("can't get power in cell ", cell.name);
-      }
+    if(*itr == "cell_leakage_power") {               // Read the leakage power.
+      OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
       cell.leakage_power = std::stof(*itr);
     }
     else if(*itr == "cell_footprint") {              // Read the footprint.
-      if(++itr == end) {
-        OT_LOGF("can't get footprint in cell ", cell.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get footprint in cell ", cell.name);
       cell.cell_footprint = std::move(*itr);
     }
     else if(*itr == "area") {                        // Read the area.
-      if(++itr == end) {
-        OT_LOGF("can't get area in cell ", cell.name);
-      }
+      OT_LOGF_IF(++itr == end, "can't get area in cell ", cell.name);
       cell.area = std::stof(*itr);
     }
     else if(*itr == "pin") {                         // Read the cell pin group.
@@ -480,6 +465,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
       stack++;
     }
     else {
+      //OT_LOGW("unexpected token ", *itr);
     }
   }
 
@@ -535,10 +521,7 @@ void Celllib::read(const std::filesystem::path& path) {
       lut_templates[lut.name] = std::move(lut);
     }
     else if(*itr == "delay_model") {
-      if(++itr == end) {
-        OT_LOGF("syntax error in delay_model");
-      }
-
+      OT_LOGF_IF(++itr == end, "syntax error in delay_model");
       if(auto ditr = delay_models.find(*itr); ditr != delay_models.end()) {
         delay_model = ditr->second;
       }
@@ -546,31 +529,49 @@ void Celllib::read(const std::filesystem::path& path) {
         OT_LOGW("unexpected delay model ", *itr);
       }
     }
-    // Unit field.
+    else if(*itr == "default_cell_leakage_power") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_cell_leakage_power");
+      default_cell_leakage_power = std::stof(*itr);
+    }
+    else if(*itr == "default_inout_pin_cap") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_inout_pin_cap");
+      default_inout_pin_cap = std::stof(*itr);
+    }
+    else if(*itr == "default_input_pin_cap") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_input_pin_cap");
+      default_input_pin_cap = std::stof(*itr);
+    }
+    else if(*itr == "default_output_pin_cap") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_output_pin_cap");
+      default_output_pin_cap = std::stof(*itr);
+    }
+    else if(*itr == "default_fanout_load") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_fanout_load");
+      default_fanout_load = std::stof(*itr);
+    }
+    else if(*itr == "default_max_fanout") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_max_fanout");
+      default_max_fanout = std::stof(*itr);
+    }
+    else if(*itr == "default_max_transition") {
+      OT_LOGF_IF(++itr == end, "syntax error in default_max_transition");
+      default_max_transition = std::stof(*itr);
+    }
+    // TODO: Unit field.
     else if(*itr == "time_unit") {
-      if(++itr == end) {
-        OT_LOGF("time_unit syntax error");
-      }
+      OT_LOGF_IF(++itr == end, "time_unit syntax error");
     }
     else if(*itr == "voltage_unit") {
-      if(++itr == end) {
-        OT_LOGF("voltage_unit syntax error");
-      }
+      OT_LOGF_IF(++itr == end, "voltage_unit syntax error");
     }
     else if(*itr == "current_unit") {
-      if(++itr == end) {
-        OT_LOGF("current_unit syntax error");
-      }
+      OT_LOGF_IF(++itr == end, "current_unit syntax error");
     }
     else if(*itr == "pulling_resistance_unit") {
-      if(++itr == end) {
-        OT_LOGF("pulling_resistance_unit syntax error");
-      }
+      OT_LOGF_IF(++itr == end, "pulling_resistance_unit syntax error");
     }
     else if(*itr == "leakage_power_unit") {
-      if(++itr == end) {
-        OT_LOGF("leakage_power_unit syntax error");
-      }   
+      OT_LOGF_IF(++itr == end, "leakage_power_unit syntax error");
     }
     else if(*itr == "capacitive_load_unit") {
       std::string unit;

@@ -34,7 +34,16 @@ struct Celllib {
   using token_iterator = std::vector<std::string>::iterator;
 
   std::string name {"OpenTimer"};
+
   std::optional<DelayModel> delay_model;
+
+  std::optional<float> default_cell_leakage_power;
+  std::optional<float> default_inout_pin_cap;
+  std::optional<float> default_input_pin_cap;
+  std::optional<float> default_output_pin_cap;
+  std::optional<float> default_fanout_load;
+  std::optional<float> default_max_fanout;
+  std::optional<float> default_max_transition;
 
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
@@ -49,11 +58,11 @@ struct Celllib {
 
   private:
 
-  LutTemplate _extract_lut_template(token_iterator&, const token_iterator);
-  TimingLut   _extract_lut         (token_iterator&, const token_iterator);
-  Cell        _extract_cell        (token_iterator&, const token_iterator);
-  Cellpin     _extract_cellpin     (token_iterator&, const token_iterator);
-  Timing      _extract_timing      (token_iterator&, const token_iterator);
+    LutTemplate _extract_lut_template(token_iterator&, const token_iterator);
+    Lut         _extract_lut         (token_iterator&, const token_iterator);
+    Cell        _extract_cell        (token_iterator&, const token_iterator);
+    Cellpin     _extract_cellpin     (token_iterator&, const token_iterator);
+    Timing      _extract_timing      (token_iterator&, const token_iterator);
 };
 
 // Operator <<

@@ -96,14 +96,14 @@ struct Timing {
   
   std::string related_pin;
 
-  std::optional<TimingSense> sense;               // by default non-sense
-  std::optional<TimingType> type;                 // by default combinational
-  std::optional<TimingLut> cell_rise;             // Delay LUT rise (sink).
-  std::optional<TimingLut> cell_fall;             // Delay LUT fall (sink).
-  std::optional<TimingLut> rise_transition;       // Slew LUT rise (sink).
-  std::optional<TimingLut> fall_transition;       // Slew LUT fall (sink).
-  std::optional<TimingLut> rise_constraint;       // Rise constraint (sink).
-  std::optional<TimingLut> fall_constraint;       // Fall constraint (sink).
+  std::optional<TimingSense> sense;         
+  std::optional<TimingType> type;           
+  std::optional<Lut> cell_rise;             
+  std::optional<Lut> cell_fall;             
+  std::optional<Lut> rise_transition;       
+  std::optional<Lut> fall_transition;       
+  std::optional<Lut> rise_constraint;       
+  std::optional<Lut> fall_constraint;       
 
   bool is_constraint() const;                     // Query the constraint status.
   bool is_hold_constraint() const;                // Query the constraint status.

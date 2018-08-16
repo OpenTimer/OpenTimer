@@ -69,8 +69,8 @@ std::string Timer::_dump_timer() const {
       << "# Arcs     : " << _arcs.size()  << '\n'
       << "# SCCs     : " << _sccs.size()  << '\n'
       << "# Tests    : " << _tests.size() << '\n'
-      << "# Cells    : " << "[early:" << _celllib[EARLY].cells.size() << "|"
-                         << "late:"   << _celllib[LATE ].cells.size() << "]\n";
+      << "# Cells    : " << std::max(_celllib[EARLY].cells.size(), 
+                                     _celllib[LATE ].cells.size()) << '\n';
 
   return oss.str();
 }

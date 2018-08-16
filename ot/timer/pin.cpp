@@ -293,7 +293,15 @@ float Pin::cap(Split el, Tran rf) const {
       return po->_load[el][rf];
     },
     [&] (CellpinView cp) {
-      return cp[el]->capacitance ? cp[el]->capacitance.value() : 0.0f;
+      if(el == RISE && cp[el]->rise_capacitance) {
+        return cp[el]->rise_capacitance.value();
+      }
+      else if(el == FALL && cp[el]->fall_capacitance) {
+        return cp[el]->fall_capacitance.value();
+      }
+      else {
+        return cp[el]->capacitance ? cp[el]->capacitance.value() : 0.0f;
+      }
     }
   }, _handle);
 }

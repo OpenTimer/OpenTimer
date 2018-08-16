@@ -37,6 +37,8 @@ void report_slack           (Timer&, std::istream&, std::ostream&, std::ostream&
 void report_tns             (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_wns             (Timer&, std::istream&, std::ostream&, std::ostream&);
 void report_fep             (Timer&, std::istream&, std::ostream&, std::ostream&);
+void report_area            (Timer&, std::istream&, std::ostream&, std::ostream&);
+void report_leakage_power   (Timer&, std::istream&, std::ostream&, std::ostream&);
 
 // Dump
 void dump_version           (Timer&, std::istream&, std::ostream&, std::ostream&);
@@ -99,6 +101,8 @@ inline const std::unordered_map<
   {"report_tns",              report_tns},
   {"report_wns",              report_wns},
   {"report_fep",              report_fep},
+  {"report_area",             report_area},
+  {"report_leakage_power",    report_leakage_power},
 
   // Dump
   {"help",                    dump_help},

@@ -110,7 +110,7 @@ std::ostream& operator << (std::ostream& os, const LutTemplate& lut) {
 // ------------------------------------------------------------------------------------------------
 
 // Function: scale_time
-void TimingLut::scale_time(float s) {
+void Lut::scale_time(float s) {
    
   if(lut_template) {
     if(auto v1 = lut_template->variable1; v1 && is_time_lut_var(*v1)) {
@@ -132,7 +132,7 @@ void TimingLut::scale_time(float s) {
 }
 
 // Function: scale_capacitance
-void TimingLut::scale_capacitance(float s) {
+void Lut::scale_capacitance(float s) {
    
   if(lut_template) {
     if(auto v1 = lut_template->variable1; v1 && is_capacitance_lut_var(*v1)) {
@@ -149,12 +149,12 @@ void TimingLut::scale_capacitance(float s) {
 }
 
 // Function: is_scalar
-bool TimingLut::is_scalar() const {
+bool Lut::is_scalar() const {
   return indices1.size() == 1 && indices2.size() == 1;
 }
 
 // Function: empty
-inline bool TimingLut::empty() const {
+inline bool Lut::empty() const {
   return indices1.size() == 0 && indices2.size() == 0;
 }
 
@@ -163,7 +163,7 @@ inline bool TimingLut::empty() const {
 // function f(x1) = y1 and f(x2) = y2. There are five cases: 1) x < x1, 2) x = x1,
 // 3) x1 < x < x2, 4) x = x2, and 5) x > x2. For cases 1) and 5), extra-polation is needed.
 // Cases 2) and 4) are boundary cases. Case 3) requires the inter-polation.
-float TimingLut::operator()(float val1, float val2) const {
+float Lut::operator()(float val1, float val2) const {
   
   if(indices1.size() < 1 || indices2.size() < 1) {
     OT_LOGF("invalid lut indices size");
@@ -249,7 +249,7 @@ float TimingLut::operator()(float val1, float val2) const {
 }
 
 // operator
-std::ostream& operator << (std::ostream& os, const TimingLut& lut) {
+std::ostream& operator << (std::ostream& os, const Lut& lut) {
 
   // Write the indices1.
   if(!lut.indices1.empty()) {

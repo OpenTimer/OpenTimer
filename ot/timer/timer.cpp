@@ -1037,6 +1037,57 @@ void Timer::_update_timing() {
   _remove_state();
 }
 
+// Procedure: _update_area
+void Timer::_update_area() {
+  
+  _update_timing();
+
+  if(_has_state(AREA_UPDATED)) {
+    return;
+  }
+  
+  _area = 0.0f;
+
+  for(const auto& kvp : _gates) {
+    if(const auto& c = kvp.second._cell[EARLY]; c->area) {
+      _area = *_area + *c->area;
+    }
+    else {
+      OT_LOGE("cell ", c->name, " has no area defined");
+      _area.reset();
+      break;
+    }
+  }
+
+  _insert_state(AREA_UPDATED);
+}
+
+// Procedure: _update_power
+void Timer::_update_power() {
+
+  _update_timing();
+
+  if(_has_state(POWER_UPDATED)) {
+    return;
+  }
+
+  // Update the static leakage power
+  _leakage_power = 0.0f;
+  
+  for(const auto& kvp : _gates) {
+    if(const auto& c = kvp.second._cell[EARLY]; c->leakage_power) {
+      _leakage_power = *_leakage_power + *c->leakage_power;
+    }
+    else {
+      OT_LOGE("cell ", c->name, " has no leakage_power defined");
+      _leakage_power.reset();
+      break;
+    }
+  }
+
+  _insert_state(POWER_UPDATED);
+}
+
 // Procedure: _update_endpoints
 void Timer::_update_endpoints() {
 
@@ -1153,6 +1204,21 @@ std::optional<size_t> Timer::fep() {
   }
 
   return v;
+}
+
+// Function: leakage_power
+std::optional<float> Timer::leakage_power() {
+  std::scoped_lock lock(_mutex);
+  _update_power();
+  return _leakage_power;
+}
+
+// Function: area
+// Sum up the area of each gate in the design.
+std::optional<float> Timer::area() {
+  std::scoped_lock lock(_mutex);
+  _update_area();
+  return _area;
 }
     
 // Procedure: _enable_full_timing_update

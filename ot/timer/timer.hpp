@@ -26,9 +26,10 @@ class Timer {
 
   friend class Shell;
   
-  constexpr static int INCREMENTAL  = 0x00;
-  constexpr static int FULL_TIMING  = 0x01;
-  constexpr static int EPTS_UPDATED = 0x02;
+  constexpr static int FULL_TIMING   = 0x01;
+  constexpr static int EPTS_UPDATED  = 0x02;
+  constexpr static int AREA_UPDATED  = 0x04;
+  constexpr static int POWER_UPDATED = 0x08;
 
   public:
     
@@ -64,6 +65,8 @@ class Timer {
     std::optional<float> slew(const std::string&, Split, Tran);
     std::optional<float> slack(const std::string&, Split, Tran);
     std::optional<float> load(const std::string&, Split, Tran);
+    std::optional<float> area();
+    std::optional<float> leakage_power();
     std::optional<float> tns();
     std::optional<float> wns();
     std::optional<size_t> fep();
@@ -126,6 +129,9 @@ class Timer {
     TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _wns;
     TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _tns;
     TimingData<std::optional<size_t>, MAX_SPLIT, MAX_TRAN> _fep;
+    
+    std::optional<float> _area;
+    std::optional<float> _leakage_power;
 
     std::deque<Pin*> _fprop_cands;
     std::deque<Pin*> _bprop_cands;
@@ -148,6 +154,8 @@ class Timer {
 
     void _update_timing();
     void _update_endpoints();
+    void _update_area();
+    void _update_power();
     void _fprop_rc_timing(Pin&);
     void _fprop_slew(Pin&);
     void _fprop_delay(Pin&);
