@@ -181,6 +181,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/s27)
 add_executable(s27 example/s27/s27.cpp)
 target_link_libraries(s27 ${OT_LINK_FLAGS})
 
+#sizer
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/sizer)
+add_executable(sizer example/sizer/sizer.cpp)
+target_link_libraries(sizer ${OT_LINK_FLAGS})
+
 #aes_cipher
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/aes_cipher)
 #add_executable(aes_cipher example/aes_cipher/aes_cipher.cpp)

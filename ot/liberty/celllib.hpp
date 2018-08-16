@@ -16,7 +16,7 @@ enum class DelayModel {
   POLYNOMIAL
 };
 
-inline const std::unordered_map<std::string, DelayModel> delay_models {
+inline const std::unordered_map<std::string_view, DelayModel> delay_models {
   {"generic_cmos",   DelayModel::GENERIC_CMOS},
   {"table_lookup",   DelayModel::TABLE_LOOKUP},
   {"cmos2",          DelayModel::CMOS2},
@@ -31,7 +31,7 @@ std::string to_string(DelayModel);
 // Class: Celllib
 struct Celllib {
   
-  using token_iterator = std::vector<std::string>::iterator;
+  using token_iterator = std::vector<std::string_view>::iterator;
 
   std::string name {"OpenTimer"};
 
@@ -63,6 +63,10 @@ struct Celllib {
     Cell        _extract_cell        (token_iterator&, const token_iterator);
     Cellpin     _extract_cellpin     (token_iterator&, const token_iterator);
     Timing      _extract_timing      (token_iterator&, const token_iterator);
+
+    void _apply_default_values();
+    void _uncomment(std::vector<char>&);
+    void _tokenize(const std::vector<char>&, std::vector<std::string_view>&);
 };
 
 // Operator <<

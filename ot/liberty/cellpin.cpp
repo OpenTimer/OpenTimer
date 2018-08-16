@@ -117,6 +117,18 @@ std::ostream& operator << (std::ostream& os, const Cellpin& p) {
   if(p.min_transition) {
     os << "    min_transition : " << *(p.min_transition) << ";\n";
   }
+  
+  if(p.fanout_load) {
+    os << "    fanout_load : " << *p.fanout_load << ";\n";
+  }
+
+  if(p.max_fanout) {
+    os << "    max_fanout : " << *p.max_fanout << ";\n";
+  }
+  
+  if(p.min_fanout) {
+    os << "    min_fanout : " << *p.min_fanout << ";\n";
+  }
 
   // Write the timing.
   for(const auto& timing : p.timings) {

@@ -2,6 +2,104 @@
 
 namespace ot {
 
+// Procedure: _uncomment
+void Celllib::_uncomment(std::vector<char>& buffer) {
+  
+  auto fsize = buffer.size() > 0 ? buffer.size() - 1 : 0;
+
+  // Mart out the comment
+  for(size_t i=0; i<fsize; ++i) {
+
+    // Block comment
+    if(buffer[i] == '/' && buffer[i+1] == '*') {
+      buffer[i] = buffer[i+1] = ' ';
+      for(i=i+2; i<fsize; buffer[i++]=' ') {
+        if(buffer[i] == '*' && buffer[i+1] == '/') {
+          buffer[i] = buffer[i+1] = ' ';
+          i = i+1;
+          break;
+        }
+      }
+    }
+    
+    // Line comment
+    if(buffer[i] == '/' && buffer[i+1] == '/') {
+      buffer[i] = buffer[i+1] = ' ';
+      for(i=i+2; i<fsize; ++i) {
+        if(buffer[i] == '\n' || buffer[i] == '\r') {
+          break;
+        }
+        else buffer[i] = ' ';
+      }
+    }
+    
+    // Pond comment
+    if(buffer[i] == '#') {
+      buffer[i] = ' ';
+      for(i=i+1; i<fsize; ++i) {
+        if(buffer[i] == '\n' || buffer[i] == '\r') {
+          break;
+        }
+        else buffer[i] = ' ';
+      }
+    }
+  }
+}
+
+// Procedure: _tokenize
+void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string_view>& tokens) {
+
+  static std::string_view dels = "(),:;/#[]{}*\"\\";
+
+  // get the position
+  const char* beg = buf.data();
+  const char* end = buf.data() + buf.size();
+
+  // Parse the token.
+  const char *token {nullptr};
+  size_t len {0};
+
+  tokens.clear();
+
+  for(const char* itr = beg; itr != end && *itr != 0; ++itr) {
+    
+    // extract the entire quoted string as a token
+    bool is_del = (dels.find(*itr) != std::string_view::npos);
+
+    if(std::isspace(*itr) || is_del) {
+      if(len > 0) {                            // Add the current token.
+        tokens.push_back({token, len});
+        token = nullptr;
+        len = 0;
+      }
+      // group delimiter is liberty token
+      if(*itr == '(' || *itr == ')' || *itr == '{' || *itr == '}') {
+        tokens.push_back({itr, 1});
+      }
+      // extract the entire quoted string (this is buggy now...)
+      //else if(*itr == '"') {
+      //  for(++itr; itr != end && *itr != '"'; ++itr, ++len) ;
+      //  if(len > 0) {
+      //    tokens.push_back({itr-len, len});
+      //    len = 0;
+      //  }
+      //}
+    } 
+    else {
+      if(len == 0) {
+        token = itr;
+      }
+      ++len;
+    }
+  }
+
+  if(len > 0) {
+    tokens.push_back({token, len});
+  } 
+}
+
+// ------------------------------------------------------------------------------------------------
+
 // Function: to_string
 std::string to_string(DelayModel m) {
   switch(m) {
@@ -83,7 +181,7 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
   if(itr=on_next_parentheses(
     itr, 
     end, 
-    [&] (auto& name) mutable { lt.name = std::move(name); }); itr == end) {
+    [&] (auto& name) mutable { lt.name = name; }); itr == end) {
     OT_LOGF("can't find lut template name");
   }
   
@@ -128,11 +226,15 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
     }
     // index_1
     else if(*itr == "index_1") {
-      itr = on_next_parentheses(itr, end, [&] (auto& str) { lt.indices1.push_back(std::stof(str)); });
+      itr = on_next_parentheses(itr, end, [&] (auto& str) { 
+        lt.indices1.push_back(std::strtof(str.data(), nullptr)); 
+      });
     }
     // index_2
     else if(*itr == "index_2") {
-      itr = on_next_parentheses(itr, end, [&] (auto& str) { lt.indices2.push_back(std::stof(str)); });
+      itr = on_next_parentheses(itr, end, [&] (auto& str) { 
+        lt.indices2.push_back(std::strtof(str.data(), nullptr)); 
+      });
     }
     else if(*itr == "}") {
       stack--;
@@ -159,7 +261,7 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   if(itr=on_next_parentheses(
     itr, 
     end, 
-    [&] (auto& name) mutable { lut.name = std::move(name); }); itr == end) {
+    [&] (auto& name) mutable { lut.name = name; }); itr == end) {
     OT_LOGF("can't find lut template name");
   }
   
@@ -177,10 +279,10 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   size_t size2 = 1;
 
   while(stack && ++itr != end) {
-    
+
     if(*itr == "index_1") { 
       itr = on_next_parentheses(itr, end, [&] (auto& v) mutable {
-        lut.indices1.push_back(std::stof(v));
+        lut.indices1.push_back(std::strtof(v.data(), nullptr));
       });
 
       if(lut.indices1.size() == 0) {
@@ -191,7 +293,7 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
     }
     else if(*itr == "index_2") {
       itr = on_next_parentheses(itr, end, [&] (auto& v) mutable {
-        lut.indices2.push_back(std::stof(v));
+        lut.indices2.push_back(std::strtof(v.data(), nullptr));
       });
 
       if(lut.indices2.size() == 0) {
@@ -220,7 +322,7 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
 
       int id {0};
       itr = on_next_parentheses(itr, end, [&] (auto& v) mutable {
-        lut.table[id++] = std::stof(v);
+        lut.table[id++] = std::strtof(v.data(), nullptr);
       });
     }
     else if(*itr == "}") {
@@ -299,7 +401,7 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
         timing.type = titr->second;
       }
       else {
-        OT_LOGW("unexpected timing type ", std::quoted(*itr));
+        OT_LOGW("unexpected timing type ", *itr);
       }
     }
     else if (*itr == "related_pin") {
@@ -308,7 +410,7 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
         OT_LOGF("syntax error in related_pin");
       }
 
-      timing.related_pin = std::move(*itr);
+      timing.related_pin = *itr;
     }
     else if(*itr == "}") {
       stack--;
@@ -335,7 +437,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
   if(itr=on_next_parentheses(
     itr, 
     end, 
-    [&] (auto& name) mutable { cellpin.name = std::move(name); }); itr == end) {
+    [&] (auto& name) mutable { cellpin.name = name; }); itr == end) {
     OT_LOGF("can't find cellpin name");
   }
   
@@ -365,31 +467,43 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     }
     else if(*itr == "capacitance") {
       OT_LOGF_IF(++itr == end, "can't get the capacitance in cellpin ", cellpin.name);
-      cellpin.capacitance = std::stof(*itr);
+      cellpin.capacitance = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "max_capacitance") {
       OT_LOGF_IF(++itr == end, "can't get the max_capacitance in cellpin ", cellpin.name);
-      cellpin.max_capacitance = std::stof(*itr);
+      cellpin.max_capacitance = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "min_capacitance") {  
       OT_LOGF_IF(++itr == end, "can't get the min_capacitance in cellpin ", cellpin.name);
-      cellpin.min_capacitance = std::stof(*itr);
+      cellpin.min_capacitance = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "max_transition") {        
       OT_LOGF(++itr == end, "can't get the max_transition in cellpin ", cellpin.name);
-      cellpin.max_transition = std::stof(*itr);
+      cellpin.max_transition = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "min_transition") {          
       OT_LOGF_IF(++itr == end, "can't get the min_transition in cellpin ", cellpin.name);
-      cellpin.min_transition = std::stof(*itr);
+      cellpin.min_transition = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "fall_capacitance") {
       OT_LOGF_IF(++itr == end, "can't get fall_capacitance in cellpin ", cellpin.name);
-      cellpin.fall_capacitance = std::stof(*itr);
+      cellpin.fall_capacitance = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "rise_capacitance") {
       OT_LOGF_IF(++itr == end, "can't get rise_capacitance in cellpin ", cellpin.name);
-      cellpin.rise_capacitance = std::stof(*itr);
+      cellpin.rise_capacitance = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "fanout_load") {
+      OT_LOGF_IF(++itr == end, "can't get fanout_load in cellpin ", cellpin.name);
+      cellpin.fanout_load = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "max_fanout") {
+      OT_LOGF_IF(++itr == end, "can't get max_fanout in cellpin ", cellpin.name);
+      cellpin.max_fanout = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "min_fanout") {
+      OT_LOGF_IF(++itr == end, "can't get min_fanout in cellpin ", cellpin.name);
+      cellpin.min_fanout = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "clock") {  
       OT_LOGF_IF(++itr == end, "can't get the clock status in cellpin ", cellpin.name);
@@ -397,7 +511,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     }
     else if(*itr == "original_pin") {
       OT_LOGF_IF(++itr ==end, "can't get the original pin in cellpin ", cellpin.name);
-      cellpin.original_pin = std::move(*itr);
+      cellpin.original_pin = *itr;
     }
     else if(*itr == "timing") {
       cellpin.timings.push_back(_extract_timing(itr, end));
@@ -427,7 +541,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   if(itr=on_next_parentheses(
     itr, 
     end, 
-    [&] (auto& name) mutable { cell.name = std::move(name); }); itr==end) {
+    [&] (auto& name) mutable { cell.name = name; }); itr==end) {
     OT_LOGF("can't find cell name");
   }
 
@@ -444,15 +558,15 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
     
     if(*itr == "cell_leakage_power") {               // Read the leakage power.
       OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
-      cell.leakage_power = std::stof(*itr);
+      cell.leakage_power = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "cell_footprint") {              // Read the footprint.
       OT_LOGF_IF(++itr == end, "can't get footprint in cell ", cell.name);
-      cell.cell_footprint = std::move(*itr);
+      cell.cell_footprint = *itr;
     }
     else if(*itr == "area") {                        // Read the area.
       OT_LOGF_IF(++itr == end, "can't get area in cell ", cell.name);
-      cell.area = std::stof(*itr);
+      cell.area = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "pin") {                         // Read the cell pin group.
       auto pin = _extract_cellpin(itr, end);
@@ -479,17 +593,26 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
 // Procedure: read
 void Celllib::read(const std::filesystem::path& path) {
   
-  OT_LOGE_RIF(
-    path.empty() || !std::filesystem::exists(path),
-    "celllib ", path, " doesn't exist"
-  );
+  std::ifstream ifs(path, std::ios::ate);
+  
+  // return on failure
+  OT_LOGE_RIF(!ifs, "failed to open celllib ", path);
 
+  // Read the file to a local buffer.
   OT_LOGI("loading celllib ", path, " ...");
 
-  static std::string_view delimiters = "(),:;/#[]{}*\"\\";
-  static std::string_view exceptions = "(){}";
+  size_t fsize = ifs.tellg();
+  ifs.seekg(0, std::ios::beg);
+  std::vector<char> buffer(fsize + 1);
+  ifs.read(buffer.data(), fsize);
+  buffer[fsize] = 0;
 
-  auto tokens = tokenize(path, delimiters, exceptions);
+  // get tokens
+  std::vector<std::string_view> tokens;
+  tokens.reserve(buffer.size() / sizeof(std::string));
+
+  _uncomment(buffer);
+  _tokenize (buffer, tokens);
 
   // Set up the iterator
   auto itr = tokens.begin();
@@ -503,7 +626,7 @@ void Celllib::read(const std::filesystem::path& path) {
   if(itr = on_next_parentheses(
     itr, 
     end, 
-    [&] (auto& str) mutable { name = std::move(str); }); itr == end) {
+    [&] (auto& str) mutable { name = str; }); itr == end) {
     OT_LOGF("can't find library name");
   }
 
@@ -518,7 +641,7 @@ void Celllib::read(const std::filesystem::path& path) {
     
     if(*itr == "lu_table_template") {
       auto lut = _extract_lut_template(itr, end);
-      lut_templates[lut.name] = std::move(lut);
+      lut_templates[lut.name] = lut;
     }
     else if(*itr == "delay_model") {
       OT_LOGF_IF(++itr == end, "syntax error in delay_model");
@@ -531,31 +654,31 @@ void Celllib::read(const std::filesystem::path& path) {
     }
     else if(*itr == "default_cell_leakage_power") {
       OT_LOGF_IF(++itr == end, "syntax error in default_cell_leakage_power");
-      default_cell_leakage_power = std::stof(*itr);
+      default_cell_leakage_power = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_inout_pin_cap") {
       OT_LOGF_IF(++itr == end, "syntax error in default_inout_pin_cap");
-      default_inout_pin_cap = std::stof(*itr);
+      default_inout_pin_cap = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_input_pin_cap") {
       OT_LOGF_IF(++itr == end, "syntax error in default_input_pin_cap");
-      default_input_pin_cap = std::stof(*itr);
+      default_input_pin_cap = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_output_pin_cap") {
       OT_LOGF_IF(++itr == end, "syntax error in default_output_pin_cap");
-      default_output_pin_cap = std::stof(*itr);
+      default_output_pin_cap = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_fanout_load") {
       OT_LOGF_IF(++itr == end, "syntax error in default_fanout_load");
-      default_fanout_load = std::stof(*itr);
+      default_fanout_load = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_max_fanout") {
       OT_LOGF_IF(++itr == end, "syntax error in default_max_fanout");
-      default_max_fanout = std::stof(*itr);
+      default_max_fanout = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_max_transition") {
       OT_LOGF_IF(++itr == end, "syntax error in default_max_transition");
-      default_max_transition = std::stof(*itr);
+      default_max_transition = std::strtof(itr->data(), nullptr);
     }
     // TODO: Unit field.
     else if(*itr == "time_unit") {
@@ -600,6 +723,69 @@ void Celllib::read(const std::filesystem::path& path) {
     OT_LOGF("can't find library group brace '}'");
   }
 
+  _apply_default_values();
+}
+  
+// Procedure: _apply_default_values
+void Celllib::_apply_default_values() {  
+
+  for(auto& ckvp : cells) {
+    
+    auto& cell = ckvp.second;
+    
+    // apply the default leakage power
+    if(!cell.leakage_power) {
+      cell.leakage_power = default_cell_leakage_power;
+    }
+
+    for(auto& pkvp : cell.cellpins) {
+
+      auto& cpin = pkvp.second;
+
+      // direction-specific default values
+      if(!cpin.direction) {
+        OT_LOGW("cellpin ", cell.name, '/', cpin.name, " has no direction defined");
+        continue;
+      }
+
+      switch(*cpin.direction) {
+
+        case CellpinDirection::INPUT:
+          if(!cpin.capacitance) {
+            cpin.capacitance = default_input_pin_cap;
+          }
+
+          if(!cpin.fanout_load) {
+            cpin.fanout_load = default_fanout_load;
+          }
+        break;
+
+        case CellpinDirection::OUTPUT:
+          if(!cpin.capacitance) {
+            cpin.capacitance = default_output_pin_cap;
+          }
+
+          if(!cpin.max_fanout) {
+            cpin.max_fanout = default_max_fanout;
+          }
+
+          if(!cpin.max_transition) {
+            cpin.max_transition = default_max_transition;
+          }
+        break;
+
+        case CellpinDirection::INOUT:
+          if(!cpin.capacitance) {
+            cpin.capacitance = default_inout_pin_cap;
+          }
+        break;
+
+        case CellpinDirection::INTERNAL:
+        break;
+      }
+      
+    }
+  }
 }
 
 //// Procedure: to_time_unit
@@ -686,11 +872,36 @@ std::ostream& operator << (std::ostream& os, const Celllib& c) {
   os << "/* Generated by OpenTimer " << " */\n";
   
   // Write library name.
-  os << "library (\"" << c.name << "\") {\n";
+  os << "library (\"" << c.name << "\") {\n\n";
 
   // Delay modeA
   if(c.delay_model) {
     os << "delay_model : " << to_string(*(c.delay_model)) << ";\n";
+  }
+  
+  // default values
+  if(c.default_cell_leakage_power) {
+    os << *c.default_cell_leakage_power << '\n';
+  }
+
+  if(c.default_inout_pin_cap) {
+    os << *c.default_inout_pin_cap << '\n';
+  }
+
+  if(c.default_input_pin_cap) {
+    os << *c.default_input_pin_cap << '\n';
+  }
+
+  if(c.default_output_pin_cap) {
+    os << *c.default_fanout_load << '\n';
+  }
+  
+  if(c.default_max_fanout) {
+    os << *c.default_max_fanout << '\n';
+  }
+  
+  if(c.default_max_transition) {
+    os << *c.default_max_transition << '\n';
   }
 
   // Write the lut templates

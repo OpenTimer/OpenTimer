@@ -293,10 +293,10 @@ float Pin::cap(Split el, Tran rf) const {
       return po->_load[el][rf];
     },
     [&] (CellpinView cp) {
-      if(el == RISE && cp[el]->rise_capacitance) {
+      if(rf == RISE && cp[el]->rise_capacitance) {
         return cp[el]->rise_capacitance.value();
       }
-      else if(el == FALL && cp[el]->fall_capacitance) {
+      else if(rf == FALL && cp[el]->fall_capacitance) {
         return cp[el]->fall_capacitance.value();
       }
       else {
@@ -338,10 +338,6 @@ void Pin::_relax_slew(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float 
         _slew[tel][trf].emplace(arc, fel, frf, val);
       }
     break;
-
-    default:
-      assert(false);
-    break;
   };
 }
 
@@ -352,26 +348,13 @@ void Pin::_relax_at(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float va
   switch (tel) {
     case EARLY:
       if(!_at[tel][trf] || val < *_at[tel][trf]) {
-        //_at[tel][trf] = val;
-        //set_at(el, trf, val);
-        //set_is_at_clocked(el, trf, e->pi_node_ptr()->is_at_clocked(el, frf));
-        //set_at_parent_ptr(el, trf, e->pi_node_ptr());
-        //set_at_parent_rf(el, trf, frf);
-
         _at[tel][trf].emplace(arc, fel, frf, val);
       }
     break;
     case LATE:
       if(!_at[tel][trf] || val > *_at[tel][trf]) {
-        //_at[tel][trf] = val;
-        //set_is_at_clocked(el, trf, e->pi_node_ptr()->is_at_clocked(el, frf));
-        //set_at_parent_ptr(el, trf, e->pi_node_ptr());
-        //set_at_parent_rf(el, trf, frf);
         _at[tel][trf].emplace(arc, fel, frf, val);
       }
-    break;
-    default:
-      assert(false);
     break;
   }
 }
@@ -384,20 +367,14 @@ void Pin::_relax_rat(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float v
 
     case EARLY:
       if(!_rat[fel][frf] || val > *_rat[fel][frf]) {
-        //_rat[fel][frf] = val;
         _rat[fel][frf].emplace(arc, tel, trf, val);
       }
     break;
 
     case LATE:
       if(!_rat[fel][frf] || val < *_rat[fel][frf]) {
-        //_rat[fel][frf] = val;
         _rat[fel][frf].emplace(arc, tel, trf, val);
       }
-    break;
-
-    default:
-      assert(false);
     break;
   };
 }

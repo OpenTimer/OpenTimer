@@ -128,7 +128,7 @@ std::vector<std::string> tokenize(
       }
     }
     
-    // Line comment
+    // Pond comment
     if(buffer[i] == '#') {
       buffer[i] = ' ';
       for(i=i+1; i<fsize; ++i) {

@@ -49,7 +49,7 @@ enum class TimingType {
   NOCHANGE_LOW_LOW,
 };
   
-inline const std::unordered_map<std::string, TimingType> timing_types = {
+inline const std::unordered_map<std::string_view, TimingType> timing_types = {
   {"combinational",            TimingType::COMBINATIONAL},
   {"combinational_rise",       TimingType::COMBINATIONAL_RISE},
   {"combinational_fall",       TimingType::COMBINATIONAL_FALL},

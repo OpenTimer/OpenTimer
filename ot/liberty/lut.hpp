@@ -18,7 +18,7 @@ enum class LutVar {
 };
 
 // Variable mapping
-inline const std::unordered_map<std::string, LutVar> lut_vars {
+inline const std::unordered_map<std::string_view, LutVar> lut_vars {
   {"total_output_net_capacitance", LutVar::TOTAL_OUTPUT_NET_CAPACITANCE},
   {"input_net_transition",         LutVar::INPUT_NET_TRANSITION},
   {"constrained_pin_transition",   LutVar::CONSTRAINED_PIN_TRANSITION},
