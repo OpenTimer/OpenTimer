@@ -361,7 +361,7 @@ The folder [example](./example) contains several examples and is a great place t
 | Example |  Description | Library |
 | ------- |  ----------- | ---- |
 | [simple](./example/simple) | A timing report example on a sequential circuit design. | [OSU Free PDK 45nm][OSUPDK] |
-| [sizer](./example/sizer) | A gate-sizing example using OpenTimer shell commands ([sizer.conf](./example/sizer/sizer.conf)) and C++ API ([sizer.cpp](./example/sizer/sizer.cpp)). | [NanGate 45nm Open Cell Library][NanGate] |
+| [sizer](./example/sizer) | A gate-sizing example on a design with six NAND2 cells. | [NanGate 45nm Open Cell Library][NanGate] |
 | [optimizer](./example/optimizer) | A timing-driven optimization example plus incremental timing update. | [TAU15 contest library][TAU15] |
 
 The folder [benchmark](./benchmark) contains more designs and they are mainly used for internal regression 
