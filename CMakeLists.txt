@@ -176,10 +176,15 @@ message(STATUS "OpenTimer shell: ${OT_SHELL}")
 # Example
 ###########################################################
 
-#s27
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/s27)
-add_executable(s27 example/s27/s27.cpp)
-target_link_libraries(s27 ${OT_LINK_FLAGS})
+#simple
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/simple)
+add_executable(simple example/simple/simple.cpp)
+target_link_libraries(simple ${OT_LINK_FLAGS})
+
+#optimizer
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/optimizer)
+add_executable(optimizer example/optimizer/optimizer.cpp)
+target_link_libraries(optimizer ${OT_LINK_FLAGS})
 
 #sizer
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/sizer)

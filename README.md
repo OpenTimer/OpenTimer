@@ -358,11 +358,11 @@ To see the full API list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
 The folder [example](./example) contains several examples and is a great place to learn how to use OpenTimer.
 
-| Example |  Description | How to Run? |
+| Example |  Description | Library |
 | ------- |  ----------- | ---- |
-| [simple](./example/simple) | A simple sequential circuit design with one FF, four gates, and a clock. | ot-shell < simple.conf |
-| [c17](./example/c17) | A combinational circuit design with six NAND gates, no clock.| ot-shell < c17.conf |
-| [s27](./example/s27) | A C++ application using OpenTimer API to analyze the timing of a sequential circuit.| ./s27 |
+| [simple](./example/simple) | A timing report example on a sequential circuit design. | [OSU Free PDK 45nm][OSUPDK] |
+| [sizer](./example/sizer) | A gate-sizing example using OpenTimer shell commands ([sizer.conf](./example/sizer/sizer.conf)) and C++ API ([sizer.cpp](./example/sizer/sizer.cpp)). | [NanGate 45nm Open Cell Library][NanGate] |
+| [optimizer](./example/optimizer) | A timing-driven optimization example plus incremental timing update. | [TAU15 contest library][TAU15] |
 
 The folder [benchmark](./benchmark) contains more designs and they are mainly used for internal regression 
 and integration tests.
@@ -486,5 +486,7 @@ THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR I
 [NSF]:                   https://www.nsf.gov/
 [UIUC]:                  https://illinois.edu/
 [CSL]:                   https://csl.illinois.edu/
+[NanGate]:               http://www.nangate.com/?page_id=22
+[OSUPDK]:                https://vlsiarch.ecen.okstate.edu/flow/
   
 
