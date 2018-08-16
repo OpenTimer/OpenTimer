@@ -410,6 +410,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Jin Hu][Jin Hu] helped define the timing API and produced the golden benchmarks for integration tests.
 - [Myung-Chul Kim][Myung-Chul Kim] helped test OpenTimer through ICCAD CAD contest.
 - [George Chen][George Chen] helped defined path report formats and test OpenTimer through TAU contest.
+- [Jignesh Shah][Jignesh Shah] contributed to the area and power report commands.
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 - [Leslie Hwang][Leslie Hwang] reviewed the documentation and README.
 
