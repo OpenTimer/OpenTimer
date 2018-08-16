@@ -306,9 +306,6 @@ void Timer::_connect_pin(Pin& pin, Net& net) {
   }
 
   // TODO(twhuang) Enable the clock tree update?
-  //if(pin_ptr->node_ptr()->is_in_clock_tree()) {
-  //  circuit_ptr()->clock_tree_ptr()->enable_clock_tree_update();
-  //}
 }
 
 // Procedure: disconnect_pin
@@ -361,9 +358,6 @@ void Timer::_disconnect_pin(Pin& pin) {
   }
   
   // TODO: Enable the clock tree update.
-  //if(pin_ptr->node_ptr()->is_in_clock_tree()) {
-  //  circuit_ptr()->clock_tree_ptr()->enable_clock_tree_update();
-  //}
   
   // Remove the pin from the net and enable the rc timing update.
   net->_remove_pin(pin);

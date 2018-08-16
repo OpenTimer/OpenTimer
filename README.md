@@ -42,7 +42,6 @@ under the `bin` directory.
 \____/ .__/\__/_//_/_/ /_/_/_/_/\__/_/       v2.0.0 (alpha)
     /_/                                     
 MIT License: type "license" to see more details.
-To see the contributor list, type "contributors".
 For help, type "help".
 For bug reports, issues, and manual, please see:
 <https://github.com/OpenTimer/OpenTimer>.
@@ -368,7 +367,6 @@ The folder [benchmark](./benchmark) contains more designs and they are mainly us
 and integration tests.
 
 
-
 # Who is Using OpenTimer?
 
 OpenTimer is an award-winning tools. It won ACM TAU Timing Analysis Contests multiple times
@@ -444,7 +442,6 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 
 * * *
 
