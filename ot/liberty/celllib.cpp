@@ -510,7 +510,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.is_clock = (*itr == "true") ? true : false;
     }
     else if(*itr == "original_pin") {
-      OT_LOGF_IF(++itr ==end, "can't get the original pin in cellpin ", cellpin.name);
+      OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = *itr;
     }
     else if(*itr == "timing") {
@@ -549,8 +549,6 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   if(itr = std::find(itr, end, "{"); itr == end) {
     OT_LOGF("can't find group brace '{' in cell ", cell.name);
   }
-
-  //std::cout << cell.name << std::endl;
 
   int stack = 1;
   
@@ -683,23 +681,23 @@ void Celllib::read(const std::filesystem::path& path) {
     // TODO: Unit field.
     else if(*itr == "time_unit") {
       OT_LOGF_IF(++itr == end, "time_unit syntax error");
-      time_unit = make_time_unit(itr->data());
+      time_unit = make_time_unit(*itr);
     }
     else if(*itr == "voltage_unit") {
       OT_LOGF_IF(++itr == end, "voltage_unit syntax error");
-      voltage_unit = make_voltage_unit(itr->data());
+      voltage_unit = make_voltage_unit(*itr);
     }
     else if(*itr == "current_unit") {
       OT_LOGF_IF(++itr == end, "current_unit syntax error");
-      current_unit = make_current_unit(itr->data());
+      current_unit = make_current_unit(*itr);
     }
     else if(*itr == "pulling_resistance_unit") {
       OT_LOGF_IF(++itr == end, "pulling_resistance_unit syntax error");
-      resistance_unit = make_resistance_unit(itr->data());
+      resistance_unit = make_resistance_unit(*itr);
     }
     else if(*itr == "leakage_power_unit") {
       OT_LOGF_IF(++itr == end, "leakage_power_unit syntax error");
-      power_unit = make_power_unit(itr->data());
+      power_unit = make_power_unit(*itr);
     }
     else if(*itr == "capacitive_load_unit") {
       std::string unit;
@@ -794,15 +792,9 @@ void Celllib::_apply_default_values() {
   }
 }
 
-// Procedure: to_time_unit
+// Procedure: scale_time
 // Convert the numerics to the new unit
-void Celllib::to_time_unit(const second_t& unit) {
-  
-  float s = (time_unit) ? static_cast<float>(*time_unit / unit) : 1.0f;
-
-  if(time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
+void Celllib::scale_time(float s) {
   
   if(default_max_transition) {
     default_max_transition = *default_max_transition * s;
@@ -813,14 +805,8 @@ void Celllib::to_time_unit(const second_t& unit) {
   }
 }
 
-// Procedure: to_capacitance_unit
-void Celllib::to_capacitance_unit(const farad_t& unit) {
-  
-  float s = (capacitance_unit) ? static_cast<float>(*capacitance_unit / unit) : 1.0f;
-
-  if(capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-    return;
-  }
+// Procedure: scale_capacitance
+void Celllib::scale_capacitance(float s) {
   
   if(default_inout_pin_cap) {
     default_inout_pin_cap = *default_inout_pin_cap * s;
@@ -839,53 +825,26 @@ void Celllib::to_capacitance_unit(const farad_t& unit) {
   }
 }
 
-//// Procedure: to_voltage_unit
-//void Celllib::to_voltage_unit(const VoltageUnit& unit) {
-//
-//  float s = (voltage_unit) ? divide_voltage_unit(*voltage_unit, unit) : 1.0f;
-//
-//  if(voltage_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  // TODO
-//}
-//
-//// Procedure: to_current_unit
-//void Celllib::to_current_unit(const CurrentUnit& unit) {
-//
-//  float s = (current_unit) ? divide_current_unit(*current_unit, unit) : 1.0f;
-//
-//  if(current_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  // TODO
-//}
-//
-//// Procedure: to_resistance_unit
-//void Celllib::to_resistance_unit(const ResistanceUnit& unit) {
-//
-//  float s = (resistance_unit) ? divide_resistance_unit(*resistance_unit, unit) : 1.0f;
-//
-//  if(resistance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  // TODO
-//}
-//
-//// Procedure: to_power_unit
-//void Celllib::to_power_unit(const PowerUnit& unit) {
-//
-//  float s = (power_unit) ? divide_power_unit(*power_unit, unit) : 1.0f;
-//
-//  if(power_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  // TODO
-//}
+// Procedure: scale_voltage
+void Celllib::scale_voltage(float s) {
+  // TODO
+}
+
+// Procedure: scale_current
+void Celllib::scale_current(float s) {
+
+  // TODO
+}
+
+// Procedure: scale_resistance
+void Celllib::scale_resistance(float s) {
+  // TODO
+}
+
+// Procedure: scale_power
+void Celllib::scale_power(float s) {
+  // TODO
+}
 
 // Operator: <<
 std::ostream& operator << (std::ostream& os, const Celllib& c) {
@@ -899,6 +858,31 @@ std::ostream& operator << (std::ostream& os, const Celllib& c) {
   // Delay modeA
   if(c.delay_model) {
     os << "delay_model : " << to_string(*(c.delay_model)) << ";\n";
+  }
+
+  // Library units
+  if(auto u = c.time_unit; u) {
+    os << "time_unit : \"" << u->value() << "s\"\n";
+  }
+
+  if(auto u = c.voltage_unit; u) {
+    os << "voltage_unit : \"" << u->value() << "V\"\n";
+  }
+  
+  if(auto u = c.current_unit; u) {
+    os << "current_unit : \"" << u->value() << "A\"\n";
+  }
+  
+  if(auto u = c.resistance_unit; u) {
+    os << "pulling_resistance_unit : \"" << u->value() << "ohm\"\n";
+  }
+
+  if(auto u = c.power_unit; u) {
+    os << "leakage_power_unit : \"" << u->value() << "W\"\n";
+  }
+
+  if(auto u = c.capacitance_unit; u) {
+    os << "capacitive_load_unit (" << u->value() << ",F)\"\n";
   }
   
   // default values

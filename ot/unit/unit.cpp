@@ -3,7 +3,7 @@
 namespace ot {
 
 // Function: make_time_unit
-std::optional<second_t> make_time_unit(const std::string& str) {
+std::optional<second_t> make_time_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -12,7 +12,7 @@ std::optional<second_t> make_time_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;
@@ -50,7 +50,7 @@ std::optional<second_t> make_time_unit(const std::string& str) {
 }
 
 // Function: make_power_unit
-std::optional<watt_t> make_power_unit(const std::string& str) {
+std::optional<watt_t> make_power_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -59,7 +59,7 @@ std::optional<watt_t> make_power_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;
@@ -99,7 +99,7 @@ std::optional<watt_t> make_power_unit(const std::string& str) {
 }
 
 // Function: make_capacitance_unit
-std::optional<farad_t> make_capacitance_unit(const std::string& str) {
+std::optional<farad_t> make_capacitance_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -108,7 +108,7 @@ std::optional<farad_t> make_capacitance_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;
@@ -148,7 +148,7 @@ std::optional<farad_t> make_capacitance_unit(const std::string& str) {
 }
 
 // Function: make_voltage_unit
-std::optional<volt_t> make_voltage_unit(const std::string& str) {
+std::optional<volt_t> make_voltage_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -157,7 +157,7 @@ std::optional<volt_t> make_voltage_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;
@@ -197,7 +197,7 @@ std::optional<volt_t> make_voltage_unit(const std::string& str) {
 }
 
 // Function: make_current_unit
-std::optional<ampere_t> make_current_unit(const std::string& str) {
+std::optional<ampere_t> make_current_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -206,7 +206,7 @@ std::optional<ampere_t> make_current_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;
@@ -246,7 +246,7 @@ std::optional<ampere_t> make_current_unit(const std::string& str) {
 }
 
 // Function: make_resistance_unit
-std::optional<ohm_t> make_resistance_unit(const std::string& str) {
+std::optional<ohm_t> make_resistance_unit(std::string_view str) {
 
   using namespace units::literals;
 
@@ -255,7 +255,7 @@ std::optional<ohm_t> make_resistance_unit(const std::string& str) {
     std::regex::icase
   );
 
-  if(std::smatch pieces; std::regex_match(str, pieces, unit_regex)) {
+  if(std::cmatch pieces; std::regex_match(str.begin(), str.end(), pieces, unit_regex)) {
 
     if(pieces.size() != 4) {
       return std::nullopt;

@@ -17,10 +17,6 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
         return true;
       }
     break;
-
-    default:
-      assert(false);
-    break;
   }
 
   return false;
@@ -62,7 +58,7 @@ Timer& Timer::celllib(std::filesystem::path path, std::optional<Split> el) {
 // Procedure: _merge_celllib
 void Timer::_merge_celllib(Celllib& lib, Split el) {
 
-  //_rebase_unit(lib);
+  _rebase_unit(lib);
   
   // Merge the lut template
   _celllib[el].lut_templates.merge(std::move(lib.lut_templates));

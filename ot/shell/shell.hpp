@@ -7,6 +7,7 @@
 namespace ot {
 
 // Builder
+void set_units              (Timer&, std::istream&, std::ostream&, std::ostream&);
 void set_num_threads        (Timer&, std::istream&, std::ostream&, std::ostream&);
 void read_verilog           (Timer&, std::istream&, std::ostream&, std::ostream&);      
 void read_spef              (Timer&, std::istream&, std::ostream&, std::ostream&);         
@@ -71,6 +72,7 @@ inline const std::unordered_map<
 > commands {
 
   // Builder
+  {"set_units",               set_units},
   {"set_num_threads",         set_num_threads},
   {"read_verilog",            read_verilog},
   {"read_spef",               read_spef},

@@ -1225,9 +1225,7 @@ void Timer::_insert_full_timing_frontiers() {
 
   // insert all zero-fanin pins to the frontier list
   for(auto& kvp : _pins) {
-    if(auto& pin = kvp.second; pin.num_fanins() == 0) {
-      _insert_frontier(pin);
-    }
+    _insert_frontier(kvp.second);
   }
 
   // clear the rc-net update flag

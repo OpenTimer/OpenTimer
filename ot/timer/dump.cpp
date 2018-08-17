@@ -48,29 +48,44 @@ std::string Timer::_dump_timer() const {
   
   std::ostringstream oss;
 
-  oss << "OpenTimer " << OT_VERSION << '\n'
-      //<< "Time       : " 
-      //<< (_time_unit ? dump_time_unit(*_time_unit) : "n/a"s) << '\n'
-      //<< "Capacitance: " 
-      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s) << '\n'
-      //<< "Voltage    : "
-      //<< (_voltage_unit ? dump_voltage_unit(*_voltage_unit) : "n/a"s) << '\n'
-      //<< "Resistance : " 
-      //<< (_resistance_unit ? dump_resistance_unit(*_resistance_unit) : "n/a"s) << '\n'
-      //<< "Current    : " 
-      //<< (_current_unit ? dump_current_unit(*_current_unit) : "n/a"s) << '\n'
-      //<< "Power      : " 
-      //<< (_power_unit ? dump_power_unit(*_power_unit) : "n/a"s) << '\n'
-      << "# Pins     : " << _pins.size()  << '\n'
-      << "# POs      : " << _pos.size()   << '\n'
-      << "# PIs      : " << _pis.size()   << '\n'
-      << "# Gates    : " << _gates.size() << '\n'
-      << "# Nets     : " << _nets.size()  << '\n'
-      << "# Arcs     : " << _arcs.size()  << '\n'
-      << "# SCCs     : " << _sccs.size()  << '\n'
-      << "# Tests    : " << _tests.size() << '\n'
-      << "# Cells    : " << std::max(_celllib[EARLY].cells.size(), 
-                                     _celllib[LATE ].cells.size()) << '\n';
+  oss << "OpenTimer " << OT_VERSION << '\n';
+  
+  // units
+  if(_time_unit) {
+    oss << "Time unit        : " << *_time_unit << '\n';
+  }
+  
+  if(_capacitance_unit) {
+    oss << "Capacitance unit : " << *_capacitance_unit << '\n';
+  }
+
+  if(_voltage_unit) {
+    oss << "Voltage unit     : " << *_voltage_unit << '\n';
+  }
+
+  if(_resistance_unit) {
+    oss << "Resistance unit  : " << *_resistance_unit << '\n';
+  }
+
+  if(_current_unit) {
+    oss << "Current unit     : " << *_current_unit << '\n';
+  }
+
+  if(_power_unit) {
+    oss << "Power unit       : "  << *_power_unit << '\n';
+  }
+  
+  // design statistics
+  oss << "# Pins           : " << _pins.size()  << '\n'
+      << "# POs            : " << _pos.size()   << '\n'
+      << "# PIs            : " << _pis.size()   << '\n'
+      << "# Gates          : " << _gates.size() << '\n'
+      << "# Nets           : " << _nets.size()  << '\n'
+      << "# Arcs           : " << _arcs.size()  << '\n'
+      << "# SCCs           : " << _sccs.size()  << '\n'
+      << "# Tests          : " << _tests.size() << '\n'
+      << "# Cells          : " << std::max(_celllib[EARLY].cells.size(), 
+                                           _celllib[LATE ].cells.size()) << '\n';
 
   return oss.str();
 }

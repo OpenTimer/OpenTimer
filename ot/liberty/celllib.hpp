@@ -56,12 +56,12 @@ struct Celllib {
   std::unordered_map<std::string, Cell> cells;
 
   void read(const std::filesystem::path&);
-  void to_time_unit(const second_t&);
-  void to_resistance_unit(const ohm_t&);
-  void to_power_unit(const watt_t&);
-  void to_capacitance_unit(const farad_t&);
-  void to_current_unit(const ampere_t&);
-  void to_voltage_unit(const volt_t&);
+  void scale_time(float);
+  void scale_resistance(float);
+  void scale_power(float);
+  void scale_capacitance(float);
+  void scale_current(float);
+  void scale_voltage(float);
 
   const LutTemplate* lut_template(const std::string&) const;
   const Cell* cell(const std::string&) const;

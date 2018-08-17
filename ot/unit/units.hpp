@@ -43,6 +43,9 @@
 
 #pragma once
 
+
+#define UNIT_LIB_DISABLE_IOSTREAM
+
 #ifndef units_h__
 #define units_h__
 

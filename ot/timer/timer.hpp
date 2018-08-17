@@ -35,7 +35,7 @@ class Timer {
     
     // Builder
     Timer& num_threads(unsigned);
-    Timer& celllib(std::filesystem::path, std::optional<Split>);
+    Timer& celllib(std::filesystem::path, std::optional<Split> = {});
     Timer& verilog(std::filesystem::path);
     Timer& spef(std::filesystem::path);
     Timer& sdc(std::filesystem::path);
@@ -178,6 +178,8 @@ class Timer {
     void _to_power_unit(const watt_t&);
     void _to_current_unit(const ampere_t&);
     void _to_voltage_unit(const volt_t&);
+    void _rebase_unit(Celllib&);
+    void _rebase_unit(spef::Spef&);
     void _update_timing();
     void _update_endpoints();
     void _update_area();

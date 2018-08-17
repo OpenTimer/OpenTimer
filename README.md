@@ -360,6 +360,7 @@ The folder [example](./example) contains several examples and is a great place t
 | Example |  Description | Library |
 | ------- |  ----------- | ---- |
 | [simple](./example/simple) | A timing report example on a sequential circuit design. | [OSU Free PDK 45nm][OSUPDK] |
+| [unit](./example/unit) | A dimensional analysis example with different time unit conversions. | [OSU Free PDK 45nm][OSUPDK] |
 | [sizer](./example/sizer) | A gate-sizing example on a design with six NAND2 cells. | [NanGate 45nm Open Cell Library][NanGate] |
 | [optimizer](./example/optimizer) | A timing-driven optimization example plus incremental timing update. | [TAU15 contest library][TAU15] |
 
