@@ -2,7 +2,7 @@
 
 #include "doctest.h"
 #include <ot/unit/unit.hpp>
-
+/*
 // Testcase: TimeUnit
 TEST_CASE("TimeUnit") {
 
@@ -160,5 +160,5 @@ TEST_CASE("PowerUnit") {
   REQUIRE(std::fabs(ot::divide_power_unit(nW, uW) - 0.001f) < 1e-6);
   REQUIRE(std::fabs(ot::divide_power_unit(uW, mW) - 0.001f) < 1e-6);
 }
-
+*/
 

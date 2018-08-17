@@ -58,6 +58,14 @@ void Cellpin::scale_capacitance(float s) {
     max_capacitance = max_capacitance.value() * s;
   }
 
+  if(fall_capacitance) {
+    fall_capacitance = fall_capacitance.value() * s;
+  }
+
+  if(rise_capacitance) {
+    rise_capacitance = rise_capacitance.value() * s;
+  }
+
   for(auto& timing : timings) {
     timing.scale_capacitance(s);
   }

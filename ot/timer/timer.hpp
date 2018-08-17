@@ -56,6 +56,12 @@ class Timer {
     Timer& clock(std::string, float);
     Timer& clock(std::string, std::string, float);
     Timer& cppr(bool);
+    Timer& time_unit(second_t);
+    Timer& capacitance_unit(farad_t);
+    Timer& resistance_unit(ohm_t);
+    Timer& voltage_unit(volt_t);
+    Timer& power_unit(watt_t);
+    Timer& current_unit(ampere_t);
 
     // Action.
     void update_timing();
@@ -98,6 +104,13 @@ class Timer {
     inline auto num_tests() const;
     inline auto num_sccs() const;
 
+    inline auto time_unit() const;
+    inline auto power_unit() const;
+    inline auto resistance_unit() const;
+    inline auto current_unit() const;
+    inline auto voltage_unit() const;
+    inline auto capacitance_unit() const;
+
   private:
 
     mutable std::shared_mutex _mutex;
@@ -110,6 +123,13 @@ class Timer {
 
     std::optional<tf::Taskflow::Task> _lineage;
     std::optional<CpprAnalysis> _cppr_analysis;
+
+    std::optional<second_t> _time_unit;
+    std::optional<watt_t> _power_unit;
+    std::optional<ohm_t> _resistance_unit;
+    std::optional<farad_t> _capacitance_unit;
+    std::optional<ampere_t> _current_unit;
+    std::optional<volt_t> _voltage_unit;
 
     TimingData<Celllib, MAX_SPLIT> _celllib;
 
@@ -152,6 +172,12 @@ class Timer {
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
+    void _to_time_unit(const second_t&);
+    void _to_capacitance_unit(const farad_t&);
+    void _to_resistance_unit(const ohm_t&);
+    void _to_power_unit(const watt_t&);
+    void _to_current_unit(const ampere_t&);
+    void _to_voltage_unit(const volt_t&);
     void _update_timing();
     void _update_endpoints();
     void _update_area();
@@ -308,6 +334,36 @@ inline auto Timer::num_tests() const {
 // Function: num_sccs
 inline auto Timer::num_sccs() const {
   return _sccs.size();
+}
+    
+// Function: time_unit
+inline auto Timer::time_unit() const {
+  return _time_unit;
+}
+
+// Function: power_unit
+inline auto Timer::power_unit() const {
+  return _power_unit;
+}
+
+// Function: resistance_unit
+inline auto Timer::resistance_unit() const {
+  return _resistance_unit;
+}
+
+// Function: current_unit
+inline auto Timer::current_unit() const {
+  return _current_unit;
+}
+
+// Function: voltage_unit
+inline auto Timer::voltage_unit() const {
+  return _voltage_unit;
+}
+
+// Function: capacitance_unit
+inline auto Timer::capacitance_unit() const {
+  return _capacitance_unit;
 }
 
 // Function: _encode_pin

@@ -5,8 +5,8 @@
 
 namespace ot {
 
-/*// Function: time_unit
-Timer& Timer::time_unit(TimeUnit unit) {
+// Function: time_unit
+Timer& Timer::time_unit(second_t unit) {
   
   std::scoped_lock lock(_mutex);
 
@@ -21,11 +21,11 @@ Timer& Timer::time_unit(TimeUnit unit) {
 }
 
 // Procedure: _to_time_unit
-void Timer::_to_time_unit(const TimeUnit& unit) {
+void Timer::_to_time_unit(const second_t& unit) {
   
-  OT_LOGI("use time unit ", std::quoted(dump_time_unit(unit)));
+  OT_LOGI("use time unit ", unit);
 
-  float s = (_time_unit) ? divide_time_unit(*_time_unit, unit) : 1.0f;
+  float s = (_time_unit) ? (*_time_unit / unit).value() : 1.0f;
 
   if(_time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -55,8 +55,9 @@ void Timer::_to_time_unit(const TimeUnit& unit) {
   _enable_full_timing_update();
 }
 
+
 // Function: capacitance_unit
-Timer& Timer::capacitance_unit(CapacitanceUnit unit) {
+Timer& Timer::capacitance_unit(farad_t unit) {
   
   std::scoped_lock lock(_mutex);
 
@@ -71,11 +72,11 @@ Timer& Timer::capacitance_unit(CapacitanceUnit unit) {
 }
 
 // Procedure: _to_capacitance_unit
-void Timer::_to_capacitance_unit(const CapacitanceUnit& unit) {
+void Timer::_to_capacitance_unit(const farad_t& unit) {
   
-  OT_LOGI("use capacitance unit ", std::quoted(dump_capacitance_unit(unit)));
+  OT_LOGI("use capacitance unit ", unit);
 
-  float s = (_capacitance_unit) ? divide_capacitance_unit(*_capacitance_unit, unit) : 1.0f;
+  float s = (_capacitance_unit) ? (*_capacitance_unit / unit).value() : 1.0f;
 
   if(_capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -91,18 +92,18 @@ void Timer::_to_capacitance_unit(const CapacitanceUnit& unit) {
     kvp.second._scale_capacitance(s);
   }
 
-  // library time
+  // library capacitance
   FOR_EACH_EL(el) {
     _celllib[el].to_capacitance_unit(unit);
   }
   
-  // TODO:
+  // TODO: other filed may need to change as well
 
   _enable_full_timing_update();
 }
 
 // Function: resistance_unit
-Timer& Timer::resistance_unit(ResistanceUnit unit) {
+Timer& Timer::resistance_unit(ohm_t unit) {
 
   std::scoped_lock lock(_mutex);
 
@@ -117,11 +118,11 @@ Timer& Timer::resistance_unit(ResistanceUnit unit) {
 }
 
 // Procedure: _to_resistance_unit
-void Timer::_to_resistance_unit(const ResistanceUnit& unit) {
+void Timer::_to_resistance_unit(const ohm_t& unit) {
   
-  OT_LOGI("use resistance unit ", std::quoted(dump_resistance_unit(unit)));
+  OT_LOGI("use resistance unit ", unit);
 
-  float s = (_resistance_unit) ? divide_resistance_unit(*_resistance_unit, unit) : 1.0f;
+  float s = (_resistance_unit) ? (*_resistance_unit / unit).value() : 1.0f;
 
   if(_resistance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -138,12 +139,11 @@ void Timer::_to_resistance_unit(const ResistanceUnit& unit) {
   }
   
   // TODO:
-
   _enable_full_timing_update();
-}
+} 
 
 // Function: voltage_unit
-Timer& Timer::voltage_unit(VoltageUnit unit) {
+Timer& Timer::voltage_unit(volt_t unit) {
 
   std::scoped_lock lock(_mutex);
 
@@ -158,11 +158,11 @@ Timer& Timer::voltage_unit(VoltageUnit unit) {
 }
 
 // Procedure: _to_voltage_unit
-void Timer::_to_voltage_unit(const VoltageUnit& unit) {
+void Timer::_to_voltage_unit(const volt_t& unit) {
   
-  OT_LOGI("use voltage unit ", std::quoted(dump_voltage_unit(unit)));
+  OT_LOGI("use voltage unit ", unit);
 
-  float s = (_voltage_unit) ? divide_voltage_unit(*_voltage_unit, unit) : 1.0f;
+  float s = (_voltage_unit) ? (*_voltage_unit/unit).value() : 1.0f;
 
   if(_voltage_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -174,7 +174,7 @@ void Timer::_to_voltage_unit(const VoltageUnit& unit) {
 }
 
 // Function: current_unit
-Timer& Timer::current_unit(CurrentUnit unit) {
+Timer& Timer::current_unit(ampere_t unit) {
 
   std::scoped_lock lock(_mutex);
 
@@ -189,11 +189,11 @@ Timer& Timer::current_unit(CurrentUnit unit) {
 }
 
 // Procedure: _to_current_unit
-void Timer::_to_current_unit(const CurrentUnit& unit) {
+void Timer::_to_current_unit(const ampere_t& unit) {
   
-  OT_LOGI("use current unit ", std::quoted(dump_current_unit(unit)));
+  OT_LOGI("use current unit ", unit);
 
-  float s = (_current_unit) ? divide_current_unit(*_current_unit, unit) : 1.0f;
+  float s = (_current_unit) ? (*_current_unit / unit).value() : 1.0f;
 
   if(_current_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -205,7 +205,7 @@ void Timer::_to_current_unit(const CurrentUnit& unit) {
 }
 
 // Function: power_unit
-Timer& Timer::power_unit(PowerUnit unit) {
+Timer& Timer::power_unit(watt_t unit) {
 
   std::scoped_lock lock(_mutex);
 
@@ -220,11 +220,11 @@ Timer& Timer::power_unit(PowerUnit unit) {
 }
 
 // Procedure: _to_power_unit
-void Timer::_to_power_unit(const PowerUnit& unit) {
+void Timer::_to_power_unit(const watt_t& unit) {
   
-  OT_LOGI("use power unit ", std::quoted(dump_power_unit(unit)));
+  OT_LOGI("use power unit ", unit);
 
-  float s = (_power_unit) ? divide_power_unit(*_power_unit, unit) : 1.0f;
+  float s = (_power_unit) ? (*_power_unit/unit).value() : 1.0f;
 
   if(_power_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
     return;
@@ -234,6 +234,8 @@ void Timer::_to_power_unit(const PowerUnit& unit) {
 
   _enable_full_timing_update();
 }
+
+/*
     
 // Procedure: _rebase_unit
 void Timer::_rebase_unit(Celllib& lib) {

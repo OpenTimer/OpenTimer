@@ -49,6 +49,7 @@
 #include <ot/taskflow/taskflow.hpp>
 #include <ot/json/json.hpp>
 #include <ot/spef/parser-spef.hpp>
+#include <ot/unit/units.hpp>
 
 // Top header declaration.
 #include <ot/config.hpp>

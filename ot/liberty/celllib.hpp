@@ -37,6 +37,13 @@ struct Celllib {
 
   std::optional<DelayModel> delay_model;
 
+  std::optional<second_t> time_unit;
+  std::optional<watt_t> power_unit;
+  std::optional<ohm_t> resistance_unit;
+  std::optional<farad_t> capacitance_unit;
+  std::optional<ampere_t> current_unit;
+  std::optional<volt_t> voltage_unit;
+
   std::optional<float> default_cell_leakage_power;
   std::optional<float> default_inout_pin_cap;
   std::optional<float> default_input_pin_cap;
@@ -49,6 +56,12 @@ struct Celllib {
   std::unordered_map<std::string, Cell> cells;
 
   void read(const std::filesystem::path&);
+  void to_time_unit(const second_t&);
+  void to_resistance_unit(const ohm_t&);
+  void to_power_unit(const watt_t&);
+  void to_capacitance_unit(const farad_t&);
+  void to_current_unit(const ampere_t&);
+  void to_voltage_unit(const volt_t&);
 
   const LutTemplate* lut_template(const std::string&) const;
   const Cell* cell(const std::string&) const;

@@ -683,18 +683,23 @@ void Celllib::read(const std::filesystem::path& path) {
     // TODO: Unit field.
     else if(*itr == "time_unit") {
       OT_LOGF_IF(++itr == end, "time_unit syntax error");
+      time_unit = make_time_unit(itr->data());
     }
     else if(*itr == "voltage_unit") {
       OT_LOGF_IF(++itr == end, "voltage_unit syntax error");
+      voltage_unit = make_voltage_unit(itr->data());
     }
     else if(*itr == "current_unit") {
       OT_LOGF_IF(++itr == end, "current_unit syntax error");
+      current_unit = make_current_unit(itr->data());
     }
     else if(*itr == "pulling_resistance_unit") {
       OT_LOGF_IF(++itr == end, "pulling_resistance_unit syntax error");
+      resistance_unit = make_resistance_unit(itr->data());
     }
     else if(*itr == "leakage_power_unit") {
       OT_LOGF_IF(++itr == end, "leakage_power_unit syntax error");
+      power_unit = make_power_unit(itr->data());
     }
     else if(*itr == "capacitive_load_unit") {
       std::string unit;
@@ -704,6 +709,7 @@ void Celllib::read(const std::filesystem::path& path) {
         [&] (auto& str) mutable { unit += str; }); itr == end) {
         OT_LOGF("capacitive_load_unit syntax error");
       }
+      capacitance_unit = make_capacitance_unit(unit);
     }
     else if(*itr == "cell") { 
       auto cell = _extract_cell(itr, end);
@@ -788,35 +794,51 @@ void Celllib::_apply_default_values() {
   }
 }
 
-//// Procedure: to_time_unit
-//// Convert the numerics to the new unit
-//void Celllib::to_time_unit(const TimeUnit& unit) {
-//  
-//  float s = (time_unit) ? divide_time_unit(*time_unit, unit) : 1.0f;
-//
-//  if(time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  for(auto& c : cells) {
-//    c.second.scale_time(s);
-//  }
-//}
-//
-//// Procedure: to_capacitance_unit
-//void Celllib::to_capacitance_unit(const CapacitanceUnit& unit) {
-//  
-//  float s = (capacitance_unit) ? divide_capacitance_unit(*capacitance_unit, unit) : 1.0f;
-//
-//  if(capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
-//    return;
-//  }
-//
-//  for(auto& c : cells) {
-//    c.second.scale_capacitance(s);
-//  }
-//}
-//
+// Procedure: to_time_unit
+// Convert the numerics to the new unit
+void Celllib::to_time_unit(const second_t& unit) {
+  
+  float s = (time_unit) ? static_cast<float>(*time_unit / unit) : 1.0f;
+
+  if(time_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+    return;
+  }
+  
+  if(default_max_transition) {
+    default_max_transition = *default_max_transition * s;
+  }
+
+  for(auto& c : cells) {
+    c.second.scale_time(s);
+  }
+}
+
+// Procedure: to_capacitance_unit
+void Celllib::to_capacitance_unit(const farad_t& unit) {
+  
+  float s = (capacitance_unit) ? static_cast<float>(*capacitance_unit / unit) : 1.0f;
+
+  if(capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-6) {
+    return;
+  }
+  
+  if(default_inout_pin_cap) {
+    default_inout_pin_cap = *default_inout_pin_cap * s;
+  }
+  
+  if(default_input_pin_cap) {
+    default_input_pin_cap = *default_input_pin_cap * s;
+  }
+  
+  if(default_output_pin_cap) {
+    default_output_pin_cap = *default_output_pin_cap * s;
+  }
+  
+  for(auto& c : cells) {
+    c.second.scale_capacitance(s);
+  }
+}
+
 //// Procedure: to_voltage_unit
 //void Celllib::to_voltage_unit(const VoltageUnit& unit) {
 //
