@@ -3,14 +3,14 @@
 namespace ot {
 
 // Procedure: dump_version
-void dump_version(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  os << OT_VERSION << '\n';
+void Shell::_dump_version() {
+  _os << OT_VERSION << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_license
-void dump_license(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_license() {
 
   static std::string_view license = "\n\
 MIT License\n\
@@ -37,13 +37,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\n\
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\n\
 SOFTWARE.\n";
 
-  os << license << '\n';
+  _os << license << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_help
-void dump_help(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_help() {
 
   // help message
   static std::string_view help = "\n\
@@ -93,63 +93,63 @@ List of commonly used commands:\n\
 For more information, consult the manual at\n\
 <https://github.com/OpenTimer/OpenTimer>.\n";
 
-  os << help << '\n';
+  _os << help << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_timer
-void dump_timer(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_timer() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)) {
-        es << "output file not given\n";
+      if(!(_is >> output)) {
+        _es << "output file not given\n";
         return;
       }
     }
   }
 
   if(output.empty()) {
-    os << timer.dump_timer();
+    _os << _timer.dump_timer();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_timer();
+      ofs << _timer.dump_timer();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
 
 // Procedure: dump_graph
-void dump_graph(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_graph() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)) {
-        es << "output file not given\n";
+      if(!(_is >> output)) {
+        _es << "output file not given\n";
         return;
       }
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_graph();
+    _os << _timer.dump_graph();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_graph();
+      ofs << _timer.dump_graph();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
@@ -157,32 +157,32 @@ void dump_graph(Timer& timer, std::istream& is, std::ostream& os, std::ostream& 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_net_load
-void dump_net_load(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_net_load() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_net_load();
+    _os << _timer.dump_net_load();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_net_load();
+      ofs << _timer.dump_net_load();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
@@ -190,32 +190,32 @@ void dump_net_load(Timer& timer, std::istream& is, std::ostream& os, std::ostrea
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_pin_cap
-void dump_pin_cap(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_pin_cap() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_pin_cap();
+    _os << _timer.dump_pin_cap();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_pin_cap();
+      ofs << _timer.dump_pin_cap();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
@@ -223,125 +223,125 @@ void dump_pin_cap(Timer& timer, std::istream& is, std::ostream& os, std::ostream
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_slack
-void dump_slack(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_slack() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_slack();
+    _os << _timer.dump_slack();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_slack();
+      ofs << _timer.dump_slack();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
 
 // Procedure: dump_rat
-void dump_rat(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_rat() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_rat();
+    _os << _timer.dump_rat();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_rat();
+      ofs << _timer.dump_rat();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
 
 // Procedure: dump_slew
-void dump_slew(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_slew() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_slew();
+    _os << _timer.dump_slew();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_slew();
+      ofs << _timer.dump_slew();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
 
 // Procedure: dump_at
-void dump_at(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_at() {
 
   std::string token;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
   
   if(output.empty()) {
-    os << timer.dump_at();
+    _os << _timer.dump_at();
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << timer.dump_at();
+      ofs << _timer.dump_at();
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 }
@@ -349,23 +349,23 @@ void dump_at(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es)
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: dump_celllib
-void dump_celllib(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_dump_celllib() {
 
   std::string token;
   std::string cell;
   Split el = EARLY;
   std::filesystem::path output;
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-o") {
-      if(!(is >> output)){
-        es << "output file not given\n";
+      if(!(_is >> output)){
+        _es << "output file not given\n";
         return;
       }
     }
     else if(token == "-cell") {
-      if(!(is >> cell)) {
-        es << "cell name not given\n";
+      if(!(_is >> cell)) {
+        _es << "cell name not given\n";
         return;
       }
     }
@@ -376,11 +376,11 @@ void dump_celllib(Timer& timer, std::istream& is, std::ostream& os, std::ostream
       el = LATE;
     }
     else {
-      es << "unexpected token " << token << '\n';
+      _es << "unexpected token " << token << '\n';
     }
   }
 
-  std::ostream* tgt = &os;
+  std::ostream* tgt = &_os;
   std::ofstream ofs;
   
   if(!output.empty()) {
@@ -388,15 +388,15 @@ void dump_celllib(Timer& timer, std::istream& is, std::ostream& os, std::ostream
       tgt = &ofs;
     }
     else {
-      es << "failed to open " << output << '\n';
+      _es << "failed to open " << output << '\n';
     }
   }
 
   if(cell.empty()) {
-    *tgt << timer.dump_celllib(el);
+    *tgt << _timer.dump_celllib(el);
   }
   else {
-    *tgt << timer.dump_cell(cell, el);
+    *tgt << _timer.dump_cell(cell, el);
   }
 }
 

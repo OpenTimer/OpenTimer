@@ -3,14 +3,14 @@
 namespace ot {
 
 // Procedure: update_timing
-void update_timing(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  timer.update_timing();
+void Shell::_update_timing() {
+  _timer.update_timing();
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_at
-void report_at(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_report_at() {
 
   std::string token;
   std::string pin;
@@ -18,30 +18,30 @@ void report_at(Timer& timer, std::istream& is, std::ostream& os, std::ostream& e
   auto rf = RISE;
   std::optional<float> value;
 
-  while(is >> token) {
-    if(token == "-pin") is >> pin;
+  while(_is >> token) {
+    if(token == "-pin") _is >> pin;
     else if(token == "-early") el = EARLY;
     else if(token == "-late" ) el = LATE;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
-      es << "failed to parse " << std::quoted(token) << '\n';
+      _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
   if(pin.empty()) {
-    es << "-pin <name> not given\n";
+    _es << "-pin <name> not given\n";
     return;
   }
 
-  auto at = timer.at(std::move(pin), el, rf);
-  os << (at ? *at : std::numeric_limits<float>::quiet_NaN()) << '\n';
+  auto at = _timer.at(std::move(pin), el, rf);
+  _os << (at ? *at : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_rat
-void report_rat(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_report_rat() {
 
   std::string token;
   std::string pin;
@@ -49,30 +49,30 @@ void report_rat(Timer& timer, std::istream& is, std::ostream& os, std::ostream& 
   auto rf = RISE;
   std::optional<float> value;
 
-  while(is >> token) {
-    if(token == "-pin") is >> pin;
+  while(_is >> token) {
+    if(token == "-pin") _is >> pin;
     else if(token == "-early") el = EARLY;
     else if(token == "-late" ) el = LATE;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
-      es << "failed to parse " << std::quoted(token) << '\n';
+      _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
   if(pin.empty()) {
-    es << "-pin <name> not given\n";
+    _es << "-pin <name> not given\n";
     return;
   }
 
-  auto rat = timer.rat(std::move(pin), el, rf);
-  os << (rat ? *rat : std::numeric_limits<float>::quiet_NaN()) << '\n';
+  auto rat = _timer.rat(std::move(pin), el, rf);
+  _os << (rat ? *rat : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_slack
-void report_slack(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_report_slack() {
 
   std::string token;
   std::string pin;
@@ -80,30 +80,30 @@ void report_slack(Timer& timer, std::istream& is, std::ostream& os, std::ostream
   auto rf = RISE;
   std::optional<float> value;
 
-  while(is >> token) {
-    if(token == "-pin") is >> pin;
+  while(_is >> token) {
+    if(token == "-pin") _is >> pin;
     else if(token == "-early") el = EARLY;
     else if(token == "-late" ) el = LATE;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
-      es << "failed to parse " << std::quoted(token) << '\n';
+      _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
   if(pin.empty()) {
-    es << "-pin <name> not given\n";
+    _es << "-pin <name> not given\n";
     return;
   }
 
-  auto slack = timer.slack(std::move(pin), el, rf);
-  os << (slack ? *slack : std::numeric_limits<float>::quiet_NaN()) << '\n';
+  auto slack = _timer.slack(std::move(pin), el, rf);
+  _os << (slack ? *slack : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_slew
-void report_slew(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_report_slew() {
 
   std::string token;
   std::string pin;
@@ -111,119 +111,119 @@ void report_slew(Timer& timer, std::istream& is, std::ostream& os, std::ostream&
   auto rf = RISE;
   std::optional<float> value;
 
-  while(is >> token) {
-    if(token == "-pin") is >> pin;
+  while(_is >> token) {
+    if(token == "-pin") _is >> pin;
     else if(token == "-early") el = EARLY;
     else if(token == "-late" ) el = LATE;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
-      es << "failed to parse " << std::quoted(token) << '\n';
+      _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
   if(pin.empty()) {
-    es << "-pin <name> not given\n";
+    _es << "-pin <name> not given\n";
     return;
   }
 
-  auto slew = timer.slew(std::move(pin), el, rf);
-  os << (slew ? *slew : std::numeric_limits<float>::quiet_NaN()) << '\n';
+  auto slew = _timer.slew(std::move(pin), el, rf);
+  _os << (slew ? *slew : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_tns
-void report_tns(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto tns = timer.tns(); tns) {
-    os << *tns << '\n';
+void Shell::_report_tns() {
+  if(auto tns = _timer.tns(); tns) {
+    _os << *tns << '\n';
   }
   else {
-    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+    _os << std::numeric_limits<float>::quiet_NaN() << '\n';
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_wns
-void report_wns(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto wns = timer.wns(); wns) {
-    os << *wns << '\n';
+void Shell::_report_wns() {
+  if(auto wns = _timer.wns(); wns) {
+    _os << *wns << '\n';
   }
   else {
-    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+    _os << std::numeric_limits<float>::quiet_NaN() << '\n';
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_fep
-void report_fep(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto fep = timer.fep(); fep) {
-    os << *fep << '\n';
+void Shell::_report_fep() {
+  if(auto fep = _timer.fep(); fep) {
+    _os << *fep << '\n';
   }
   else {
-    os << "no endpoints found\n";
+    _os << "no endpoints found\n";
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_timing
-void report_timing(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto paths = timer.worst_paths(1); !paths.empty()) {
-    os << paths[0];
+void Shell::_report_timing() {
+  if(auto paths = _timer.worst_paths(1); !paths.empty()) {
+    _os << paths[0];
   }
   else {
-    os << empty_path;
+    _os << empty_path;
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_path
-void report_path(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
+void Shell::_report_path() {
 
   std::string token;
   size_t K {1};
 
-  while(is >> token) {
+  while(_is >> token) {
     if(token == "-num_paths") {
-      is >> K;
+      _is >> K;
     }
     else {
-      es << "failed to parse " << std::quoted(token) << '\n';
+      _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
-  auto paths = timer.worst_paths(K);
+  auto paths = _timer.worst_paths(K);
 
   for(const auto& path : paths) {
-    os << path;
+    _os << path;
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_area
-void report_area(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto area = timer.area(); area) {
-    os << *area << '\n';
+void Shell::_report_area() {
+  if(auto area = _timer.area(); area) {
+    _os << *area << '\n';
   }
   else {
-    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+    _os << std::numeric_limits<float>::quiet_NaN() << '\n';
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_leakage_power
-void report_leakage_power(Timer& timer, std::istream& is, std::ostream& os, std::ostream& es) {
-  if(auto lp = timer.leakage_power(); lp) {
-    os << *lp << '\n';
+void Shell::_report_leakage_power() {
+  if(auto lp = _timer.leakage_power(); lp) {
+    _os << *lp << '\n';
   }
   else {
-    os << std::numeric_limits<float>::quiet_NaN() << '\n';
+    _os << std::numeric_limits<float>::quiet_NaN() << '\n';
   }
 }
 
