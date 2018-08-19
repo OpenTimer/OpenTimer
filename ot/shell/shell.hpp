@@ -39,6 +39,7 @@ class Shell {
     prompt::Prompt _prompt;
   
     std::string _line;
+    std::string _op;
     std::istringstream _is;
     
     // builder

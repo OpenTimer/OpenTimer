@@ -32,21 +32,20 @@ void Shell::operator()() {
 
     _is.clear();
     _is.str(_line);
-
-    std::string op;
-    _is >> op;
+    _is >> _op;
     
     // Nothing to do with empty line
-    if(op.empty()) {
+    if(_op.empty()) {
     }
     // leave
-    else if(op == "quit" || op == "exit") {
+    else if(_op == "quit" || _op == "exit") {
       quit = true; 
     }
     // built-in command
-    else if(auto itr = _handles.find(op); itr != _handles.end()) {
+    else if(auto itr = _handles.find(_op); itr != _handles.end()) {
       (this->*(itr->second))();
     } 
+    // undefined command
     else {
       _es << "undefined command: " << std::quoted(_line) << '\n';
     }

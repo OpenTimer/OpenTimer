@@ -65,7 +65,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
           }
         }
         else {
-          OT_LOGW(obj.command, ": port ", std::quoted(port), " not found");
+          OT_LOGE(obj.command, ": port ", std::quoted(port), " not found");
         }
       }
     },
@@ -99,7 +99,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
           }
         }
         else {
-          OT_LOGW(obj.command, ": port ", std::quoted(port), " not found");
+          OT_LOGE(obj.command, ": port ", std::quoted(port), " not found");
         }
       }
     },
@@ -113,12 +113,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
 // Sets output delay on pins or input ports relative to a clock signal.
 void Timer::_sdc(sdc::SetOutputDelay& obj) {
 
-  assert(obj.delay_value);
-
-  if(!obj.port_pin_list) {
-    OT_LOGW(obj.command, ": port_pin_list not found");
-    return;
-  }
+  assert(obj.delay_value && obj.port_pin_list);
 
   if(_clocks.find(obj.clock) == _clocks.end()) {
     OT_LOGE(obj.command, ": clock ", std::quoted(obj.clock), " not found");
@@ -155,7 +150,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
           }
         }
         else {
-          OT_LOGW(obj.command, ": port ", std::quoted(port), " not found");
+          OT_LOGE(obj.command, ": port ", std::quoted(port), " not found");
         }
       }
     },
@@ -189,7 +184,7 @@ void Timer::_sdc(sdc::SetLoad& obj) {
           }
         }
         else {
-          OT_LOGW(obj.command, ": port ", std::quoted(port), " not found");
+          OT_LOGE(obj.command, ": port ", std::quoted(port), " not found");
         }
       }
     },
