@@ -37,7 +37,8 @@ class Shell {
     std::ostream& _es;
   
     prompt::Prompt _prompt;
-
+  
+    std::string _line;
     std::istringstream _is;
     
     // builder
@@ -98,6 +99,18 @@ class Shell {
     void _set_spef_fpath         ();
     void _set_timing_fpath       ();
     void _report_timer           ();
+
+    // System
+    void _ls                     ();
+    void _cd                     ();
+    void _pwd                    ();
+    void _rm                     ();
+    void _cat                    ();
+    void _head                   ();
+    void _tail                   ();
+    void _clear                  ();
+    void _echo                   ();
+    void _which                  ();
     
     std::unordered_map<std::string, void(Shell::*)()> _handles {
       // Builder
@@ -157,46 +170,23 @@ class Shell {
       {"set_verilog_fpath",       &Shell::_set_verilog_fpath},
       {"set_spef_fpath",          &Shell::_set_spef_fpath},
       {"set_timing_fpath",        &Shell::_set_timing_fpath},
-      {"report_timer",            &Shell::_report_timer} 
+      {"report_timer",            &Shell::_report_timer},
+
+      // system commands
+      {"ls",                      &Shell::_ls},
+      {"cd",                      &Shell::_cd},
+      {"pwd",                     &Shell::_pwd},
+      {"rm",                      &Shell::_rm},
+      {"cat",                     &Shell::_cat},
+      {"head",                    &Shell::_head},
+      {"tail",                    &Shell::_tail},
+      {"clear",                   &Shell::_clear},
+      {"echo",                    &Shell::_echo},
+      {"which",                   &Shell::_which}
     };
 };
 
 //-------------------------------------------------------------------------------------------------
-
-// Bash
-void ls    (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void cd    (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void pwd   (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void rm    (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void cat   (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void head  (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void tail  (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void clear (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void echo  (std::string_view, std::istream&, std::ostream&, std::ostream&);
-void which (std::string_view, std::istream&, std::ostream&, std::ostream&);
-
-inline std::unordered_map<
-  std::string, 
-  void(*)(std::string_view, std::istream&, std::ostream&, std::ostream&)
-> syscmds {
-  // Misc
-  {"ls",                      ls},
-  {"pwd",                     pwd},
-  {"cd",                      cd},
-  {"rm",                      rm},
-  {"cat",                     cat},
-  {"head",                    head},
-  {"tail",                    tail},
-  {"clear",                   clear},
-  {"echo",                    echo},
-  {"which",                   which}
-};
-
-// ------------------------------------------------------------------------------------------------
-  
-// Procedure: shell
-// Main procedure to enter into a shell.
-//int shell(int, char*[]);
 
 };  // end of namespace ot ------------------------------------------------------------------------
 

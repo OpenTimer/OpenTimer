@@ -13,10 +13,6 @@ Shell::Shell(const std::string& w, std::ostream& os, std::ostream& es) :
     _prompt.autocomplete(kvp.first);
   }
 
-  for(const auto& kvp : ot::syscmds) {
-    _prompt.autocomplete(kvp.first);
-  }
-
   _prompt.autocomplete("quit");
   _prompt.autocomplete("exit");
 
@@ -25,19 +21,17 @@ Shell::Shell(const std::string& w, std::ostream& os, std::ostream& es) :
 // Operator: ()
 void Shell::operator()() {  
 
-  std::string line;
-
   bool quit {false};
   
-  while(!quit && _prompt.readline(line)) {
+  while(!quit && _prompt.readline(_line)) {
 
     // Remove the comment
-    if(auto cpos = line.find('#'); cpos != std::string::npos) {
-      line.erase(cpos);
+    if(auto cpos = _line.find('#'); cpos != std::string::npos) {
+      _line.erase(cpos);
     }
 
     _is.clear();
-    _is.str(line);
+    _is.str(_line);
 
     std::string op;
     _is >> op;
@@ -53,12 +47,8 @@ void Shell::operator()() {
     else if(auto itr = _handles.find(op); itr != _handles.end()) {
       (this->*(itr->second))();
     } 
-    // system command
-    else if(auto itr = ot::syscmds.find(op); itr != ot::syscmds.end()) {
-      std::invoke(itr->second, line, _is, _os, _es);
-    }
     else {
-      _es << "undefined command: " << std::quoted(line) << '\n';
+      _es << "undefined command: " << std::quoted(_line) << '\n';
     }
 
     // flush
