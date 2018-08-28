@@ -121,7 +121,7 @@ class Timer {
     
     bool _scc_analysis {false};
 
-    std::optional<tf::Taskflow::Task> _lineage;
+    std::optional<tf::Task> _lineage;
     std::optional<CpprAnalysis> _cppr_analysis;
 
     std::optional<second_t> _time_unit;
@@ -204,7 +204,7 @@ class Timer {
     void _sdc(sdc::SetOutputDelay&);
     void _sdc(sdc::SetLoad&);
     void _sdc(sdc::CreateClock&);
-    void _add_to_lineage(const tf::Taskflow::Task&);
+    void _add_to_lineage(const tf::Task&);
     void _connect_pin(Pin&, Net&);
     void _disconnect_pin(Pin&);
     void _insert_frontier(Pin&);

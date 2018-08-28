@@ -14,7 +14,7 @@ Timer& Timer::num_threads(unsigned n) {
 }
 
 // Procedure: _add_to_lineage
-void Timer::_add_to_lineage(const tf::Taskflow::Task& last) {
+void Timer::_add_to_lineage(const tf::Task& last) {
   _lineage | [&] (auto& p) { p.precede(last); };
   _lineage = last;
 }

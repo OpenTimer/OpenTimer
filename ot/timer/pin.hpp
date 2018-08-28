@@ -175,8 +175,8 @@ class Pin {
 
     int _state {0};
 
-    std::optional<tf::Taskflow::Task> _ftask;
-    std::optional<tf::Taskflow::Task> _btask;
+    std::optional<tf::Task> _ftask;
+    std::optional<tf::Task> _btask;
     
     bool _has_state(int) const;
     bool _has_no_state(int) const;
