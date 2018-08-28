@@ -334,13 +334,13 @@ The example below shows an OpenTimer application and the use of builder, action,
 
 int main(int argc, char *argv[]) {
   
-  ot::Timer timer;                           // create a timer instance (thread-safe)
+  ot::Timer timer;                                // create a timer instance (thread-safe)
   
-  timer.celllib("simple.lib", std::nullopt)  // read the library (O(1) builder)
-       .verilog("simple.v")                  // read the verilog netlist (O(1) builder)
-       .spef("simple.spef")                  // read the parasitics (O(1) builder)
-       .sdc("simple.sdc")                    // read the design constraints (O(1) builder)
-       .update_timing();                     // update timing (O(1) builder)
+  timer.read_celllib("simple.lib", std::nullopt)  // read the library (O(1) builder)
+       .read_verilog("simple.v")                  // read the verilog netlist (O(1) builder)
+       .read_spef("simple.spef")                  // read the parasitics (O(1) builder)
+       .read_sdc("simple.sdc")                    // read the design constraints (O(1) builder)
+       .update_timing();                          // update timing (O(1) builder)
 
   if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
   if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
