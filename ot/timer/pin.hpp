@@ -57,7 +57,7 @@ class PrimaryOutput {
 
     Pin& _pin;
     
-    TimingData<float, MAX_SPLIT, MAX_TRAN> _load {.0f, .0f, .0f, .0f};
+    TimingData<float, MAX_SPLIT, MAX_TRAN> _load {{{.0f, .0f}, {.0f, .0f}}};
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
 
     void _scale_time(float);

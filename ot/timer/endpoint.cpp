@@ -48,7 +48,7 @@ std::vector<Endpoint*> Timer::_worst_endpoints(size_t K) {
   _update_endpoints();
 
   std::vector<Endpoint*> epts;
-  std::array<std::array<size_t, MAX_TRAN>, MAX_SPLIT> i {0, 0, 0, 0};
+  std::array<std::array<size_t, MAX_TRAN>, MAX_SPLIT> i {{{0, 0}, {0, 0}}};
 
   for(size_t k=0; k<K; ++k) {
 

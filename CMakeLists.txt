@@ -9,16 +9,22 @@ project(OpenTimer)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 # CXX target properties
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU")
-  if(${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS "7.2")
+## g++
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.2")
     message(FATAL_ERROR "\nOpenTimer requires G++ at least v7.2 to build.")
   endif()
+## clang++
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
+    message(FATAL_ERROR "\nOpenTimer requires clang++ at least v5.0")
+  endif() 
 else()
   message(FATAL_ERROR "\n\
-OpenTimer requires GNU compiler to build. Try the following:\n\
-~$ rm CMakeCache.txt\n\
-~$ cmake ../ -DCMAKE_CXX_COMPILER=g++\n\
-~$ make")
+OpenTimer currently supports the following compilers:\n\
+- g++ v7.2 or above\n\
+- clang++ v5.0 or above\n\
+")
 endif()
 
 set(CMAKE_CXX_STANDARD 17)

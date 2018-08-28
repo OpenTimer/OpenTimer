@@ -22,15 +22,15 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
   return false;
 }
 
-// Function: celllib
-Timer& Timer::celllib(std::filesystem::path path, std::optional<Split> el) {
+// Function: read_celllib
+Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) {
   
   auto lib = std::make_shared<Celllib>();
   
   std::scoped_lock lock(_mutex);
   
   // Library reader
-  auto reader = _taskflow.silent_emplace([this, path=std::move(path), lib] () {
+  auto reader = _taskflow.silent_emplace([path=std::move(path), lib] () {
     lib->read(path);
   });
 

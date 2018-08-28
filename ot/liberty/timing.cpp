@@ -410,7 +410,7 @@ std::optional<float> Timing::delay(Tran irf, Tran orf, float slew, float load) c
   }
 
   // Case 2: non-scalar table.
-  float val1, val2;
+  float val1 {.0f}, val2 {.0f};
   
   // - obtain the input numerics
   assert(lut->lut_template->variable1);
@@ -485,7 +485,7 @@ std::optional<float> Timing::slew(Tran irf, Tran orf, float slew, float load) co
   }
 
   // Case 2: non-scalar table.
-  float val1, val2;
+  float val1 {0.0f}, val2 {0.0f};
   
   // - obtain the input numerics
   assert(lut->lut_template->variable1);
@@ -564,7 +564,7 @@ std::optional<float> Timing::constraint(
   }
   
   // Case 2: non-scalar table.
-  float val1, val2;
+  float val1 {0.0f}, val2 {0.0f};
   
   // - obtain the input numerics
   assert(lut->lut_template->variable1);

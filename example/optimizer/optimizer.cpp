@@ -16,11 +16,11 @@ int main(int argc, char *argv[]) {
   
   // Read design
   timer.num_threads(std::thread::hardware_concurrency())
-       .celllib("optimizer_Early.lib", ot::EARLY)
-       .celllib("optimizer_Late.lib", ot::LATE)
-       .verilog("optimizer.v")
-       .spef("optimizer.spef")
-       .sdc("optimizer.sdc");
+       .read_celllib("optimizer_Early.lib", ot::EARLY)
+       .read_celllib("optimizer_Late.lib", ot::LATE)
+       .read_verilog("optimizer.v")
+       .read_spef("optimizer.spef")
+       .read_sdc("optimizer.sdc");
 
   // Report the TNS and WNS
   if(std::optional<float> tns = timer.tns(); tns) {
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
        .connect_pin("inst_3:ZN", "TAUNET_1")
        .connect_pin("TAUGATE_1:A", "TAUNET_1")
        .connect_pin("TAUGATE_1:Z", "net_14")
-       .spef("change_1.spef");
+       .read_spef("change_1.spef");
   
   // report the slack at a G17
   std::cout << "Late/Fall slack at pin G17: " 

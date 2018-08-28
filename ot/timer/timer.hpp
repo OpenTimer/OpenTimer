@@ -35,11 +35,11 @@ class Timer {
     
     // Builder
     Timer& num_threads(unsigned);
-    Timer& celllib(std::filesystem::path, std::optional<Split> = {});
-    Timer& verilog(std::filesystem::path);
-    Timer& spef(std::filesystem::path);
-    Timer& sdc(std::filesystem::path);
-    Timer& timing(std::filesystem::path);
+    Timer& read_celllib(std::filesystem::path, std::optional<Split> = {});
+    Timer& read_verilog(std::filesystem::path);
+    Timer& read_spef(std::filesystem::path);
+    Timer& read_sdc(std::filesystem::path);
+    Timer& read_timing(std::filesystem::path);
     Timer& insert_net(std::string);
     Timer& insert_gate(std::string, std::string);
     Timer& repower_gate(std::string, std::string);

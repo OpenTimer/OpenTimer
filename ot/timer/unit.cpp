@@ -240,7 +240,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       
   // Convert the time unit.
   if(!_time_unit) {
-    if(_time_unit = lib.time_unit) {
+    if(_time_unit = lib.time_unit; _time_unit) {
       OT_LOGI("use celllib time unit ", *_time_unit);
     }
   }
@@ -254,7 +254,7 @@ void Timer::_rebase_unit(Celllib& lib) {
 
   // Convert the capacitance unit
   if(!_capacitance_unit) {
-    if(_capacitance_unit = lib.capacitance_unit) {
+    if(_capacitance_unit = lib.capacitance_unit; _capacitance_unit) {
       OT_LOGI("use celllib capacitance unit ", *_capacitance_unit);
     }
   }
@@ -268,7 +268,7 @@ void Timer::_rebase_unit(Celllib& lib) {
 
   // Conver the current unit.
   if(!_current_unit) {
-    if(_current_unit = lib.current_unit) {
+    if(_current_unit = lib.current_unit; _current_unit) {
       OT_LOGI("use celllib current unit ", *_current_unit);
     }
   }
@@ -282,7 +282,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   
   // Conver the voltage unit.
   if(!_voltage_unit) {
-    if(_voltage_unit = lib.voltage_unit) {
+    if(_voltage_unit = lib.voltage_unit; _voltage_unit) {
       OT_LOGI("use celllib voltage unit ", *_voltage_unit);
     }
   }
@@ -296,7 +296,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   
   // Conver the resistance unit.
   if(!_resistance_unit) {
-    if(_resistance_unit = lib.resistance_unit) {
+    if(_resistance_unit = lib.resistance_unit; _resistance_unit) {
       OT_LOGI("use celllib resistance unit ", *_resistance_unit);
     }
   }
@@ -310,7 +310,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   
   // Conver the power unit.
   if(!_power_unit) {
-    if(_power_unit = lib.power_unit) {
+    if(_power_unit = lib.power_unit; _power_unit) {
       OT_LOGI("use celllib power unit ", *_power_unit);
     }
   }
@@ -332,7 +332,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
 
   // Convert the capacitive load unit
   if(!_capacitance_unit) {
-    if(_capacitance_unit = capu) {
+    if(_capacitance_unit = capu; _capacitance_unit) {
       OT_LOGI("use spef capacitance unit ", *_capacitance_unit);
     }
   }
@@ -346,7 +346,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
 
   // conver teh resistance unit
   if(!_resistance_unit) {
-    if(_resistance_unit = resu) {
+    if(_resistance_unit = resu; _resistance_unit) {
       OT_LOGI("use spef resistance unit ", *_resistance_unit);
     }
   }

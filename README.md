@@ -315,10 +315,10 @@ The table below summarizes a list of commonly used methods.
 
 | Method | Type | Argument | Return | Description |
 | ------ | ---- | -------- | ------ | ----------- |
-| celllib| builder | path, split | self | read the cell library for early and late splits |
-| verilog| builder | path | self | read a verilog netlist |
-| spef   | builder | path | self | read parasitics in SPEF |
-| sdc    | builder | path | self | read a Synopsys Design Constraint file |
+| read_celllib| builder | path, split | self | read the cell library for early and late splits |
+| read_verilog| builder | path | self | read a verilog netlist |
+| read_spef   | builder | path | self | read parasitics in SPEF |
+| read_sdc    | builder | path | self | read a Synopsys Design Constraint file |
 | update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
 | tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |

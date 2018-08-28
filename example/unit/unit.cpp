@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
   ot::Timer timer;
   
   // read the design
-  timer.celllib("osu018_stdcells.lib")
-       .verilog("unit.v")
-       .sdc("unit.sdc")
-       .spef("unit.spef")
+  timer.read_celllib("osu018_stdcells.lib")
+       .read_verilog("unit.v")
+       .read_sdc("unit.sdc")
+       .read_spef("unit.spef")
        .update_timing();
 
   // the default library is at ns and pf scale.

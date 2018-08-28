@@ -26,7 +26,6 @@ enum class LogType {
 };
 
 // Class: Logger
-template<typename L = std::mutex>
 class Logger {
 
   public:
@@ -38,8 +37,8 @@ class Logger {
     static constexpr const char* RESET_COLOR   {"\033[0m"   };
 
     Logger() = default;
-    Logger(const std::string&);
-    ~Logger();
+    inline Logger(const std::string&);
+    inline ~Logger();
 
     template <typename... ArgsT>
     void raw(ArgsT&&...);
@@ -59,11 +58,11 @@ class Logger {
     template <typename...ArgsT>
     void fatal(const char*, const int, ArgsT&&...);
 
-    void redir(const std::string&);
+    inline void redir(const std::string&);
   
   private:
 
-    mutable L _mutex;
+    mutable std::mutex _mutex;
 
     FILE* _handle {stderr};
 
@@ -73,21 +72,19 @@ class Logger {
     constexpr const char* _basename(const char*, const char*) const;
     constexpr const char* _basename(const char*) const;
 
-    static pid_t _gettid();
+    inline pid_t _gettid();
     
     template <LogType severity, typename...ArgsT>
     void _write(const char*, const int, ArgsT&&...);
 };
 
 // Constructor.
-template <typename L>
-Logger<L>::Logger(const std::string& fpath) {
+inline Logger::Logger(const std::string& fpath) {
   redir(fpath);
 }
 
 // Destructor.
-template <typename L>
-Logger<L>::~Logger() {
+inline Logger::~Logger() {
   if(_handle != stderr) {
     std::fclose(_handle);
   }
@@ -95,8 +92,7 @@ Logger<L>::~Logger() {
 
 // Function: _gettid
 // Adoped from google's open-source library glog.
-template <typename L>
-pid_t Logger<L>::_gettid() {
+inline pid_t Logger::_gettid() {
   // On Linux and MacOSX, we try to use gettid().
 #if defined OS_LINUX || defined OS_MACOSX
 #ifndef __NR_gettid
@@ -135,28 +131,24 @@ pid_t Logger<L>::_gettid() {
     
 // Function: _strend
 // Compile-time finding of the end of a string.
-template <typename L>
-constexpr const char* Logger<L>::_strend(const char* str) const {
+constexpr const char* Logger::_strend(const char* str) const {
   return *str ? _strend(str + 1) : str;
 }
 
 // Function: _basename
 // Compile-time finding of a file name.
-template <typename L>
-constexpr const char* Logger<L>::_basename(const char* beg, const char* end) const {
+constexpr const char* Logger::_basename(const char* beg, const char* end) const {
   return (end >= beg && *end != '/') ? _basename(beg, end - 1) : (end + 1);
 }
 
 // Function: _basename
 // Compile-time finding of a file name.
-template <typename L>
-constexpr const char* Logger<L>::_basename(const char* fpath) const {
+constexpr const char* Logger::_basename(const char* fpath) const {
   return _basename(fpath, _strend(fpath));
 }
 
 // Procedure: redir
-template <typename L>
-void Logger<L>::redir(const std::string& fpath) {
+inline void Logger::redir(const std::string& fpath) {
 
   if(fpath.empty()) {
     return;
@@ -181,9 +173,8 @@ void Logger<L>::redir(const std::string& fpath) {
 }
 
 // Procedure: write
-template<typename L>
 template<LogType severity, typename...ArgsT>
-void Logger<L>::_write(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::_write(const char* fpath, const int line, ArgsT&&... args) {
   
   // ------------------------
   // Message header
@@ -223,6 +214,7 @@ void Logger<L>::_write(const char* fpath, const int line, ArgsT&&... args) {
   // ------------------------
   // Message body
   // ------------------------
+  //_write(oss, std::forward<ArgsT>(args)...);
   (oss << ... << args);
   
   // ---- Message tail ----
@@ -245,9 +237,8 @@ void Logger<L>::_write(const char* fpath, const int line, ArgsT&&... args) {
 }
 
 // Procedure: raw
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::raw(ArgsT&&... args) {
+void Logger::raw(ArgsT&&... args) {
 
   std::ostringstream oss;
   (oss << ... << args);
@@ -259,38 +250,33 @@ void Logger<L>::raw(ArgsT&&... args) {
 }
 
 // Procedure: debug
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::debug(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::debug(const char* fpath, const int line, ArgsT&&... args) {
   _write<LogType::DEBUG>(fpath, line, std::forward<ArgsT>(args)...);
 }
 
 // Procedure: info
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::info(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::info(const char* fpath, const int line, ArgsT&&... args) {
   _write<LogType::INFO>(fpath, line, std::forward<ArgsT>(args)...);
 }
 
 // Procedure: warning
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::warning(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::warning(const char* fpath, const int line, ArgsT&&... args) {
   _write<LogType::WARNING>(fpath, line, std::forward<ArgsT>(args)...);
 }
 
 // Procedure: error
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::error(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::error(const char* fpath, const int line, ArgsT&&... args) {
   _write<LogType::ERROR>(fpath, line, std::forward<ArgsT>(args)...);
 }
 
 // Procedure: fatal
 // Log a fatal message and generate the backtrace symbols.
-template <typename L>
 template <typename... ArgsT>
-void Logger<L>::fatal(const char* fpath, const int line, ArgsT&&... args) {
+void Logger::fatal(const char* fpath, const int line, ArgsT&&... args) {
   _write<LogType::FATAL>(fpath, line, std::forward<ArgsT>(args)...);
 }
 

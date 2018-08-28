@@ -16,7 +16,6 @@ void Shell::_report_at() {
   std::string pin;
   auto el = EARLY;
   auto rf = RISE;
-  std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
@@ -47,7 +46,6 @@ void Shell::_report_rat() {
   std::string pin;
   auto el = EARLY;
   auto rf = RISE;
-  std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
@@ -78,7 +76,6 @@ void Shell::_report_slack() {
   std::string pin;
   auto el = EARLY;
   auto rf = RISE;
-  std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
@@ -109,7 +106,6 @@ void Shell::_report_slew() {
   std::string pin;
   auto el = EARLY;
   auto rf = RISE;
-  std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;

@@ -82,7 +82,7 @@ void Shell::_set_num_threads() {
 // Procedure: read_verilog
 void Shell::_read_verilog() {
   if(std::filesystem::path path; _is >> path) {
-    _timer.verilog(std::move(path));
+    _timer.read_verilog(std::move(path));
   }
 }
 
@@ -91,7 +91,7 @@ void Shell::_read_verilog() {
 // Procedure: read_spef
 void Shell::_read_spef() {
   if(std::filesystem::path path; _is >> path) {
-    _timer.spef(std::move(path));
+    _timer.read_spef(std::move(path));
   }
 }
 
@@ -100,7 +100,7 @@ void Shell::_read_spef() {
 // Procedure: read_timing
 void Shell::_read_timing() {
   if(std::filesystem::path path; _is >> path) {
-    _timer.timing(std::move(path));
+    _timer.read_timing(std::move(path));
   }
 }
 
@@ -125,13 +125,13 @@ void Shell::_read_celllib() {
     }
   }
 
-  _timer.celllib(std::move(path), el);
+  _timer.read_celllib(std::move(path), el);
 }
 
 // Procedure: read_sdc
 void Shell::_read_sdc() {
   if(std::filesystem::path path; _is >> path) {
-    _timer.sdc(std::move(path));
+    _timer.read_sdc(std::move(path));
   }
 }
 

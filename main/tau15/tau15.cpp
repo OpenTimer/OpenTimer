@@ -27,11 +27,11 @@ int main(int argc, char* argv[]) {
   ot::Timer timer;
 
   // Initialize the timer.
-  timer.celllib(early_celllib, ot::EARLY)
-       .celllib(late_celllib, ot::LATE)
-       .verilog(verilog)
-       .spef(spef)
-       .timing(timing)
+  timer.read_celllib(early_celllib, ot::EARLY)
+       .read_celllib(late_celllib, ot::LATE)
+       .read_verilog(verilog)
+       .read_spef(spef)
+       .read_timing(timing)
        .cppr(true);
   
   std::string line, token, pin;
@@ -211,7 +211,7 @@ int main(int argc, char* argv[]) {
       if(tokens.size() < 2) {
         throw std::runtime_error("syntax error in remove_net");
       }
-      timer.spef(std::move(tokens[1]));
+      timer.read_spef(std::move(tokens[1]));
     }
     else if(tokens[0] == "report_worst_paths") {
 

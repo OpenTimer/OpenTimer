@@ -2,8 +2,8 @@
 
 namespace ot {
 
-// Function: spef
-Timer& Timer::spef(std::filesystem::path path) {
+// Function: read_spef
+Timer& Timer::read_spef(std::filesystem::path path) {
 
   // Create a spefnet shared pointer
   auto spef = std::make_shared<spef::Spef>(); 

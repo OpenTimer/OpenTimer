@@ -65,15 +65,15 @@ void Timing::read(const std::filesystem::path& path) {
 
 namespace ot {
 
-// Function: timing
-Timer& Timer::timing(std::filesystem::path path) {
+// Function: read_timing
+Timer& Timer::read_timing(std::filesystem::path path) {
 
   auto timing = std::make_shared<tau15::Timing>();
 
   std::scoped_lock lock(_mutex);
   
   // Library reader
-  auto reader = _taskflow.silent_emplace([this, path=std::move(path), timing] () {
+  auto reader = _taskflow.silent_emplace([path=std::move(path), timing] () {
     OT_LOGI("loading timing ", path, " ...");
     timing->read(path);
   });

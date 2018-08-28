@@ -2,8 +2,8 @@
 
 namespace ot {
 
-// Function: sdc
-Timer& Timer::sdc(std::filesystem::path path) {
+// Function: read_sdc
+Timer& Timer::read_sdc(std::filesystem::path path) {
 
   // Create a shared sdc object
   auto sdc = std::make_shared<sdc::SDC>();
@@ -11,7 +11,7 @@ Timer& Timer::sdc(std::filesystem::path path) {
   std::scoped_lock lock(_mutex);
   
   // reader
-  auto reader = _taskflow.silent_emplace([this, sdc, path=std::move(path)] () {
+  auto reader = _taskflow.silent_emplace([sdc, path=std::move(path)] () {
     sdc->read(path);
   });
 

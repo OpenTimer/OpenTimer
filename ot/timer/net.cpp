@@ -304,7 +304,7 @@ void Net::_update_rc_timing() {
     [&] (EmptyRct& rct) {
       FOR_EACH_EL_RF(el, rf) {
         rct.load[el][rf] = std::accumulate(_pins.begin(), _pins.end(), 0.0f, 
-          [&] (float v, Pin* pin) {
+          [this, el=el, rf=rf] (float v, Pin* pin) {
             return pin == _root ? v : v + pin->cap(el, rf);
           }
         );

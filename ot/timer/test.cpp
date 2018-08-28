@@ -93,7 +93,7 @@ void Test::_fprop_rat(float period) {
     float from_slew = *(_arc._from._slew[fel][rrf]);
     float to_slew = *(_arc._to._slew[el][rf]);
 
-    if(_constraint[el][rf] = tv[el]->constraint(rrf, rf, from_slew, to_slew)) {
+    if(_constraint[el][rf]=tv[el]->constraint(rrf, rf, from_slew, to_slew); _constraint[el][rf]) {
       if(el == EARLY) {
         _rat[el][rf] = *_constraint[el][rf] + from_at;
       }

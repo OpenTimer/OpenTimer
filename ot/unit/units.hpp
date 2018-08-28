@@ -43,9 +43,6 @@
 
 #pragma once
 
-
-#define UNIT_LIB_DISABLE_IOSTREAM
-
 #ifndef units_h__
 #define units_h__
 
@@ -2192,8 +2189,15 @@ namespace units
 	template<class Units, typename T, template<typename> class NonLinearScale>
 	inline std::ostream& operator<<(std::ostream& os, const unit_t<Units, T, NonLinearScale>& obj) noexcept
 	{
-		using BaseUnits = unit<std::ratio<1>, typename traits::unit_traits<Units>::base_unit_type>;
+    // change made by twhuang
+    // we don't need the long name as defined in the original library.
+    os << obj.value() << ' ' << units::abbreviation(obj);
+    return os;
+    
+		/*using BaseUnits = unit<std::ratio<1>, typename traits::unit_traits<Units>::base_unit_type>;
 		os << convert<Units, BaseUnits>(obj());
+
+
 
 		if (traits::unit_traits<Units>::base_unit_type::meter_ratio::num != 0) { os << " m"; }
 		if (traits::unit_traits<Units>::base_unit_type::meter_ratio::num != 0 && 
@@ -2240,7 +2244,7 @@ namespace units
 			traits::unit_traits<Units>::base_unit_type::byte_ratio::num != 1) { os << "^" << traits::unit_traits<Units>::base_unit_type::byte_ratio::num; }
 		if (traits::unit_traits<Units>::base_unit_type::byte_ratio::den != 1) { os << "/" << traits::unit_traits<Units>::base_unit_type::byte_ratio::den; }
 
-		return os;
+		return os;*/
 	}
 #endif
 

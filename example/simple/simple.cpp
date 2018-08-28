@@ -13,10 +13,10 @@ int main(int argc, char *argv[]) {
   
   // Read design
   timer.num_threads(std::thread::hardware_concurrency())
-       .celllib("osu018_stdcells.lib", ot::EARLY)
-       .celllib("osu018_stdcells.lib", ot::LATE)
-       .verilog("simple.v")
-       .sdc("simple.sdc");
+       .read_celllib("osu018_stdcells.lib", ot::EARLY)
+       .read_celllib("osu018_stdcells.lib", ot::LATE)
+       .read_verilog("simple.v")
+       .read_sdc("simple.sdc");
 
   // get the top-5 worst critical paths
   auto paths = timer.worst_paths(5);

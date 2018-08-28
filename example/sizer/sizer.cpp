@@ -17,10 +17,10 @@ int main(int argc, char* argv[]) {
   //   - read the verilog
   //   - read the parasitics
   //   - read the design constraints
-  timer.celllib("NangateOpenCellLibrary_typical.lib", std::nullopt)
-       .verilog("sizer.v")
-       .spef   ("sizer.spef")
-       .sdc    ("sizer.sdc");
+  timer.read_celllib("NangateOpenCellLibrary_typical.lib", std::nullopt)
+       .read_verilog("sizer.v")
+       .read_spef   ("sizer.spef")
+       .read_sdc    ("sizer.sdc");
 
   // Report the timing/power/area
   std::optional<float> tns  = timer.tns();

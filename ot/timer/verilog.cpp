@@ -2,8 +2,8 @@
 
 namespace ot {
 
-// Function: verilog
-Timer& Timer::verilog(std::filesystem::path path) {
+// Function: read_verilog
+Timer& Timer::read_verilog(std::filesystem::path path) {
   
   // Create a verilog module
   auto module = std::make_shared<vlog::Module>();
@@ -11,7 +11,7 @@ Timer& Timer::verilog(std::filesystem::path path) {
   std::scoped_lock lock(_mutex);
 
   // reader
-  auto reader = _taskflow.silent_emplace([this, module, path=std::move(path)] () {
+  auto reader = _taskflow.silent_emplace([module, path=std::move(path)] () {
     *module = vlog::read_verilog(path);
   });
 

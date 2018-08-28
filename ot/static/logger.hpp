@@ -7,7 +7,7 @@
 namespace ot {
 
 // Global declaration and macro usage.
-inline Logger<std::mutex> logger(env::log_file());
+inline Logger logger(env::log_file());
 
 }; // end of namespace ot. ------------------------------------------------------------------------
 

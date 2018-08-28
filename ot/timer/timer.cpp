@@ -1096,7 +1096,7 @@ void Timer::_update_endpoints() {
 
     _endpoints[el][rf].clear();
 
-    _taskflow.silent_emplace([this, el, rf] () {
+    _taskflow.silent_emplace([this, el=el, rf=rf] () {
 
       // for each po
       for(auto& po : _pos) {

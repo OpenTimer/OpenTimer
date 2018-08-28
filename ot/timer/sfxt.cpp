@@ -122,7 +122,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
   std::queue<size_t> queue;
   queue.push(v);
   sfxt.__dist[v] = (el == EARLY) ? -(*po._rat[el][rf]) : *po._rat[el][rf];
-  sfxt.__spfa[v] == true;
+  sfxt.__spfa[v] = true;
 
   // build the tree
   _spfa(sfxt, queue);
