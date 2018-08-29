@@ -469,7 +469,7 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 [Github projects]:       https://github.com/OpenTimer/OpenTimer/projects
 [Github insights]:       https://github.com/OpenTimer/OpenTimer/pulse
 [GraphViz]:              https://dreampuf.github.io/GraphvizOnline/
-[OpenTimer Wiki]:        https://github.com/OpenTimer/OpenTimer/wiki
+[OpenTimer Wiki]:        ./wiki/Home.md
 [OpenTimer-1.0]:         https://web.engr.illinois.edu/~thuang19/software/timer/OpenTimer.html
 [OpenTimerCitation]:     https://scholar.google.com/scholar?oi=bibs&hl=en&cites=142282068238605079
 [OpenTimerPaper]:        doc/iccad15.pdf
