@@ -417,6 +417,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Jignesh Shah][Jignesh Shah] contributed to the area and power report commands.
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 - [Leslie Hwang][Leslie Hwang] reviewed the documentation and README.
+- [Song Chen][Song Chen] shared his opinion about command designs to avoid naming conflicts and litigation.
 
 <!--
 
@@ -449,6 +450,20 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 >
 >THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+---
+
+The core of OpenTimer is under MIT license. However, it is built, tested, and documented
+using several third-party tools and services. Thanks a lot!
++ [units][units]: a compile-time header-only dimensional analysis and unit conversion
++ [Parser-SPEF][Parser-SPEF]: a fast C++ header-only parser for standard parasitic exchange format (SPEF)
++ [PEGTL][PEGTL]: parsing expression grammar template library
++ [Cpp-Taskflow][Cpp-Taskflow]: fast C++ parallel programming with task dependencies
++ [NanGate 45nm Library][NanGate]: open-source standard-cell library for testing and exploring EDA flows
++ [OSU PDK][OSUPDK]: Oklahoma State University system on chip (SoC) design flows
++ [Synopsys TAP-in][Synopsys Tap-in]: Synopsys technology access program for liberty user guide and open-source SDC parser.
+
+You can find a copy of these licenses under the folder [licenses](licenses).
+
 * * *
 
 [Tsung-Wei Huang]:       http://web.engr.illinois.edu/~thuang19/
@@ -463,6 +478,7 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 [Jignesh Shah]:          mailto:jignesh.shah@intel.com
 [Pao-I Chen]:            mailto:poyipenny@gmail.com
 [Leslie Hwang]:          mailto:tkdlezz@gmail.com 
+[Song Chen]:             mailto:song.chen@synopsys.com
 [Github releases]:       https://github.com/OpenTimer/OpenTimer/releases
 [Github issues]:         https://github.com/OpenTimer/OpenTimer/issues
 [Github pull requests]:  https://github.com/OpenTimer/OpenTimer/pulls
@@ -475,7 +491,6 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 [OpenTimerPaper]:        doc/iccad15.pdf
 [UI-TimerPaper]:         doc/tcad16.pdf
 [email me]:              mailto:twh760812@gmail.com
-[Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
 [VSD]:                   https://www.vlsisystemdesign.com/
 [ICCAD15]:               http://cad-contest.el.cycu.edu.tw/problem_C/default.html
 [TAU14]:                 https://sites.google.com/site/taucontest2014/
@@ -491,7 +506,11 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 [UIUC]:                  https://illinois.edu/
 [CSL]:                   https://csl.illinois.edu/
 [C++17]:                 https://en.wikipedia.org/wiki/C%2B%2B17
+[units]:                 https://github.com/nholthaus/units
+[PEGTL]:                 https://github.com/taocpp/PEGTL
+[Parser-SPEF]:           https://github.com/OpenTimer/Parser-SPEF         
+[Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
 [NanGate]:               http://www.nangate.com/?page_id=22
 [OSUPDK]:                https://vlsiarch.ecen.okstate.edu/flow/
-  
-
+[Synopsys TAP-in]:       https://www.synopsys.com/community/interoperability-programs/tap-in.html
+ 

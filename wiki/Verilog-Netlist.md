@@ -117,7 +117,7 @@ This includes support for:
 
 
 
-## Reference
+# Reference
 1. [2015 ACM TAU Timing Analysis Contest][TAU15]
 
 * * *

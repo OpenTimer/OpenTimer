@@ -5,15 +5,15 @@ Each RC network is described in a [Standard Parasitic Exchange Format (SPEF)][SP
 If the connection does not have parasitics, then the delay is zero and the output
 slew is euqal to the input slew.
 
-## Admissible SPEF Format
+# Admissible SPEF Format
 
 OpenTimer can parse pretty much a complete SPEF netlist.
 We use the open-source project [Parser-SPEF][Parser-SPEF] to parse a SPEF file.
-Each SPEF file contains 
-(1) header section,
-(2) name map section,
-(3) port section, and
-(4) parasitics section.
+Each SPEF file contains:
+1. header section
+2. name map section
+3. port section
+4. parasitics section
 
 ```spef
 // begin header (14 lines)
@@ -123,7 +123,7 @@ The resistor section defines:
 + 1.6 kOhm resistor between SPEF-specific intermediate node `inp2:2` and `u1:b`
 
 
-## Reference
+# Reference
 1. [Standard Parasitic Exchange Format][SPEF Wiki]
 2. [2015 ACM TAU Timing Analysis Contest][TAU15]
 

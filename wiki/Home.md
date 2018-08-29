@@ -5,18 +5,18 @@ software architecture, shell commands, C++ API, and input/output supports.
 
 Many pages are still under construction. Please stayed tune.
 
-## OpenTimer Architecture
+# OpenTimer Architecture
 
-## OpenTimer Shell
+# OpenTimer Shell
 
-## OpenTimer API
+# OpenTimer API
 
-## Input/Output Support
+# Input/Output Support
 
 + [Cell Library](Cell-Library.md)
 + [Verilog Netlist](Verilog-Netlist.md)
-+ [Synopsys Design Constraint](Synopsys-Design-Constraint.md)
-+ [Standard Parasitic Exchange Format](SPEF.md)
++ [Synopsys Design Constraint (SDC)](Synopsys-Design-Constraint.md)
++ [Standard Parasitic Exchange Format (SPEF)](SPEF.md)
 
-## Frequently Asked Questions
+# Frequently Asked Questions
 

@@ -5,7 +5,7 @@ impose initial timing conditions on the design.
 SDC is a tcl-based format to specify the design intent and surrounding constraints
 for synthesis, clocking, timing, power, test, and area.
 
-## Admissible SDC Format
+# Admissible SDC Format
 
 OpenTimer uses open-source SDC parser provided by 
 [Synopsys Technology Access Program][Synopsys TAP-in].
@@ -23,7 +23,7 @@ The table below lists all of them:
 
 
 
-## Reference
+# Reference
 
 1. [Synopsys Technology Access Program (TAP-in)][Synopsys TAP-in]
 2. [Synopsys Design Constraints Basics][SDC-Basics]
