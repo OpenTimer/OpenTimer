@@ -102,26 +102,25 @@ Parasitics of net inp2.
 </p>
 
 
-The example above defines a RC network *inp2* with a total lumped
+The example above defines a RC network `inp2` with a total lumped
 capacitance of 2 femto farads (fF). The name mapped section defines:
-+ inp2 to be referred by its name or by \*1
++ `inp2` to be referred by its name or by \*1
 
 The connection section defines:
-+ Port pin inp2 with input direction
-+ Internal pin u1:b with input direction
++ Port pin `inp2` with input direction
++ Internal pin `u1:b` with input direction
 
-inp2 as a primary input port and u1:b as an internal
-input pin.
+`inp2` as a primary input port and `u1:b` as an internal input pin.
 The capacitor section defines:
-+ 0.2 fF capacitor between primary input pin inp2 and GND
-+ 0.5 fF capacitor between SPEF-specific intermediate node inp2:1 and GND
-+ 0.4 fF capacitor between SPEF-specific intermediate node inp2:2 and GND
-+ 0.9 fF capacitor between u1:b and GND
++ 0.2 fF capacitor between primary input pin `inp2` and `GND`
++ 0.5 fF capacitor between SPEF-specific intermediate node `inp2:1` and `GND`
++ 0.4 fF capacitor between SPEF-specific intermediate node `inp2:2` and `GND`
++ 0.9 fF capacitor between `u1:b` and `GND`
 
 The resistor section defines:
-+ 1.4 kOhm resistor between primary input pin inp2 and inp2:1
-+ 1.5 kOhm resistor between SPEF-specific intermediate nodes inp2:1 and inp2:2
-+ 1.6 kOhm resistor between SPEF-specific intermediate node inp2:2 and u1:b
++ 1.4 kOhm resistor between primary input pin `inp2` and `inp2:1`
++ 1.5 kOhm resistor between SPEF-specific intermediate nodes `inp2:1` and `inp2:2`
++ 1.6 kOhm resistor between SPEF-specific intermediate node `inp2:2` and `u1:b`
 
 
 ## Reference
