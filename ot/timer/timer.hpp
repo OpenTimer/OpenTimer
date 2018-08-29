@@ -131,7 +131,7 @@ class Timer {
     std::optional<ampere_t> _current_unit;
     std::optional<volt_t> _voltage_unit;
 
-    TimingData<Celllib, MAX_SPLIT> _celllib;
+    TimingData<std::optional<Celllib>, MAX_SPLIT> _celllib;
 
     std::unordered_map<std::string, PrimaryInput> _pis;
     std::unordered_map<std::string, PrimaryOutput> _pos; 

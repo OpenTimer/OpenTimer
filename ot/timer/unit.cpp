@@ -47,8 +47,8 @@ void Timer::_to_time_unit(const second_t& unit) {
   }
 
   // library time
-  FOR_EACH_EL(el) {
-    _celllib[el].scale_time(s);
+  FOR_EACH_EL_IF(el, _celllib[el]) {
+    _celllib[el]->scale_time(s);
   }
   
   // enable full timing update
@@ -93,8 +93,8 @@ void Timer::_to_capacitance_unit(const farad_t& unit) {
   }
 
   // library capacitance
-  FOR_EACH_EL(el) {
-    _celllib[el].scale_capacitance(s);
+  FOR_EACH_EL_IF(el, _celllib[el]) {
+    _celllib[el]->scale_capacitance(s);
   }
   
   // TODO: other filed may need to change as well
@@ -134,8 +134,8 @@ void Timer::_to_resistance_unit(const ohm_t& unit) {
   }
   
   // library resistance
-  FOR_EACH_EL(el) {
-    _celllib[el].scale_resistance(s);
+  FOR_EACH_EL_IF(el, _celllib[el]) {
+    _celllib[el]->scale_resistance(s);
   }
   
   // TODO:

@@ -24,6 +24,7 @@ std::ostream& operator << (std::ostream& os, const Path& path) {
 
   if(path.empty()) {
     os << "empty path\n";
+    return os;
   }
 
   auto split = path.endpoint->split();

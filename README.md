@@ -119,10 +119,15 @@ By default, OpenTimer performs parallel incremental timing to maintain slack int
 ## System Requirements
 
 OpenTimer is very self-contained and has very few dependencies.
-To compile OpenTimer , you need:
+To compile OpenTimer, you need a [C++17][C++17] compiler. 
+We currently support:
 
-+ A GNU [C++ Compiler G++ v7.2](https://gcc.gnu.org/gcc-7/) (or higher) with C++17 support
-+ Tcl interpreter [tclsh](https://www.tcl.tk/about/language.html) 
++ GNU C++ Compiler G++ v7.2 with -std=c++1z
++ Clang 5.0 C++ Compiler with -std=c++17
+
+In addition, you need a tcl shell interpreter:
+
++ [tclsh](https://www.tcl.tk/about/language.html) 
 (most Unix/Linux/OSX distributions already include tclsh)
 
 OpenTimer has been tested to run well on Linux distributions and MAC OSX.
@@ -137,7 +142,7 @@ We recommend using out-of-source build.
 ~$ cd OpenTimer
 ~$ mkdir build
 ~$ cd build
-~$ cmake ../ -DCMAKE_CXX_COMPILER=g++
+~$ cmake ../
 ~$ make 
 ```
 
@@ -485,6 +490,7 @@ OpenTimer is licensed under the [MIT License](./LICENSE):
 [NSF]:                   https://www.nsf.gov/
 [UIUC]:                  https://illinois.edu/
 [CSL]:                   https://csl.illinois.edu/
+[C++17]:                 https://en.wikipedia.org/wiki/C%2B%2B17
 [NanGate]:               http://www.nangate.com/?page_id=22
 [OSUPDK]:                https://vlsiarch.ecen.okstate.edu/flow/
   

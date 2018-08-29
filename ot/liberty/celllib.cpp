@@ -478,7 +478,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.min_capacitance = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "max_transition") {        
-      OT_LOGF(++itr == end, "can't get the max_transition in cellpin ", cellpin.name);
+      OT_LOGF_IF(++itr == end, "can't get the max_transition in cellpin ", cellpin.name);
       cellpin.max_transition = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "min_transition") {          

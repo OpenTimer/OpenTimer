@@ -73,7 +73,7 @@ void Shell::_report_timer() {
     _os << paths[0];
   }
   else {
-    _os << empty_path;
+    _os << "no paths found\n";
   }
 }
 

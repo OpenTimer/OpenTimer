@@ -74,7 +74,13 @@ std::string Timer::_dump_timer() const {
   if(_power_unit) {
     oss << "Power unit       : "  << *_power_unit << '\n';
   }
-  
+
+  size_t num_cells = 0;
+
+  FOR_EACH_EL_IF(el, _celllib[el]) {
+    num_cells = std::max(num_cells, _celllib[el]->cells.size());
+  }
+
   // design statistics
   oss << "# Pins           : " << _pins.size()  << '\n'
       << "# POs            : " << _pos.size()   << '\n'
@@ -84,8 +90,7 @@ std::string Timer::_dump_timer() const {
       << "# Arcs           : " << _arcs.size()  << '\n'
       << "# SCCs           : " << _sccs.size()  << '\n'
       << "# Tests          : " << _tests.size() << '\n'
-      << "# Cells          : " << std::max(_celllib[EARLY].cells.size(), 
-                                           _celllib[LATE ].cells.size()) << '\n';
+      << "# Cells          : " << num_cells     << '\n';
 
   return oss.str();
 }
@@ -102,8 +107,6 @@ std::string Timer::_dump_net_load() const {
   std::ostringstream oss;
   
   oss << "Net Load [nets:" << _nets.size() 
-      //<< "|capacitance:" 
-      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
       << "]\n";
 
 
@@ -149,8 +152,6 @@ std::string Timer::_dump_pin_cap() const {
   std::ostringstream oss;
   
   oss << "Pin Capacitance [pins:" << _pins.size() 
-      //<< "|capacitance:" 
-      //<< (_capacitance_unit ? dump_capacitance_unit(*_capacitance_unit) : "n/a"s)
       << "]\n";
 
   if(!_pins.empty())  {
@@ -376,14 +377,19 @@ std::string Timer::dump_cell(const std::string& name, Split el) const {
 
 // Function: _dump_cell
 std::string Timer::_dump_cell(const std::string& name, Split el) const {
-  std::ostringstream oss;
-  if(auto ptr = _celllib[el].cell(name); ptr) {
-    oss << *ptr;
+  if(_celllib[el]) {
+    std::ostringstream oss;
+    if(auto ptr = _celllib[el]->cell(name); ptr) {
+      oss << *ptr;
+    }
+    else {
+      oss << "cell not found\n";
+    }
+    return oss.str();
   }
   else {
-    oss << Cell();
+    return "celllib not found\n";
   }
-  return oss.str();
 }
 
 // Function: dump_celllib
@@ -394,9 +400,18 @@ std::string Timer::dump_celllib(Split el) const {
 
 // Function: _dump_celllib
 std::string Timer::_dump_celllib(Split el) const {
-  std::ostringstream oss;
-  oss << _celllib[el];
-  return oss.str();
+  
+  if(_celllib[el]) {
+    std::ostringstream oss;
+    oss << *_celllib[el];
+    return oss.str();
+  }
+  else {
+    return "celllib not found\n";
+  }
 }
     
 };  // end of namespace ot. -----------------------------------------------------------------------
+
+
+

@@ -29,7 +29,8 @@ void Shell::operator()() {
     if(auto cpos = _line.find('#'); cpos != std::string::npos) {
       _line.erase(cpos);
     }
-
+    
+    _op.clear();
     _is.clear();
     _is.str(_line);
     _is >> _op;

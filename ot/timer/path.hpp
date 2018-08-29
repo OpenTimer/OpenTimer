@@ -41,9 +41,6 @@ struct Path : std::list<Point> {
 // Operator << ostream
 std::ostream& operator << (std::ostream&, const Path&);
 
-// EmptyPath
-inline const Path empty_path {0.0f, nullptr};
-
 // ------------------------------------------------------------------------------------------------
 
 // Class: PathHeap

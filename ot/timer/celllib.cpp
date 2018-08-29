@@ -59,17 +59,28 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
 void Timer::_merge_celllib(Celllib& lib, Split el) {
 
   _rebase_unit(lib);
-  
-  // Merge the lut template
-  _celllib[el].lut_templates.merge(std::move(lib.lut_templates));
-  
-  // Merge the cell
-  _celllib[el].cells.merge(std::move(lib.cells)); 
+
+  // initialize a library
+  if(!_celllib[el]) {
+    _celllib[el] = std::move(lib);
+    OT_LOGI(
+      "added ", to_string(el), " celllib ", std::quoted(_celllib[el]->name), 
+      " [cells:", _celllib[el]->cells.size(), ']'
+    );
+  }
+  // merge the library
+  else {
+    // Merge the lut template
+    _celllib[el]->lut_templates.merge(std::move(lib.lut_templates));
     
-  OT_LOGI(
-    "added ", to_string(el), " celllib ", std::quoted(lib.name), 
-    " [cells:", _celllib[el].cells.size(), ']'
-  );
+    // Merge the cell
+    _celllib[el]->cells.merge(std::move(lib.cells)); 
+    
+    OT_LOGI(
+      "merged with library ", std::quoted(lib.name), 
+      " [cells:", _celllib[el]->cells.size(), ']'
+    );
+  }
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------
