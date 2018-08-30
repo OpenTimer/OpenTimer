@@ -7,8 +7,6 @@ Many pages are still under construction. Please stayed tune.
 
 # Get Started with OpenTimer
 
-+ Generate your first timing report
-
 # OpenTimer Shell
 
 # OpenTimer API
