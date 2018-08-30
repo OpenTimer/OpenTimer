@@ -5,7 +5,9 @@ software architecture, shell commands, C++ API, and input/output supports.
 
 Many pages are still under construction. Please stayed tune.
 
-# OpenTimer Architecture
+# Get Started with OpenTimer
+
++ Generate your first timing report
 
 # OpenTimer Shell
 
