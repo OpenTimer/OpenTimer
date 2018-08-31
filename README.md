@@ -81,7 +81,6 @@ Analysis type : early
 
       clock      25.000      25.000  fall  f1:CLK (DFFNEGX1)
  constraint       1.518      26.518        library hold_falling
-cppr credit         n/a
    required                  26.518        data required time
 ------------------------------------------------------
       slack                 -23.551        VIOLATED

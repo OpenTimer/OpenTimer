@@ -103,7 +103,6 @@ class Timer {
     inline auto num_gates() const;
     inline auto num_tests() const;
     inline auto num_sccs() const;
-
     inline auto time_unit() const;
     inline auto power_unit() const;
     inline auto resistance_unit() const;
@@ -236,6 +235,18 @@ class Timer {
     void _insert_full_timing_frontiers();
     void _spur(Endpoint&, size_t, PathHeap&) const;
     void _spur(PfxtCache&, const PfxtNode&) const;
+    void _dump_graph(std::ostream&) const;
+    void _dump_lineage(std::ostream&) const;
+    void _dump_cell(std::ostream&, const std::string&, Split) const;
+    void _dump_celllib(std::ostream&, Split) const;
+    void _dump_net_load(std::ostream&) const;
+    void _dump_pin_cap(std::ostream&) const;
+    void _dump_slew(std::ostream&) const;
+    void _dump_slack(std::ostream&) const;
+    void _dump_at(std::ostream&) const;
+    void _dump_rat(std::ostream&) const;
+    void _dump_timer(std::ostream&) const;
+    void _dump_timing(std::ostream&) const;
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
@@ -265,19 +276,6 @@ class Timer {
     std::optional<float> _cppr_credit(const CpprCache&, Pin&, Split, Tran) const;
     std::optional<float> _cppr_offset(const CpprCache&, Pin&, Split, Tran) const;
     std::optional<float> _sfxt_offset(const SfxtCache&, size_t) const;
-
-    std::string _dump_graph() const;
-    std::string _dump_lineage() const;
-    std::string _dump_cell(const std::string&, Split) const;
-    std::string _dump_celllib(Split) const;
-    std::string _dump_net_load() const;
-    std::string _dump_pin_cap() const;
-    std::string _dump_slew() const;
-    std::string _dump_slack() const;
-    std::string _dump_at() const;
-    std::string _dump_rat() const;
-    std::string _dump_timer() const;
-    std::string _dump_timing() const;
     
     size_t _max_pin_name_size() const;
     size_t _max_net_name_size() const;
@@ -286,10 +284,9 @@ class Timer {
     inline auto _decode_pin(size_t) const;
     inline auto _encode_arc(Arc&, Tran, Tran) const;
     inline auto _decode_arc(size_t) const;
-    
-    constexpr auto _has_state(int) const;
-    constexpr auto _insert_state(int);
-    constexpr auto _remove_state(int = 0);
+    inline auto _has_state(int) const;
+    inline auto _insert_state(int);
+    inline auto _remove_state(int = 0);
 };
 
 // Procedure: _insert_frontier
@@ -405,17 +402,17 @@ inline auto Timer::_decode_arc(size_t idx) const {
 }
 
 // Function: _has_state
-constexpr auto Timer::_has_state(int s) const {
+inline auto Timer::_has_state(int s) const {
   return _state & s;
 }
 
 // Procedure: _insert_state
-constexpr auto Timer::_insert_state(int s) {
+inline auto Timer::_insert_state(int s) {
   _state |= s;
 }
   
 // Procedure: _remove_state
-constexpr auto Timer::_remove_state(int s) {
+inline auto Timer::_remove_state(int s) {
   if(s == 0) _state = 0;
   else {
     _state &= ~s;

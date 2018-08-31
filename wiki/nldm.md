@@ -1,44 +1,51 @@
 # Non-Linear Delay Model (NLDM)
 
+OpenTimer supports Non-Linear Delay Model (NLDM).
 Most of the cell libraries include table models to specify the delays and timing checks
 for various timing arcs of the cell.
-The table models are referred to as Non-Linear Delay Model (NLDM),
+The table models are referred to as NLDM,
 and are used for delay, output slew, and timing tests.
 NLDM captures the delay through the combination of input transition time at the cell input pin
 and the total output capacitance at the cell output pin.
-Here is an example of such a table for a typical inverter cell:
+
+## How does NLDM Work in OpenTimer?
+
+To give you a better idea about how OpenTimer works with NLDM,
+let's start with an example of such a table for a typical inverter cell.
 
 ```text
-pin ("o") {
-  direction : output ;
-  capacitance : 0.0 ;
-  max_capacitance : 12.80 ;
-  min_capacitance : 0.00 ;
-  timing() {
-    cell_fall ("delay_template_5x5") {
-      index_1 ("0.00,1.00,2.00,4.00,8.00") ;      // input transition
-      index_2 ("5.00,30.00,50.00,80.00,140.00") ; // output capacitance
-      values (\
-        "9.376,  14.576, 18.136, 22.088, 27.856", \
-        "13.544, 18.744, 22.88,  27.96,  35.32",  \
-        "17.704, 22.904, 27.064, 32.992, 41.784", \
-        "26.04,  31.24,  35.4,   41.64,  52.84",  \
-        "42.704, 47.904, 52.064, 58.304, 70.784"  \
-      );
+cell ("INV_X1") {
+  pin ("o") {
+    direction : output ;
+    capacitance : 0.0 ;
+    max_capacitance : 12.80 ;
+    min_capacitance : 0.00 ;
+    timing() {
+      cell_fall ("delay_template_5x5") {
+        index_1 ("0.00,1.00,2.00,4.00,8.00") ;      // input transition
+        index_2 ("5.00,30.00,50.00,80.00,140.00") ; // output capacitance
+        values (\
+          "9.376,  14.576, 18.136, 22.088, 27.856", \
+          "13.544, 18.744, 22.88,  27.96,  35.32",  \
+          "17.704, 22.904, 27.064, 32.992, 41.784", \
+          "26.04,  31.24,  35.4,   41.64,  52.84",  \
+          "42.704, 47.904, 52.064, 58.304, 70.784"  \
+        );
+      }
+      cell_rise ("delay_template_5x5") {
+        index_1 ("0.00,1.00,2.00,4.00,8.00") ;      // input transition
+        index_2 ("5.00,30.00,50.00,80.00,140.00") ; // output capacitance
+        values (\
+          "9.376,  14.576, 18.136, 22.088, 27.856", \
+          "13.544, 18.744, 22.88,  27.96,  35.32",  \
+          "17.704, 22.904, 27.064, 32.992, 41.784", \
+          "26.04,  31.24,  35.4,   41.64,  52.84",  \
+          "42.704, 47.904, 52.064, 58.304, 70.784"  \
+        );
+      }
+      timing_sense : negative_unate ;
+      related_pin  : "a" ;
     }
-    cell_rise ("delay_template_5x5") {
-      index_1 ("0.00,1.00,2.00,4.00,8.00") ;      // input transition
-      index_2 ("5.00,30.00,50.00,80.00,140.00") ; // output capacitance
-      values (\
-        "9.376,  14.576, 18.136, 22.088, 27.856", \
-        "13.544, 18.744, 22.88,  27.96,  35.32",  \
-        "17.704, 22.904, 27.064, 32.992, 41.784", \
-        "26.04,  31.24,  35.4,   41.64,  52.84",  \
-        "42.704, 47.904, 52.064, 58.304, 70.784"  \
-      );
-    }
-    timing_sense : negative_unate ;
-    related_pin  : "a" ;
   }
 }
 ```

@@ -15,13 +15,23 @@ struct CpprAnalysis {
   // TODO
 };
 
+// ----------------------------------------------------------------------------
+
 // Struct: CpprCredit 
 struct CpprCredit {
-  Tran rf;
   Pin& pin;
+  Tran rf;
   float credit;
+  inline CpprCredit(Pin&, Tran, float);
   inline operator float() const;
 };
+
+// Constructor
+CpprCredit::CpprCredit(Pin& pin, Tran rf, float c) :
+  pin    {pin},
+  rf     {rf},
+  credit {c} {
+}
 
 // operator
 inline CpprCredit::operator float() const {

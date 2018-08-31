@@ -161,13 +161,10 @@ void Path::dump(std::ostream& os) const {
       }
       
       // cppr credit
-      os << std::setw(w1) << "cppr credit";
       if(auto c = test->_cppr_credit[split][tran]; c) {
+        os << std::setw(w1) << "cppr credit";
         sum += *c;
         os << std::setw(w2) << *c << std::setw(w3) << sum << '\n';
-      }
-      else {
-        os << std::setw(w2) << "n/a" << '\n';
       }
 
       assert(std::fabs(sum - rat) < 1e-3);
