@@ -404,9 +404,11 @@ Please don't hesitate to [let me know][email me] if I forgot your project!
 + Read and cite our [ICCAD][OpenTimerPaper] and [TCAD][UI-TimerPaper] papers.
 
 # Contributors & Acknowledgment
+
 OpenTimer is being actively developed and contributed by the following people:
 - [Tsung-Wei Huang][Tsung-Wei Huang] created the OpenTimer project is now the chief architect.
 - [Martin Wong][Martin Wong] supported the OpenTimer project through NSF and DARPA funding.
+- [Andreas Olofsson][Andreas Olofsson] supported the OpenTimer project through the DARPA IDEA project.
 - [Chun-Xun Lin][Chun-Xun Lin] implemented the prompt interface of OpenTimer shell.
 - [Kunal Ghosh][Kunal Ghosh] provided a list of practical features to include in OpenTimer.
 - [Pei-Yu Lee][Pei-Yu Lee] provided useful incremental timing discussion and helped fix bugs.
@@ -469,6 +471,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [Tsung-Wei Huang]:       http://web.engr.illinois.edu/~thuang19/
 [Chun-Xun Lin]:          https://github.com/clin99
 [Martin Wong]:           https://ece.illinois.edu/directory/profile/mdfwong
+[Andreas Olofsson]:      https://github.com/aolofsson
 [Kunal Ghosh]:           mailto:kunalpghosh@gmail.com
 [Jin Hu]:                mailto:jinhu@umich.edu
 [Myung-Chul Kim]:        mailto:mckima@us.ibm.com
