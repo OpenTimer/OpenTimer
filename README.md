@@ -63,56 +63,32 @@ ot> read_sdc simple.sdc
 
 Report the timing to show the most critical path.
 
-```bash
-ot> report_timing                     # report the most critical path
-Endpoint     :   f1:D
-Startpoint   :   inp1
-Path type    :   early
-Required Time:   26.5175
-Arrival Time :   2.97909
-Slack        :   -23.5384
-----------------------------------
-   Arrival       Delay   Dir   Pin
-----------------------------------
-         0         n/a  fall  inp1
-         0           0  fall  u1:A
-   2.79669     2.79669  rise  u1:Y
-   2.79669           0  rise  u4:A
-   2.97909    0.182399  fall  u4:Y
-   2.97909           0  fall  f1:D
-----------------------------------
+```text
+ot> report_timing      # report the most critical path
+Startpoint    : inp1
+Endpoint      : f1:D
+Analysis type : early
+------------------------------------------------------
+       Type       Delay        Time   Dir  Description
+------------------------------------------------------
+       port       0.000       0.000  fall  inp1
+        pin       0.000       0.000  fall  u1:A (NAND2X1)
+        pin       2.786       2.786  rise  u1:Y (NAND2X1)
+        pin       0.000       2.786  rise  u4:A (NOR2X1)
+        pin       0.181       2.967  fall  u4:Y (NOR2X1)
+        pin       0.000       2.967  fall  f1:D (DFFNEGX1)
+    arrival                   2.967        data arrival time
+
+      clock      25.000      25.000  fall  f1:CLK (DFFNEGX1)
+ constraint       1.518      26.518        library hold_falling
+cppr credit         n/a
+   required                  26.518        data required time
+------------------------------------------------------
+      slack                 -23.551        VIOLATED
 ```
 
-The critical path originates from the primary input `inp1` all the way 
-to the data pin `f1:D` of the flip-flop `f1`.
-<!--You can dump a dot format and use online tools like [GraphViz][GraphViz]
-to visualize the timing graph.
-The critical path is marked in red.
-
-```bash
-ot> dump_graph -o simple.dot  # dump the timing graph to the .dot format
-```
-
-![](image/simple_graph.png)
-
-We have provided three command files, 
-[simple.conf](./example/simple/simple.conf), 
-[unit.conf](./example/simple/unit.conf), and 
-[opt.conf](./example/simple/opt.conf)
-to demonstrate more usages of OpenTimer. 
-You can redirect it through stdin to OpenTimer shell.
-
-```bash
-cd example/simple
-../../bin/ot-shell < opt.conf     # modify the design and perform incremental timing
-```
-
-The graph below is generated after applying gate changing operations in 
-[opt.conf](./example/simple/opt.conf).
-One gate (marked in cyan) is inserted to the timing graph.
-By default, OpenTimer performs parallel incremental timing to maintain slack integrity.
-
-![](image/simple_opt_graph.png) -->
+The critical path originates from the primary input `inp1` and 
+feed into the data pin `f1:D` of the flip-flop `DFFNEGX1`.
 
 # Compile OpenTimer
 

@@ -19,16 +19,21 @@ class Test {
   friend class Cppr;
   friend class Endpoint;
 
+  friend struct Path;
+
   public:
     
     Test(Arc&);
 
     std::optional<float> rat(Split, Tran) const;
+    std::optional<float> constraint(Split, Tran) const;
     std::optional<float> slack(Split, Tran) const;
     std::optional<float> raw_slack(Split, Tran) const;
+    std::optional<float> cppr_credit(Split, Tran) const;
 
     const Pin& constrained_pin() const;
     const Pin& related_pin() const;
+    const Arc& arc() const;
 
   private:
 
@@ -40,6 +45,7 @@ class Test {
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _cppr_credit;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _constraint;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _clock_at;
 
     void _reset();
     void _fprop_rat(float);

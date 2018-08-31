@@ -159,7 +159,7 @@ void Shell::_report_fep() {
     _os << *fep << '\n';
   }
   else {
-    _os << "no endpoints found\n";
+    _os << "no endpoint found\n";
   }
 }
 
@@ -171,7 +171,7 @@ void Shell::_report_timing() {
     _os << paths[0];
   }
   else {
-    _os << "no paths found\n";
+    _os << "no path found\n";
   }
 }
 
@@ -194,8 +194,9 @@ void Shell::_report_path() {
 
   auto paths = _timer.worst_paths(K);
 
-  for(const auto& path : paths) {
-    _os << path;
+  for(size_t i=0; i<paths.size(); ++i) {
+    if(i) _os << '\n';
+    _os << paths[i];
   }
 }
 

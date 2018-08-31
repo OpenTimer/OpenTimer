@@ -5,12 +5,30 @@
 
 namespace ot {
 
+// Forward declaration
+class Pin;
+
+// ----------------------------------------------------------------------------
+
 // Struct: CpprAnalysis
 struct CpprAnalysis {
   // TODO
 };
 
-// ------------------------------------------------------------------------------------------------
+// Struct: CpprCredit 
+struct CpprCredit {
+  Tran rf;
+  Pin& pin;
+  float credit;
+  inline operator float() const;
+};
+
+// operator
+inline CpprCredit::operator float() const {
+  return credit;
+}
+
+// ----------------------------------------------------------------------------
 
 // CpprCache: The internal thread-local storage for cppr.
 class CpprCache {

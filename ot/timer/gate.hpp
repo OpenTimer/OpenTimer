@@ -23,6 +23,8 @@ class Gate {
 
     inline const std::string& name() const;
 
+    const std::string& cell_name() const;
+
   private:
 
     std::string _name;

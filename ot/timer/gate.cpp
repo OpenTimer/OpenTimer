@@ -12,6 +12,11 @@ Gate::Gate(const std::string& name, CellView cell) :
   _cell {cell} {
 }
 
+// Function: cell_name
+const std::string& Gate::cell_name() const {
+  return _cell[EARLY]->name;
+}
+
 /*// Procedure: _repower
 void Gate::_repower(CellView cell) {
 

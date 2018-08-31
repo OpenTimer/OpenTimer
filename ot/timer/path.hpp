@@ -25,13 +25,14 @@ struct Point {
 // Struct: Path
 struct Path : std::list<Point> {
 
-  Path() = default;
   Path(float, const Endpoint*);
   Path(const Path&) = delete;
   Path(Path&&) = default; 
 
   Path& operator = (const Path&) = delete;
   Path& operator = (Path&&) = default;
+  
+  void dump(std::ostream&) const;
 
   float slack {std::numeric_limits<float>::quiet_NaN()};
   

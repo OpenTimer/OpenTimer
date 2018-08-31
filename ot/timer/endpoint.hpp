@@ -20,6 +20,8 @@ class Endpoint {
 
   friend class Timer;
 
+  friend struct Path;
+
   public:
     
     Endpoint(Split, Tran, Test&);

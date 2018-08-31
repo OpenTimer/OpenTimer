@@ -17,67 +17,191 @@ Path::Path(float slk, const Endpoint* ept) :
   endpoint {ept} {
 }
 
-// ------------------------------------------------------------------------------------------------
+// Procedure: dump
+void Path::dump(std::ostream& os) const {
 
-// Operator <<
-std::ostream& operator << (std::ostream& os, const Path& path) {
-
-  if(path.empty()) {
+  if(empty()) {
     os << "empty path\n";
-    return os;
+    return;
   }
 
-  auto split = path.endpoint->split();
+  auto fmt   = os.flags();
+  auto split = endpoint->split();
+  auto tran  = endpoint->transition();
+  auto at    = back().at;
+  auto rat   = (split == EARLY ? at - slack : at + slack);
   
   // Print the head
-  os << "Endpoint     :   " << path.back().pin.name()  << '\n';
-  os << "Startpoint   :   " << path.front().pin.name() << '\n';
-  os << "Analysis type:   " << to_string(split) << '\n';
-  os << "Required Time:   " << (split == EARLY ? path.back().at - path.slack :
-                                                 path.back().at + path.slack) 
-                            << '\n';
-  os << "Arrival Time :   " << path.back().at << '\n';
-  os << "Slack        :   " << path.slack << '\n';
+  os << "Startpoint    : " << front().pin.name() << '\n';
+  os << "Endpoint      : " << back().pin.name()  << '\n';
+  os << "Analysis type : " << to_string(split) << '\n';
   
-  // find the maximum pin name
-  auto max_plen = std::max_element(path.begin(), path.end(), 
-    [] (const Point& lp, const Point& rp) {
-      return lp.pin.name().size() < rp.pin.name().size();
-    }
-  )->pin.name().size();
+  size_t w1 = 11;
+  size_t w2 = 12;
+  size_t w3 = 12;
+  size_t w4 = 6;
+  size_t w5 = 13;
+  size_t W = w1 + w2 + w3 + w4 + w5;
 
-  os << std::setfill('-') << std::setw(31 + max_plen) << '\n'
-     << std::setfill(' ') << std::setw(10) << "Arrival"  
-                          << std::setw(12) << "Delay"
-                          << std::setw(6)  << "Dir" 
-                          << std::setw(2  + max_plen)  << "Pin"   << '\n'
-     << std::setfill('-') << std::setw(31 + max_plen) << '\n';
+  std::fill_n(std::ostream_iterator<char>(os), W, '-');
+  os << '\n'
+     << std::setw(w1) << "Type"
+     << std::setw(w2) << "Delay"
+     << std::setw(w3) << "Time"
+     << std::setw(w4) << "Dir";
+  std::fill_n(std::ostream_iterator<char>(os), 2, ' ');
+  os << "Description" << '\n';
+  std::fill_n(std::ostream_iterator<char>(os), W, '-');
+  os << '\n';
   
   // trace
-  os << std::setfill(' ') << std::fixed << std::setprecision(3);
+  os << std::fixed << std::setprecision(3);
   std::optional<float> pi_at;
-  for(const auto& p : path) {
-    // arrival time
-    os << std::setw(10) << p.at << "  ";
-    
+
+  for(const auto& p : *this) {
+
+    // type
+    if(p.pin.primary_input() || p.pin.primary_output()) {
+      os << std::setw(w1) << "port";
+    }
+    else {
+      os << std::setw(w1) << "pin";
+    }
+
     // delay
-    os << std::setw(10);
+    os << std::setw(w2);
     if(pi_at) os << p.at - *pi_at;
-    else os << "n/a";
-    os << "  ";
+    else os << p.at;
+    
+    // arrival time
+    os << std::setw(w3) << p.at;
 
     // transition
-    os << std::setw(4) << to_string(p.transition) << "  ";
+    os << std::setw(w4) << to_string(p.transition);
 
     // pin name
-    os << std::setw(max_plen) << p.pin.name() << '\n';
+    std::fill_n(std::ostream_iterator<char>(os), 2, ' ');
+    if(os << p.pin.name(); p.pin.gate()) {
+      os << " (" << p.pin.gate()->cell_name() << ')';
+    }
+    os << '\n';
     
     // cursor
     pi_at = p.at;
   }
+
+  os << std::setw(w1) << "arrival" 
+     << std::setw(w2+w3) << at;
+  std::fill_n(std::ostream_iterator<char>(os), w4 + 2, ' ');
+  os << "data arrival time" << '\n'; 
+
+  // Print the required arrival time
+  os << '\n';
   
-  os << std::setfill('-') << std::setw(31 + max_plen) << '\n';
+  // test type
+  std::visit(Functors{
+    [&] (Test* test) {
+        
+      auto tv  = (test->_arc.timing_view())[split];
+      auto sum = 0.0f;
+
+      // clock network latency
+      os << std::setw(w1) << "clock";
+      if(auto c = test->_clock_at[split][tran]; c) {
+        sum += *c;
+        os << std::setw(w2) << *c << std::setw(w3) << sum;
+      }
+      else {
+        os << std::setw(w2+w3) << "n/a";
+      }
+
+      if(tv && tv->is_rising_edge_triggered()) {
+        os << std::setw(w4) << "rise";
+      }
+      else if(tv && tv->is_falling_edge_triggered()){
+        os << std::setw(w4) << "fall";
+      }
+      else {
+        os << "n/a";
+      }
+
+      std::fill_n(std::ostream_iterator<char>(os), 2, ' ');
+      if(os << test->related_pin().name(); test->related_pin().gate()) {
+        os << " (" << test->related_pin().gate()->cell_name() << ')';
+      }
+      os << '\n';
+
+      // constraint value
+      os << std::setw(w1) << "constraint";
+      if(auto c = test->_constraint[split][tran]; c) {
+
+        switch(split) {
+          case EARLY: 
+            sum += *c;
+            os << std::setw(w2) << c.value() << std::setw(w3) << sum;
+          break;
+
+          case LATE:
+            sum -= *c;
+            os << std::setw(w2) << -c.value() << std::setw(w3) << sum;
+          break;
+        }
+        
+        // timing type
+        if(tv && tv->type) {
+          std::fill_n(std::ostream_iterator<char>(os), w4+2, ' ');
+          os << "library " << to_string(tv->type.value()) << '\n';
+        }
+        else {
+          os << '\n';
+        }
+      }
+      else {
+        os << std::setw(w2) << "n/a" << '\n';
+      }
+      
+      // cppr credit
+      os << std::setw(w1) << "cppr credit";
+      if(auto c = test->_cppr_credit[split][tran]; c) {
+        sum += *c;
+        os << std::setw(w2) << *c << std::setw(w3) << sum << '\n';
+      }
+      else {
+        os << std::setw(w2) << "n/a" << '\n';
+      }
+
+      assert(std::fabs(sum - rat) < 1e-3);
+    },
+    [&] (PrimaryOutput* po) {
+      os << std::setw(w1) << "port";
+      if(auto v = po->rat(split, tran); v) {
+        os << std::setw(w2) << *v << std::setw(w3) << *v;
+        std::fill_n(std::ostream_iterator<char>(os), w4+2, ' ');
+        os << "output port delay" << '\n';
+      }
+      else {
+        os << std::setw(w2) << "n/a" << '\n';
+      }
+    }
+  }, endpoint->_handle);
   
+  os << std::setw(w1) << "required" << std::setw(w2+w3) << rat;
+  std::fill_n(std::ostream_iterator<char>(os), w4+2, ' ');
+  os << "data required time" << '\n';
+
+  // slack
+  std::fill_n(std::ostream_iterator<char>(os), W, '-');
+  os << '\n' << std::setw(w1) << "slack" << std::setw(w2+w3) << slack;
+  std::fill_n(std::ostream_iterator<char>(os), w4+2, ' ');
+  os << (slack < 0.0f ? "VIOLATED" : "MET") << '\n';
+  
+  // restore the format
+  os.flags(fmt);
+}
+
+// Operator <<
+std::ostream& operator << (std::ostream& os, const Path& path) {
+  path.dump(os);
   return os;
 }
 

@@ -15,6 +15,16 @@ std::optional<float> Test::rat(Split el, Tran rf) const {
   return _rat[el][rf];
 }
 
+// Function: constraint
+std::optional<float> Test::constraint(Split el, Tran rf) const {
+  return _constraint[el][rf];
+}
+
+// Function: cppr_credit
+std::optional<float> Test::cppr_credit(Split el, Tran rf) const {
+  return _cppr_credit[el][rf];
+}
+
 // Function: slack
 std::optional<float> Test::slack(Split el, Tran rf) const {
   if(_arc._to._at[el][rf] && _rat[el][rf]) {
@@ -37,6 +47,11 @@ std::optional<float> Test::raw_slack(Split el, Tran rf) const {
     );
   }
   else return std::nullopt;
+}
+
+// Function: arc
+const Arc& Test::arc() const {
+  return _arc;
 }
 
 // Function: constrained_pin
@@ -65,6 +80,7 @@ void Test::_reset() {
     _rat[el][rf].reset();
     _cppr_credit[el][rf].reset();
     _constraint[el][rf].reset();
+    _clock_at[el][rf].reset();
   }
 }
 
@@ -73,7 +89,6 @@ void Test::_fprop_rat(float period) {
 
   auto tv = _arc.timing_view();
 
-  // Clear rat and cppr
   FOR_EACH_EL_RF_IF(el, rf, tv[el]) {
 
     // SLEW not defined at the constrained pin.
@@ -82,23 +97,38 @@ void Test::_fprop_rat(float period) {
     }
 
     auto fel = (el == EARLY ? LATE : EARLY);
-    auto rrf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
+    auto frf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
     
+    if(frf == FALL && !tv[el]->is_falling_edge_triggered()) {
+      OT_LOGE("clock transition not found for test ", _arc.name());
+      continue;
+    }
+
     // AT/SLEW not defined at the arc._from
-    if(!(_arc._from._at[fel][rrf]) || !(_arc._from._slew[fel][rrf])) {
+    if(!(_arc._from._at[fel][frf]) || !(_arc._from._slew[fel][frf])) {
       continue;
     }
     
-    float from_at = *(_arc._from._at[fel][rrf]);
-    float from_slew = *(_arc._from._slew[fel][rrf]);
-    float to_slew = *(_arc._to._slew[el][rf]);
+    if(el == EARLY) {
+      _clock_at[el][rf] = *_arc._from._at[fel][frf];
+    }
+    else {
+      _clock_at[el][rf] = *_arc._from._at[fel][frf] + period;
+    }
 
-    if(_constraint[el][rf]=tv[el]->constraint(rrf, rf, from_slew, to_slew); _constraint[el][rf]) {
+    _constraint[el][rf] = tv[el]->constraint(
+      frf, 
+      rf, 
+      *_arc._from._slew[fel][frf],
+      *_arc._to._slew[el][rf]
+    );
+    
+    if(_constraint[el][rf] && _clock_at[el][rf]) {
       if(el == EARLY) {
-        _rat[el][rf] = *_constraint[el][rf] + from_at;
+        _rat[el][rf] = *_constraint[el][rf] + *_clock_at[el][rf];
       }
       else {
-        _rat[el][rf] = from_at + period - *_constraint[el][rf];
+        _rat[el][rf] = *_clock_at[el][rf] - *_constraint[el][rf];
       }
     }
   }
