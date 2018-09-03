@@ -12,7 +12,7 @@ We use the open-source project [Parser-SPEF][Parser-SPEF] to parse a SPEF file.
 Each SPEF file contains:
 1. header section
 2. name map section
-3. port section
+3. port section 
 4. parasitics section
 
 ```spef

@@ -25,5 +25,7 @@ Many pages are still under construction. Please stayed tune.
 + [Synopsys Design Constraint (SDC)](sdc.md)
 + [Standard Parasitic Exchange Format (SPEF)](spef.md)
 
+# Technical Report
+
 # Frequently Asked Questions
 
