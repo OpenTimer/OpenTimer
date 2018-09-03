@@ -7,6 +7,9 @@ Many pages are still under construction. Please stayed tune.
 
 # Get Started with OpenTimer
 
++ Compile and build OpenTimer
++ Obtain your first timing report
+
 # OpenTimer Shell
 
 # OpenTimer API
@@ -17,10 +20,10 @@ Many pages are still under construction. Please stayed tune.
 
 # Input/Output Files
 
-+ [Cell Library](Cell-Library.md)
-+ [Verilog Netlist](Verilog-Netlist.md)
-+ [Synopsys Design Constraint (SDC)](Synopsys-Design-Constraint.md)
-+ [Standard Parasitic Exchange Format (SPEF)](SPEF.md)
++ [Cell Library](library.md)
++ [Verilog Netlist](verilog.md)
++ [Synopsys Design Constraint (SDC)](sdc.md)
++ [Standard Parasitic Exchange Format (SPEF)](spef.md)
 
 # Frequently Asked Questions
 

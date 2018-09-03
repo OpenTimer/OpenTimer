@@ -1,6 +1,6 @@
 # Non-Linear Delay Model (NLDM)
 
-OpenTimer supports Non-Linear Delay Model (NLDM).
+OpenTimer supports *Non-Linear Delay Model (NLDM)*.
 Most of the cell libraries include table models to specify the delays and timing checks
 for various timing arcs of the cell.
 The table models are referred to as NLDM,
@@ -70,7 +70,37 @@ and the second variable is the output capacitance.
 Based on the upon delay tables, an input fall transition time of 1.00 (library time unit)
 and an output load of 30.00 (library capacitance unit) will correspond to the rise delay
 of the inverter of 18.744 (library time unit).
-For values outside the indeices, we perform interpolation to obtain the resulting timing values.
+For values outside the indices, we perform interpolation or extrapolation to obtain the resulting timing values.
+
+## Table Lookup through Linear Interpolation and Extrapolation
+
+The figure below demonstrates different timing lookup tables of scalar,
+one dimension, and two dimensions.
+
+<img src="image/nldm.png" width="70%"> 
+
+If the table is of size 1x1 (single scalar value),
+no interpolation is needed. 
+Regardless of input `x` and `y`, the output value `z` is constant.
+
+If the table is one-dimensional (1xn or mx1),
+the output values depends on the non-scalar dimension.
+For instance, in the above 1x4 table, if `y < y1`, 
+the output value z is the linear extrapolation between `z1` and `z2`.
+If `y2 ≤ y ≤ y3`, the output value `z` is the linear interpolation 
+between `z2` and `z3`.
+If `y > y4`, the output value `z` is the linear extrapolation 
+between `z3` and `z4`.
+
+If the table is two-dimensional, 
+we perform linear interpolation or extrapolation on the x value first,
+and then perform the linear interpolation or extrapolation on the y value.
+For instance, in the above 3x4 table,
+if `x2 < x < x3` and `y2 < y < y3`, 
+we compute `z_first` by linear interpolation on `z22` and `z32`,
+and `z_second` by linear interpolation on `z23` and `z33`.
+Then we determine the output value z by linear interpolation on
+`z_first` and `z_second`.
 
 # Summary
 
@@ -83,8 +113,10 @@ At 90nm and below,
 other delay models (e.g., CCS, ECSM, etc) 
 are used in order to enable accuracy close to circuit simulation.
 
-
 # Reference
+
+1. [2015 ACM TAU Timing Analysis Contest][TAU15]
 
 * * *
 
+[TAU15]:        https://sites.google.com/site/taucontest2015/
