@@ -16,7 +16,7 @@ void compress_spef(const std::filesystem::path& ori, const std::filesystem::path
 
   std::ofstream ofs(cmp);
   
-  ofs << spef.dump_compact();
+  spef.dump_compact(ofs);
 }
 
 // Procedure: timing_to_sdc

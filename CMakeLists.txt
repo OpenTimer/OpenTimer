@@ -268,6 +268,7 @@ add_test(it.tau15.c7552_slack ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR
 add_test(it.tau15.simple ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} simple)
 add_test(it.tau15.s27 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s27)
 add_test(it.tau15.s27_path ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s27_path)
+add_test(it.tau15.s27_spef ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s27_spef)
 add_test(it.tau15.s344 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s344)
 add_test(it.tau15.s349 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s349)
 add_test(it.tau15.s386 ${OT_TAU15_CHECKER} ${OT_TAU15} ${OT_BENCHMARK_DIR} s386)

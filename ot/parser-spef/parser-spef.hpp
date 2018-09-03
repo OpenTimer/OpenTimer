@@ -493,7 +493,8 @@ inline std::string Spef::dump_compact() const {
 // Procedure: dump_compact
 inline void Spef::dump_compact(std::ostream& os) const {
 
-  if(not name_map.empty()){
+  if(!name_map.empty()){
+    dump(os);
     return;
   }
 
