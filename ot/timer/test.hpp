@@ -15,8 +15,6 @@ class Arc;
 class Test {
   
   friend class Timer;
-  friend class Gate;
-  friend class Cppr;
   friend class Endpoint;
 
   friend struct Path;

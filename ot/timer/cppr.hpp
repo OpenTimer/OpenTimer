@@ -17,24 +17,24 @@ struct CpprAnalysis {
 
 // ----------------------------------------------------------------------------
 
-// Struct: CpprCredit 
-struct CpprCredit {
+// Struct: Cppr
+struct Cppr {
   Pin& pin;
   Tran rf;
   float credit;
-  inline CpprCredit(Pin&, Tran, float);
+  inline Cppr(Pin&, Tran, float);
   inline operator float() const;
 };
 
 // Constructor
-CpprCredit::CpprCredit(Pin& pin, Tran rf, float c) :
+inline Cppr::Cppr(Pin& pin, Tran rf, float c) :
   pin    {pin},
   rf     {rf},
   credit {c} {
 }
 
 // operator
-inline CpprCredit::operator float() const {
+inline Cppr::operator float() const {
   return credit;
 }
 

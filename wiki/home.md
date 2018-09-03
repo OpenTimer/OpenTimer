@@ -7,8 +7,8 @@ Many pages are still under construction. Please stayed tune.
 
 # Get Started with OpenTimer
 
-+ Compile and build OpenTimer
-+ Obtain your first timing report
++ Compile and Build OpenTimer
++ Obtain your First Timing Report
 
 # OpenTimer Shell
 
@@ -16,7 +16,7 @@ Many pages are still under construction. Please stayed tune.
 
 # Timing Model
 
-+ [Non-Linear Delay Model (NLDM)](nldm.md)
++ [Non-Linear Delay Model (NLDM)](model/nldm.md)
 
 # Input/Output Files
 
@@ -26,4 +26,8 @@ Many pages are still under construction. Please stayed tune.
 + [Standard Parasitic Exchange Format (SPEF)](spef.md)
 
 # Frequently Asked Questions
+
++ [General Questions](faq/general.md)
++ [Compilation Issues](faq/compilation.md)
++ [Programming Questions](faq/programming.md)
 

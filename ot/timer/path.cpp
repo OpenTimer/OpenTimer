@@ -18,6 +18,28 @@ Path::Path(float slk, const Endpoint* ept) :
 }
 
 // Procedure: dump
+// dump the path in the following format:
+//
+// Startpoint    : inp1
+// Endpoint      : f1:D
+// Analysis type : early
+// ------------------------------------------------------
+//        Type       Delay        Time   Dir  Description
+// ------------------------------------------------------
+//        port       0.000       0.000  fall  inp1
+//         pin       0.000       0.000  fall  u1:A (NAND2X1)
+//         pin       2.786       2.786  rise  u1:Y (NAND2X1)
+//         pin       0.000       2.786  rise  u4:A (NOR2X1)
+//         pin       0.181       2.967  fall  u4:Y (NOR2X1)
+//         pin       0.000       2.967  fall  f1:D (DFFNEGX1)
+//     arrival                   2.967        data arrival time
+// 
+//       clock      25.000      25.000  fall  f1:CLK (DFFNEGX1)
+//  constraint       1.518      26.518        library hold_falling
+//    required                  26.518        data required time
+// ------------------------------------------------------
+//       slack                 -23.551        VIOLATED
+//
 void Path::dump(std::ostream& os) const {
 
   if(empty()) {

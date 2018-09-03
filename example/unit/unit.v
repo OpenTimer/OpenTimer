@@ -31,3 +31,4 @@ INVX2 u3 ( .A(n4), .Y(out) );
 NOR2X1 u4 ( .A(n1), .B(n3), .Y(n2) );
 
 endmodule
+

@@ -14,7 +14,7 @@ A High-Performance Timing Analysis Tool for VLSI Systems
 
 <img align="right" width="30%" src="image/critical_path.jpg">
 
-OpenTimer is a new static timing analysis (STA) tool to help IC designers
+OpenTimer is a new [static timing analysis (STA)][STA] tool to help IC designers
 quickly verify the circuit timing.
 It is developed completely from the ground up using *C++17*
 to efficiently support parallel and incremental timing. 
@@ -443,6 +443,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 
 * * *
 
+[STA]:                   https://en.wikipedia.org/wiki/Static_timing_analysis
 [Tsung-Wei Huang]:       http://web.engr.illinois.edu/~thuang19/
 [Chun-Xun Lin]:          https://github.com/clin99
 [Martin Wong]:           https://ece.illinois.edu/directory/profile/mdfwong
