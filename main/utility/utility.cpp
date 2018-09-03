@@ -1,5 +1,24 @@
 #include <ot/timer/timer.hpp>
 
+// Procedure: compress_spef
+void compress_spef(const std::filesystem::path& ori, const std::filesystem::path& cmp) {
+  
+  // Open the spef file
+  spef::Spef spef;
+  spef.read(ori);
+
+  if(spef.error) {
+    OT_LOGF("spef error: ", spef.error.value());
+  }
+  
+  // clear the original name map.
+  spef.expand_name();
+
+  std::ofstream ofs(cmp);
+  
+  ofs << spef.dump_compact();
+}
+
 // Procedure: timing_to_sdc
 void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::path& sdc) {
   
@@ -195,11 +214,15 @@ int main(int argc, char* argv[]) {
 
   std::vector<std::filesystem::path> t2s;
   std::vector<std::filesystem::path> o2s;
+  std::vector<std::filesystem::path> spef;
 
-  app.add_option("--timing-to-sdc", t2s, "Convert a TAU15 timing file to sdc format")
+  app.add_option("--timing-to-sdc", t2s, "convert a TAU15 timing file to sdc format")
      ->expected(2);
 
-  app.add_option("--tau15-to-shell", o2s, "Convert a TAU15 bundle to a ot-shell file")
+  app.add_option("--tau15-to-shell", o2s, "convert a TAU15 bundle to a ot-shell file")
+     ->expected(2);
+
+  app.add_option("--compress-spef", spef, "compress a spef file")
      ->expected(2);
 
   try {
@@ -216,9 +239,14 @@ int main(int argc, char* argv[]) {
     timing_to_sdc(t2s[0], t2s[1]);
   }
   
-  // conver ops to shell command
+  // convert ops to shell command
   if(!o2s.empty()) {
     tau15_to_shell(o2s[0], o2s[1]);
+  }
+
+  // compress a spef file
+  if(!spef.empty()) {
+    compress_spef(spef[0], spef[1]);
   }
 
   return 0;
