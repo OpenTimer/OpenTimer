@@ -231,10 +231,77 @@ bool Timing::is_input_transition_defined() const {
 
 // Function: is_constraint
 bool Timing::is_constraint() const {
-  return rise_constraint       || 
-         fall_constraint       || 
-         is_hold_constraint()  || 
-         is_setup_constraint();
+  if(type) {
+    switch(*type) {
+      case TimingType::REMOVAL_RISING:
+      case TimingType::REMOVAL_FALLING:
+      case TimingType::RECOVERY_RISING:
+      case TimingType::RECOVERY_FALLING:
+      case TimingType::SETUP_RISING:
+      case TimingType::SETUP_FALLING:
+      case TimingType::HOLD_RISING:
+      case TimingType::HOLD_FALLING:
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::NON_SEQ_HOLD_RISING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
+        return true;
+      break;
+
+      default:
+        return false;
+      break;
+    }
+  }
+  else {
+    return false;
+  }
+}
+
+// Function: is_min_constraint
+bool Timing::is_min_constraint() const {
+  if(type) {
+    switch(*type) {
+      case TimingType::HOLD_RISING:
+      case TimingType::HOLD_FALLING:
+      case TimingType::NON_SEQ_HOLD_RISING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
+      case TimingType::REMOVAL_RISING:
+      case TimingType::REMOVAL_FALLING:
+        return true;
+      break;
+
+      default:
+        return false;
+      break;
+    }
+  }
+  else {
+    return false;
+  }
+}
+
+// Function: is_max_constraint
+bool Timing::is_max_constraint() const {
+  if(type) {
+    switch(*type) {
+      case TimingType::SETUP_RISING:
+      case TimingType::SETUP_FALLING:
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::RECOVERY_RISING:
+      case TimingType::RECOVERY_FALLING:
+        return true;
+      break;
+
+      default:
+        return false;
+      break;
+    }
+  }
+  else {
+    return false;
+  }
 }
 
 // Function: is_hold_constraint
@@ -243,6 +310,8 @@ bool Timing::is_hold_constraint() const {
     switch (*type) {
       case TimingType::HOLD_RISING:
       case TimingType::HOLD_FALLING:
+      case TimingType::NON_SEQ_HOLD_RISING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
         return true;
       break;
       default:
@@ -261,6 +330,8 @@ bool Timing::is_setup_constraint() const {
     switch (*type) {
       case TimingType::SETUP_RISING:
       case TimingType::SETUP_FALLING:
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
         return true;
       break;
       default:
@@ -279,6 +350,8 @@ bool Timing::is_falling_edge_triggered() const {
     switch (*type) {
       case TimingType::SETUP_FALLING:
       case TimingType::HOLD_FALLING:
+      case TimingType::REMOVAL_FALLING:
+      case TimingType::RECOVERY_FALLING:
       case TimingType::FALLING_EDGE:
         return true;
       break;
@@ -299,6 +372,8 @@ bool Timing::is_rising_edge_triggered() const {
     switch (*type) {
       case TimingType::SETUP_RISING:
       case TimingType::HOLD_RISING:
+      case TimingType::REMOVAL_RISING:
+      case TimingType::RECOVERY_RISING:
       case TimingType::RISING_EDGE:
         return true;
       break;

@@ -105,15 +105,17 @@ struct Timing {
   std::optional<Lut> rise_constraint;       
   std::optional<Lut> fall_constraint;       
 
-  bool is_constraint() const;                     // Query the constraint status.
-  bool is_hold_constraint() const;                // Query the constraint status.
-  bool is_setup_constraint() const;               // Query the constraint status.
-  bool is_rising_edge_triggered() const;          // Query the rising edge status.
-  bool is_falling_edge_triggered() const;         // Query the falling edge status.
-  bool is_input_transition_defined() const;       // Query the input transition status.
-  bool is_input_transition_defined(Tran) const;   // Query the input transition status.
-  bool is_output_transition_defined(Tran) const;  // Query the output transition status.
-  bool is_transition_defined(Tran, Tran) const;   // Query the timing transition status.
+  bool is_constraint() const; 
+  bool is_min_constraint() const;
+  bool is_max_constraint() const;
+  bool is_hold_constraint() const;
+  bool is_setup_constraint() const;
+  bool is_rising_edge_triggered() const;
+  bool is_falling_edge_triggered() const;
+  bool is_input_transition_defined() const;
+  bool is_input_transition_defined(Tran) const;
+  bool is_output_transition_defined(Tran) const;
+  bool is_transition_defined(Tran, Tran) const;
   bool isomorphic(const Timing&) const;
 
   void scale_time(float);

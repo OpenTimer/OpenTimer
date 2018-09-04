@@ -43,7 +43,7 @@ class Test {
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _rat;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _cppr_credit;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _constraint;
-    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _clock_at;
+    TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _related_at;
 
     void _reset();
     void _fprop_rat(float);

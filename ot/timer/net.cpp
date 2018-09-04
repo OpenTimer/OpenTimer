@@ -245,7 +245,8 @@ void Net::_make_rct() {
 
   // Step 2: insert the node and capacitance (*CAP section).
   for(const auto& [node1, node2, cap] : _spef_net->caps) {
-    assert(node2.empty());
+    // TODO: if node2 not empty - we need to deal with coupling capacitance
+    //assert(node2.empty());
     rct.insert_node(node1, cap);
   }
 

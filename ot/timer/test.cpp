@@ -80,7 +80,7 @@ void Test::_reset() {
     _rat[el][rf].reset();
     _cppr_credit[el][rf].reset();
     _constraint[el][rf].reset();
-    _clock_at[el][rf].reset();
+    _related_at[el][rf].reset();
   }
 }
 
@@ -110,10 +110,10 @@ void Test::_fprop_rat(float period) {
     }
     
     if(el == EARLY) {
-      _clock_at[el][rf] = *_arc._from._at[fel][frf];
+      _related_at[el][rf] = *_arc._from._at[fel][frf];
     }
     else {
-      _clock_at[el][rf] = *_arc._from._at[fel][frf] + period;
+      _related_at[el][rf] = *_arc._from._at[fel][frf] + period;
     }
 
     _constraint[el][rf] = tv[el]->constraint(
@@ -123,12 +123,12 @@ void Test::_fprop_rat(float period) {
       *_arc._to._slew[el][rf]
     );
     
-    if(_constraint[el][rf] && _clock_at[el][rf]) {
+    if(_constraint[el][rf] && _related_at[el][rf]) {
       if(el == EARLY) {
-        _rat[el][rf] = *_constraint[el][rf] + *_clock_at[el][rf];
+        _rat[el][rf] = *_constraint[el][rf] + *_related_at[el][rf];
       }
       else {
-        _rat[el][rf] = *_clock_at[el][rf] - *_constraint[el][rf];
+        _rat[el][rf] = *_related_at[el][rf] - *_constraint[el][rf];
       }
     }
   }

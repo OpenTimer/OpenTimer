@@ -265,7 +265,7 @@ void Shell::_set_load() {
         value = std::stof(token);
       }
       catch(...) {
-        _es << "failed to parse " << std::quoted(token) << '\n';
+        _es << "failed to parse load " << std::quoted(token) << '\n';
         return;
       }
     }

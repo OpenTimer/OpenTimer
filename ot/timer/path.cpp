@@ -127,9 +127,9 @@ void Path::dump(std::ostream& os) const {
       auto tv  = (test->_arc.timing_view())[split];
       auto sum = 0.0f;
 
-      // clock network latency
-      os << std::setw(w1) << "clock";
-      if(auto c = test->_clock_at[split][tran]; c) {
+      // related pin latency
+      os << std::setw(w1) << "related pin";
+      if(auto c = test->_related_at[split][tran]; c) {
         sum += *c;
         os << std::setw(w2) << *c << std::setw(w3) << sum;
       }

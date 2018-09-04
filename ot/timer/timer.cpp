@@ -114,8 +114,6 @@ void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
   }
 }
 
-
-
 // Fucntion: insert_gate
 // Create a new gate in the design. This newly-created gate is "not yet" connected to
 // any other gates or wires. The gate to insert cannot conflict with existing gates.
@@ -245,6 +243,7 @@ void Timer::_insert_gate_arcs(Gate& gate) {
       auto& to_pin = _insert_pin(gate._name + ':' + cpname);
 
       for(const auto& tm : cp.timings) {
+
         if(_is_redundant_timing(tm, el)) {
           continue;
         }

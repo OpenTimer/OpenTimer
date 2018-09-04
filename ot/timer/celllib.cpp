@@ -7,13 +7,13 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 
   switch(el) {
     case EARLY:
-      if(timing.is_setup_constraint()) {
+      if(timing.is_max_constraint()) {
         return true; 
       }
     break;
 
     case LATE:
-      if(timing.is_hold_constraint()) {
+      if(timing.is_min_constraint()) {
         return true;
       }
     break;

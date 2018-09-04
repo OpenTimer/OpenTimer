@@ -79,7 +79,7 @@ Analysis type : early
         pin       0.000       2.967  fall  f1:D (DFFNEGX1)
     arrival                   2.967        data arrival time
 
-      clock      25.000      25.000  fall  f1:CLK (DFFNEGX1)
+related pin      25.000      25.000  fall  f1:CLK (DFFNEGX1)
  constraint       1.518      26.518        library hold_falling
    required                  26.518        data required time
 ------------------------------------------------------
