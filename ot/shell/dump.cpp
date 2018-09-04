@@ -50,15 +50,15 @@ void Shell::_dump_help() {
 List of commonly used commands:\n\
 \n[Builder] operations to build the timer\n\n\
   set_num_threads    <N>\n\
-  read_celllib       [-early|-late] <file>\n\
+  read_celllib       [-min|-max] <file>\n\
   read_verilog       <file>\n\
   read_spef          <file>\n\
   read_sdc           <file>\n\
   read_timing        <file>\n\
-  set_slew           -pin name [-early|-late] [-rise|-fall] <value>\n\
-  set_at             -pin name [-early|-late] [-rise|-fall] <value>\n\
-  set_rat            -pin name [-early|-late] [-rise|-fall] <value>\n\
-  set_load           -pin name [-early|-late] [-rise|-fall] <value>\n\
+  set_slew           -pin name [-min|-max] [-rise|-fall] <value>\n\
+  set_at             -pin name [-min|-max] [-rise|-fall] <value>\n\
+  set_rat            -pin name [-min|-max] [-rise|-fall] <value>\n\
+  set_load           -pin name [-min|-max] [-rise|-fall] <value>\n\
   insert_gate        <gate> <cell>\n\
   repower_gate       <gate> <cell>\n\
   remove_gate        <gate>\n\
@@ -71,10 +71,10 @@ List of commonly used commands:\n\
   update_timing\n\
   report_timing\n\
   report_path        [-num_paths <N>]\n\
-  report_slew        -pin name [-early|-late] [-rise|-fall]\n\
-  report_at          -pin name [-early|-late] [-rise|-fall]\n\
-  report_rat         -pin name [-early|-late] [-rise|-fall]\n\
-  report_slack       -pin name [-early|-late] [-rise|-fall]\n\
+  report_slew        -pin name [-min|-max] [-rise|-fall]\n\
+  report_at          -pin name [-min|-max] [-rise|-fall]\n\
+  report_rat         -pin name [-min|-max] [-rise|-fall]\n\
+  report_slack       -pin name [-min|-max] [-rise|-fall]\n\
   report_wns\n\
   report_tns\n\
   report_fep\n\
@@ -82,7 +82,7 @@ List of commonly used commands:\n\
   help\n\
   version\n\
   dump_graph         [-o <file>]\n\
-  dump_celllib       [-o <file>] [-early|-late] [-cell <name>]\n\
+  dump_celllib       [-o <file>] [-min|-max] [-cell <name>]\n\
   dump_net_load      [-o <file>]\n\
   dump_pin_cap       [-o <file>]\n\
   dump_slew          [-o <file>]\n\
@@ -353,7 +353,7 @@ void Shell::_dump_celllib() {
 
   std::string token;
   std::string cell;
-  Split el = EARLY;
+  Split el = MIN;
   std::filesystem::path output;
 
   while(_is >> token) {
@@ -369,11 +369,11 @@ void Shell::_dump_celllib() {
         return;
       }
     }
-    else if(token == "-early") {
-      el = EARLY;
+    else if(token == "-min" || token == "-early") {
+      el = MIN;
     }
-    else if(token == "-late") {
-      el = LATE;
+    else if(token == "-max" || token == "-late") {
+      el = MAX;
     }
     else {
       _es << "unexpected token " << token << '\n';

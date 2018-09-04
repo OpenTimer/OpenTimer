@@ -39,7 +39,7 @@ CpprCache Timer::_cppr_cache(const Test& test, Split el, Tran rf) const {
 
   // Find the capture path
   auto v   = &(test._arc._from);
-  auto vel = (el == EARLY) ? LATE : EARLY;
+  auto vel = (el == MIN) ? MAX : MIN;
   auto vrf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
 
   cppr._cape = _encode_pin(*v, vrf);
@@ -84,7 +84,7 @@ std::optional<float> Timer::_cppr_credit(const Test& test, Split el, Tran rf) co
   // compute the cppr credit
   if(sfxt.slack()) {
     auto tat = *test._arc._to._at[el][rf];
-    auto rat = (el == EARLY) ? tat - *sfxt.slack() : *sfxt.slack() + tat;
+    auto rat = (el == MIN) ? tat - *sfxt.slack() : *sfxt.slack() + tat;
     return rat - *test._rat[el][rf];
   }
   else {
@@ -111,16 +111,16 @@ std::optional<float> Timer::_cppr_credit(const CpprCache& cppr, Pin& pin, Split 
       
       assert(vel == el);
 
-      auto dv = v->_delta_at(LATE, vrf, EARLY, vrf);
+      auto dv = v->_delta_at(MAX, vrf, MIN, vrf);
 
       // Return the credit for the early (hold) test.  
-      if(el == EARLY) {
+      if(el == MIN) {
         return dv;
       }
       // Return the credit for the late (setup) test.
       else {
         auto [r, rrf] = _decode_pin(cppr._capb);
-        auto dr = r->_delta_at(LATE, rrf, EARLY, rrf);
+        auto dr = r->_delta_at(MAX, rrf, MIN, rrf);
         if(dv && dr) {
           return *dv - *dr;
         }
@@ -157,10 +157,10 @@ std::optional<float> Timer::_cppr_offset(const CpprCache& cppr, Pin& pin, Split 
   }
   else {
     if(auto credit = _cppr_credit(cppr, pin, el, rf); credit) {
-      return (el == EARLY) ? *at + *credit : -(*at) + *credit; 
+      return (el == MIN) ? *at + *credit : -(*at) + *credit; 
     }
     else {
-      return (el == EARLY) ? *at : -(*at);
+      return (el == MIN) ? *at : -(*at);
     }
   }
 }

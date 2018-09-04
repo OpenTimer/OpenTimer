@@ -6,13 +6,13 @@ namespace ot {
 bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 
   switch(el) {
-    case EARLY:
+    case MIN:
       if(timing.is_max_constraint()) {
         return true; 
       }
     break;
 
-    case LATE:
+    case MAX:
       if(timing.is_min_constraint()) {
         return true;
       }
@@ -41,8 +41,8 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
     }
     else {
       auto cpy = *lib;
-      _merge_celllib(cpy, EARLY);
-      _merge_celllib(*lib, LATE);
+      _merge_celllib(cpy, MIN);
+      _merge_celllib(*lib, MAX);
     }
   });
 

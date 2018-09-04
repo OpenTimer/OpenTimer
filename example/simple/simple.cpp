@@ -13,8 +13,8 @@ int main(int argc, char *argv[]) {
   
   // Read design
   timer.num_threads(std::thread::hardware_concurrency())
-       .read_celllib("osu018_stdcells.lib", ot::EARLY)
-       .read_celllib("osu018_stdcells.lib", ot::LATE)
+       .read_celllib("osu018_stdcells.lib", ot::MIN)
+       .read_celllib("osu018_stdcells.lib", ot::MAX)
        .read_verilog("simple.v")
        .read_sdc("simple.sdc");
 

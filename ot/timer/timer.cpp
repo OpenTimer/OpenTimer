@@ -67,7 +67,7 @@ Timer& Timer::repower_gate(std::string gate, std::string cell) {
 // Procedure: _repower_gate
 void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
   
-  OT_LOGE_RIF(!_celllib[EARLY] || !_celllib[LATE], "celllib not found");
+  OT_LOGE_RIF(!_celllib[MIN] || !_celllib[MAX], "celllib not found");
 
   // Insert the gate if it doesn't exist.
   if(auto gitr = _gates.find(gname); gitr == _gates.end()) {
@@ -77,9 +77,9 @@ void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
   }
   else {
 
-    auto cell = CellView {_celllib[EARLY]->cell(cname), _celllib[LATE]->cell(cname)};
+    auto cell = CellView {_celllib[MIN]->cell(cname), _celllib[MAX]->cell(cname)};
 
-    OT_LOGE_RIF(!cell[EARLY] || !cell[LATE], "cell ", cname, " not found");
+    OT_LOGE_RIF(!cell[MIN] || !cell[MAX], "cell ", cname, " not found");
 
     auto& gate = gitr->second;
 
@@ -133,16 +133,16 @@ Timer& Timer::insert_gate(std::string gate, std::string cell) {
 // Function: _insert_gate
 void Timer::_insert_gate(const std::string& gname, const std::string& cname) {
 
-  OT_LOGE_RIF(!_celllib[EARLY] || !_celllib[LATE], "celllib not found");
+  OT_LOGE_RIF(!_celllib[MIN] || !_celllib[MAX], "celllib not found");
 
   if(_gates.find(gname) != _gates.end()) {
     OT_LOGW("gate ", gname, " already existed");
     return;
   }
 
-  auto cell = CellView {_celllib[EARLY]->cell(cname), _celllib[LATE]->cell(cname)};
+  auto cell = CellView {_celllib[MIN]->cell(cname), _celllib[MAX]->cell(cname)};
 
-  if(!cell[EARLY] || !cell[LATE]) {
+  if(!cell[MIN] || !cell[MAX]) {
     OT_LOGE("cell ", cname, " not found in celllib");
     return;
   }
@@ -150,11 +150,11 @@ void Timer::_insert_gate(const std::string& gname, const std::string& cname) {
   auto& gate = _gates.try_emplace(gname, gname, cell).first->second;
   
   // Insert pins
-  for(const auto& [cpname, ecpin] : cell[EARLY]->cellpins) {
+  for(const auto& [cpname, ecpin] : cell[MIN]->cellpins) {
 
-    CellpinView cpv {&ecpin, cell[LATE]->cellpin(cpname)};
+    CellpinView cpv {&ecpin, cell[MAX]->cellpin(cpname)};
 
-    if(!cpv[EARLY] || !cpv[LATE]) {
+    if(!cpv[MIN] || !cpv[MAX]) {
       OT_LOGF("cellpin ", cpname, " mismatched in celllib");
     }
 
@@ -1046,7 +1046,7 @@ void Timer::_update_area() {
   _area = 0.0f;
 
   for(const auto& kvp : _gates) {
-    if(const auto& c = kvp.second._cell[EARLY]; c->area) {
+    if(const auto& c = kvp.second._cell[MIN]; c->area) {
       _area = *_area + *c->area;
     }
     else {
@@ -1072,7 +1072,7 @@ void Timer::_update_power() {
   _leakage_power = 0.0f;
   
   for(const auto& kvp : _gates) {
-    if(const auto& c = kvp.second._cell[EARLY]; c->leakage_power) {
+    if(const auto& c = kvp.second._cell[MIN]; c->leakage_power) {
       _leakage_power = *_leakage_power + *c->leakage_power;
     }
     else {

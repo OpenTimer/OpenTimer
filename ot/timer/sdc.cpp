@@ -132,7 +132,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
             kvp.second, 
             el, 
             rf, 
-            el == EARLY ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
+            el == MIN ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
           );
         }
       }
@@ -145,7 +145,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
               itr->second, 
               el, 
               rf, 
-              el == EARLY ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
+              el == MIN ? -(*obj.delay_value) : clock._period - (*obj.delay_value)
             ); 
           }
         }

@@ -46,7 +46,7 @@ bool Arc::is_cell_arc() const {
 // Function: is_tseg
 bool Arc::is_tseg() const {
   if(auto ptr = std::get_if<TimingView>(&_handle); ptr) {
-    return (*ptr)[EARLY]->is_constraint();
+    return (*ptr)[MIN]->is_constraint();
   }
   else return false;
 }
@@ -54,7 +54,7 @@ bool Arc::is_tseg() const {
 // Function: is_pseg
 bool Arc::is_pseg() const {
   if(auto ptr = std::get_if<TimingView>(&_handle); ptr) {
-    return !(*ptr)[EARLY]->is_constraint();
+    return !(*ptr)[MIN]->is_constraint();
   }
   else return false;
 }
@@ -179,18 +179,18 @@ void Arc::_bprop_rat() {
             continue;
           }
 
-          if(el == EARLY) {
-            auto at = _from._at[LATE][frf];
-            auto slack = _to.slack(EARLY, trf);
+          if(el == MIN) {
+            auto at = _from._at[MAX][frf];
+            auto slack = _to.slack(MIN, trf);
             if(at && slack) {
-              _from._relax_rat(this, LATE, frf, EARLY, trf, *at + *slack);
+              _from._relax_rat(this, MAX, frf, MIN, trf, *at + *slack);
             }
           }
           else {
-            auto at = _from._at[EARLY][frf];
-            auto slack = _to.slack(LATE, trf);
+            auto at = _from._at[MIN][frf];
+            auto slack = _to.slack(MAX, trf);
             if(at && slack) {
-              _from._relax_rat(this, EARLY, frf, LATE, trf, *at - *slack);
+              _from._relax_rat(this, MIN, frf, MAX, trf, *at - *slack);
             }
           }
         }

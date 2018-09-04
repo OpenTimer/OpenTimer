@@ -77,8 +77,8 @@ using namespace std::chrono_literals;
 using namespace std::literals::string_literals;
 
 enum Split {
-  EARLY = 0,
-  LATE  = 1
+  MIN = 0,
+  MAX = 1
 };
 
 enum Tran {
@@ -92,12 +92,12 @@ constexpr int MAX_TRAN = 2;
 // Function: to_string
 inline auto to_string(Split m) {
   switch(m) {
-    case EARLY:
-      return "early"s;
+    case MIN:
+      return "min"s;
     break;
 
-    case LATE:
-      return "late"s;
+    case MAX:
+      return "max"s;
     break;
 
     default:
@@ -130,15 +130,15 @@ inline auto to_string(Tran from, Tran to) {
 
 // ------------------------------------------------------------------------------------------------  
 
-constexpr std::initializer_list<Split> SPLIT = {EARLY, LATE};
+constexpr std::initializer_list<Split> SPLIT = {MIN, MAX};
 
 constexpr std::initializer_list<Tran> TRAN = {RISE, FALL};
 
 constexpr std::initializer_list<std::pair<Split, Tran>> SPLIT_TRAN = { 
-  {EARLY, RISE},
-  {EARLY, FALL},
-  {LATE,  RISE},
-  {LATE,  FALL} 
+  {MIN, RISE},
+  {MIN, FALL},
+  {MAX, RISE},
+  {MAX, FALL} 
 };
 
 constexpr std::initializer_list<std::pair<Tran, Tran>> TRANX2 = {
@@ -149,14 +149,14 @@ constexpr std::initializer_list<std::pair<Tran, Tran>> TRANX2 = {
 };
 
 constexpr std::initializer_list<std::tuple<Split, Tran, Tran>> SPLIT_TRANx2 = {
-  {EARLY, RISE, RISE},
-  {EARLY, RISE, FALL},
-  {EARLY, FALL, RISE},
-  {EARLY, FALL, FALL},
-  {LATE, RISE, RISE},
-  {LATE, RISE, FALL},
-  {LATE, FALL, RISE},
-  {LATE, FALL, FALL}
+  {MIN, RISE, RISE},
+  {MIN, RISE, FALL},
+  {MIN, FALL, RISE},
+  {MIN, FALL, FALL},
+  {MAX, RISE, RISE},
+  {MAX, RISE, FALL},
+  {MAX, FALL, RISE},
+  {MAX, FALL, FALL}
 };
 
 // ------------------------------------------------------------------------------------------------  

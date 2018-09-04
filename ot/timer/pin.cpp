@@ -17,7 +17,7 @@ std::optional<float> PrimaryOutput::rat(Split el, Tran rf) const {
 // Function: slack
 std::optional<float> PrimaryOutput::slack(Split el, Tran rf) const {
   if(_pin._at[el][rf] && _rat[el][rf]) {
-    return el == EARLY ? *_pin._at[el][rf] - *_rat[el][rf] : *_rat[el][rf] - *_pin._at[el][rf];
+    return el == MIN ? *_pin._at[el][rf] - *_rat[el][rf] : *_rat[el][rf] - *_pin._at[el][rf];
   }
   else {
     return std::nullopt;
@@ -131,7 +131,7 @@ bool Pin::is_input() const {
       return false;
     },
     [] (CellpinView cp) {
-      return cp[EARLY]->direction == CellpinDirection::INPUT;
+      return cp[MIN]->direction == CellpinDirection::INPUT;
     }
   }, _handle);
 }
@@ -146,7 +146,7 @@ bool Pin::is_output() const {
       return true;
     },
     [] (CellpinView cp) {
-      return cp[EARLY]->direction == CellpinDirection::OUTPUT;
+      return cp[MIN]->direction == CellpinDirection::OUTPUT;
     }
   }, _handle);
 }
@@ -162,7 +162,7 @@ bool Pin::is_rct_root() const {
       return false;
     },
     [] (CellpinView cp) {
-      return cp[EARLY]->direction == CellpinDirection::OUTPUT;
+      return cp[MIN]->direction == CellpinDirection::OUTPUT;
     }
   }, _handle);
 }
@@ -176,7 +176,7 @@ bool Pin::is_datapath_source() const {
     return true;
   }
   // Clock cell pin
-  else if(auto cp = cellpin(EARLY)) {
+  else if(auto cp = cellpin(MIN)) {
     return (cp->is_clock && cp->is_clock.value() == true);
   }
   // Primary input
@@ -250,7 +250,7 @@ std::optional<float> Pin::slew(Split el, Tran rf) const {
 // Function: slack
 std::optional<float> Pin::slack(Split el, Tran rf) const {
   if(_at[el][rf] && _rat[el][rf]) {
-    return el == EARLY ? *_at[el][rf] - *_rat[el][rf] : *_rat[el][rf] - *_at[el][rf];
+    return el == MIN ? *_at[el][rf] - *_rat[el][rf] : *_rat[el][rf] - *_at[el][rf];
   }
   else return std::nullopt;
 }
@@ -327,13 +327,13 @@ void Pin::_relax_slew(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float 
 
   switch(tel) {
 
-    case EARLY:
+    case MIN:
       if(!_slew[tel][trf] || val < *_slew[tel][trf]) {
         _slew[tel][trf].emplace(arc, fel, frf, val);
       }
     break;
 
-    case LATE:
+    case MAX:
       if(!_slew[tel][trf] || val > *_slew[tel][trf]) {
         _slew[tel][trf].emplace(arc, fel, frf, val);
       }
@@ -346,12 +346,12 @@ void Pin::_relax_slew(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float 
 void Pin::_relax_at(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float val) {
   
   switch (tel) {
-    case EARLY:
+    case MIN:
       if(!_at[tel][trf] || val < *_at[tel][trf]) {
         _at[tel][trf].emplace(arc, fel, frf, val);
       }
     break;
-    case LATE:
+    case MAX:
       if(!_at[tel][trf] || val > *_at[tel][trf]) {
         _at[tel][trf].emplace(arc, fel, frf, val);
       }
@@ -365,13 +365,13 @@ void Pin::_relax_rat(Arc* arc, Split fel, Tran frf, Split tel, Tran trf, float v
 
   switch(fel) {
 
-    case EARLY:
+    case MIN:
       if(!_rat[fel][frf] || val > *_rat[fel][frf]) {
         _rat[fel][frf].emplace(arc, tel, trf, val);
       }
     break;
 
-    case LATE:
+    case MAX:
       if(!_rat[fel][frf] || val < *_rat[fel][frf]) {
         _rat[fel][frf].emplace(arc, tel, trf, val);
       }

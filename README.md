@@ -67,7 +67,7 @@ Report the timing to show the most critical path.
 ot> report_timing      # report the most critical path
 Startpoint    : inp1
 Endpoint      : f1:D
-Analysis type : early
+Analysis type : min
 ------------------------------------------------------
        Type       Delay        Time   Dir  Description
 ------------------------------------------------------
@@ -218,7 +218,7 @@ The table below shows a list of commonly used commands.
 
 | Command | type | Arguments | Description | Example |
 | ------- | ---- | --------- | ----------- | ------- |
-| read_celllib | builder | [-early \| -late] file | read the cell library for early and late splits | read_celllib -early mylib_Early.lib |
+| read_celllib | builder | [-min \| -max] file | read the cell library for early and late splits | read_celllib -min mylib_Early.lib |
 | read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
 | read_spef | builder | file | read parasitics in SPEF | read_spef myrc.spef |
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |

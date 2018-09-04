@@ -10,13 +10,13 @@ Gate::Gate(const std::string& name, CellView cell) :
 
 // Function: cell_name
 const std::string& Gate::cell_name() const {
-  return _cell[EARLY]->name;
+  return _cell[MIN]->name;
 }
 
 /*// Procedure: _repower
 void Gate::_repower(CellView cell) {
 
-  assert(cell[EARLY] && cell[LATE]);
+  assert(cell[MIN] && cell[MAX]);
 
   // Remap the pin
   for(auto pin : _pins) {

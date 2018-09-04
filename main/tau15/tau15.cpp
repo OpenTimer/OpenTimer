@@ -27,8 +27,8 @@ int main(int argc, char* argv[]) {
   ot::Timer timer;
 
   // Initialize the timer.
-  timer.read_celllib(early_celllib, ot::EARLY)
-       .read_celllib(late_celllib, ot::LATE)
+  timer.read_celllib(early_celllib, ot::MIN)
+       .read_celllib(late_celllib, ot::MAX)
        .read_verilog(verilog)
        .read_spef(spef)
        .read_timing(timing)
@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
     if(tokens.empty()) break;
 
     if(tokens[0] == "report_slew")  {
-      auto el = ot::EARLY;
+      auto el = ot::MIN;
       auto rf = ot::RISE;  
       auto pin = ""s;
 
@@ -66,10 +66,10 @@ int main(int argc, char* argv[]) {
           rf = ot::FALL;
         }
         else if(tokens[i] == "-early") {
-          el = ot::EARLY;
+          el = ot::MIN;
         }
         else if(tokens[i] == "-late") {
-          el = ot::LATE;
+          el = ot::MAX;
         }
         else {
           throw std::runtime_error("unexpected report_slew option "s + tokens[i]);
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
       ofs << (slew ? *slew : std::numeric_limits<float>::quiet_NaN()) << '\n';
     }
     else if(tokens[0] == "report_at")  {
-      auto el = ot::EARLY;
+      auto el = ot::MIN;
       auto rf = ot::RISE;  
       auto pin = ""s;
 
@@ -95,10 +95,10 @@ int main(int argc, char* argv[]) {
           rf = ot::FALL;
         }
         else if(tokens[i] == "-early") {
-          el = ot::EARLY;
+          el = ot::MIN;
         }
         else if(tokens[i] == "-late") {
-          el = ot::LATE;
+          el = ot::MAX;
         }
         else {
           throw std::runtime_error("unexpected report_at option "s + tokens[i]);
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
     }
     else if(tokens[0] == "report_rat"){
       
-      auto el = ot::EARLY;
+      auto el = ot::MIN;
       auto rf = ot::RISE;  
       auto pin = ""s;
 
@@ -124,10 +124,10 @@ int main(int argc, char* argv[]) {
           rf = ot::FALL;
         }
         else if(tokens[i] == "-early") {
-          el = ot::EARLY;
+          el = ot::MIN;
         }
         else if(tokens[i] == "-late") {
-          el = ot::LATE;
+          el = ot::MAX;
         }
         else {
           throw std::runtime_error("unexpected report_rat option "s + tokens[i]);
@@ -138,7 +138,7 @@ int main(int argc, char* argv[]) {
     }
     else if(tokens[0] == "report_slack"){
       
-      auto el = ot::EARLY;
+      auto el = ot::MIN;
       auto rf = ot::RISE;  
       auto pin = ""s;
 
@@ -153,10 +153,10 @@ int main(int argc, char* argv[]) {
           rf = ot::FALL;
         }
         else if(tokens[i] == "-early") {
-          el = ot::EARLY;
+          el = ot::MIN;
         }
         else if(tokens[i] == "-late") {
-          el = ot::LATE;
+          el = ot::MAX;
         }
         else {
           throw std::runtime_error("unexpected report_at option "s + tokens[i]);
@@ -240,10 +240,10 @@ int main(int argc, char* argv[]) {
           ofs << "RAT";
         }
         else {
-          ofs << (paths[i].endpoint->split() == ot::EARLY ? "Hold" : "Setup");
+          ofs << (paths[i].endpoint->split() == ot::MIN ? "Hold" : "Setup");
         }
         ofs << ' ' << paths[i].slack << ' ' << paths[i].size() 
-                  << ' ' << (paths[i].endpoint->split() == ot::EARLY ? "E" : "L") << '\n';
+                  << ' ' << (paths[i].endpoint->split() == ot::MIN ? "E" : "L") << '\n';
         
         for(auto itr = paths[i].rbegin(); itr != paths[i].rend(); ++itr) {
           ofs << itr->pin.name() << ' ' 

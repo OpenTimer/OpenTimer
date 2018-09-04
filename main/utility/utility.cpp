@@ -58,25 +58,25 @@ void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::p
     else if(token == "at") {
       OT_LOGI("generating set_input_delay ...");
       ss >> pin 
-         >> value[ot::EARLY][ot::RISE] >> value[ot::EARLY][ot::FALL] 
-         >> value[ot::LATE][ot::RISE] >> value[ot::LATE][ot::FALL];
+         >> value[ot::MIN][ot::RISE] >> value[ot::MIN][ot::FALL] 
+         >> value[ot::MAX][ot::RISE] >> value[ot::MAX][ot::FALL];
 
-      sfs << "set_input_delay " << value[ot::EARLY][ot::RISE] << " -min -rise"
+      sfs << "set_input_delay " << value[ot::MIN][ot::RISE] << " -min -rise"
                                 << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs    << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_delay " << value[ot::EARLY][ot::FALL] << " -min -fall"
+      sfs << "set_input_delay " << value[ot::MIN][ot::FALL] << " -min -fall"
                                 << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs    << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_delay " << value[ot::LATE][ot::RISE] << " -max -rise"
+      sfs << "set_input_delay " << value[ot::MAX][ot::RISE] << " -max -rise"
                                 << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs    << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_delay " << value[ot::LATE][ot::FALL] << " -max -fall"
+      sfs << "set_input_delay " << value[ot::MAX][ot::FALL] << " -max -fall"
                                 << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs    << " -clock " << clock;
       sfs << '\n';
@@ -86,25 +86,25 @@ void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::p
     else if(token == "slew") {
       OT_LOGI("generating set_input_transition ...");
       ss >> pin
-         >> value[ot::EARLY][ot::RISE] >> value[ot::EARLY][ot::FALL]
-         >> value[ot::LATE][ot::RISE] >> value[ot::LATE][ot::FALL];
+         >> value[ot::MIN][ot::RISE] >> value[ot::MIN][ot::FALL]
+         >> value[ot::MAX][ot::RISE] >> value[ot::MAX][ot::FALL];
       
-      sfs << "set_input_transition " << value[ot::EARLY][ot::RISE] << " -min -rise"
+      sfs << "set_input_transition " << value[ot::MIN][ot::RISE] << " -min -rise"
                                      << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs         << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_transition " << value[ot::EARLY][ot::FALL] << " -min -fall"
+      sfs << "set_input_transition " << value[ot::MIN][ot::FALL] << " -min -fall"
                                      << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs         << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_transition " << value[ot::LATE][ot::RISE] << " -max -rise"
+      sfs << "set_input_transition " << value[ot::MAX][ot::RISE] << " -max -rise"
                                      << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs         << " -clock " << clock;
       sfs << '\n';
       
-      sfs << "set_input_transition " << value[ot::LATE][ot::FALL] << " -max -fall"
+      sfs << "set_input_transition " << value[ot::MAX][ot::FALL] << " -max -fall"
                                      << " [get_ports " << pin << "]";
       if(!clock.empty()) sfs         << " -clock " << clock;
       sfs << '\n';
@@ -116,8 +116,8 @@ void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::p
       OT_LOGI("generating set_output_delay ...");
 
       ss >> pin
-         >> value[ot::EARLY][ot::RISE] >> value[ot::EARLY][ot::FALL]
-         >> value[ot::LATE][ot::RISE] >> value[ot::LATE][ot::FALL];
+         >> value[ot::MIN][ot::RISE] >> value[ot::MIN][ot::FALL]
+         >> value[ot::MAX][ot::RISE] >> value[ot::MAX][ot::FALL];
       
       // create a virtual clock if needed
       if(clock.empty()) {
@@ -127,19 +127,19 @@ void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::p
         num_sdc++;
       }
       
-      sfs << "set_output_delay " << -value[ot::EARLY][ot::RISE] << " -min -rise"
+      sfs << "set_output_delay " << -value[ot::MIN][ot::RISE] << " -min -rise"
                                  << " [get_ports " << pin << "]"
                                  << " -clock " << clock << '\n';
       
-      sfs << "set_output_delay " << -value[ot::EARLY][ot::FALL] << " -min -fall"
+      sfs << "set_output_delay " << -value[ot::MIN][ot::FALL] << " -min -fall"
                                  << " [get_ports " << pin << "]"
                                  << " -clock " << clock << '\n';
       
-      sfs << "set_output_delay " << period - value[ot::LATE][ot::RISE] << " -max -rise"
+      sfs << "set_output_delay " << period - value[ot::MAX][ot::RISE] << " -max -rise"
                                  << " [get_ports " << pin << "]"
                                  << " -clock " << clock << '\n';
       
-      sfs << "set_output_delay " << period - value[ot::LATE][ot::FALL] << " -max -fall"
+      sfs << "set_output_delay " << period - value[ot::MAX][ot::FALL] << " -max -fall"
                                  << " [get_ports " << pin << "]"
                                  << " -clock " << clock << '\n';
 

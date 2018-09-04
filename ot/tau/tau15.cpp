@@ -32,22 +32,22 @@ void Timing::read(const std::filesystem::path& path) {
     else if(token == "at") {
       AT at;
       ss >> at.pin 
-         >> at.value[ot::EARLY][ot::RISE] >> at.value[ot::EARLY][ot::FALL] 
-         >> at.value[ot::LATE][ot::RISE]  >> at.value[ot::LATE][ot::FALL];
+         >> at.value[ot::MIN][ot::RISE] >> at.value[ot::MIN][ot::FALL] 
+         >> at.value[ot::MAX][ot::RISE]  >> at.value[ot::MAX][ot::FALL];
       assertions.push_back(std::move(at));
     }
     else if(token == "slew") {
       Slew slew;
       ss >> slew.pin
-         >> slew.value[ot::EARLY][ot::RISE] >> slew.value[ot::EARLY][ot::FALL]
-         >> slew.value[ot::LATE][ot::RISE] >> slew.value[ot::LATE][ot::FALL];
+         >> slew.value[ot::MIN][ot::RISE] >> slew.value[ot::MIN][ot::FALL]
+         >> slew.value[ot::MAX][ot::RISE] >> slew.value[ot::MAX][ot::FALL];
       assertions.push_back(std::move(slew));
     }
     else if(token == "rat") {
       RAT rat;
       ss >> rat.pin
-         >> rat.value[ot::EARLY][ot::RISE] >> rat.value[ot::EARLY][ot::FALL]
-         >> rat.value[ot::LATE][ot::RISE] >> rat.value[ot::LATE][ot::FALL];
+         >> rat.value[ot::MIN][ot::RISE] >> rat.value[ot::MIN][ot::FALL]
+         >> rat.value[ot::MAX][ot::RISE] >> rat.value[ot::MAX][ot::FALL];
       assertions.push_back(std::move(rat));
     }
     else if(token == "load") {

@@ -114,11 +114,11 @@ void Shell::_read_celllib() {
   std::optional<Split> el;
 
   while(_is >> token) {
-    if(token == "-early") {
-      el = EARLY;
+    if(token == "-min" || token == "-early") {
+      el = MIN;
     }
-    else if(token == "-late") {
-      el = LATE;
+    else if(token == "-max" || token == "-late" || token == "-max") {
+      el = MAX;
     }
     else {
       path = std::move(token);
@@ -142,14 +142,14 @@ void Shell::_set_at() {
 
   std::string token;
   std::string pin;
-  auto el = EARLY;
+  auto el = MIN;
   auto rf = RISE;
   std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-early" || token == "-min") el = MIN;
+    else if(token == "-late" || token == "-max" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -178,14 +178,14 @@ void Shell::_set_slew() {
 
   std::string token;
   std::string pin;
-  Split el = EARLY;
+  Split el = MIN;
   Tran  rf = RISE;
   std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-early" || token == "-min") el = MIN;
+    else if(token == "-late" || token == "-max" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -214,14 +214,14 @@ void Shell::_set_rat() {
 
   std::string token;
   std::string pin;
-  Split el = EARLY;
+  Split el = MIN;
   Tran  rf = RISE;
   std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-early" || token == "-min") el = MIN;
+    else if(token == "-late" || token == "-max" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -250,14 +250,14 @@ void Shell::_set_load() {
 
   std::string token;
   std::string pin;
-  Split el = EARLY;
+  Split el = MIN;
   Tran  rf = RISE;
   std::optional<float> value;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-early" || token == "-min") el = MIN;
+    else if(token == "-late"  || token == "-max") el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {

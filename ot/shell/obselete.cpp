@@ -18,7 +18,7 @@ void Shell::_set_early_celllib_fpath() {
     std::quoted("set_early_celllib_fpath"), " is obselete; use ", std::quoted("read_celllib") 
   );
   if(std::filesystem::path path; _is >> path) {
-    _timer.read_celllib(std::move(path), EARLY);
+    _timer.read_celllib(std::move(path), MIN);
   }
 }
 
@@ -28,7 +28,7 @@ void Shell::_set_late_celllib_fpath() {
     std::quoted("set_late_celllib_fpath"), " is obselete; use ", std::quoted("read_celllib")
   );
   if(std::filesystem::path path; _is >> path) {
-    _timer.read_celllib(std::move(path), LATE);
+    _timer.read_celllib(std::move(path), MAX);
   }
 }
 

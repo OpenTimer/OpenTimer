@@ -134,7 +134,7 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
           continue;
         }
 
-        auto w = (el == EARLY) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        auto w = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
         auto s = *pfxt._sfxt.__dist[v] + w - *pfxt._sfxt.__dist[u] + pfx.slack;
 
         if(s < 0.0f) {

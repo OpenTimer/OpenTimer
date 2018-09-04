@@ -31,7 +31,7 @@ struct TimingMask {
   int mask {0};
 
   constexpr bool operator | (Split el) const {
-    return (el == EARLY) ? mask & min_mask : mask & max_mask;
+    return (el == MIN) ? mask & min_mask : mask & max_mask;
   }
 
   constexpr bool operator | (Tran rf) const {

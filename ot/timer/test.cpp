@@ -29,7 +29,7 @@ std::optional<float> Test::cppr_credit(Split el, Tran rf) const {
 std::optional<float> Test::slack(Split el, Tran rf) const {
   if(_arc._to._at[el][rf] && _rat[el][rf]) {
     return (
-      el == EARLY ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
+      el == MIN ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
                     *_rat[el][rf] - *_arc._to._at[el][rf]
     ) + (
       _cppr_credit[el][rf] ? *_cppr_credit[el][rf] : 0.0f
@@ -42,7 +42,7 @@ std::optional<float> Test::slack(Split el, Tran rf) const {
 std::optional<float> Test::raw_slack(Split el, Tran rf) const {
   if(_arc._to._at[el][rf] && _rat[el][rf]) {
     return (
-      el == EARLY ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
+      el == MIN ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
                     *_rat[el][rf] - *_arc._to._at[el][rf]
     );
   }
@@ -96,7 +96,7 @@ void Test::_fprop_rat(float period) {
       continue;
     }
 
-    auto fel = (el == EARLY ? LATE : EARLY);
+    auto fel = (el == MIN ? MAX : MIN);
     auto frf = tv[el]->is_rising_edge_triggered() ? RISE : FALL;
     
     if(frf == FALL && !tv[el]->is_falling_edge_triggered()) {
@@ -109,7 +109,7 @@ void Test::_fprop_rat(float period) {
       continue;
     }
     
-    if(el == EARLY) {
+    if(el == MIN) {
       _related_at[el][rf] = *_arc._from._at[fel][frf];
     }
     else {
@@ -124,7 +124,7 @@ void Test::_fprop_rat(float period) {
     );
     
     if(_constraint[el][rf] && _related_at[el][rf]) {
-      if(el == EARLY) {
+      if(el == MIN) {
         _rat[el][rf] = *_constraint[el][rf] + *_related_at[el][rf];
       }
       else {

@@ -14,13 +14,13 @@ void Shell::_report_at() {
 
   std::string token;
   std::string pin;
-  auto el = EARLY;
+  auto el = MIN;
   auto rf = RISE;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -44,13 +44,13 @@ void Shell::_report_rat() {
 
   std::string token;
   std::string pin;
-  auto el = EARLY;
+  auto el = MIN;
   auto rf = RISE;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -74,13 +74,13 @@ void Shell::_report_slack() {
 
   std::string token;
   std::string pin;
-  auto el = EARLY;
+  auto el = MIN;
   auto rf = RISE;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {
@@ -104,13 +104,13 @@ void Shell::_report_slew() {
 
   std::string token;
   std::string pin;
-  auto el = EARLY;
+  auto el = MIN;
   auto rf = RISE;
 
   while(_is >> token) {
     if(token == "-pin") _is >> pin;
-    else if(token == "-early") el = EARLY;
-    else if(token == "-late" ) el = LATE;
+    else if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
     else if(token == "-rise" ) rf = RISE;
     else if(token == "-fall" ) rf = FALL;
     else {

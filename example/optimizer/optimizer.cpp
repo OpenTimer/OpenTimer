@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
   
   // Read design
   timer.num_threads(std::thread::hardware_concurrency())
-       .read_celllib("optimizer_Early.lib", ot::EARLY)
-       .read_celllib("optimizer_Late.lib", ot::LATE)
+       .read_celllib("optimizer_Early.lib", ot::MIN)
+       .read_celllib("optimizer_Late.lib", ot::MAX)
        .read_verilog("optimizer.v")
        .read_spef("optimizer.spef")
        .read_sdc("optimizer.sdc");
@@ -49,17 +49,17 @@ int main(int argc, char *argv[]) {
   
   // report the slack at a G17
   std::cout << "Late/Fall slack at pin G17: " 
-            << *timer.slack("G17", ot::LATE, ot::FALL) 
+            << *timer.slack("G17", ot::MAX, ot::FALL) 
             << '\n';
   
   // report the arrival time at G17
   std::cout << "Late/Fall arrival time at pin G17: "
-            << *timer.at("G17", ot::LATE, ot::FALL)
+            << *timer.at("G17", ot::MAX, ot::FALL)
             << '\n';
   
   // report the required arrival time at G17
   std::cout << "Late/Fall required arrival time at pin G17: "
-            << *timer.rat("G17", ot::LATE, ot::FALL)
+            << *timer.rat("G17", ot::MAX, ot::FALL)
             << '\n';
 
   // report the path after optimization

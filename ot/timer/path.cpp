@@ -51,7 +51,7 @@ void Path::dump(std::ostream& os) const {
   auto split = endpoint->split();
   auto tran  = endpoint->transition();
   auto at    = back().at;
-  auto rat   = (split == EARLY ? at - slack : at + slack);
+  auto rat   = (split == MIN ? at - slack : at + slack);
   
   // Print the head
   os << "Startpoint    : " << front().pin.name() << '\n';
@@ -158,12 +158,12 @@ void Path::dump(std::ostream& os) const {
       if(auto c = test->_constraint[split][tran]; c) {
 
         switch(split) {
-          case EARLY: 
+          case MIN: 
             sum += *c;
             os << std::setw(w2) << c.value() << std::setw(w3) << sum;
           break;
 
-          case LATE:
+          case MAX:
             sum -= *c;
             os << std::setw(w2) << -c.value() << std::setw(w3) << sum;
           break;

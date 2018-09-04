@@ -91,7 +91,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
     for(auto arc : pin->_fanin) {
       FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
         auto u = _encode_pin(arc->_from, urf);
-        auto d = (el == EARLY) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
         if(sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d)) {
           if(!sfxt.__spfa[u] || *sfxt.__spfa[u] == false) {
             queue.push(u);
@@ -121,7 +121,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
   // start at the root
   std::queue<size_t> queue;
   queue.push(v);
-  sfxt.__dist[v] = (el == EARLY) ? -(*po._rat[el][rf]) : *po._rat[el][rf];
+  sfxt.__dist[v] = (el == MIN) ? -(*po._rat[el][rf]) : *po._rat[el][rf];
   sfxt.__spfa[v] = true;
 
   // build the tree
@@ -152,7 +152,7 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
   assert(!sfxt.__dist[v]);
   std::queue<size_t> queue;
   queue.push(v);
-  sfxt.__dist[v] = (el == EARLY) ? -(*test._rat[el][rf]) : *test._rat[el][rf];
+  sfxt.__dist[v] = (el == MIN) ? -(*test._rat[el][rf]) : *test._rat[el][rf];
   sfxt.__spfa[v] = true;
   
   // Build the tree
@@ -192,7 +192,7 @@ std::optional<float> Timer::_sfxt_offset(const SfxtCache& sfxt, size_t v) const 
   auto [pin, rf] = _decode_pin(v);
   
   if(auto at = pin->_at[sfxt._el][rf]; at) {
-    return sfxt._el == EARLY ? *at : -*at;
+    return sfxt._el == MIN ? *at : -*at;
   }
   else {
     return std::nullopt;
