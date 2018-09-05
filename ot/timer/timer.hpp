@@ -83,17 +83,17 @@ class Timer {
     std::vector<Path> worst_paths(size_t, Split, Tran);
 
     // Accessor
-    std::string dump_graph() const;
-    std::string dump_lineage() const;
-    std::string dump_cell(const std::string&, Split) const;
-    std::string dump_celllib(Split) const;
-    std::string dump_net_load() const;
-    std::string dump_pin_cap() const;
-    std::string dump_at() const;
-    std::string dump_rat() const;
-    std::string dump_slew() const;
-    std::string dump_slack() const;
-    std::string dump_timer() const;
+    void dump_graph(std::ostream&) const;
+    void dump_lineage(std::ostream&) const;
+    void dump_cell(std::ostream&, const std::string&, Split) const;
+    void dump_celllib(std::ostream&, Split) const;
+    void dump_net_load(std::ostream&) const;
+    void dump_pin_cap(std::ostream&) const;
+    void dump_at(std::ostream&) const;
+    void dump_rat(std::ostream&) const;
+    void dump_slew(std::ostream&) const;
+    void dump_slack(std::ostream&) const;
+    void dump_timer(std::ostream&) const;
     
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;

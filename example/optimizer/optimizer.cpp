@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
   std::cout << "Critical path after  optimization: \n" << opt_path[0];
 
   // dump the slack
-  std::cout << timer.dump_slack();
+  timer.dump_slack(std::cout);
 
   return 0;
 }

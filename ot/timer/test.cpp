@@ -30,7 +30,7 @@ std::optional<float> Test::slack(Split el, Tran rf) const {
   if(_arc._to._at[el][rf] && _rat[el][rf]) {
     return (
       el == MIN ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
-                    *_rat[el][rf] - *_arc._to._at[el][rf]
+                  *_rat[el][rf] - *_arc._to._at[el][rf]
     ) + (
       _cppr_credit[el][rf] ? *_cppr_credit[el][rf] : 0.0f
     );
@@ -43,7 +43,7 @@ std::optional<float> Test::raw_slack(Split el, Tran rf) const {
   if(_arc._to._at[el][rf] && _rat[el][rf]) {
     return (
       el == MIN ? *_arc._to._at[el][rf] - *_rat[el][rf] : 
-                    *_rat[el][rf] - *_arc._to._at[el][rf]
+                  *_rat[el][rf] - *_arc._to._at[el][rf]
     );
   }
   else return std::nullopt;

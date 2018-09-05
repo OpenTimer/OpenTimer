@@ -299,18 +299,18 @@ The table below summarizes a list of commonly used methods.
 | read_verilog| builder | path | self | read a verilog netlist |
 | read_spef   | builder | path | self | read parasitics in SPEF |
 | read_sdc    | builder | path | self | read a Synopsys Design Constraint file |
-| update_timing | action | n/a | void | update the timing; all timing values are up-to-date upon return |
-| tns | action | n/a | optional of float | update the timing and return the total negative slack if exists |
-| wns | action | n/a | optional of float | update the timing and return the worst negative slack if exists |
-| dump_timer | accessor | n/a | string | dump the present timer details |
-| dump_slack | accessor | n/a | string | dump the present slack values of all pins |
+| update_timing | action | void | void | update the timing; all timing values are up-to-date upon return |
+| tns | action | void | optional of float | update the timing and return the total negative slack if exists |
+| wns | action | void | optional of float | update the timing and return the worst negative slack if exists |
+| dump_timer | accessor | ostream | void | dump the present timer details to an ostream |
+| dump_slack | accessor | ostream | void | dump the present slack values of all pins to an ostream |
 
 
 *All public methods are thread-safe* as a result of OpenTimer lineage.
 The example below shows an OpenTimer application and the use of builder, action, and accessor API.
 
 ```cpp
-#include <ot/timer/timer.hpp>                // top-level header to include
+#include <ot/timer/timer.hpp>                     // top-level header to include
 
 int main(int argc, char *argv[]) {
   
@@ -324,8 +324,8 @@ int main(int argc, char *argv[]) {
 
   if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
   if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
-
-  std::cout << timer.dump_timer();  // dump the timer details (O(1) accessor)
+  
+  timer.dump_timer(std::cout);                    // dump the timer details (O(1) accessor)
   
   return 0;
 }

@@ -3,11 +3,9 @@
 namespace ot {
 
 // Function: dump_graph
-std::string Timer::dump_graph() const {
-  std::ostringstream os;
+void Timer::dump_graph(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_graph(os);
-  return os.str(); 
 }
 
 // Function: _dump_graph
@@ -25,11 +23,9 @@ void Timer::_dump_graph(std::ostream& os) const {
 }
 
 // Function: dump_lineage
-std::string Timer::dump_lineage() const {
-  std::ostringstream os;
+void Timer::dump_lineage(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_lineage(os);
-  return os.str();
 }
 
 // Function: _dump_lineage
@@ -38,11 +34,9 @@ void Timer::_dump_lineage(std::ostream& os) const {
 }
 
 // Function: dump_timer
-std::string Timer::dump_timer() const {
-  std::ostringstream os;
+void Timer::dump_timer(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_timer(os);
-  return os.str();
 }
 
 // Function: _dump_timer
@@ -94,11 +88,9 @@ void Timer::_dump_timer(std::ostream& os) const {
 }
 
 // Function: dump_net_load
-std::string Timer::dump_net_load() const {
-  std::ostringstream os;
+void Timer::dump_net_load(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_net_load(os);
-  return os.str();
 }
 
 // Function: _dump_net_load
@@ -135,11 +127,9 @@ void Timer::_dump_net_load(std::ostream& os) const {
 }
 
 // Function: dump_pin_cap
-std::string Timer::dump_pin_cap() const {
-  std::ostringstream os;
+void Timer::dump_pin_cap(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_pin_cap(os);
-  return os.str();
 }
 
 // Function: _dump_pin_cap
@@ -177,11 +167,9 @@ void Timer::_dump_pin_cap(std::ostream& os) const {
 }
 
 // Function: dump_slew
-std::string Timer::dump_slew() const {
-  std::ostringstream os;
+void Timer::dump_slew(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_slew(os);
-  return os.str();
 }
 
 // Function: _dump_slew
@@ -221,11 +209,9 @@ void Timer::_dump_slew(std::ostream& os) const {
 }
 
 // Function: dump_slack
-std::string Timer::dump_slack() const {
-  std::ostringstream os;
+void Timer::dump_slack(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_slack(os);
-  return os.str();
 }
 
 // Function: _dump_slack
@@ -265,11 +251,9 @@ void Timer::_dump_slack(std::ostream& os) const {
 }
 
 // Function: dump_at
-std::string Timer::dump_at() const {
-  std::ostringstream os;
+void Timer::dump_at(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_at(os);
-  return os.str();
 }
 
 // Function: _dump_at
@@ -309,11 +293,9 @@ void Timer::_dump_at(std::ostream& os) const {
 }
 
 // Function: dump_rat
-std::string Timer::dump_rat() const {
-  std::ostringstream os;
+void Timer::dump_rat(std::ostream& os) const {
   std::shared_lock lock(_mutex);
   _dump_rat(os);
-  return os.str();
 }
 
 // Function: _dump_rat
@@ -354,11 +336,9 @@ void Timer::_dump_rat(std::ostream& os) const {
 }
 
 // Function: dump_cell
-std::string Timer::dump_cell(const std::string& name, Split el) const {
-  std::ostringstream os;
+void Timer::dump_cell(std::ostream& os, const std::string& name, Split el) const {
   std::shared_lock lock(_mutex);
   _dump_cell(os, name, el);
-  return os.str();
 }
 
 // Function: _dump_cell
@@ -377,11 +357,9 @@ void Timer::_dump_cell(std::ostream& os, const std::string& name, Split el) cons
 }
 
 // Function: dump_celllib
-std::string Timer::dump_celllib(Split el) const {
-  std::ostringstream os;
+void Timer::dump_celllib(std::ostream& os, Split el) const {
   std::shared_lock lock(_mutex);
   _dump_celllib(os, el);
-  return os.str();
 }
 
 // Function: _dump_celllib

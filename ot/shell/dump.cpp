@@ -114,11 +114,11 @@ void Shell::_dump_timer() {
   }
 
   if(output.empty()) {
-    _os << _timer.dump_timer();
+    _timer.dump_timer(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_timer();
+      _timer.dump_timer(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -142,11 +142,11 @@ void Shell::_dump_graph() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_graph();
+    _timer.dump_graph(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_graph();
+      _timer.dump_graph(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -175,11 +175,11 @@ void Shell::_dump_net_load() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_net_load();
+    _timer.dump_net_load(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_net_load();
+      _timer.dump_net_load(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -208,11 +208,11 @@ void Shell::_dump_pin_cap() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_pin_cap();
+    _timer.dump_pin_cap(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_pin_cap();
+      _timer.dump_pin_cap(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -241,11 +241,11 @@ void Shell::_dump_slack() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_slack();
+    _timer.dump_slack(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_slack();
+      _timer.dump_slack(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -272,11 +272,11 @@ void Shell::_dump_rat() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_rat();
+    _timer.dump_rat(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_rat();
+      _timer.dump_rat(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -303,11 +303,11 @@ void Shell::_dump_slew() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_slew();
+    _timer.dump_slew(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_slew();
+      _timer.dump_slew(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -334,11 +334,11 @@ void Shell::_dump_at() {
   }
   
   if(output.empty()) {
-    _os << _timer.dump_at();
+    _timer.dump_at(_os);
   }
   else {
     if(std::ofstream ofs(output); ofs) {
-      ofs << _timer.dump_at();
+      _timer.dump_at(ofs);
     }
     else {
       _es << "failed to open " << output << '\n';
@@ -393,10 +393,10 @@ void Shell::_dump_celllib() {
   }
 
   if(cell.empty()) {
-    *tgt << _timer.dump_celllib(el);
+    _timer.dump_celllib(*tgt, el);
   }
   else {
-    *tgt << _timer.dump_cell(cell, el);
+    _timer.dump_cell(*tgt, cell, el);
   }
 }
 

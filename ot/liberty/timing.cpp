@@ -304,46 +304,6 @@ bool Timing::is_max_constraint() const {
   }
 }
 
-// Function: is_hold_constraint
-bool Timing::is_hold_constraint() const {
-  if(type) {
-    switch (*type) {
-      case TimingType::HOLD_RISING:
-      case TimingType::HOLD_FALLING:
-      case TimingType::NON_SEQ_HOLD_RISING:
-      case TimingType::NON_SEQ_HOLD_FALLING:
-        return true;
-      break;
-      default:
-        return false;
-      break;
-    };
-  }
-  else {
-    return false;
-  }
-}
-
-// Function: is_setup_constraint
-bool Timing::is_setup_constraint() const {
-  if(type) {
-    switch (*type) {
-      case TimingType::SETUP_RISING:
-      case TimingType::SETUP_FALLING:
-      case TimingType::NON_SEQ_SETUP_RISING:
-      case TimingType::NON_SEQ_SETUP_FALLING:
-        return true;
-      break;
-      default:
-        return false;
-      break;
-    };
-  }
-  else {
-    return false;
-  }
-}
-
 // Function: is_falling_edge_triggered
 bool Timing::is_falling_edge_triggered() const {
   if(type) {
