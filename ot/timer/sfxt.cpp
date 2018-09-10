@@ -5,10 +5,10 @@ namespace ot {
 
 // Constructor
 SfxtCache::SfxtCache(Split el, size_t S, size_t T) : _el {el}, _S {S}, _T {T} {
-  resize_to_fit(std::max(S, T) + 1, __tree, __link, __dist, __spfa);
-  _pins.insert(S);
-  _pins.insert(T);
-  // debug
+  resize_to_fit(std::max(S, T) + 1, __tree, __link, __dist, __spfa /*, __odeg*/);
+  //_pins.insert(S);
+  //_pins.insert(T);
+  //// debug
   //for(const auto& i : __tree) assert(!i);
   //for(const auto& i : __dist) assert(!i);
   //for(const auto& i : __spfa) assert(!i);
@@ -25,6 +25,12 @@ SfxtCache::SfxtCache(SfxtCache&& rhs) :
 
 // Destructor
 SfxtCache::~SfxtCache() {
+
+  __dist[_S].reset();
+  __tree[_S].reset();
+  __link[_S].reset();
+  __spfa[_S].reset();
+
   for(const auto& p : _pins) {
     __dist[p].reset();
     __tree[p].reset();
@@ -44,29 +50,160 @@ bool SfxtCache::_relax(size_t u, size_t v, std::optional<size_t> e, float d) {
   return false;
 }
 
-// Function: mirrorize
-SfxtMirror SfxtCache::mirrorize() const {
-
-  SfxtMirror mirror {_el, _S, _T};
-
-  for(const auto& p : _pins) {
-    mirror.dist[p] = __dist[p];
-    mirror.tree[p] = __tree[p];
-    mirror.link[p] = __link[p];
-  }
-
-  mirror.srcs = _srcs;
-  
-  return mirror;
-}
-
-// ------------------------------------------------------------------------------------------------
-
-// Function: _prune
-//bool Timer::_prune(SfxtCache& sfxt, size_t v) const {
+//// Function: mirrorize
+//SfxtMirror SfxtCache::mirrorize() const {
+//
+//  SfxtMirror mirror {_el, _S, _T};
+//
+//  for(const auto& p : _pins) {
+//    mirror.dist[p] = __dist[p];
+//    mirror.tree[p] = __tree[p];
+//    mirror.link[p] = __link[p];
+//  }
+//
+//  mirror.srcs = _srcs;
+//  
+//  return mirror;
 //}
 
-// Procedure: _spfa
+// ----------------------------------------------------------------------------
+
+void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
+
+  sfxt.__spfa[v] = true;
+
+  auto [pin, vrf] = _decode_pin(v);
+
+  // Stop at the data source
+  if(!pin->is_datapath_source()) {
+    for(auto arc : pin->_fanin) {
+      FOR_EACH_RF_IF(urf, arc->_delay[sfxt._el][urf][vrf]) {
+        auto u = _encode_pin(arc->_from, urf);
+        if(!sfxt.__spfa[u]) {
+          _topologize(sfxt, u);
+        }
+      }
+    }
+  }
+  
+  sfxt._pins.push_back(v);
+}
+
+// Procedure: _levelize
+void Timer::_levelize(SfxtCache& sfxt) const {
+  
+  assert(sfxt._pins.empty());
+  
+  _topologize(sfxt, sfxt._T);
+  
+  assert(!sfxt._pins.empty());
+
+  auto el = sfxt._el;
+
+  for(auto itr = sfxt._pins.rbegin(); itr != sfxt._pins.rend(); ++itr) {
+
+    auto v = *itr;
+    auto [pin, vrf] = _decode_pin(v);
+
+    //sfxt._pins.insert(v);
+    
+    assert(sfxt.__dist[v]);
+    
+    // Stop at the data source
+    if(pin->is_datapath_source()) {
+      sfxt._srcs.try_emplace(v, std::nullopt);
+      continue;
+    }
+
+    // Relax on fanin
+    for(auto arc : pin->_fanin) {
+      FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
+        auto u = _encode_pin(arc->_from, urf);
+        auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d);
+      }
+    }
+  }
+
+  // -----------
+
+  /*assert(sfxt._pins.size() == 2);
+  
+  auto el = sfxt._el;
+
+  std::queue<size_t> queue;  
+
+  // explore the search cone
+  queue.push(sfxt._T);
+  sfxt.__spfa[sfxt._T] = true;
+  sfxt.__odeg[sfxt._T] = 0;
+
+  while(!queue.empty()) {
+    
+    auto v = queue.front();
+    queue.pop();
+    auto [pin, vrf] = _decode_pin(v);
+
+    sfxt._pins.insert(v);
+
+    // Stop at the data source
+    if(pin->is_datapath_source()) {
+      continue;
+    }
+
+    // Relax on fanin
+    for(auto arc : pin->_fanin) {
+      FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
+        auto u = _encode_pin(arc->_from, urf);
+
+        if(!sfxt.__spfa[u]) {
+          sfxt.__spfa[u] = true;
+          queue.push(u);
+        }
+        
+        if(sfxt.__odeg[u]) {
+          sfxt.__odeg[u] = *sfxt.__odeg[u] + 1;
+        }
+        else {
+          sfxt.__odeg[u] = 1;
+        }
+      }
+    }
+  }
+  
+  // dynamic programming
+  queue.push(sfxt._T);
+
+  while(!queue.empty()) {
+
+    auto v = queue.front();
+    queue.pop();
+    auto [pin, vrf] = _decode_pin(v);
+    
+    assert(sfxt.__dist[v]);
+    
+    // Stop at the data source
+    if(pin->is_datapath_source()) {
+      sfxt._srcs.try_emplace(v, std::nullopt);
+      continue;
+    }
+
+    // Relax on fanin
+    for(auto arc : pin->_fanin) {
+      FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
+        auto u = _encode_pin(arc->_from, urf);
+        auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d);
+        assert(sfxt.__odeg[u]);
+        if(sfxt.__odeg[u] = *sfxt.__odeg[u] - 1; *(sfxt.__odeg[u]) == 0) {
+          queue.push(u);
+        }
+      }
+    }
+  }*/
+}
+
+/*// Procedure: _spfa
 // Perform shortest path fast algorithm (SPFA) to build up the suffix tree.
 void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
 
@@ -102,7 +239,7 @@ void Timer::_spfa(SfxtCache& sfxt, std::queue<size_t>& queue) const {
     }
   }
 
-}
+} */
 
 // Function: _sfxt_cache
 // Find the suffix tree rooted at the primary output po.
@@ -116,16 +253,17 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
 
   SfxtCache sfxt(el, S, v);
 
-  assert(!sfxt.__dist[v]);
-
   // start at the root
-  std::queue<size_t> queue;
-  queue.push(v);
+  assert(!sfxt.__dist[v]);
   sfxt.__dist[v] = (el == MIN) ? -(*po._rat[el][rf]) : *po._rat[el][rf];
   sfxt.__spfa[v] = true;
 
-  // build the tree
-  _spfa(sfxt, queue);
+  _levelize(sfxt);
+
+  //// build the tree
+  //std::queue<size_t> queue;
+  //queue.push(v);
+  //_spfa(sfxt, queue);
   
   // relax sources
   for(auto& [s, v] : sfxt._srcs) {
@@ -150,13 +288,15 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
 
   // Start at the D pin and perform SPFA all the way to the sources of data paths.
   assert(!sfxt.__dist[v]);
-  std::queue<size_t> queue;
-  queue.push(v);
   sfxt.__dist[v] = (el == MIN) ? -(*test._rat[el][rf]) : *test._rat[el][rf];
   sfxt.__spfa[v] = true;
   
   // Build the tree
-  _spfa(sfxt, queue);
+  _levelize(sfxt);
+
+  //std::queue<size_t> queue;
+  //queue.push(v);
+  //_spfa(sfxt, queue);
 
   // relaxation from the sources
   if(_cppr_analysis) {

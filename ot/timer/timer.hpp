@@ -226,6 +226,7 @@ class Timer {
     void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _cppr(bool);
+    void _topologize(SfxtCache&, size_t) const;
     void _spfa(SfxtCache&, std::queue<size_t>&) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_datapath(Path&, const SfxtCache&) const;
@@ -250,6 +251,8 @@ class Timer {
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
+
+    void _levelize(SfxtCache&) const;
 
     SfxtCache _sfxt_cache(const Endpoint&) const;
     SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;

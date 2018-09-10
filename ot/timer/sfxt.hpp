@@ -41,8 +41,9 @@ class SfxtCache {
 
     inline std::optional<float> slack() const;
     inline Split split() const;
+    inline size_t root() const;
 
-    SfxtMirror mirrorize() const;
+    //SfxtMirror mirrorize() const;
 
   private:
     
@@ -50,9 +51,9 @@ class SfxtCache {
     size_t _S;    // super source
     size_t _T;    // root
 
-    std::unordered_set<size_t> _pins;
+    std::vector<size_t> _pins;
     std::unordered_map<size_t, std::optional<float>> _srcs;
-
+    
     inline thread_local static std::vector<std::optional<float>>  __dist;
     inline thread_local static std::vector<std::optional<size_t>> __tree;
     inline thread_local static std::vector<std::optional<size_t>> __link;
@@ -60,6 +61,11 @@ class SfxtCache {
 
     bool _relax(size_t, size_t, std::optional<size_t>, float);
 };
+
+// Function: root
+inline size_t SfxtCache::root() const {
+  return _T;
+}
 
 // Function: slack
 inline std::optional<float> SfxtCache::slack() const {
