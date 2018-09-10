@@ -6,7 +6,7 @@ This page summarizes a list of questions related to the compilation and building
 
 #### Q: What compiler does OpenTimer support now?
 
-**A:** OpenTimer currently supports G++ v7.2 and clang++ 5.0, both requiring C++17.
+**A:** OpenTimer currently requires g++ v7.2 and clang++ v6.0 with -std=c++17.
 
 #### Q: How do I switch to different compilers to compile OpenTimer?
 

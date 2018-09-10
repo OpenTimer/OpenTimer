@@ -35,13 +35,13 @@ class RctNode {
 
     std::string _name;                           
 
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _ures    {{{.0f, .0f}, {.0f, .0f}}}; 
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _ncap    {{{.0f, .0f}, {.0f, .0f}}};
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _load    {{{.0f, .0f}, {.0f, .0f}}}; 
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _beta    {{{.0f, .0f}, {.0f, .0f}}};
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _delay   {{{.0f, .0f}, {.0f, .0f}}};
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _ldelay  {{{.0f, .0f}, {.0f, .0f}}};
-    TimingData<float, MAX_TRAN, MAX_SPLIT> _impulse {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ures   ; 
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ncap   ;
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _load   ; 
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _beta   ;
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _delay  ;
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ldelay ;
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _impulse;
 
     std::list<RctEdge*> _fanin;
     std::list<RctEdge*> _fanout;

@@ -97,8 +97,8 @@ OpenTimer is very self-contained and has very few dependencies.
 To compile OpenTimer, you need a [C++17][C++17] compiler. 
 We currently support:
 
-+ GNU C++ Compiler G++ v7.2 with -std=c++1z
-+ Clang 5.0 C++ Compiler with -std=c++17
++ GNU C++ Compiler v7.2 with -std=c++1z
++ Clang C++ Compiler v6.0 with -std=c++17
 
 In addition, you need a tcl shell interpreter:
 

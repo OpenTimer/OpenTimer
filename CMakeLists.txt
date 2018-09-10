@@ -16,14 +16,14 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   endif()
 ## clang++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.0")
-    message(FATAL_ERROR "\nOpenTimer requires clang++ at least v5.0")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
+    message(FATAL_ERROR "\nOpenTimer requires clang++ at least v6.0")
   endif() 
 else()
   message(FATAL_ERROR "\n\
 OpenTimer currently supports the following compilers:\n\
 - g++ v7.2 or above\n\
-- clang++ v5.0 or above\n\
+- clang++ v6.0 or above\n\
 ")
 endif()
 

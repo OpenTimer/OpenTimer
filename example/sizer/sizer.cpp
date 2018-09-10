@@ -1,5 +1,5 @@
-// This program demonstrate how to resize a design of six NAND2 cells
-// and report timing/power/area values using OpenTimer C++ API.
+// This program demonstrates how to resize a design of six NAND2 cells
+// and reports timing/power/area values using OpenTimer C++ API.
 // 
 // Design : sizer.v
 // SDC    : sizer.sdc
