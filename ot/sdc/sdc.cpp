@@ -108,7 +108,7 @@ void SDC::read(const std::filesystem::path& path) {
         commands.emplace_back(std::in_place_type_t<CreateClock>{}, j);
       }
       else {
-        OT_LOGW("sdc command ", c, " not supported yet");
+        OT_LOGE("sdc command ", c, " not supported yet");
       }
     }
 
@@ -164,12 +164,18 @@ SetInputDelay::SetInputDelay(const Json& json) {
     else if(key == "port_pin_list") {
       port_pin_list = parse_port(unquoted(itr.value()));
     }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
+    }
   }
 }
 
 // ------------------------------------------------------------------------------------------------
 
-//
+// Constructor
 SetInputTransition::SetInputTransition(const Json& json) {
   
   for(auto itr = json.begin(); itr != json.end(); ++itr) {
@@ -197,6 +203,12 @@ SetInputTransition::SetInputTransition(const Json& json) {
     }
     else if(key == "port_list") {
       port_list = parse_port(unquoted(itr.value()));
+    }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
     }
   }
 }
@@ -244,6 +256,12 @@ SetOutputDelay::SetOutputDelay(const Json& json) {
     else if(key == "port_pin_list") {
       port_pin_list = parse_port(unquoted(itr.value()));
     }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
+    }
   }
 }
 
@@ -275,6 +293,12 @@ SetLoad::SetLoad(const Json& json) {
     else if(key == "value") {
       value = std::stof(unquoted(itr.value()));
     }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
+    }
   }
 }
 
@@ -301,6 +325,31 @@ CreateClock::CreateClock(const Json& json) {
     }
     else if(key == "port_pin_list") {
       port_pin_list = parse_port(unquoted(itr.value()));
+    }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Constructor
+SetClockUncertainty::SetClockUncertainty(const Json& json) {
+  for(auto itr = json.begin(); itr != json.end(); ++itr) {
+    if(auto& key = itr.key(); key == "uncertainty") {
+    }
+    else if(key == "object_list") {
+      object_list = parse_port(unquoted(itr.value()));
+    }
+    else if(key == "command") {
+      OT_LOGE_IF(itr.value() != command, "wrong command field: ", itr.value());
+    }
+    else {
+      OT_LOGE(command, ": ", std::quoted(key), " not supported");
     }
   }
 }

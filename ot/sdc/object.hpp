@@ -71,12 +71,6 @@ using Object = std::variant<
 
 Object parse_port(const std::string&);
 
-// ------------------------------------------------------------------------------------------------
-
-//std::ostream& operator << (std::ostream&, const Port&);
-//std::ostream& operator << (std::ostream&, const Clock&);
-
-
 };  // end of namespace ot::sdc. ------------------------------------------------------------------
 
 

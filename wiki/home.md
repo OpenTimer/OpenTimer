@@ -32,3 +32,8 @@ Many pages are still under construction. Please stayed tune.
 + [Compilation Issues](faq/compilation.md)
 + [Programming Questions](faq/programming.md)
 
+# Milestones
+
++ [Monthly Technical Reports](milestones/logs.md)
+
+

@@ -117,7 +117,14 @@ struct CreateClock {
 
 // Class: SetClockUncertainty 
 struct SetClockUncertainty {
+
   inline static constexpr auto command = "set_clock_uncertainty";
+
+  std::optional<float> uncertainty;
+  std::optional<Object> object_list;
+
+  SetClockUncertainty() = default;
+  SetClockUncertainty(const Json&);
 };
 
 // ------------------------------------------------------------------------------------------------
