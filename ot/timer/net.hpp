@@ -26,22 +26,22 @@ class RctNode {
     RctNode() = default;
     RctNode(const std::string&);
 
-    float load(Split, Tran) const;
-    float cap(Split, Tran) const;
-    float slew(Split, Tran, float) const;
+    float load (Split, Tran) const;
+    float cap  (Split, Tran) const;
+    float slew (Split, Tran, float) const;
     float delay(Split, Tran) const;
 
   private:
 
     std::string _name;                           
 
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _ures    {{{.0f, .0f}, {.0f, .0f}}}; 
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _ncap    {{{.0f, .0f}, {.0f, .0f}}};
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _load    {{{.0f, .0f}, {.0f, .0f}}}; 
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _beta    {{{.0f, .0f}, {.0f, .0f}}};
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _delay   {{{.0f, .0f}, {.0f, .0f}}};
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _ldelay  {{{.0f, .0f}, {.0f, .0f}}};
-    std::array<std::array<float, MAX_TRAN>, MAX_SPLIT> _impulse {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ures    {{{.0f, .0f}, {.0f, .0f}}}; 
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ncap    {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _load    {{{.0f, .0f}, {.0f, .0f}}}; 
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _beta    {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _delay   {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _ldelay  {{{.0f, .0f}, {.0f, .0f}}};
+    TimingData<float, MAX_TRAN, MAX_SPLIT> _impulse {{{.0f, .0f}, {.0f, .0f}}};
 
     std::list<RctEdge*> _fanin;
     std::list<RctEdge*> _fanout;
@@ -144,7 +144,6 @@ class Net {
 
   friend class Timer;
   friend class Arc;
-  friend class Gate;
   friend class Pin;
   
   struct EmptyRct {

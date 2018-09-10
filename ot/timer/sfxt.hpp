@@ -54,6 +54,7 @@ class SfxtCache {
     std::vector<size_t> _pins;
     std::unordered_map<size_t, std::optional<float>> _srcs;
     
+    inline thread_local static std::vector<size_t> __pins;
     inline thread_local static std::vector<std::optional<float>>  __dist;
     inline thread_local static std::vector<std::optional<size_t>> __tree;
     inline thread_local static std::vector<std::optional<size_t>> __link;
