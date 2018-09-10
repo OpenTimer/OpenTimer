@@ -18,8 +18,19 @@ However, the project does contain third-party tools and services that users shou
 For example, the libraries we use in example and regression folders are subject to extra license agreement.
 You will need to double check these [licenses](../../licenses).
 
+#### Q: What industry formats do OpenTimer support?
+
+**A:** OpenTimer takes (1) cell library (.lib), (2) verilog netlist (.v), (3) parasitics (.spef),
+and (4) Synopsys design constraint (.sdc).
+Additional formats from [TAU contest][TAU15] such as .timing are also admissible.
+
+#### Q: Does OpenTimer do signal integrity (SI) analysis?
+
+**A:** OpenTimer currently does not support SI analysis, but it is in our wish list.
+
 
 * * *
 
 [STA]:                   https://en.wikipedia.org/wiki/Static_timing_analysis
 [DARPA IDEA]:            https://www.darpa.mil/news-events/2017-09-13
+[TAU15]:                 https://sites.google.com/site/taucontest2015/resources

@@ -15,10 +15,10 @@ struct GetClocks {
   std::vector<std::string> clocks;
 };
 
-struct AllInputs{
+struct AllInputs {
 };
 
-struct AllOutputs{
+struct AllOutputs {
 };
 
 struct GetPorts {

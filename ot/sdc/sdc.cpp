@@ -169,6 +169,7 @@ SetInputDelay::SetInputDelay(const Json& json) {
 
 // ------------------------------------------------------------------------------------------------
 
+//
 SetInputTransition::SetInputTransition(const Json& json) {
   
   for(auto itr = json.begin(); itr != json.end(); ++itr) {
@@ -248,7 +249,7 @@ SetOutputDelay::SetOutputDelay(const Json& json) {
 
 // ------------------------------------------------------------------------------------------------
 
-// SetLoad
+// Constructor
 SetLoad::SetLoad(const Json& json) {
 
   for(auto itr = json.begin(); itr != json.end(); ++itr) {
@@ -279,6 +280,7 @@ SetLoad::SetLoad(const Json& json) {
 
 // ------------------------------------------------------------------------------------------------
 
+// Constructor
 CreateClock::CreateClock(const Json& json) {
 
   for(auto itr = json.begin(); itr != json.end(); ++itr) {

@@ -11,7 +11,9 @@ std::filesystem::path home();
 
 // SetInputDelay
 struct SetInputDelay {
+
   inline static constexpr auto command = "set_input_delay";
+
   std::string clock;
   std::optional<std::byte> clock_fall;
   std::optional<std::byte> level_sensitive;
@@ -34,7 +36,9 @@ struct SetInputDelay {
 // SetInputTransition
 // Set a fixed transition on input or inout ports
 struct SetInputTransition {
+
   inline static constexpr auto command = "set_input_transition";
+
   std::string clock;
   std::optional<std::byte> min;
   std::optional<std::byte> max;
@@ -52,7 +56,9 @@ struct SetInputTransition {
 
 // SetOutputDelay
 struct SetOutputDelay {
+
   inline static constexpr auto command = "set_output_delay";
+
   std::string clock;
   std::optional<std::byte> clock_fall;
   std::optional<std::byte> level_sensitive;
@@ -74,7 +80,9 @@ struct SetOutputDelay {
 
 // SetLoad
 struct SetLoad {
+
   inline static constexpr auto command = "set_load";
+
   std::optional<std::byte> min;
   std::optional<std::byte> max;
   std::optional<std::byte> subtract_pin_load;
@@ -91,7 +99,9 @@ struct SetLoad {
 
 // CreateClock
 struct CreateClock {
+
   inline static constexpr auto command = "create_clock";
+
   std::optional<float> period;
   std::optional<std::byte> add;
   std::string name;
@@ -101,6 +111,13 @@ struct CreateClock {
   
   CreateClock() = default;
   CreateClock(const Json&);
+};
+
+// ------------------------------------------------------------------------------------------------
+
+// Class: SetClockUncertainty 
+struct SetClockUncertainty {
+  inline static constexpr auto command = "set_clock_uncertainty";
 };
 
 // ------------------------------------------------------------------------------------------------
@@ -117,9 +134,7 @@ using Command = std::variant<
 
 // Class: SDC
 struct SDC {
-
   std::vector<Command> commands;
-
   void read(const std::filesystem::path&);
 };
 

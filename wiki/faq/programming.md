@@ -27,15 +27,8 @@ timer2.update_timing();     # update the timer for the second corner
 It is also safe to spawn two threads each on a timer.
 
 ```cpp
-std::thread t1([&] () {     # thread 1 to operate on one timer
-  ot::Timer timer1;
-  ...
-});
-
-std::thread t2([&] () {     # thread 2 to operate on another timer
-  ot::Timer timer2;
-  ...
-});
+std::thread t1([&] () { ot::Timer timer1; });  # thread 1 to operate timer 1
+std::thread t2([&] () { ot::Timer timer2; });  # thread 2 to operate timer 2
 ```
 
 

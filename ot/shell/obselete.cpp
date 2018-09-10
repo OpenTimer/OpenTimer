@@ -64,17 +64,10 @@ void Shell::_set_timing_fpath() {
 
 // Procedure: report_timer
 void Shell::_report_timer() {
-
   OT_LOGW(
     std::quoted("report_timer"), " is obselete; use ", std::quoted("dump_timer")
   );
-    
-  if(auto paths = _timer.worst_paths(1); !paths.empty()) {
-    _os << paths[0];
-  }
-  else {
-    _os << "no paths found\n";
-  }
+  _timer.dump_timer(_os);
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------

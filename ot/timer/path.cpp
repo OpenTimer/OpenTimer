@@ -351,7 +351,7 @@ std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
     std::vector<Path> paths;
     paths.emplace_back(epts[0]->slack(), epts[0]);
     auto sfxt = _sfxt_cache(*epts[0]);
-    assert(std::fabs(*sfxt.slack() - paths[0].slack) < 1e-3);
+    assert(std::fabs(*sfxt.slack() - paths[0].slack) < 0.1f);
     _recover_datapath(paths[0], sfxt);
     return paths;
   }

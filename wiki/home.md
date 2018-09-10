@@ -8,7 +8,8 @@ Many pages are still under construction. Please stayed tune.
 # Get Started with OpenTimer
 
 + Compile and Build OpenTimer
-+ Obtain your First Timing Report
++ Analyze your First Circuit Timing
++ Program your First OpenTimer Application
 
 # OpenTimer Shell
 
