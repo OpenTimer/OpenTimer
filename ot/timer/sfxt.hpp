@@ -5,22 +5,6 @@
 
 namespace ot {
 
-// Struct: SfxtMirror
-// Mirror of a suffix tree, i.e., a copy of the tree exported from SfxtCache.
-struct SfxtMirror {
-    
-  Split el;
-  size_t S;    // super source
-  size_t T;    // root
-
-  std::unordered_map<size_t, std::optional<float>>  dist;
-  std::unordered_map<size_t, std::optional<size_t>> tree;
-  std::unordered_map<size_t, std::optional<size_t>> link;
-  std::unordered_map<size_t, std::optional<float>>  srcs;
-};
-
-// ------------------------------------------------------------------------------------------------
-
 // Class: SfxtCache
 // The internal thread-local storage to construct suffix tree for 
 // path-based timing analysis. The suffix tree is a shortest path tree 
@@ -42,8 +26,6 @@ class SfxtCache {
     inline std::optional<float> slack() const;
     inline Split split() const;
     inline size_t root() const;
-
-    //SfxtMirror mirrorize() const;
 
   private:
     

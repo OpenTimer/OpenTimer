@@ -12,8 +12,7 @@ SfxtCache::SfxtCache(Split el, size_t S, size_t T) :
 
   resize_to_fit(std::max(S, T) + 1, __tree, __link, __dist, __spfa);
 
-  //_pins.insert(S);
-  //// debug
+  // debug
   //for(const auto& i : __tree) assert(!i);
   //for(const auto& i : __dist) assert(!i);
   //for(const auto& i : __spfa) assert(!i);
@@ -58,24 +57,9 @@ bool SfxtCache::_relax(size_t u, size_t v, std::optional<size_t> e, float d) {
   return false;
 }
 
-//// Function: mirrorize
-//SfxtMirror SfxtCache::mirrorize() const {
-//
-//  SfxtMirror mirror {_el, _S, _T};
-//
-//  for(const auto& p : _pins) {
-//    mirror.dist[p] = __dist[p];
-//    mirror.tree[p] = __tree[p];
-//    mirror.link[p] = __link[p];
-//  }
-//
-//  mirror.srcs = _srcs;
-//  
-//  return mirror;
-//}
-
 // ----------------------------------------------------------------------------
 
+// Procedure: _topologize
 void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
 
   sfxt.__spfa[v] = true;
