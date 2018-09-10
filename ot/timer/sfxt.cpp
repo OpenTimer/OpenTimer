@@ -46,16 +46,7 @@ SfxtCache::~SfxtCache() {
   __pins = std::move(_pins);
 }
         
-// Function: _relax        
-bool SfxtCache::_relax(size_t u, size_t v, std::optional<size_t> e, float d) {
-  if(!__dist[u] || *__dist[v] + d < *__dist[u]) {
-    __dist[u] = *__dist[v] + d;
-    __tree[u] = v;
-    __link[u] = e;
-    return true;
-  }
-  return false;
-}
+
 
 // ----------------------------------------------------------------------------
 

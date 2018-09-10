@@ -77,7 +77,7 @@ For values outside the indices, we perform interpolation or extrapolation to obt
 The figure below demonstrates different timing lookup tables of scalar,
 one dimension, and two dimensions.
 
-<img src="image/nldm.png" width="70%"> 
+<img src="../image/nldm.png" width="70%"> 
 
 If the table is of size 1x1 (single scalar value),
 no interpolation is needed. 

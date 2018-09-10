@@ -122,7 +122,6 @@ class Timer {
 
     std::optional<tf::Task> _lineage;
     std::optional<CpprAnalysis> _cppr_analysis;
-
     std::optional<second_t> _time_unit;
     std::optional<watt_t> _power_unit;
     std::optional<ohm_t> _resistance_unit;

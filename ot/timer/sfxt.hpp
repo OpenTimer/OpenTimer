@@ -42,7 +42,7 @@ class SfxtCache {
     inline thread_local static std::vector<std::optional<size_t>> __link;
     inline thread_local static std::vector<std::optional<bool>>   __spfa;
 
-    bool _relax(size_t, size_t, std::optional<size_t>, float);
+    inline bool _relax(size_t, size_t, std::optional<size_t>, float);
 };
 
 // Function: root
@@ -58,6 +58,17 @@ inline std::optional<float> SfxtCache::slack() const {
 // Function: split
 inline Split SfxtCache::split() const {
   return _el;
+}
+
+// Function: _relax        
+inline bool SfxtCache::_relax(size_t u, size_t v, std::optional<size_t> e, float d) {
+  if(!__dist[u] || *__dist[v] + d < *__dist[u]) {
+    __dist[u] = *__dist[v] + d;
+    __tree[u] = v;
+    __link[u] = e;
+    return true;
+  }
+  return false;
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------
