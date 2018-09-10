@@ -88,10 +88,12 @@ on the port `out`.
 
 1. [Synopsys Technology Access Program (TAP-in)][Synopsys TAP-in]
 2. [Synopsys Design Constraints Basics][SDC-Basics]
+3. [Synopsys Design Constraints Format Application Node][SDC Manual]
 
 
 * * *
 
 [Synopsys TAP-in]: https://www.synopsys.com/community/interoperability-programs/tap-in.html
 [SDC-Basics]: http://www.vlsi-expert.com/2011/02/synopsys-design-constraints-sdc-basics.html
+[SDC Manual]: ./reference/sdc2.1.pdf
 
