@@ -3,10 +3,10 @@
 namespace ot {
 
 // Constructor
-Shell::Shell(const std::string& w, std::ostream& os, std::ostream& es) :
+Shell::Shell(const std::string& w, FILE* is, std::ostream& os, std::ostream& es) :
   _os     {os},
   _es     {es},
-  _prompt {w, "ot> ", ot::user_home() / ".ot_history"} {
+  _prompt {w, "ot> ", ot::user_home() / ".ot_history", is, os, es} {
   
   // Add auto-complete
   for(const auto& kvp : _handles) {
@@ -15,7 +15,6 @@ Shell::Shell(const std::string& w, std::ostream& os, std::ostream& es) :
 
   _prompt.autocomplete("quit");
   _prompt.autocomplete("exit");
-
 }
   
 // Operator: ()

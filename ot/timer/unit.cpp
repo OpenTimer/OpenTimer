@@ -27,7 +27,7 @@ void Timer::_to_time_unit(const second_t& unit) {
 
   float s = (_time_unit) ? (*_time_unit / unit).value() : 1.0f;
 
-  if(_time_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_time_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -78,7 +78,7 @@ void Timer::_to_capacitance_unit(const farad_t& unit) {
 
   float s = (_capacitance_unit) ? (*_capacitance_unit / unit).value() : 1.0f;
 
-  if(_capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_capacitance_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -124,7 +124,7 @@ void Timer::_to_resistance_unit(const ohm_t& unit) {
 
   float s = (_resistance_unit) ? (*_resistance_unit / unit).value() : 1.0f;
 
-  if(_resistance_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_resistance_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -164,7 +164,7 @@ void Timer::_to_voltage_unit(const volt_t& unit) {
 
   float s = (_voltage_unit) ? (*_voltage_unit/unit).value() : 1.0f;
 
-  if(_voltage_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_voltage_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -195,7 +195,7 @@ void Timer::_to_current_unit(const ampere_t& unit) {
 
   float s = (_current_unit) ? (*_current_unit / unit).value() : 1.0f;
 
-  if(_current_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_current_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -226,7 +226,7 @@ void Timer::_to_power_unit(const watt_t& unit) {
 
   float s = (_power_unit) ? (*_power_unit/unit).value() : 1.0f;
 
-  if(_power_unit = unit; std::fabs(s - 1.0f) < 1e-3f) {
+  if(_power_unit = unit; std::fabs(s - 1.0f) < 1e-2f) {
     return;
   }
 
@@ -246,7 +246,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else if(lib.time_unit){
     float s = (*lib.time_unit / *_time_unit).value(); 
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " time to ", *_time_unit);
       lib.scale_time(s);
     }
@@ -260,7 +260,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else {
     float s = (*lib.capacitance_unit / *_capacitance_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " capacitance to ", *_capacitance_unit);
       lib.scale_capacitance(s);
     }
@@ -274,7 +274,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else {
     float s = (*lib.current_unit / *_current_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " current to ", *_current_unit);
       lib.scale_current(s);
     }
@@ -288,7 +288,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else {
     float s = (*lib.voltage_unit / *_voltage_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " voltage to ", *_voltage_unit);
       lib.scale_voltage(s);
     }
@@ -302,7 +302,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else {
     float s = (*lib.resistance_unit / *_resistance_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " resistance to ", *_resistance_unit);
       lib.scale_resistance(s);
     }
@@ -316,7 +316,7 @@ void Timer::_rebase_unit(Celllib& lib) {
   }
   else {
     float s = (*lib.power_unit / *_power_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " power to ", *_power_unit);
       lib.scale_power(s);
     }
@@ -338,7 +338,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
   }
   else {
     float s = (*capu / *_capacitance_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase spef capacitance to ", *capu);
       spef.scale_capacitance(s);
     }
@@ -352,7 +352,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
   }
   else {
     float s = (*resu / *_resistance_unit).value();
-    if(std::fabs(s - 1.0f) >= 1e-3f) {
+    if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase spef resistance to ", *resu);
       spef.scale_resistance(s);
     }

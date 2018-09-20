@@ -16,7 +16,9 @@ This page summarizes the change logs of OpenTimer on a monthly basis.
 + added command to report the aggregated cell areas in the design
 + added command to report the static leakage power of all cells in the design
 + added several examples to demonstrate the usage of OpenTimer
++ added support for asynchronous timing contraints (removal and recovery)
 + added clang++ compiler support
++ added support for explicit redirection of stdin to a file
 + improved the path report formats
 
 ---

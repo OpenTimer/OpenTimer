@@ -189,7 +189,7 @@ void Path::dump(std::ostream& os) const {
         os << std::setw(w2) << *c << std::setw(w3) << sum << '\n';
       }
 
-      assert(std::fabs(sum - rat) < 1e-3);
+      assert(std::fabs(sum - rat) < 1e-2f);
     },
     [&] (PrimaryOutput* po) {
       os << std::setw(w1) << "port";

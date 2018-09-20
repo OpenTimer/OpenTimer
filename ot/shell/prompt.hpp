@@ -56,40 +56,85 @@ namespace prompt {
 
 // Procedure: read_line
 // Read one line from an input stream
+//template <typename C, typename T, typename A>
+//std::basic_istream<C, T>& read_line(
+//  std::basic_istream<C, T>& is, 
+//  std::basic_string<C, T, A>& line
+//) {
+//
+//  line.clear();
+//
+//  typename std::basic_istream<C, T>::sentry se(is, true);        
+//  std::streambuf* sb = is.rdbuf();
+//
+//  for(;;) {
+//    switch (int c = sb->sbumpc(); c) {
+//
+//      // case 1: newline
+//      case '\n':
+//        return is;
+//      break;
+//
+//      // case 2: carriage return
+//      case '\r':
+//        if(sb->sgetc() == '\n'){
+//          sb->sbumpc();
+//        }
+//        return is;
+//      break;
+//      
+//      // case 3: eof
+//      case std::streambuf::traits_type::eof():
+//        // Also handle the case when the last line has no line ending
+//        if(line.empty()) {
+//          is.setstate(std::ios::eofbit | std::ios::failbit);
+//        }
+//        return is;
+//      break;
+//
+//      default:
+//        line.push_back(static_cast<char>(c));
+//      break;
+//    }
+//  } 
+//
+//  return is;
+//}
+
+
+
 template <typename C, typename T, typename A>
-std::basic_istream<C, T>& read_line(
-  std::basic_istream<C, T>& is, 
+bool read_line(
+  FILE* is, 
   std::basic_string<C, T, A>& line
 ) {
 
   line.clear();
 
-  typename std::basic_istream<C, T>::sentry se(is, true);        
-  std::streambuf* sb = is.rdbuf();
-
   for(;;) {
-    switch (int c = sb->sbumpc(); c) {
+    switch (int c = ::fgetc(is); c) {
 
       // case 1: newline
       case '\n':
-        return is;
+        return true;
       break;
 
-      // case 2: carriage return
-      case '\r':
-        if(sb->sgetc() == '\n'){
-          sb->sbumpc();
+      // case 2: carriage return '\r\n'
+      case '\r': 
+        if(auto nc = ::fgetc(is); nc != '\n'){
+          ::ungetc(nc, is);
         }
-        return is;
+        return true;
       break;
       
       // case 3: eof
-      case std::streambuf::traits_type::eof():
+      case EOF:
         // Also handle the case when the last line has no line ending
         if(line.empty()) {
-          is.setstate(std::ios::eofbit | std::ios::failbit);
+          // The line is empty (only EOF)
+          return false;
         }
-        return is;
+        return true;
       break;
 
       default:
@@ -97,9 +142,9 @@ std::basic_istream<C, T>& read_line(
       break;
     }
   } 
-
-  return is;
+  return true;
 }
+
 
 // ------------------------------------------------------------------------------------------------
 
@@ -420,14 +465,24 @@ class Prompt {
 
   public:
 
+    //Prompt(
+    //  const std::string&,   // Welcome message 
+    //  const std::string&,   // prompt
+    //  const std::filesystem::path& = std::filesystem::current_path()/".prompt_history",  // history log path
+    //  std::istream& = std::cin, 
+    //  std::ostream& = std::cout, 
+    //  std::ostream& = std::cerr,
+    //  int = STDIN_FILENO
+    //);
+
+    //// TODO:
     Prompt(
       const std::string&,   // Welcome message 
       const std::string&,   // prompt
       const std::filesystem::path& = std::filesystem::current_path()/".prompt_history",  // history log path
-      std::istream& = std::cin, 
-      std::ostream& = std::cout, 
-      std::ostream& = std::cerr,
-      int = STDIN_FILENO
+      FILE* = stdin,
+      std::ostream& = std::cout,
+      std::ostream& = std::cerr
     );
 
     ~Prompt();
@@ -443,12 +498,18 @@ class Prompt {
   
     std::string _prompt;  
     std::filesystem::path _history_path;
-    std::istream& _cin;
+    
+    // TODO: replace these with FILE* _is, _os, _es;
+    // fix inserters and extractors
+    //std::istream& _cin;
+    FILE* _is;
     std::ostream& _cout;
     std::ostream& _cerr;
 
-    
-    int _infd;
+
+    // TODO: remove _infd and use ::fileno(_is);
+    //int _infd;
+
     size_t _columns {80};   // default width of terminal is 80
     
     RadixTree<std::string> _tree;  // Radix tree for command autocomplete
@@ -456,7 +517,7 @@ class Prompt {
     std::string _obuf;      // Buffer for _refresh_single_line
 
     bool _unsupported_term();
-    void _stdin_not_tty(std::string &);
+    bool _stdin_not_tty(std::string &);
     bool _set_raw_mode();
     void _disable_raw_mode();
 
@@ -517,24 +578,55 @@ inline void Prompt::LineInfo::operator = (const LineInfo& l){
   history_trace = l.history_trace;   
 }
 
+//// Procedure: Ctor
+//inline Prompt::Prompt(
+//  const std::string& welcome_msg, 
+//  const std::string& pmt, 
+//  const std::filesystem::path& path,
+//  std::istream& in, 
+//  std::ostream& out, 
+//  std::ostream& err,
+//  int infd
+//):
+//  _prompt(pmt), 
+//  _history_path(path),
+//  _cin(in),
+//  _cout(out),
+//  _cerr(err),
+//  _infd(infd)
+//{
+//  if(::isatty(_infd)){
+//    _cout << welcome_msg;
+//    _columns = _terminal_columns();
+//    if(std::filesystem::exists(_history_path)){
+//      if(std::error_code ec; not std::filesystem::is_regular_file(_history_path, ec)){
+//        _cerr << "The history file is not a regular file\n";
+//      }
+//      else{
+//        _load_history();
+//      }
+//    }
+//  }
+//}
+
+
 // Procedure: Ctor
 inline Prompt::Prompt(
   const std::string& welcome_msg, 
   const std::string& pmt, 
   const std::filesystem::path& path,
-  std::istream& in, 
+  FILE* in,
   std::ostream& out, 
-  std::ostream& err,
-  int infd
+  std::ostream& err
+
 ):
   _prompt(pmt), 
   _history_path(path),
-  _cin(in),
+  _is(in),
   _cout(out),
-  _cerr(err),
-  _infd(infd)
+  _cerr(err)
 {
-  if(::isatty(_infd)){
+  if(::isatty(::fileno(_is))){
     _cout << welcome_msg;
     _columns = _terminal_columns();
     if(std::filesystem::exists(_history_path)){
@@ -553,7 +645,8 @@ inline Prompt::Prompt(
 inline Prompt::~Prompt(){
   // Restore the original mode if has kept
   if(_has_orig_termios){
-    ::tcsetattr(_infd, TCSAFLUSH, &_orig_termios);
+    //::tcsetattr(_infd, TCSAFLUSH, &_orig_termios);
+    ::tcsetattr(::fileno(_is), TCSAFLUSH, &_orig_termios);
   }
   if(not _history.empty()){
     _save_history();
@@ -618,8 +711,9 @@ inline void Prompt::_add_history(const std::string &hist){
 
 // Procedure: _stdin_not_tty
 // Store input in a string if stdin is not from tty (from pipe or redirected file)
-inline void Prompt::_stdin_not_tty(std::string& s){
-  read_line(_cin, s);  // Read until newline, CR or EOF.
+inline bool Prompt::_stdin_not_tty(std::string& s){
+  //read_line(_cin, s);  // Read until newline, CR or EOF.
+  return read_line(_is, s);
 }
 
 // Procedure: _unsupported_term
@@ -644,14 +738,21 @@ inline bool Prompt::_unsupported_term(){
 // Procedure: readline 
 // This is the main entry of Prompt
 inline bool Prompt::readline(std::string& s) {
-  if(not ::isatty(_infd)) {
+  if(! ::isatty(::fileno(_is))) {
     // not a tty, either from file or pipe; we don't limit the line size
-    _stdin_not_tty(s);
-    return _cin.eof() ? false : true;
+    if(!_stdin_not_tty(s)){
+      return false;
+    }
+
+    // TODO: ferror precedes feof
+    return ::ferror(_is) ? false : ::feof(_is) ? false : true;
+    //return _cin.eof() ? false : true;
   }
   else if(_unsupported_term()){
-    read_line(_cin, s);
-    return _cin.eof() ? false : true;
+    //read_line(_cin, s);
+    if(!read_line(_is, s)) return false;
+    return ::ferror(_is) ? false : ::feof(_is) ? false : true;
+    //return _cin.eof() ? false : true;
   }
   else{
     if(not _set_raw_mode()){
@@ -660,7 +761,9 @@ inline bool Prompt::readline(std::string& s) {
     _edit_line(s);
     _add_history(s);
     _disable_raw_mode();
-    std::cout << '\n';
+    // TODO: what?
+    //std::cout << '\n';
+    _cout << '\n';
     return errno == EAGAIN ? false : true;
   }
 }
@@ -694,7 +797,8 @@ inline int Prompt::_get_cursor_pos(){
 
   /* Read the response: ESC [ rows ; cols R */
   for(size_t i=0; i<sizeof(buf)-1; i++){
-    if(not(_cin >> buf[i]) or buf[i] == 'R'){
+    //if(not(_cin >> buf[i]) or buf[i] == 'R'){
+    if(buf[i]=fgetc(_is); ::ferror(_is) || buf[i] == 'R'){
       buf[i] = '\0';
       break;
     }
@@ -725,7 +829,7 @@ inline void Prompt::_clear_screen() {
 // Procedure: _set_raw_mode 
 // Set the fd to raw mode
 inline bool Prompt::_set_raw_mode(){
-  if(::isatty(_infd) and _save_orig_termios(_infd) == true){
+  if(::isatty(::fileno(_is)) and _save_orig_termios(::fileno(_is)) == true){
     struct termios raw;  
     raw = _orig_termios;  /* modify the original mode */
     /* input modes: no break, no CR to NL, no parity check, no strip char,
@@ -743,7 +847,7 @@ inline bool Prompt::_set_raw_mode(){
     raw.c_cc[VMIN] = 1; raw.c_cc[VTIME] = 0; /* 1 byte, no timer */
 
     /* put terminal in raw mode after flushing */
-    if (::tcsetattr(_infd, TCSAFLUSH, &raw) >= 0){
+    if (::tcsetattr(::fileno(_is), TCSAFLUSH, &raw) >= 0){
       return true;
     }
   }
@@ -756,7 +860,7 @@ inline bool Prompt::_set_raw_mode(){
 // Recover the termios to the original mode
 inline void Prompt::_disable_raw_mode(){
   if(_has_orig_termios){
-    ::tcsetattr(_infd, TCSAFLUSH, &_orig_termios);
+    ::tcsetattr(::fileno(_is), TCSAFLUSH, &_orig_termios);
   }
 }
 
@@ -859,7 +963,8 @@ inline int Prompt::_autocomplete_iterate_command(){
         _refresh_single_line(_line);
       }
 
-      if(_cin.read(&c, 1); not _cin.good()){
+      //if(_cin.read(&c, 1); not _cin.good()){
+      if(c = ::fgetc(_is); ::ferror(_is)){
         return -1;
       }
 
@@ -1151,12 +1256,14 @@ inline bool Prompt::_append_character(LineInfo& line, char c){
 // Handle Control Sequence Introducer
 inline bool Prompt::_key_handle_CSI(LineInfo& line){ 
   char seq[3];
-  if(_cin.read(seq,1), _cin.read(seq+1,1); not _cin.good() ){
+  //if(_cin.read(seq,1), _cin.read(seq+1,1); not _cin.good() ){
+  if(seq[0] = ::fgetc(_is), seq[1] = ::fgetc(_is); ::ferror(_is)){
     return false;
   }
   if(seq[0] == '['){
     if(seq[1] >= '0' and seq[1] <= '9'){
-      if(_cin.read(seq+2, 1); not _cin.good()){
+      //if(_cin.read(seq+2, 1); not _cin.good()){
+      if(seq[2] = ::fgetc(_is); ::ferror(_is)){
         return false;
       }
       if(seq[2] == '~' and seq[1] == '3'){
@@ -1215,7 +1322,8 @@ inline void Prompt::_edit_line(std::string &s){
   _line.reset();
   s.clear();
   for(char c;;){
-    if(_cin.read(&c, 1); not _cin.good()){
+    //if(_cin.read(&c, 1); not _cin.good()){
+    if(c = ::fgetc(_is); ::ferror(_is)){
       s = _line.buf;
       return ;
     }

@@ -2,19 +2,25 @@
 
 int main(int argc, char* argv[]) {
   
-  ot::ArgParse app {"ot-shell"};
+  // ==========================================================================
+  // Argument Definitions
+  // ==========================================================================
+  
+  ot::ArgParse app {"OpenTimer Shell"};
   
   auto flag_quiet {false};
   auto flag_version {false};
 
-  std::filesystem::path out_path;
-  std::filesystem::path err_path;
+  std::filesystem::path stdin_path;
+  std::filesystem::path stdout_path;
+  std::filesystem::path stderr_path;
   std::filesystem::path log_path;
 
   app.add_flag  ("-q,--quiet",   flag_quiet,   "Do not print the welcome on startup");
   app.add_flag  ("-v,--version", flag_version, "Print version information and exit");
-  app.add_option("-o,--ostream", out_path,     "Redirect output stream to a file");
-  app.add_option("-e,--estream", err_path,     "Redirect error stream to a file");
+  app.add_option("-i,--stdin",   stdin_path,   "Redirect stdin to a file");
+  app.add_option("-o,--stdout",  stdout_path,  "Redirect stdout to a file");
+  app.add_option("-e,--stderr",  stderr_path,  "Redirect stderr to a file");
   app.add_option("--log",        log_path,     "Redirect logging to a file");
 
   try {
@@ -24,10 +30,20 @@ int main(int argc, char* argv[]) {
     return app.exit(e);
   }
 
-  // Set up the stdout and stderr
-  std::ofstream ofs(out_path);
-  std::ofstream efs(err_path);
+  // ==========================================================================
+  // OpenTimer Shell
+  // ==========================================================================
 
+  // set up the stdin
+  FILE* is = ::fopen(stdin_path.c_str(), "r");
+  if(is == nullptr) {
+    is = stdin;
+  }
+
+  // set up the stdout and stderr
+  std::ofstream ofs(stdout_path);
+  std::ofstream efs(stderr_path);
+  
   std::ostream& os = ofs.good() ? ofs : std::cout;
   std::ostream& es = efs.good() ? efs : std::cerr;
   
@@ -41,7 +57,12 @@ int main(int argc, char* argv[]) {
   }
 
   // Launch the OpenTimer shell
-  ot::Shell(flag_quiet ? "" : ot::welcome, os, es)();
+  ot::Shell(flag_quiet ? "" : ot::welcome, is, os, es)();
+
+  // close the input stream
+  if(is != stdin) {
+    ::fclose(is);
+  }
 
   return 0;
 }

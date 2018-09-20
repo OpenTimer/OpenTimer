@@ -25,7 +25,7 @@ class Shell {
   
   public:
 
-    Shell(const std::string&, std::ostream&, std::ostream&);
+    Shell(const std::string&, FILE*, std::ostream&, std::ostream&);
 
     void operator ()();
 
