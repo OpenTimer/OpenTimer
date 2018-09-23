@@ -200,5 +200,4 @@ library ("simple") {
 [Synopsys TAP-in]: https://www.synopsys.com/community/interoperability-programs/tap-in.html
 [SDC-Basics]:      http://www.vlsi-expert.com/2011/02/synopsys-design-constraints-sdc-basics.html
 [TAU15]:           https://sites.google.com/site/taucontest2015/
-[Liberty User Guide]: reference/Liberty_User_Guide_2017_06.pdf
 
