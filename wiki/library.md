@@ -193,7 +193,6 @@ library ("simple") {
 
 1. [2015 ACM TAU Timing Analysis Contest][TAU15]
 2. [Synopsys Technology Access Program (TAP-in)][Synopsys TAP-in]
-3. [Liberty User Guides Version 2017.06][Liberty User Guide]
 
 * * *
 

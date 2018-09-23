@@ -88,7 +88,6 @@ on the port `out`.
 
 1. [Synopsys Technology Access Program (TAP-in)][Synopsys TAP-in]
 2. [Synopsys Design Constraints Basics][SDC-Basics]
-3. [Synopsys Design Constraints Format Application Node][SDC Manual]
 
 
 * * *
