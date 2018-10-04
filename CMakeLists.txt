@@ -79,6 +79,17 @@ message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
 #set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 
+# Check if static build
+if(CMAKE_EXE_LINKER_FLAGS)
+  string(FIND ${CMAKE_EXE_LINKER_FLAGS} "-static" IS_STATIC)
+  if(NOT ${IS_STATIC} EQUAL -1)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--whole-archive ${CMAKE_THREAD_LIBS_INIT} -Wl,--no-whole-archive")
+  endif()
+endif()
+message(STATUS "CMAKE_EXE_LINKER_FLAGS: " ${CMAKE_EXE_LINKER_FLAGS})
+
+
+
 # Tclsh module
 include(FindTclsh)
 if (NOT TCL_TCLSH)
