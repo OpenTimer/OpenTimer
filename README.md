@@ -367,8 +367,8 @@ Many industry and academic people are using OpenTimer in their projects:
 - [Qflow][Qflow]: a digital synthesis flow using open-source EDA tools
 - [Ophidian][Ophidian]: an open-source library for physical design research and teaching
 
-| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
-| :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] | [<img src="image/ophidian.png" width="100px">][Ophidian] | [<img src="image/cloudv.png" width="100px">][CloudV] | [<img src="image/lgraph.png" width="100px">][LGraph] | [<img src="image/qflow.png" width="100px">][Qflow] |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 
 Please don't hesitate to [let me know][email me] if I forgot your project! 
