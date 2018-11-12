@@ -2,7 +2,34 @@
 
 This page summarizes the change logs of OpenTimer on a monthly basis.
 
-## 09/2018 - present
+## 11/2018
+
+### News
+
++ OpenTimer won the best tool award in the 1st Workshop of Open-source EDA Technology (WOSET)
+
+### Improvements
+
++ rename action API, report_at, report_rat, report_slack, etc. to be consistent with shell commands
+
+
+---
+
+## 10/2018
+
+### News
+
++ Finished the first quarterly meeting with DARPA
+
+### Improvements
+
++ fixed several bugs in path report
++ integrated with the newest cpp-taskflow module
++ rename builder API, read_celllib, read_verilog, create_clock, etc. to be consistent with shell commands
+
+---
+
+## 09/2018
 
 ### News
 
@@ -23,7 +50,7 @@ This page summarizes the change logs of OpenTimer on a monthly basis.
 
 ---
 
-## 08/2018 - 09/2018
+## 08/2018
 
 ### Improvements
 
@@ -42,7 +69,7 @@ This page summarizes the change logs of OpenTimer on a monthly basis.
 
 ---
 
-## 07/2018 - 08/2018
+## 07/2018
 
 ### News
 
