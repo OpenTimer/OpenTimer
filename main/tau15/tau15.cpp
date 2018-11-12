@@ -247,7 +247,7 @@ int main(int argc, char* argv[]) {
         
         for(auto itr = paths[i].rbegin(); itr != paths[i].rend(); ++itr) {
           ofs << itr->pin.name() << ' ' 
-                    << (itr->transition == ot::RISE ? 'R' : 'F') << '\n';
+              << (itr->transition == ot::RISE ? 'R' : 'F') << '\n';
         }
       }
     }

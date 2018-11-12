@@ -1,13 +1,26 @@
+// 2018/10/10 - modified by Tsung-Wei
+//   - merged with Guannan's implementation
+//   - merged with Chun-Xun's implementation
+// For now we will just leave privatized threadpool an independent interests.
+// The speed curve is not reliable and can fluctuate a lot.
+//
+// 2018/10/05 - modified by Chun-Xun
+//   - adopted the new threadpool model   
+//
 // 2018/09/21 - modified by Tsung-Wei and Chun-Xun
 //   - refactored the code
 //  
-// TODO:
-//   - Problems can occur when external threads insert tasks during spawn.
-//
 // 2018/09/12 - created by Tsung-Wei Huang and Chun-Xun Lin
 //
 // Implemented PrivatizedThreadpool using the data structre inspired
 // Eigen CXX/Threadpool.
+
+// TODO
+// - double check whether we can use std::forward<Args>(args)... in enqueue/dequeue
+// - can we replace lock with CAS
+// - refactored the WorkQueue class ...
+// - add more example to threadpool and use std::future to mimic the control flow
+// - atomic add problem (extremely slow)
 
 #pragma once
 
@@ -15,7 +28,6 @@
 #include <functional>
 #include <vector>
 #include <mutex>
-#include <deque>
 #include <thread>
 #include <stdexcept>
 #include <condition_variable>
@@ -24,13 +36,17 @@
 #include <optional>
 #include <unordered_set>
 #include <unordered_map>
+#include <array>
 
 #include "move_on_copy.hpp"
 
 namespace tf {
 
-// ---------------------------------------------------------------------------- 
+/*// ========
+// Guannan's implementation
+// ========
 
+//-------------RunQueue-----------------
 template <typename T, unsigned N>
 class RunQueue {
 
@@ -59,9 +75,9 @@ class RunQueue {
     bool push_front(T&&);
 
     bool push_front(T&);
-    bool pop_front(T&);
+    bool pop_front(std::optional<T>&);
     bool push_back(T&);
-    bool pop_back(T&);
+    bool pop_back(std::optional<T>&);
     bool empty() const;
 
   private:
@@ -115,7 +131,7 @@ bool RunQueue<T, N>::push_front(T&& w) {
 
 // pop the first item out of the queue and store it to w
 template <typename T, unsigned N>
-bool RunQueue<T, N>::pop_front(T& w) {
+bool RunQueue<T, N>::pop_front(std::optional<T>& w) {
 
   if(empty()) {
     return false;
@@ -168,7 +184,7 @@ bool RunQueue<T, N>::push_back(T&& w) {
 // pop_back removes and returns the last elements in the queue.
 // Can fail spuriously.
 template <typename T, unsigned N>
-bool RunQueue<T, N>::pop_back(T& w) {
+bool RunQueue<T, N>::pop_back(std::optional<T>& w) {
 
   if(empty()) {
     return false;
@@ -204,42 +220,425 @@ bool RunQueue<T, N>::empty() const {
          _back.load(std::memory_order_relaxed);
 }
 
-// Class: BasicPrivatizedThreadpool
-template < template<typename...> class Func >
-class BasicPrivatizedThreadpool {
 
-  using TaskType = Func<void()>;
+//------------------------------------------------------------
+//------------------Class:: PrivatizedThreadpool-------------
+
+template <typename Task>
+class PrivatizedThreadpool {
 
   struct Worker{
-    enum : uint8_t{
-      ALIVE,
-      EXIT
-    };
-
+    std::mutex mutex;
     std::condition_variable cv;
-    RunQueue<TaskType, 1024> queue;
-    uint8_t state {ALIVE};
+    bool ready {true};
+    bool exit {false};
+    std::optional<Task> task {std::nullopt};
+    RunQueue<Task, 1024> queue;
   };
+
+  struct PerThread {
+    PrivatizedThreadpool* pool {nullptr};
+    uint64_t rand {0};
+    int thread_id {-1};
+  };
+
 
   public:
 
-    BasicPrivatizedThreadpool(unsigned);
-    ~BasicPrivatizedThreadpool();
+    PrivatizedThreadpool(unsigned);
+    ~PrivatizedThreadpool();
 
     size_t num_tasks() const;
     size_t num_workers() const;
 
     bool is_owner() const;
 
-    void shutdown();
-    void spawn(unsigned);
-    void wait_for_all();
+    template <typename... ArgsT>
+    void emplace(ArgsT&&...);
 
-    template <typename C>
-    void silent_async(C&&);
+  private:
 
-    template <typename C>
-    auto async(C&&);
+    const std::thread::id _owner {std::this_thread::get_id()};
+
+    mutable std::mutex _mutex;
+    std::vector<Task> _tasks;
+    std::vector<std::thread> _threads;
+    std::vector<Worker> _workers;
+   
+    std::atomic<unsigned> _num_idlers {0};
+    std::atomic<size_t> _next_queue {0}; 
+    
+    std::optional<size_t> _nonempty_worker_queue() const;
+    std::optional<Task> _try_dequeue();
+
+    bool _steal(std::optional<Task>&);
+
+    void _shutdown();
+    void _spawn(unsigned);
+
+    PerThread* _per_thread() const;
+    
+    unsigned _randomize(uint64_t*) const;
+
+};  // class PrivatizedThreadpool. --------------------------------------
+
+// Function: _nonempty_worker_queue
+template <typename Task>
+std::optional<size_t> PrivatizedThreadpool<Task>::_nonempty_worker_queue() const {
+  for(size_t i=0;i <_workers.size(); ++i){
+    if(!_workers[i].queue.empty()){
+      return i;
+    }
+  }
+  return {};
+}
+    
+// Function: _per_thread
+template <typename Task>
+typename PrivatizedThreadpool<Task>::PerThread* 
+PrivatizedThreadpool<Task>::_per_thread() const {
+  thread_local PerThread per_thread_;
+  PerThread* pt = &per_thread_;
+  return pt;
+}
+
+// Function: _randomize
+template <typename Task>
+unsigned PrivatizedThreadpool<Task>::_randomize(uint64_t* state) const {
+  uint64_t current = *state;
+  *state = current * 6364136223846793005ULL + 0xda3e39cb94b95bdbULL;
+  return static_cast<unsigned>((current ^ (current >> 22)) >> (22 + (current >> 61)));
+}
+
+// Function: _steal 
+template <typename Task>
+bool PrivatizedThreadpool<Task>::_steal(std::optional<Task>& w){
+
+  PerThread* pt = _per_thread();
+  const auto queue_num = _workers.size();
+  unsigned r = _randomize(&pt->rand);
+  unsigned victim = r % queue_num;
+  
+  for(size_t i=0; i<queue_num; i++){
+    if(_workers[victim].queue.pop_back(w)){
+      return true;
+    }
+    victim += 1;
+    if(victim >= queue_num){
+      victim -= queue_num;
+    }
+  }
+
+  {
+    std::scoped_lock lock(_mutex);
+    if(!_tasks.empty()){
+      w = std::move(_tasks.back());
+      _tasks.pop_back();
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Constructor
+template <typename Task>
+PrivatizedThreadpool<Task>::PrivatizedThreadpool(unsigned N): _workers {N} {
+  _spawn(N);
+}
+
+// Destructor
+template <typename Task>
+PrivatizedThreadpool<Task>::~PrivatizedThreadpool(){
+  _shutdown();
+}
+
+// Function: is_owner
+template <typename Task>
+bool PrivatizedThreadpool<Task>::is_owner() const {
+  return std::this_thread::get_id() == _owner;
+}
+
+// Function: num_tasks
+template <typename Task>
+size_t PrivatizedThreadpool<Task>::num_tasks() const { 
+  return _tasks.size(); 
+}
+
+// Function: num_workers
+template <typename Task>
+size_t PrivatizedThreadpool<Task>::num_workers() const { 
+  return _workers.size();
+}
+
+// Function: shutdown
+template <typename Task>
+void PrivatizedThreadpool<Task>::_shutdown(){
+
+  assert(is_owner());
+  
+  for(auto& w: _workers){ 
+    std::scoped_lock worker_lock(w.mutex);//need a lock here, tested by unittest 
+    w.ready = true;
+    w.exit = true;
+    w.cv.notify_one();
+  }
+
+  for(auto& t : _threads){
+    t.join();
+  }
+
+  _threads.clear();
+  _workers.clear();
+}
+
+
+// Function: _spawn 
+template <typename Task>
+void PrivatizedThreadpool<Task>::_spawn(unsigned N) {
+ 
+  assert(is_owner());
+
+  for(size_t i=0; i<N; i++){
+    _threads.emplace_back([this, i=i]() -> void{
+      
+      PerThread* pt = _per_thread();
+      pt->pool = this;
+      pt->rand = std::hash<std::thread::id>()(std::this_thread::get_id());
+      pt->thread_id = i;
+
+      std::optional<Task> t;
+      Worker& w = _workers[i];
+
+      while(!w.exit){
+        //fail to get task from private queue or steal task from other queue
+        if(!w.queue.pop_front(t) && !_steal(t)){ 
+    
+          // owner may insert tasks to private queue after the check 
+          if(++_num_idlers == num_workers()){
+            if(auto ret = _nonempty_worker_queue(); ret){
+              --_num_idlers;
+              _workers[*ret].cv.notify_one(); //pesimistic
+              continue;
+            }
+          }
+    
+          {
+            std::unique_lock worker_lock(w.mutex);
+            
+            if(w.queue.empty() && _tasks.empty()){
+              w.ready = false;
+            }        
+            
+            // TODO: problematic
+            while(!w.exit && !w.ready){
+              w.cv.wait(worker_lock);
+            }
+
+            w.ready = true;
+          } 
+
+          t = std::move(w.task);
+          w.task = std::nullopt; 
+
+          --_num_idlers;           
+        }
+
+        while(t.has_value()){ 
+          (*t)();
+          if(w.task){
+            t = std::move(w.task);
+            w.task = std::nullopt;
+          }
+          else{
+            t = std::nullopt;
+          }  
+        } 
+      }
+    });
+  }
+}
+
+// Procedure: emplace
+template <typename Task>
+template <typename... ArgsT>
+void PrivatizedThreadpool<Task>::emplace(ArgsT&&... args){
+
+  //no worker thread available
+  if(num_workers() == 0){
+    Task{std::forward<ArgsT>(args)...}();
+    return;
+  }
+
+  Task t {std::forward<ArgsT>(args)...};
+
+  PerThread* pt = _per_thread();
+  size_t target = _next_queue; //round robin
+  bool ret = false;
+
+  //workers
+  if (pt->pool == this) {
+    target = pt->thread_id;
+    Worker& w = _workers[target];   
+    if(!w.task.has_value()){ //directly insert if it owns the queue
+      w.task = std::move(t);
+      return;
+    }
+    else{
+      if(auto ret = w.queue.push_front(std::move(t)); ret) {
+        return;
+      }
+      else{
+        std::scoped_lock lock(_mutex);
+        _tasks.push_back(std::move(t));
+        return;
+      }
+    }
+  } 
+  //non workers
+  else {
+
+    // TODO: modulo operation can be slow here?
+    target = (++_next_queue) % _workers.size(); 
+    Worker& w = _workers[target];
+    _next_queue = target;
+    
+
+    {
+      std::scoped_lock worker_lock(w.mutex);
+
+      if(w.ready){ //worker busy
+        ret = w.queue.push_back(std::move(t));
+        if(!ret){
+          std::scoped_lock lock(_mutex);
+          _tasks.push_back(std::move(t));
+        }    
+      }
+      else{
+        w.task = std::move(t);
+        w.ready = true;
+        w.cv.notify_one();
+      }
+    }
+    return;
+  }
+}   */
+
+
+// ==========
+// Chun-Xun's implementation
+// ==========
+
+// ---------------------------------------------------------------------------- 
+// Privatized queue of worker. The lock-free queue is inspired by 
+// http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
+template<typename T, size_t C>
+class PrivatizedTaskQueue {
+
+  public:
+
+  PrivatizedTaskQueue() : _buffer_mask(C - 1) {
+    for (size_t i = 0; i < C; i ++){
+      _buffer[i].sequence_.store(i, std::memory_order_relaxed);
+    }
+    _front.store(0, std::memory_order_relaxed);
+    _back.store(0, std::memory_order_relaxed);
+  }
+
+  ~PrivatizedTaskQueue(){}
+
+  bool enqueue(T& data){
+    size_t pos = _front.load(std::memory_order_relaxed);
+    cell_t* cell = &_buffer[pos & _buffer_mask];
+    size_t seq = cell->sequence_.load(std::memory_order_acquire);
+    intptr_t dif = (intptr_t)seq - (intptr_t)pos;
+    if (dif == 0 && _front.compare_exchange_strong(pos, pos + 1, std::memory_order_relaxed)){
+      _num_items.fetch_add(1, std::memory_order_relaxed);
+      cell->data = std::move(data);
+      cell->sequence_.store(pos + 1, std::memory_order_release);
+      return true;
+    }
+    return false;
+  }
+
+  bool dequeue(std::optional<T>& data){
+    if(empty()) return false;
+    size_t pos = _back.load(std::memory_order_relaxed);
+    cell_t* cell = &_buffer[pos & _buffer_mask];
+    size_t seq = cell->sequence_.load(std::memory_order_acquire);
+    intptr_t dif = (intptr_t)seq - (intptr_t)(pos + 1);
+    if (dif == 0 && _back.compare_exchange_strong(pos, pos + 1, std::memory_order_relaxed)){
+      _num_items.fetch_sub(1, std::memory_order_relaxed);
+      data = std::move(cell->data);
+      cell->sequence_.store(pos + _buffer_mask + 1, std::memory_order_release);
+      return true;
+    }
+    return false;
+  }
+
+  bool empty() const {
+    return _front.load(std::memory_order_relaxed) == 
+           _back.load(std::memory_order_relaxed);
+  };
+
+  size_t size() const {
+    return _num_items.load(std::memory_order_relaxed);
+  }
+
+  private:
+  
+  struct cell_t {
+    std::atomic<size_t>   sequence_;
+    T                     data;
+  };
+
+  static size_t const     cacheline_size = 64;
+  typedef char            cacheline_pad_t [cacheline_size];
+
+  cacheline_pad_t         _pad0;
+  std::array<cell_t, C>   _buffer;
+  size_t const            _buffer_mask;
+  cacheline_pad_t         _pad1;
+  std::atomic<size_t>     _front;
+  cacheline_pad_t         _pad2;
+  std::atomic<size_t>     _back;
+  cacheline_pad_t         _pad3;
+  std::atomic<size_t>     _num_items {0};
+}; 
+
+
+// ----------------------------------------------------------------------------
+
+// Class: PrivatizedThreadpool
+template <typename Task>
+class PrivatizedThreadpool {
+
+  struct Worker{
+    std::condition_variable cv;
+    PrivatizedTaskQueue<Task, 1024> queue;
+    std::optional<Task> cache;
+    bool exit {false};
+
+    size_t last_victim {0};
+  };
+  
+  struct PerThread {
+    PrivatizedThreadpool* pool {nullptr};
+    Worker* worker {nullptr};
+  };
+
+  public:
+
+    PrivatizedThreadpool(unsigned);
+    ~PrivatizedThreadpool();
+
+    size_t num_tasks() const;
+    size_t num_workers() const;
+
+    bool is_owner() const;
+
+    template <typename... ArgsT>
+    void emplace(ArgsT&&...);
 
   private:
     
@@ -247,64 +646,68 @@ class BasicPrivatizedThreadpool {
 
     mutable std::mutex _mutex;
 
-    std::condition_variable _empty_cv;
+    uint64_t _seed {1};
 
-    std::deque<TaskType> _task_queue;
+    std::vector<Task> _tasks;
     std::vector<std::thread> _threads;
-    std::vector<size_t> _coprimes;
+    std::vector<Worker> _workers;
     
-    std::unordered_map<std::thread::id, size_t> _worker_maps;    
-    std::vector<std::unique_ptr<Worker>> _workers;
+    std::unordered_map<std::thread::id, size_t> _worker_maps;
 
-    std::atomic<bool> _allow_steal {true};
-
-    size_t _num_idlers {0};
     size_t _next_queue {0};
-    
-    bool _wait_for_all {false};
 
+    std::atomic<size_t> _num_tasks {0};
+    
     std::optional<size_t> _nonempty_worker_queue() const;
 
-    void _xorshift32(uint32_t&);
-    bool _steal(TaskType&, uint32_t&);
+    bool _steal(std::optional<Task>&, uint64_t&, const size_t);
 
-};  // class BasicPrivatizedThreadpool. --------------------------------------
+    void _shutdown();
+    void _spawn(unsigned);
 
+    PerThread& _per_thread() const;
+
+    unsigned _randomize(uint64_t&);
+    uint32_t _fast_modulo(const uint32_t, const uint32_t);
+};
 
 // Function: _nonempty_worker_queue
-template < template<typename...> class Func >
-std::optional<size_t> BasicPrivatizedThreadpool<Func>::_nonempty_worker_queue() const {
+template <typename Task>
+std::optional<size_t> PrivatizedThreadpool<Task>::_nonempty_worker_queue() const {
   for(size_t i=0;i <_workers.size(); ++i){
-    if(!_workers[i]->queue.empty()){
+    if(!_workers[i].queue.empty()){
       return i;
     }
   }
   return {};
 }
 
-// Function: _xorshift32
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::_xorshift32(uint32_t& x){
-  // x must be non zero: https://en.wikipedia.org/wiki/Xorshift
-  // Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" 
-  x ^= x << 13;
-  x ^= x >> 17;
-  x ^= x << 5;
+// Function: _randomize
+template <typename Task>
+unsigned PrivatizedThreadpool<Task>::_randomize(uint64_t& state) {
+  uint64_t current = state;
+  state = current * 6364136223846793005ULL + 0xda3e39cb94b95bdbULL;
+  // Generate the random output (using the PCG-XSH-RS scheme)
+  return static_cast<unsigned>((current ^ (current >> 22)) >> (22 + (current >> 61)));
 }
 
-// Function: _steal
-template < template<typename...> class Func >
-bool BasicPrivatizedThreadpool<Func>::_steal(TaskType& w, uint32_t& seed){
+// http://lemire.me/blog/2016/06/27/a-fast-alternative-to-the-modulo-reduction/
+template <typename Task>
+uint32_t PrivatizedThreadpool<Task>::_fast_modulo(const uint32_t x, const uint32_t N) {
+  return ((uint64_t) x * (uint64_t) N) >> 32;
+}
 
-  _xorshift32(seed);
-  const auto inc = _coprimes[seed % _coprimes.size()];
+// Function: _steal 
+template <typename Task>
+bool PrivatizedThreadpool<Task>::_steal(std::optional<Task>& w, uint64_t& seed, const size_t id){
   const auto queue_num = _workers.size();
-  auto victim = seed % queue_num;
+  auto victim = _workers[id].last_victim;
   for(size_t i=0; i<queue_num; i++){
-    if(_workers[victim]->queue.pop_back(w)){
+    if(_workers[victim].queue.dequeue(w)){
+      _workers[id].last_victim = victim;
       return true;
     }
-    victim += inc;
+    victim += 1;
     if(victim >= queue_num){
       victim -= queue_num;
     }
@@ -313,70 +716,56 @@ bool BasicPrivatizedThreadpool<Func>::_steal(TaskType& w, uint32_t& seed){
 }
 
 // Constructor
-template < template<typename...> class Func >
-BasicPrivatizedThreadpool<Func>::BasicPrivatizedThreadpool(unsigned N){
-  spawn(N);
+template <typename Task>
+PrivatizedThreadpool<Task>::PrivatizedThreadpool(unsigned N): _workers {N} {
+  _spawn(N);
 }
 
 // Destructor
-template < template<typename...> class Func >
-BasicPrivatizedThreadpool<Func>::~BasicPrivatizedThreadpool(){
-  shutdown();
+template <typename Task>
+PrivatizedThreadpool<Task>::~PrivatizedThreadpool(){
+  _shutdown();
+}
+
+// Function: _per_thread
+template <typename Task>
+typename PrivatizedThreadpool<Task>::PerThread&
+PrivatizedThreadpool<Task>::_per_thread() const {
+  thread_local PerThread pt {this};
+  return pt;
 }
 
 // Function: is_owner
-template < template<typename...> class Func >
-bool BasicPrivatizedThreadpool<Func>::is_owner() const {
+template <typename Task>
+bool PrivatizedThreadpool<Task>::is_owner() const {
   return std::this_thread::get_id() == _owner;
 }
 
 // Function: num_tasks
-template < template<typename...> class Func >
-size_t BasicPrivatizedThreadpool<Func>::num_tasks() const { 
-  return _task_queue.size(); 
+template <typename Task>
+size_t PrivatizedThreadpool<Task>::num_tasks() const { 
+  return _tasks.size(); 
 }
 
 // Function: num_workers
-template < template<typename...> class Func >
-size_t BasicPrivatizedThreadpool<Func>::num_workers() const { 
+template <typename Task>
+size_t PrivatizedThreadpool<Task>::num_workers() const { 
   return _threads.size();  
 }
 
 // Function: shutdown
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::shutdown(){
+template <typename Task>
+void PrivatizedThreadpool<Task>::_shutdown(){
 
-  if(!is_owner()){
-    throw std::runtime_error("Worker thread cannot shut down the pool");
-  }
-
-  if(_threads.empty()) {
-    return;
-  }
+  assert(is_owner());
 
   {
-    std::unique_lock<std::mutex> lock(_mutex);
-    // If all workers are idle && all queues are empty, then master
-    // can directly wake up workers without waiting for notified
-    if(_num_idlers != num_workers() || _nonempty_worker_queue().has_value()){
-      _wait_for_all = true;
-
-      // Wake up all workers in case their queues are not empty
-      for(auto& w : _workers){
-        w->cv.notify_one();
-      }
-
-      while(_wait_for_all){
-        _empty_cv.wait(lock);
-      }
-    }
-
-    // Notify workers to exit
+    std::scoped_lock lock(_mutex);
     for(auto& w : _workers){
-      w->state = Worker::EXIT;
-      w->cv.notify_one();
+      w.exit = true;
+      w.cv.notify_one();
     }
-  } // Release lock
+  } 
 
   for(auto& t : _threads){
     t.join();
@@ -387,595 +776,113 @@ void BasicPrivatizedThreadpool<Func>::shutdown(){
   _worker_maps.clear();
 }
 
-// Function: spawn 
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::spawn(unsigned N) {
+// Function: _spawn 
+template <typename Task>
+void PrivatizedThreadpool<Task>::_spawn(unsigned N) {
 
-  if(! is_owner()){
-    throw std::runtime_error("Worker thread cannot spawn threads");
-  }
-
-  // Wait untill all workers become idle if any
-  if(!_threads.empty()){
-    // Disable steal when spawning new threads. Becuz steal allows workers to access 
-    // other workers' data structures.
-    _allow_steal = false;
-    wait_for_all();
-  }
-
-  const size_t sz = _threads.size();
+  assert(is_owner());
 
   // Lock to synchronize all workers before creating _worker_mapss
   std::scoped_lock lock(_mutex);
 
-  _coprimes.clear();
-  for(size_t i=1; i<=sz+N; i++){
-    if(std::gcd(i, sz+N) == 1){
-      _coprimes.push_back(i);
-    }
-  }
-
   for(size_t i=0; i<N; ++i){
-    _workers.push_back(std::make_unique<Worker>());
-  }
+    _threads.emplace_back([this, i=i] () -> void {
 
-  for(size_t i=0; i<N; ++i){
-    _threads.emplace_back([this, i=i+sz]() -> void {
-
-      TaskType t {nullptr};
-      Worker& w = *(_workers[i]);
-      uint32_t seed = i+1;
+      std::optional<Task> t;
+      Worker& w = (_workers[i]);
+      uint64_t seed = i+1;
       std::unique_lock lock(_mutex, std::defer_lock);
 
-      while(w.state != Worker::EXIT){
-        if(!w.queue.pop_front(t)) {
-          if(!_allow_steal.load(std::memory_order_relaxed) || !_steal(t, seed)) {
-            lock.lock();
-            if(!_task_queue.empty()) {
-              t = std::move(_task_queue.front());
-              _task_queue.pop_front();
+      while(!w.exit){
+        if(_num_tasks == 0 || (!w.queue.dequeue(t) && !_steal(t, seed, i))) {
+          lock.lock();
+          if(!_tasks.empty()) {
+            t = std::move(_tasks.back());
+            _tasks.pop_back();
+          }
+          else{
+            while(!w.exit && _num_tasks.load(std::memory_order_relaxed) == 0){
+              w.cv.wait(lock);
             }
-            else{
-              if(++_num_idlers == num_workers()){
-                // Last active thread checks if all queues are empty
-                if(auto ret = _nonempty_worker_queue(); ret.has_value()){
-                  // if the nonempty queue is mine, continue to process tasks in queue
-                  if(*ret == i){
-                    --_num_idlers;
-                    lock.unlock();
-                    continue;
-                  }
-                  // If any queue is not empty, notify the worker to process the tasks 
-                  _workers[*ret]->cv.notify_one();
-                }
-                else{
-                  // here only one thread will do so
-                  // if all workers are idle && all queues are empty && master is waiting 
-                  // notify the master by last thread
-                  if(_wait_for_all){
-                    _wait_for_all = false;
-                    _empty_cv.notify_one();
-                  }
-                }
-              } 
-
-              while(w.state == Worker::ALIVE && w.queue.empty()){
-                w.cv.wait(lock);
-              }
-              --_num_idlers;
-            } 
-            lock.unlock();
-          } // End of Steal
+          } 
+          lock.unlock();
         } // End of pop_front 
 
-        if(t){
-          t();
-          t = nullptr;
+        while(t) {
+          _num_tasks.fetch_sub(1, std::memory_order_relaxed);
+          (*t)();
+          if(w.cache) {
+            t = std::move(w.cache);
+            w.cache = std::nullopt;
+          }
+          else {
+            t = std::nullopt;
+          }
         }
-      } // End of while ------------------------------------------------------
+      } // End of while ------------------------------------------------------ 
+
     });     
 
-    _worker_maps.insert({_threads.back().get_id(), i+sz});
+    _worker_maps.insert({_threads.back().get_id(), i});
   } // End of For ---------------------------------------------------------------------------------
-
-  _allow_steal = true;
 }
 
-
-// Function: async
-template < template<typename...> class Func >
-template <typename C>
-auto BasicPrivatizedThreadpool<Func>::async(C&& c){
-
-  using R = std::invoke_result_t<C>;
-
-  std::promise<R> p;
-  auto fu = p.get_future();
-  
-  // master thread
-  if(num_workers() == 0){
-    if constexpr(std::is_same_v<void, R>){
-      c();
-      p.set_value();
-    }
-    else{
-      p.set_value(c());
-    } 
-  }
-  // have worker(s)
-  else{
-    if constexpr(std::is_same_v<void, R>){
-      silent_async( 
-        [p = MoC(std::move(p)), c = std::forward<C>(c)]() mutable {
-          c();
-          p.get().set_value(); 
-        }
-      );
-    }
-    else{
-      silent_async( 
-        [p = MoC(std::move(p)), c = std::forward<C>(c)]() mutable {
-          p.get().set_value(c()); 
-        }
-      );
-    }
-  }
-  return fu;
-}
-
-template < template<typename...> class Func >
-template <typename C>
-void BasicPrivatizedThreadpool<Func>::silent_async(C&& c){
-
-  TaskType t {std::forward<C>(c)};
+template <typename Task>
+template <typename... ArgsT>
+void PrivatizedThreadpool<Task>::emplace(ArgsT&&... args){
 
   //no worker thread available
   if(num_workers() == 0){
-    t();
+    Task{std::forward<ArgsT>(args)...}();
     return;
   }
 
+  _num_tasks.fetch_add(1, std::memory_order_relaxed);
+
+  Task t {std::forward<ArgsT>(args)...};
+  
+  // caller is not the owner
   if(auto tid = std::this_thread::get_id(); tid != _owner){
+
+    // the caller is the worker of the threadpool
     if(auto itr = _worker_maps.find(tid); itr != _worker_maps.end()){
-      if(!_workers[itr->second]->queue.push_front(t)){
-        std::scoped_lock<std::mutex> lock(_mutex);       
-        _task_queue.push_back(std::move(t));
+      // Speculation
+      if(!_workers[itr->second].cache.has_value()){
+        _workers[itr->second].cache = std::move(t);
+        return ;
+      }
+     
+      auto other = _fast_modulo(_randomize(_seed), _workers.size());
+      if(_workers[other].queue.size() > _workers[itr->second].queue.size()){
+        if(!_workers[itr->second].queue.enqueue(t)){
+          std::scoped_lock lock(_mutex);       
+          _tasks.push_back(std::move(t));
+        }
+      }
+      else{
+        if(!_workers[other].queue.enqueue(t)){
+          std::scoped_lock lock(_mutex);       
+          _tasks.push_back(std::move(t));
+        }
+        _workers[other].cv.notify_one();
       }
       return ;
     }
   }
+  
+  auto id = _fast_modulo(_randomize(_seed), _workers.size());
 
-  // owner thread or other threads
-  auto id = (++_next_queue) % _workers.size();
-
-  if(!_workers[id]->queue.push_back(t)){
+  if(!_workers[id].queue.enqueue(t)){
     std::scoped_lock lock(_mutex);
-    _task_queue.push_back(std::move(t));
+    _tasks.push_back(std::move(t));
   }
   else{
     // Lock to make sure the worker will be notified
     std::scoped_lock lock(_mutex);
   }
-  _workers[id]->cv.notify_one();
+  _workers[id].cv.notify_one();
 }
 
-
-// Function: wait_for_all
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::wait_for_all() {
-
-  if(!is_owner()){
-    throw std::runtime_error("Worker thread cannot wait for all");
-  }
-
-  if(num_workers() == 0) {
-    return ;
-  }
-
-  std::unique_lock lock(_mutex);
-  // If all workers are idle && all queues are empty, 
-  // then wait_for_all is done.
-  if(_num_idlers == num_workers() && !_nonempty_worker_queue()){
-    return ;
-  }
-
-  _wait_for_all = true;     
-
-  for(auto& w: _workers){
-    w->cv.notify_one();
-  }
-
-  while(_wait_for_all){
-    _empty_cv.wait(lock);
-  }
-}
-
-
-
-
-/*
-// Class: BasicPrivatizedThreadpool
-template < template<typename...> class Func >
-class BasicPrivatizedThreadpool {
-
-  using TaskType = Func<void()>;
-  using WorkQueue = RunQueue<TaskType, 1024>;
-
-  struct Worker{
-    std::condition_variable cv;
-    WorkQueue queue;
-  };
-
-  public:
-
-    BasicPrivatizedThreadpool(unsigned);
-    ~BasicPrivatizedThreadpool();
-
-    size_t num_tasks() const;
-    size_t num_workers() const;
-
-    bool is_owner() const;
-
-    void shutdown();
-    void spawn(unsigned);
-    void wait_for_all();
-
-    template <typename C>
-    void silent_async(C&&);
-
-    template <typename C>
-    auto async(C&&);
-
-  private:
-
-    const std::thread::id _owner {std::this_thread::get_id()};
-
-    mutable std::mutex _mutex;
-
-    std::condition_variable _empty_cv;
-
-    std::deque<TaskType> _task_queue;
-
-    std::vector<std::thread> _threads;
-    std::vector<std::unique_ptr<Worker>> _workers;
-    std::vector<size_t> _coprimes;
-
-    size_t _num_idlers {0}; 
-    size_t _next_queue {0};
-
-    std::unordered_map<std::thread::id, size_t> _worker_maps;    
-    
-    bool _exiting      {false};
-    bool _wait_for_all {false};
-
-    size_t _nonempty_worker_queue() const;
-
-    void _xorshift32(uint32_t&);
-    bool _steal(TaskType&, uint32_t&);
-
-};  // class BasicPrivatizedThreadpool. --------------------------------------
-
-
-// Function: _nonempty_worker_queue
-template < template<typename...> class Func >
-size_t BasicPrivatizedThreadpool<Func>::_nonempty_worker_queue() const {
-  for(size_t i=0;i <_workers.size(); ++i){
-    if(!_workers[i]->queue.empty()){
-      return i;
-    }
-  }
-  return _workers.size();
-}
-
-// Function: _xorshift32
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::_xorshift32(uint32_t& x){
-  // x must be non zero: https://en.wikipedia.org/wiki/Xorshift
-  // Algorithm "xor" from p. 4 of Marsaglia, "Xorshift RNGs" 
-  x ^= x << 13;
-  x ^= x >> 17;
-  x ^= x << 5;
-}
-
-// Function: _steal
-template < template<typename...> class Func >
-bool BasicPrivatizedThreadpool<Func>::_steal(TaskType& w, uint32_t& seed){
-  _xorshift32(seed);
-  const auto inc = _coprimes[seed % _coprimes.size()];
-  const auto queue_num = num_workers();
-  auto victim = seed % queue_num;
-  for(size_t i=0; i<queue_num; i++){
-    if(_workers[victim]->queue.pop_back(w)){
-      return true;
-    }
-    victim += inc;
-    if(victim >= queue_num){
-      victim -= queue_num;
-    }
-  }
-  return false;
-}
-
-
-
-// Constructor
-template < template<typename...> class Func >
-BasicPrivatizedThreadpool<Func>::BasicPrivatizedThreadpool(unsigned N){
-  spawn(N);
-}
-
-// Destructor
-template < template<typename...> class Func >
-BasicPrivatizedThreadpool<Func>::~BasicPrivatizedThreadpool(){
-  shutdown();
-}
-
-// Function: is_owner
-template < template<typename...> class Func >
-bool BasicPrivatizedThreadpool<Func>::is_owner() const {
-  return std::this_thread::get_id() == _owner;
-}
-
-// Function: num_tasks
-template < template<typename...> class Func >
-size_t BasicPrivatizedThreadpool<Func>::num_tasks() const { 
-  return _task_queue.size(); 
-}
-
-// Function: num_workers
-template < template<typename...> class Func >
-size_t BasicPrivatizedThreadpool<Func>::num_workers() const { 
-  return _threads.size();  
-}
-
-// Function: shutdown
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::shutdown(){
-
-  if(!is_owner()){
-    throw std::runtime_error("Worker thread cannot shut down the pool");
-  }
-
-  if(_threads.empty()) {
-    return;
-  }
-
-  { 
-    std::unique_lock<std::mutex> lock(_mutex);
-    _wait_for_all = true;
-
-    // Wake up all workers in case they are already idle
-    for(const auto& w : _workers){
-      w->cv.notify_one();
-    }
-
-    //while(_num_idlers != num_workers()) {
-    while(_wait_for_all){
-      _empty_cv.wait(lock);
-    }
-    _exiting = true;
-
-    for(auto& w : _workers){
-      // TODO: can we replace this dummy task with state?
-      w->queue.push_back([](){});
-      w->cv.notify_one();
-    }
-  }
-
-  for(auto& t : _threads){
-    t.join();
-  } 
-  _threads.clear();  
-
-  _workers.clear();
-  _worker_maps.clear();
-  
-  _wait_for_all = false;
-  _exiting = false;
-  
-  // task queue might have tasks added by threads outside this pool...
-  //while(not _task_queue.empty()) {
-  //  std::invoke(_task_queue.front());
-  //  _task_queue.pop_front();
-  //}
-}
-
-// Function: spawn 
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::spawn(unsigned N) {
-
-  if(!is_owner()){
-    throw std::runtime_error("Worker thread cannot spawn threads");
-  }
-
-  // Wait untill all workers become idle if any
-  if(!_threads.empty()){
-    wait_for_all();
-  }
-
-  const size_t sz = _threads.size();
-
-  // Lock to synchronize all workers before creating _worker_mapss
-  std::scoped_lock<std::mutex> lock(_mutex);
-
-  _coprimes.clear();
-  for(size_t i=1; i<=sz+N; i++){
-    if(std::gcd(i, sz+N) == 1){
-      _coprimes.push_back(i);
-    }
-  }
-
-  for(size_t i=0; i<N; ++i){
-    _workers.push_back(std::make_unique<Worker>());
-  }
-
-  for(size_t i=0; i<N; ++i){
-    _threads.emplace_back([this, i=i+sz]() -> void {
-
-      TaskType t {nullptr};
-      Worker& w = *(_workers[i]);
-      uint32_t seed = i+1;
-      std::unique_lock<std::mutex> lock(_mutex);
-
-      while(!_exiting){
-        
-        lock.unlock();
-        if(t) {
-          t();
-          t = nullptr;
-        }
-        while(w.queue.pop_front(t)) {
-          t();
-          t = nullptr;
-        };
-        lock.lock();
-        
-
-        //if(!w.queue.pop_front(t)){
-          if(_steal(t, seed)) {
-          }
-          else if(!_task_queue.empty()) {
-            t = std::move(_task_queue.front());
-            _task_queue.pop_front();
-          } 
-          else {
-            // Last idler
-            if(++_num_idlers == num_workers() && _wait_for_all){
-              if(auto ret = _nonempty_worker_queue(); ret == num_workers()){
-                _wait_for_all = false;
-                _empty_cv.notify_one();
-              }
-              else{
-                if(ret == i){
-                  --_num_idlers;
-                  continue;
-                }
-                _workers[ret]->cv.notify_one();
-              }
-            } 
-            w.cv.wait(lock);
-            --_num_idlers;
-          }
-        //} // End of first if
-
-        //if(t){
-        //  _mutex.unlock();
-        //  // speculation
-        //  do {
-        //    t();
-        //    t = nullptr;
-        //  } while(w.queue.pop_front(t));
-        //  _mutex.lock();
-        //}
-      } // End of while ------------------------------------------------------
-    });     
-
-    _worker_maps.insert({_threads.back().get_id(), i+sz});
-  } // End of For ---------------------------------------------------------------------------------
-
-}
-
-
-// Function: async
-template < template<typename...> class Func >
-template <typename C>
-auto BasicPrivatizedThreadpool<Func>::async(C&& c){
-
-  using R = std::invoke_result_t<C>;
-
-  std::promise<R> p;
-  auto fu = p.get_future();
-  
-  // master thread
-  if(num_workers() == 0){
-    if constexpr(std::is_same_v<void, R>){
-      c();
-      p.set_value();
-    }
-    else{
-      p.set_value(c());
-    } 
-  }
-  // have worker(s)
-  else{
-    if constexpr(std::is_same_v<void, R>){
-      silent_async( 
-        [p = MoC(std::move(p)), c = std::forward<C>(c)]() mutable {
-          c();
-          p.get().set_value(); 
-        }
-      );
-    }
-    else{
-      silent_async( 
-        [p = MoC(std::move(p)), c = std::forward<C>(c)]() mutable {
-          p.get().set_value(c()); 
-        }
-      );
-    }
-  }
-  return fu;
-}
-
-template < template<typename...> class Func >
-template <typename C>
-void BasicPrivatizedThreadpool<Func>::silent_async(C&& c){
-
-  TaskType t {std::forward<C>(c)};
-
-  //no worker thread available
-  if(num_workers() == 0){
-    t();
-    return;
-  }
-
-  if(std::this_thread::get_id() != _owner){
-    auto tid = std::this_thread::get_id();
-    if(_worker_maps.find(tid) != _worker_maps.end()){
-      if(!_workers[_worker_maps.at(tid)]->queue.push_front(t)){
-        std::scoped_lock<std::mutex> lock(_mutex);       
-        _task_queue.push_back(std::move(t));
-      }
-      return ;
-    }
-  }
-
-  // owner thread or other threads
-  auto id = (++_next_queue)%_workers.size();
-  if(!_workers[id]->queue.push_back(t)){
-    std::scoped_lock<std::mutex> lock(_mutex);
-    _task_queue.push_back(std::move(t));
-  }
-
-  // Make sure at least one worker will handle the task
-  _workers[id]->cv.notify_one();
-}
-
-
-// Function: wait_for_all
-template < template<typename...> class Func >
-void BasicPrivatizedThreadpool<Func>::wait_for_all() {
-
-  if(!is_owner()){
-    throw std::runtime_error("Worker thread cannot wait for all");
-  }
-
-  if(num_workers() == 0) return ;
-
-  std::unique_lock<std::mutex> lock(_mutex);
-
-  _wait_for_all = true;
-
-  // Wake up all workers in case they are already idle
-  for(const auto& w : _workers){
-    w->cv.notify_one();
-  }
-  
-  while(_wait_for_all) {
-    _empty_cv.wait(lock);
-  }
-} 
-*/
 
 };  // namespace tf -----------------------------------------------------------
 

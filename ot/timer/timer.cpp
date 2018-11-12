@@ -9,7 +9,8 @@ Timer& Timer::num_threads(unsigned n) {
   std::scoped_lock lock(_mutex);
   unsigned w = (n == 0) ? 0 : n-1;
   OT_LOGI("using ", n, " threads (", w, " worker)");
-  _taskflow.num_workers(w);
+  // TODO
+  //_taskflow.num_workers(w);
   return *this;
 }
 
@@ -1018,8 +1019,6 @@ void Timer::_update_timing() {
 
   // build propagation tasks
   _build_prop_tasks();
-
-  //std::cout << _taskflow.dump() << '\n';
 
   // Execute the task
   _taskflow.wait_for_all();

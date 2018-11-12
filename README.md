@@ -20,10 +20,10 @@ It is developed completely from the ground up using *C++17*
 to efficiently support parallel and incremental timing. 
 Key features are:
 
-+ Industry standard format (.lib, .v, .spef, .sdc) support.
-+ Graph- and path-based timing analysis.
-+ Parallel incremental timing for fast timing closure.
-+ Award-winning tools and golden timers in ACM TAU timing analysis contests.
++ Industry standard format (.lib, .v, .spef, .sdc) support
++ Graph- and path-based timing analysis
++ Parallel incremental timing for fast timing closure
++ Award-winning tools and golden timers in CAD Contests
 
 
 # Get Started with OpenTimer
@@ -362,6 +362,10 @@ Many industry and academic people are using OpenTimer in their projects:
 - [Golden Timer][ICCAD15], 2015 ACM/IEEE ICCAD Incremental Timing-driven Placement Contest
 - [VSD][VSD], VLSI System Design Corporation
 - [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
+- [CloudV][CloudV], a cloud-based platform to design and test chips for free
+- [LGraph][LGraph], live graph infrastructure for synthesis and simulation
+- [Qflow][Qflow], a digital synthesis flow using open-source EDA tools
+- [Ophidian][Ophidian], an open-source library for physical design research and teaching
 
 | [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
 | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -444,7 +448,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 * * *
 
 [STA]:                   https://en.wikipedia.org/wiki/Static_timing_analysis
-[Tsung-Wei Huang]:       http://web.engr.illinois.edu/~thuang19/
+[Tsung-Wei Huang]:       https://twhuang.ece.illinois.edu/
 [Chun-Xun Lin]:          https://github.com/clin99
 [Martin Wong]:           https://ece.illinois.edu/directory/profile/mdfwong
 [Andreas Olofsson]:      https://github.com/aolofsson
@@ -480,6 +484,10 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [TAU19]:                 https://sites.google.com/view/tau-contest-2019/home
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
 [OpenDesign]:            https://github.com/jinwookjungs/open_design_flow
+[CloudV]:                https://cloudv.io/
+[LGraph]:                https://github.com/masc-ucsc/lgraph
+[Qflow]:                 http://opencircuitdesign.com/qflow/history.html
+[Ophidian]:              https://gitlab.com/eclufsc/ophidian
 [DARPA IDEA]:            https://www.darpa.mil/news-events/2017-09-13
 [NSF]:                   https://www.nsf.gov/
 [UIUC]:                  https://illinois.edu/
