@@ -351,8 +351,9 @@ and integration tests.
 # Who is Using OpenTimer?
 
 OpenTimer is an award-winning tools. It won ACM TAU Timing Analysis Contests multiple times
-([1st place][TAU14] in 2014, [2nd place][TAU15] in 2015, and [1st place][TAU16] in 2016)
-and the [special price][LibreCores] from 2016 LibreCores Design Contest.
+([1st Place][TAU14] in 2014, [2nd Place][TAU15] in 2015, and [1st Place][TAU16] in 2016),
+the [Special Price][LibreCores] in the 2016 LibreCores Design Contest,
+and the Best Tool Winner in the 2018 [WOSET][WOSET18] at ICCAD.
 Many industry and academic people are using OpenTimer in their projects:
 
 - [Golden Timer][TAU19], 2019 ACM TAU Timing Analysis Contest on Timing-driven Optimization
@@ -482,6 +483,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [TAU17]:                 https://sites.google.com/site/taucontest2017/
 [TAU18]:                 https://sites.google.com/view/taucontest2018/
 [TAU19]:                 https://sites.google.com/view/tau-contest-2019/home
+[WOSET18]:               https://woset-workshop.github.io/
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
 [OpenDesign]:            https://github.com/jinwookjungs/open_design_flow
 [CloudV]:                https://cloudv.io/
