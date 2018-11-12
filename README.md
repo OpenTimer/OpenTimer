@@ -360,12 +360,12 @@ Many industry and academic people are using OpenTimer in their projects:
 - [Golden Timer][TAU17], 2017 ACM TAU Timing Analysis Contest on Micro Modeling
 - [Golden Timer][TAU16], 2016 ACM TAU Timing Analysis Contest on Micro Modeling
 - [Golden Timer][ICCAD15], 2015 ACM/IEEE ICCAD Incremental Timing-driven Placement Contest
-- [VSD][VSD], VLSI System Design Corporation
-- [OpenDesign Flow Database][OpenDesign], the infrastructure for VLSI design and design automation research
-- [CloudV][CloudV], a cloud-based platform to design and test chips for free
-- [LGraph][LGraph], live graph infrastructure for synthesis and simulation
-- [Qflow][Qflow], a digital synthesis flow using open-source EDA tools
-- [Ophidian][Ophidian], an open-source library for physical design research and teaching
+- [VSD][VSD]: VLSI System Design Corporation
+- [OpenDesign Flow Database][OpenDesign]: the infrastructure for VLSI design and design automation research
+- [CloudV][CloudV]: a cloud-based platform to design and test chips for free
+- [LGraph][LGraph]: live graph infrastructure for synthesis and simulation
+- [Qflow][Qflow]: a digital synthesis flow using open-source EDA tools
+- [Ophidian][Ophidian]: an open-source library for physical design research and teaching
 
 | [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
 | :---: | :---: | :---: | :---: | :---: | :---: |
