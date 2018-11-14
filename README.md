@@ -351,8 +351,9 @@ and integration tests.
 # Who is Using OpenTimer?
 
 OpenTimer is an award-winning tools. It won ACM TAU Timing Analysis Contests multiple times
-([1st place][TAU14] in 2014, [2nd place][TAU15] in 2015, and [1st place][TAU16] in 2016)
-and the [special price][LibreCores] from 2016 LibreCores Design Contest.
+([1st Place][TAU14] in 2014, [2nd Place][TAU15] in 2015, and [1st Place][TAU16] in 2016),
+the [Special Price][LibreCores] in the 2016 LibreCores Design Contest,
+and the Best Tool Winner in the 2018 [WOSET][WOSET18] at ICCAD.
 Many industry and academic people are using OpenTimer in their projects:
 
 - [Golden Timer][TAU19], 2019 ACM TAU Timing Analysis Contest on Timing-driven Optimization
@@ -367,8 +368,8 @@ Many industry and academic people are using OpenTimer in their projects:
 - [Qflow][Qflow]: a digital synthesis flow using open-source EDA tools
 - [Ophidian][Ophidian]: an open-source library for physical design research and teaching
 
-| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] |
-| :---: | :---: | :---: | :---: | :---: | :---: |
+| [<img src="image/tau16.png" width="100px">][TAU16] | [<img src="image/tau17.png" width="100px">][TAU17]| [<img src="image/tau18.png" width="100px">][TAU18] | [<img src="image/tau19.png" width="100px">][TAU19]  | [<img src="image/CAD-contest.png" width="100px">][ICCAD15] | [<img src="image/vsd.jpg" width="100px">][VSD] | [<img src="image/ophidian.png" width="100px">][Ophidian] | [<img src="image/cloudv.png" width="100px">][CloudV] | [<img src="image/lgraph.png" width="100px">][LGraph] | [<img src="image/qflow.png" width="100px">][Qflow] |
+| :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 
 
 Please don't hesitate to [let me know][email me] if I forgot your project! 
@@ -482,6 +483,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [TAU17]:                 https://sites.google.com/site/taucontest2017/
 [TAU18]:                 https://sites.google.com/view/taucontest2018/
 [TAU19]:                 https://sites.google.com/view/tau-contest-2019/home
+[WOSET18]:               https://woset-workshop.github.io/
 [LibreCores]:            https://fossi-foundation.org/2016/10/13/designcontest
 [OpenDesign]:            https://github.com/jinwookjungs/open_design_flow
 [CloudV]:                https://cloudv.io/

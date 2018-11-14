@@ -11,8 +11,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 # CXX target properties
 ## g++
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.2")
-    message(FATAL_ERROR "\nOpenTimer requires G++ at least v7.2 to build.")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "7.3")
+    message(FATAL_ERROR "\nOpenTimer requires G++ at least v7.3 to build.")
   endif()
 ## clang++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -22,7 +22,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 else()
   message(FATAL_ERROR "\n\
 OpenTimer currently supports the following compilers:\n\
-- g++ v7.2 or above\n\
+- g++ v7.3 or above\n\
 - clang++ v6.0 or above\n\
 ")
 endif()
@@ -78,6 +78,16 @@ message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
 # Find package
 #set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
+
+# Check if static build
+if(CMAKE_EXE_LINKER_FLAGS)
+  string(FIND ${CMAKE_EXE_LINKER_FLAGS} "-static" IS_STATIC)
+  if(NOT ${IS_STATIC} EQUAL -1)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--whole-archive ${CMAKE_THREAD_LIBS_INIT} -Wl,--no-whole-archive")
+  endif()
+endif()
+message(STATUS "CMAKE_EXE_LINKER_FLAGS: " ${CMAKE_EXE_LINKER_FLAGS})
+
 
 # Tclsh module
 include(FindTclsh)
