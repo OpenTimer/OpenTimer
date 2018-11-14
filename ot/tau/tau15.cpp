@@ -72,24 +72,24 @@ Timer& Timer::read_timing(std::filesystem::path path) {
 
   std::scoped_lock lock(_mutex);
   
+  auto parser = _insert_builder(to_string("parse_timing ", path), false);
+  auto reader = _insert_builder(to_string("read_timing ", path), true);
+  
   // Library reader
-  auto reader = _taskflow.silent_emplace([path=std::move(path), timing] () {
+  parser.work([path=std::move(path), timing] () {
     OT_LOGI("loading timing ", path, " ...");
     timing->read(path);
   });
 
   // Placeholder to add_lineage
-  auto modifier = _taskflow.silent_emplace([this, timing] () {
+  reader.work([this, timing] () {
     OT_LOGI("add ", timing->assertions.size(), " timing assertions");
     _timing(*timing);
   });
 
   // Reader -> modifier
-  reader.precede(modifier);
+  parser.precede(reader);
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-  
   return *this;
 }
 
@@ -100,7 +100,7 @@ void Timer::_timing(tau15::Timing& timing) {
     std::visit(Functors{
       [&] (tau15::Clock& clock) {
         if(auto itr = _pins.find(clock.pin); itr != _pins.end()) {
-          _insert_clock(itr->first, itr->second, clock.period);
+          _create_clock(itr->first, itr->second, clock.period);
         }
         else {
           OT_LOGE("can't create clock (pin ", clock.pin, " not found)");
@@ -109,7 +109,7 @@ void Timer::_timing(tau15::Timing& timing) {
       [&] (tau15::AT& a) {
         if(auto itr = _pis.find(a.pin); itr != _pis.end()) {
           FOR_EACH_EL_RF(el, rf) {
-            _at(itr->second, el, rf, a.value[el][rf]);
+            _set_at(itr->second, el, rf, a.value[el][rf]);
           }
         }
         else {
@@ -119,7 +119,7 @@ void Timer::_timing(tau15::Timing& timing) {
       [&] (tau15::Slew& s) {
         if(auto itr = _pis.find(s.pin); itr != _pis.end()) {
           FOR_EACH_EL_RF(el, rf) {
-            _slew(itr->second, el, rf, s.value[el][rf]);
+            _set_slew(itr->second, el, rf, s.value[el][rf]);
           }
         }
         else {
@@ -129,7 +129,7 @@ void Timer::_timing(tau15::Timing& timing) {
       [&] (tau15::RAT& r) {
         if(auto itr = _pos.find(r.pin); itr != _pos.end()) {
           FOR_EACH_EL_RF(el, rf) {
-            _rat(itr->second, el, rf, r.value[el][rf]);
+            _set_rat(itr->second, el, rf, r.value[el][rf]);
           }
         }
         else {
@@ -139,7 +139,7 @@ void Timer::_timing(tau15::Timing& timing) {
       [&] (tau15::Load& l) {
         if(auto itr = _pos.find(l.pin); itr != _pos.end()) {
           FOR_EACH_EL_RF(el, rf) {
-            _load(itr->second, el, rf, l.value);
+            _set_load(itr->second, el, rf, l.value);
           }
         }
         else {

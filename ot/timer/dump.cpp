@@ -22,15 +22,15 @@ void Timer::_dump_graph(std::ostream& os) const {
   os << "}\n";
 }
 
-// Function: dump_lineage
-void Timer::dump_lineage(std::ostream& os) const {
+// Function: dump_taskflow
+void Timer::dump_taskflow(std::ostream& os) const {
   std::shared_lock lock(_mutex);
-  _dump_lineage(os);
+  _dump_taskflow(os);
 }
 
-// Function: _dump_lineage
-void Timer::_dump_lineage(std::ostream& os) const {
-  os << _taskflow.dump();
+// Function: _dump_taskflow
+void Timer::_dump_taskflow(std::ostream& os) const {
+  _taskflow.dump(os);
 }
 
 // Function: dump_timer

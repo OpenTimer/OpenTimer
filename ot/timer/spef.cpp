@@ -10,34 +10,34 @@ Timer& Timer::read_spef(std::filesystem::path path) {
   
   std::scoped_lock lock(_mutex);
 
+  auto parser = _insert_builder(to_string("parse_spef ", path), false);
+  auto reader = _insert_builder(to_string("read_spef ", path), true);
+
   // Reader task
-  auto reader = _taskflow.silent_emplace([path=std::move(path), spef] () {
+  parser.work([path=std::move(path), spef] () {
     if(spef->read(path); spef->error) {
       OT_LOGD("Parser-SPEF error:\n", *spef->error);
     }
     spef->expand_name();
   });
   
-  // Spef update task (this has to be after reader)
-  auto modifier = _taskflow.silent_emplace([this, spef] () {
+  // Spef update task (this has to be after parser)
+  reader.work([this, spef] () {
     if(!(spef->error)) {
       _rebase_unit(*spef);
-      _spef(*spef);
+      _read_spef(*spef);
       OT_LOGI("added ", spef->nets.size(), " spef nets");
     }
   });
   
   // Build the task dependency.
-  reader.precede(modifier);
-  
-  // parent -> modifier
-  _add_to_lineage(modifier);
+  parser.precede(reader);
   
   return *this;
 }
 
-// Procedure: _spef
-void Timer::_spef(spef::Spef& spef) {
+// Procedure: _read_spef
+void Timer::_read_spef(spef::Spef& spef) {
   for(auto& spef_net : spef.nets) {
     if(auto itr = _nets.find(spef_net.name); itr == _nets.end()) {
       OT_LOGW("spef net ", spef_net.name, " not found");

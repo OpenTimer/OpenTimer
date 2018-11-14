@@ -123,6 +123,40 @@ inline auto to_string(Tran t) {
   };
 }
 
+inline std::ostream& operator << (std::ostream& os, Split t) {
+  switch(t) {
+    case MIN:
+      os << "min";
+    break;
+
+    case MAX:
+      os << "max";
+    break;
+
+    default:
+      os << "unknown split";
+    break;
+  };
+  return os;
+}
+
+inline std::ostream& operator << (std::ostream& os, Tran t) {
+  switch(t) {
+    case RISE:
+      os << "rise";
+    break;
+
+    case FALL:
+      os << "fall";
+    break;
+
+    default:
+      os << "unknown tran";
+    break;
+  };
+  return os;
+}
+
 // Function: to_string
 inline auto to_string(Tran from, Tran to) {
   return to_string(from) + "->" + to_string(to);

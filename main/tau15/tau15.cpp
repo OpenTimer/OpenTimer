@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
         }
       }
 
-      auto slew = timer.slew(std::move(pin), el, rf);
+      auto slew = timer.report_slew(std::move(pin), el, rf);
       ofs << (slew ? *slew : std::numeric_limits<float>::quiet_NaN()) << '\n';
     }
     else if(tokens[0] == "report_at")  {
@@ -104,7 +104,7 @@ int main(int argc, char* argv[]) {
           throw std::runtime_error("unexpected report_at option "s + tokens[i]);
         }
       }
-      auto at = timer.at(std::move(pin), el, rf);
+      auto at = timer.report_at(std::move(pin), el, rf);
       ofs << (at ? *at : std::numeric_limits<float>::quiet_NaN()) << '\n';
     }
     else if(tokens[0] == "report_rat"){
@@ -133,7 +133,7 @@ int main(int argc, char* argv[]) {
           throw std::runtime_error("unexpected report_rat option "s + tokens[i]);
         }
       }
-      auto rat = timer.rat(std::move(pin), el, rf);
+      auto rat = timer.report_rat(std::move(pin), el, rf);
       ofs << (rat ? *rat : std::numeric_limits<float>::quiet_NaN()) << '\n';
     }
     else if(tokens[0] == "report_slack"){
@@ -162,7 +162,7 @@ int main(int argc, char* argv[]) {
           throw std::runtime_error("unexpected report_at option "s + tokens[i]);
         }
       }
-      auto slack = timer.slack(std::move(pin), el, rf);
+      auto slack = timer.report_slack(std::move(pin), el, rf);
       ofs << (slack ? *slack : std::numeric_limits<float>::quiet_NaN()) << '\n';
     }
     else if(tokens[0] == "insert_gate") {
@@ -230,7 +230,7 @@ int main(int argc, char* argv[]) {
         continue;
       }
 
-      auto paths = timer.worst_paths(K);
+      auto paths = timer.report_timing(K);
       
       ofs << "report_worst_paths " << paths.size() << '\n';
 

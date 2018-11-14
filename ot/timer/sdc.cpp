@@ -10,32 +10,33 @@ Timer& Timer::read_sdc(std::filesystem::path path) {
 
   std::scoped_lock lock(_mutex);
   
-  // reader
-  auto reader = _taskflow.silent_emplace([sdc, path=std::move(path)] () {
+  // sdc tasks
+  auto parser = _insert_builder(to_string("parse_sdc ", path), false);
+  auto reader = _insert_builder(to_string("read_sdc ", path), true);
+  
+  // parser
+  parser.work([sdc, path=std::move(path)] () {
     sdc->read(path);
   });
 
-  // modifier
-  auto modifier = _taskflow.silent_emplace([this, sdc] () mutable {
-    _sdc(*sdc);
+  // reader
+  reader.work([this, sdc] () mutable {
+    _read_sdc(*sdc);
     OT_LOGI("added ", sdc->commands.size(), " sdc commands");
   });
 
   // Build the task dependency
-  reader.precede(modifier);
-
-  // Build the dependency with the precedent
-  _add_to_lineage(modifier);
+  parser.precede(reader);
 
   return *this;
 }
 
 // Procedure: _sdc
-void Timer::_sdc(sdc::SDC& sdc) {
+void Timer::_read_sdc(sdc::SDC& sdc) {
   for(auto& command : sdc.commands) { 
     std::visit(Functors{
       [this] (auto&& cmd) {
-        _sdc(cmd);
+        _read_sdc(cmd);
       }
     }, command);
   }
@@ -43,7 +44,7 @@ void Timer::_sdc(sdc::SDC& sdc) {
 
 // Procedure: _sdc
 // Sets input delay on pins or input ports relative to a clock signal.
-void Timer::_sdc(sdc::SetInputDelay& obj) {
+void Timer::_read_sdc(sdc::SetInputDelay& obj) {
 
   assert(obj.delay_value && obj.port_pin_list);
 
@@ -53,7 +54,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
     [&] (sdc::AllInputs&) {
       for(auto& kvp : _pis) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _at(kvp.second, el, rf, obj.delay_value);
+          _set_at(kvp.second, el, rf, obj.delay_value);
         }
       }
     },
@@ -61,7 +62,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pis.find(port); itr != _pis.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _at(itr->second, el, rf, obj.delay_value); 
+            _set_at(itr->second, el, rf, obj.delay_value); 
           }
         }
         else {
@@ -77,7 +78,7 @@ void Timer::_sdc(sdc::SetInputDelay& obj) {
 
 // Procedure: _sdc
 // Sets input transition on pins or input ports relative to a clock signal.
-void Timer::_sdc(sdc::SetInputTransition& obj) {
+void Timer::_read_sdc(sdc::SetInputTransition& obj) {
 
   assert(obj.transition && obj.port_list);
 
@@ -87,7 +88,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
     [&] (sdc::AllInputs&) {
       for(auto& kvp : _pis) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _slew(kvp.second, el, rf, obj.transition);
+          _set_slew(kvp.second, el, rf, obj.transition);
         }
       }
     },
@@ -95,7 +96,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pis.find(port); itr != _pis.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _slew(itr->second, el, rf, obj.transition); 
+            _set_slew(itr->second, el, rf, obj.transition); 
           }
         }
         else {
@@ -111,7 +112,7 @@ void Timer::_sdc(sdc::SetInputTransition& obj) {
 
 // Procedure: _sdc
 // Sets output delay on pins or input ports relative to a clock signal.
-void Timer::_sdc(sdc::SetOutputDelay& obj) {
+void Timer::_read_sdc(sdc::SetOutputDelay& obj) {
 
   assert(obj.delay_value && obj.port_pin_list);
 
@@ -128,7 +129,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
     [&] (sdc::AllOutputs&) {
       for(auto& kvp : _pos) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _rat(
+          _set_rat(
             kvp.second, 
             el, 
             rf, 
@@ -141,7 +142,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pos.find(port); itr != _pos.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _rat(
+            _set_rat(
               itr->second, 
               el, 
               rf, 
@@ -162,7 +163,7 @@ void Timer::_sdc(sdc::SetOutputDelay& obj) {
 
 // Procedure: _sdc
 // Sets the load attribute to a specified value on specified ports and nets.
-void Timer::_sdc(sdc::SetLoad& obj) {
+void Timer::_read_sdc(sdc::SetLoad& obj) {
 
   assert(obj.value && obj.objects);
   
@@ -172,7 +173,7 @@ void Timer::_sdc(sdc::SetLoad& obj) {
     [&] (sdc::AllOutputs&) {
       for(auto& kvp : _pos) {
         FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-          _load(kvp.second, el, rf, obj.value);
+          _set_load(kvp.second, el, rf, obj.value);
         }
       }
     },
@@ -180,7 +181,7 @@ void Timer::_sdc(sdc::SetLoad& obj) {
       for(auto& port : get_ports.ports) {
         if(auto itr = _pos.find(port); itr != _pos.end()) {
           FOR_EACH_EL_RF_IF(el, rf, (mask | el) && (mask | rf)) {
-            _load(itr->second, el, rf, obj.value); 
+            _set_load(itr->second, el, rf, obj.value); 
           }
         }
         else {
@@ -196,7 +197,7 @@ void Timer::_sdc(sdc::SetLoad& obj) {
 
 // Procedure: _sdc
 // create a clock object and defines its waveform in the current design.
-void Timer::_sdc(sdc::CreateClock& obj) {
+void Timer::_read_sdc(sdc::CreateClock& obj) {
 
   assert(obj.period && !obj.name.empty());
   
@@ -207,7 +208,7 @@ void Timer::_sdc(sdc::CreateClock& obj) {
         auto& ports = get_ports.ports;
         assert(ports.size() == 1);
         if(auto itr = _pins.find(ports.front()); itr != _pins.end()) {
-          _insert_clock(obj.name, itr->second, *obj.period);
+          _create_clock(obj.name, itr->second, *obj.period);
         }
         else {
           OT_LOGE(obj.command, ": port ", std::quoted(ports.front()), " not found");
@@ -220,7 +221,7 @@ void Timer::_sdc(sdc::CreateClock& obj) {
   }
   // create virtual clock
   else {
-    _insert_clock(obj.name, *obj.period);
+    _create_clock(obj.name, *obj.period);
   }
 }
 

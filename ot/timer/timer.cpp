@@ -4,8 +4,8 @@ namespace ot {
 
 // ------------------------------------------------------------------------------------------------
 
-// Function: num_threads
-Timer& Timer::num_threads(unsigned n) {
+// Function: set_num_threads
+Timer& Timer::set_num_threads(unsigned n) {
   std::scoped_lock lock(_mutex);
   unsigned w = (n == 0) ? 0 : n-1;
   OT_LOGI("using ", n, " threads (", w, " worker)");
@@ -14,10 +14,23 @@ Timer& Timer::num_threads(unsigned n) {
   return *this;
 }
 
-// Procedure: _add_to_lineage
-void Timer::_add_to_lineage(const tf::Task& last) {
-  _lineage | [&] (auto& p) { p.precede(last); };
-  _lineage = last;
+// Function: _insert_builder
+tf::Task Timer::_insert_builder(const std::string& name, bool attached) {
+  static size_t B {0};
+  auto last = _taskflow.placeholder();
+  last.name(to_string("[B", B++, "] ", name));
+  if(attached) {
+    _lineage | [&] (auto& p) { p.precede(last); };
+    _lineage = last;
+  }
+  return last;
+}
+
+// Function: _insert_action
+tf::Task Timer::_insert_action(const std::string& name) {
+  static size_t A {0};
+  return _taskflow.placeholder()
+                  .name(to_string("[A", A++, "] ", name));
 }
 
 // Function: _max_pin_name_size
@@ -56,11 +69,11 @@ Timer& Timer::repower_gate(std::string gate, std::string cell) {
 
   std::scoped_lock lock(_mutex);
 
-  auto op = _taskflow.silent_emplace([this, gate=std::move(gate), cell=std::move(cell)] () {
+  auto op = _insert_builder(to_string("repower_gate ", gate, ' ', cell), true);
+
+  op.work([this, gate=std::move(gate), cell=std::move(cell)] () {
     _repower_gate(gate, cell);
   });
-  
-  _add_to_lineage(op);
   
   return *this;
 }
@@ -122,11 +135,11 @@ Timer& Timer::insert_gate(std::string gate, std::string cell) {
   
   std::scoped_lock lock(_mutex);
 
-  auto op = _taskflow.silent_emplace([this, gate=std::move(gate), cell=std::move(cell)] () {
+  auto op = _insert_builder(to_string("insert_gate ", gate, ' ', cell), true);
+  
+  op.work([this, gate=std::move(gate), cell=std::move(cell)] () {
     _insert_gate(gate, cell);
   });
-
-  _add_to_lineage(op);
 
   return *this;
 }
@@ -180,13 +193,13 @@ Timer& Timer::remove_gate(std::string gate) {
   
   std::scoped_lock lock(_mutex);
 
-  auto op = _taskflow.silent_emplace([this, gate=std::move(gate)] () {
+  auto op = _insert_builder(to_string("remove ", gate), true);
+
+  op.work([this, gate=std::move(gate)] () {
     if(auto gitr = _gates.find(gate); gitr != _gates.end()) {
       _remove_gate(gitr->second);
     }
   });
-
-  _add_to_lineage(op);
 
   return *this;
 }
@@ -273,7 +286,9 @@ Timer& Timer::connect_pin(std::string pin, std::string net) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, pin=std::move(pin), net=std::move(net)] () {
+  auto op = _insert_builder(to_string("connect_pin ", pin, ' ', net), true);
+
+  op.work([this, pin=std::move(pin), net=std::move(net)] () {
     auto p = _pins.find(pin);
     auto n = _nets.find(net);
     OT_LOGE_RIF(p==_pins.end() || n == _nets.end(),
@@ -281,9 +296,6 @@ Timer& Timer::connect_pin(std::string pin, std::string net) {
     )
     _connect_pin(p->second, n->second);
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -319,14 +331,13 @@ Timer& Timer::disconnect_pin(std::string name) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name)] () {
+  auto op = _insert_builder(to_string("disconnect_pin ", name), true);
+
+  op.work([this, name=std::move(name)] () {
     if(auto itr = _pins.find(name); itr != _pins.end()) {
       _disconnect_pin(itr->second);
     }
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -375,12 +386,11 @@ Timer& Timer::insert_net(std::string name) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name)] () {
+  auto op = _insert_builder(to_string("insert_net ", name), true);
+  
+  op.work([this, name=std::move(name)] () {
     _insert_net(name);
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -396,13 +406,13 @@ Timer& Timer::remove_net(std::string name) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name)] () {
+  auto op = _insert_builder(to_string("remove_net ", name), true);
+
+  op.work([this, name=std::move(name)] () {
     if(auto itr = _nets.find(name); itr != _nets.end()) {
       _remove_net(itr->second);
     }
   });
-
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -465,12 +475,11 @@ Timer& Timer::cppr(bool flag) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, flag] () {
+  auto op = _insert_builder(to_string("cppr ", flag), true);
+
+  op.work([this, flag] () {
     _cppr(flag);
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -499,49 +508,47 @@ void Timer::_cppr(bool enable) {
 }
 
 // Function: clock
-Timer& Timer::clock(std::string c, std::string s, float p) {
+Timer& Timer::create_clock(std::string c, std::string s, float p) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), s=std::move(s), p] () {
+  auto op = _insert_builder(to_string("create_clock ", s, ' ', p), true);
+
+  op.work([this, c=std::move(c), s=std::move(s), p] () {
     if(auto itr = _pins.find(s); itr != _pins.end()) {
-      _insert_clock(c, itr->second, p);
+      _create_clock(c, itr->second, p);
     }
     else {
       OT_LOGE("can't create clock ", c, " on source ", s, " (pin not found)");
     }
   });
   
-  // parent -> modifier
-  _add_to_lineage(modifier);
-
   return *this;
 }
 
-// Function: clock
-Timer& Timer::clock(std::string c, float p) {
+// Function: create_clock
+Timer& Timer::create_clock(std::string c, float p) {
   
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, c=std::move(c), p] () {
-    _insert_clock(c, p);
+  auto op = _insert_builder(to_string("create_clock ", c, ' ', p), true);
+
+  op.work([this, c=std::move(c), p] () {
+    _create_clock(c, p);
   });
-  
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
 
-// Procedure: _insert_clock
-Clock& Timer::_insert_clock(const std::string& name, Pin& pin, float period) {
+// Procedure: _create_clock
+Clock& Timer::_create_clock(const std::string& name, Pin& pin, float period) {
   auto& clock = _clocks.try_emplace(name, name, pin, period).first->second;
   _insert_frontier(pin);
   return clock;
 }
 
-// Procedure: _insert_clock
-Clock& Timer::_insert_clock(const std::string& name, float period) {
+// Procedure: _create_clock
+Clock& Timer::_create_clock(const std::string& name, float period) {
   auto& clock = _clocks.try_emplace(name, name, period).first->second;
   return clock;
 }
@@ -551,12 +558,11 @@ Timer& Timer::insert_primary_input(std::string name) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name)] () {
+  auto op = _insert_builder(to_string("insert_primary_input ", name), true);
+
+  op.work([this, name=std::move(name)] () {
     _insert_primary_input(name);
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -593,12 +599,11 @@ Timer& Timer::insert_primary_output(std::string name) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name)] () {
+  auto op = _insert_builder("insert_primary_output "s + name, true);
+
+  op.work([this, name=std::move(name)] () {
     _insert_primary_output(name);
   });
-
-  // parent -> modifier
-  _add_to_lineage(modifier);
 
   return *this;
 }
@@ -925,13 +930,13 @@ void Timer::_build_prop_tasks() {
   // (4) propagate the arrival time.
   for(auto pin : _fprop_cands) {
     assert(!pin->_ftask);
-    pin->_ftask = _taskflow.silent_emplace([this, pin] () {
+    pin->_ftask = _insert_action("fprop_s"s + pin->_name).work([this, pin] () {
       _fprop_rc_timing(*pin);
       _fprop_slew(*pin);
       _fprop_delay(*pin);
       _fprop_at(*pin);
       _fprop_test(*pin);
-    })/*.name("fprop_"s + pin->_name)*/;
+    });
   }
   
   // Build the dependency
@@ -950,9 +955,9 @@ void Timer::_build_prop_tasks() {
   // (1) propagate the required arrival time
   for(auto pin : _bprop_cands) {
     assert(!pin->_btask);
-    pin->_btask = _taskflow.silent_emplace([this, pin] () {
+    pin->_btask = _insert_action("bprop_"s + pin->_name).work([this, pin] () {
       _bprop_rat(*pin);
-    })/*.name("bprop_"s + pin->_name)*/;
+    });
   }
 
   // Build the task dependencies.
@@ -1008,7 +1013,7 @@ void Timer::_update_timing() {
     return;
   }
 
-  // run tasks on the lineage
+  // materialize the lineage
   _taskflow.wait_for_all();
   _lineage.reset();
   
@@ -1097,8 +1102,8 @@ void Timer::_update_endpoints() {
   FOR_EACH_EL_RF(el, rf) {
 
     _endpoints[el][rf].clear();
-
-    _taskflow.silent_emplace([this, el=el, rf=rf] () {
+    
+    _insert_action(to_string("update_endpoints ", el, ' ', rf)).work([this, el, rf] () {
 
       // for each po
       for(auto& po : _pos) {
@@ -1152,7 +1157,7 @@ void Timer::_update_endpoints() {
 // Function: tns
 // Update the total negative slack for any transition and timing split. The procedure applies
 // the parallel reduction to compute the value.
-std::optional<float> Timer::tns() {
+std::optional<float> Timer::report_tns() {
 
   std::scoped_lock lock(_mutex);
 
@@ -1170,7 +1175,7 @@ std::optional<float> Timer::tns() {
 // Function: wns
 // Update the total negative slack for any transition and timing split. The procedure apply
 // the parallel reduction to compute the value.
-std::optional<float> Timer::wns() {
+std::optional<float> Timer::report_wns() {
 
   std::scoped_lock lock(_mutex);
 
@@ -1187,7 +1192,7 @@ std::optional<float> Timer::wns() {
 
 // Function: fep
 // Update the failing end points
-std::optional<size_t> Timer::fep() {
+std::optional<size_t> Timer::report_fep() {
   
   std::scoped_lock lock(_mutex);
 
@@ -1203,7 +1208,7 @@ std::optional<size_t> Timer::fep() {
 }
 
 // Function: leakage_power
-std::optional<float> Timer::leakage_power() {
+std::optional<float> Timer::report_leakage_power() {
   std::scoped_lock lock(_mutex);
   _update_power();
   return _leakage_power;
@@ -1211,7 +1216,7 @@ std::optional<float> Timer::leakage_power() {
 
 // Function: area
 // Sum up the area of each gate in the design.
-std::optional<float> Timer::area() {
+std::optional<float> Timer::report_area() {
   std::scoped_lock lock(_mutex);
   _update_area();
   return _area;
@@ -1284,15 +1289,15 @@ void Timer::_remove_scc(SCC& scc) {
   _sccs.erase(*scc._satellite); 
 }
 
-// Function: at   
+// Function: report_at   
 // Report the arrival time in picoseconds at a given pin name.
-std::optional<float> Timer::at(const std::string& name, Split m, Tran t) {
+std::optional<float> Timer::report_at(const std::string& name, Split m, Tran t) {
   std::scoped_lock lock(_mutex);
-  return _at(name, m, t);
+  return _report_at(name, m, t);
 }
 
-// Function: _at
-std::optional<float> Timer::_at(const std::string& name, Split m, Tran t) {
+// Function: _report_at
+std::optional<float> Timer::_report_at(const std::string& name, Split m, Tran t) {
   _update_timing();
   if(auto itr = _pins.find(name); itr != _pins.end() && itr->second._at[m][t]) {
     return itr->second._at[m][t]->numeric;
@@ -1300,15 +1305,15 @@ std::optional<float> Timer::_at(const std::string& name, Split m, Tran t) {
   else return std::nullopt;
 }
 
-// Function: rat
+// Function: report_rat
 // Report the required arrival time in picoseconds at a given pin name.
-std::optional<float> Timer::rat(const std::string& name, Split m, Tran t) {
+std::optional<float> Timer::report_rat(const std::string& name, Split m, Tran t) {
   std::scoped_lock lock(_mutex);
-  return _rat(name, m, t);
+  return _report_rat(name, m, t);
 }
 
-// Function: _rat
-std::optional<float> Timer::_rat(const std::string& name, Split m, Tran t) {
+// Function: _report_rat
+std::optional<float> Timer::_report_rat(const std::string& name, Split m, Tran t) {
   _update_timing();
   if(auto itr = _pins.find(name); itr != _pins.end() && itr->second._at[m][t]) {
     return itr->second._rat[m][t];
@@ -1316,15 +1321,15 @@ std::optional<float> Timer::_rat(const std::string& name, Split m, Tran t) {
   else return std::nullopt;
 }
 
-// Function: slew
+// Function: report_slew
 // Report the slew in picoseconds at a given pin name.
-std::optional<float> Timer::slew(const std::string& name, Split m, Tran t) {
+std::optional<float> Timer::report_slew(const std::string& name, Split m, Tran t) {
   std::scoped_lock lock(_mutex);
-  return _slew(name, m, t);
+  return _report_slew(name, m, t);
 }
 
-// Function: _slew
-std::optional<float> Timer::_slew(const std::string& name, Split m, Tran t) {
+// Function: _report_slew
+std::optional<float> Timer::_report_slew(const std::string& name, Split m, Tran t) {
   _update_timing();
   if(auto itr = _pins.find(name); itr != _pins.end() && itr->second._slew[m][t]) {
     return itr->second._slew[m][t]->numeric;
@@ -1332,14 +1337,14 @@ std::optional<float> Timer::_slew(const std::string& name, Split m, Tran t) {
   else return std::nullopt;
 }
 
-// Function: slack
-std::optional<float> Timer::slack(const std::string& pin, Split m, Tran t) {
+// Function: report_slack
+std::optional<float> Timer::report_slack(const std::string& pin, Split m, Tran t) {
   std::scoped_lock lock(_mutex);
-  return _slack(pin, m, t);
+  return _report_slack(pin, m, t);
 }
 
-// Function: _slack
-std::optional<float> Timer::_slack(const std::string& pin, Split m, Tran t) {
+// Function: _report_slack
+std::optional<float> Timer::_report_slack(const std::string& pin, Split m, Tran t) {
   _update_timing();
   if(auto itr = _pins.find(pin); itr != _pins.end()) {
     return itr->second.slack(m, t);
@@ -1347,15 +1352,15 @@ std::optional<float> Timer::_slack(const std::string& pin, Split m, Tran t) {
   else return std::nullopt;
 }
 
-// Function: load
+// Function: report_load
 // Report the load at a given pin name
-std::optional<float> Timer::load(const std::string& name, Split m, Tran t) {
+std::optional<float> Timer::report_load(const std::string& name, Split m, Tran t) {
   std::scoped_lock lock(_mutex);
-  return _load(name, m, t);
+  return _report_load(name, m, t);
 }
 
-// Function: load
-std::optional<float> Timer::_load(const std::string& name, Split m, Tran t) {
+// Function: _report_load
+std::optional<float> Timer::_report_load(const std::string& name, Split m, Tran t) {
   _update_timing();
   if(auto itr = _nets.find(name); itr != _nets.end()) {
     return itr->second._load(m, t);
@@ -1363,106 +1368,110 @@ std::optional<float> Timer::_load(const std::string& name, Split m, Tran t) {
   else return std::nullopt;
 }
 
-// Function: at
-Timer& Timer::at(std::string name, Split m, Tran t, std::optional<float> v) {
+// Function: set_at
+Timer& Timer::set_at(std::string name, Split m, Tran t, std::optional<float> v) {
 
   std::scoped_lock lock(_mutex);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
+  auto op = _insert_builder(to_string(
+    "set_at ", name, ' ', m, '-', t, ' ', (v ? *v : std::numeric_limits<float>::quiet_NaN())
+  ), true);
+
+  op.work([this, name=std::move(name), m, t, v] () {
     if(auto itr = _pis.find(name); itr != _pis.end()) {
-      _at(itr->second, m, t, v);
+      _set_at(itr->second, m, t, v);
     }
     else {
       OT_LOGE("can't set at (PI ", name, " not found)");
     }
   });
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-
   return *this;
 }
 
-// Procedure: _at
-void Timer::_at(PrimaryInput& pi, Split m, Tran t, std::optional<float> v) {
+// Procedure: _set_at
+void Timer::_set_at(PrimaryInput& pi, Split m, Tran t, std::optional<float> v) {
   pi._at[m][t] = v;
   _insert_frontier(pi._pin);
 }
 
-// Function: rat
-Timer& Timer::rat(std::string name, Split m, Tran t, std::optional<float> v) {
+// Function: set_rat
+Timer& Timer::set_rat(std::string name, Split m, Tran t, std::optional<float> v) {
 
   std::scoped_lock lock(_mutex);
+  
+  auto op = _insert_builder(to_string(
+    "set_rat ", name, ' ', m, '-', t, ' ', (v ? *v : std::numeric_limits<float>::quiet_NaN())
+  ), true);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
+  op.work([this, name=std::move(name), m, t, v] () {
     if(auto itr = _pos.find(name); itr != _pos.end()) {
-      _rat(itr->second, m, t, v);
+      _set_rat(itr->second, m, t, v);
     }
     else {
       OT_LOGE("can't set rat (PO ", name, " not found)");
     }
   });
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-
   return *this;
 }
 
-// Procedure: _rat
-void Timer::_rat(PrimaryOutput& po, Split m, Tran t, std::optional<float> v) {
+// Procedure: _set_rat
+void Timer::_set_rat(PrimaryOutput& po, Split m, Tran t, std::optional<float> v) {
   po._rat[m][t] = v;
   _insert_frontier(po._pin);
 }
 
-// Function: slew
-Timer& Timer::slew(std::string name, Split m, Tran t, std::optional<float> v) {
+// Function: set_slew
+Timer& Timer::set_slew(std::string name, Split m, Tran t, std::optional<float> v) {
 
   std::scoped_lock lock(_mutex);
+  
+  auto op = _insert_builder(to_string(
+    "set_slew ", name, ' ', m, '-', t, ' ', (v ? *v : std::numeric_limits<float>::quiet_NaN())
+  ), true);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
+  op.work([this, name=std::move(name), m, t, v] () {
     if(auto itr = _pis.find(name); itr != _pis.end()) {
-      _slew(itr->second, m, t, v);
+      _set_slew(itr->second, m, t, v);
     }
     else {
       OT_LOGE("can't set slew (PI ", name, " not found)");
     }
   });
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-
   return *this;
 }
 
-// Procedure: _slew
-void Timer::_slew(PrimaryInput& pi, Split m, Tran t, std::optional<float> v) {
+// Procedure: _set_slew
+void Timer::_set_slew(PrimaryInput& pi, Split m, Tran t, std::optional<float> v) {
   pi._slew[m][t] = v;
   _insert_frontier(pi._pin);
 }
 
-// Function: load
-Timer& Timer::load(std::string name, Split m, Tran t, std::optional<float> v) {
+// Function: set_load
+Timer& Timer::set_load(std::string name, Split m, Tran t, std::optional<float> v) {
 
   std::scoped_lock lock(_mutex);
+  
+  auto op = _insert_builder(to_string(
+    "set_load ", name, ' ', m, '-', t, ' ', (v ? *v : std::numeric_limits<float>::quiet_NaN())
+  ), true);
 
-  auto modifier = _taskflow.silent_emplace([this, name=std::move(name), m, t, v] () {
+  op.work([this, name=std::move(name), m, t, v] () {
     if(auto itr = _pos.find(name); itr != _pos.end()) {
-      _load(itr->second, m, t, v);
+      _set_load(itr->second, m, t, v);
     }
     else {
       OT_LOGE("can't set load (PO ", name, " not found)");
     }
   });
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-
   return *this;
 }
 
-// Procedure: _load
-void Timer::_load(PrimaryOutput& po, Split m, Tran t, std::optional<float> v) {
+// Procedure: _set_load
+void Timer::_set_load(PrimaryOutput& po, Split m, Tran t, std::optional<float> v) {
 
   po._load[m][t] = v ? *v : 0.0f;
 

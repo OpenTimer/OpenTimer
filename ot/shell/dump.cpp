@@ -126,6 +126,34 @@ void Shell::_dump_timer() {
   }
 }
 
+// Procedure: dump_taskflow
+void Shell::_dump_taskflow() {
+
+  std::string token;
+  std::filesystem::path output;
+
+  while(_is >> token) {
+    if(token == "-o") {
+      if(!(_is >> output)) {
+        _es << "output file not given\n";
+        return;
+      }
+    }
+  }
+  
+  if(output.empty()) {
+    _timer.dump_taskflow(_os);
+  }
+  else {
+    if(std::ofstream ofs(output); ofs) {
+      _timer.dump_taskflow(ofs);
+    }
+    else {
+      _es << "failed to open " << output << '\n';
+    }
+  }
+}
+
 // Procedure: dump_graph
 void Shell::_dump_graph() {
 

@@ -29,13 +29,19 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
   
   std::scoped_lock lock(_mutex);
   
-  // Library reader
-  auto reader = _taskflow.silent_emplace([path=std::move(path), lib] () {
+  // Library parser
+  auto parser = _insert_builder(to_string("parse_celllib ", path), false);
+  auto reader = _insert_builder(
+    to_string("read_celllib ", path, ' ', (el ? to_string(*el) : ""s)),
+    true
+  );
+
+  parser.work([path=std::move(path), lib] () {
     lib->read(path);
   });
 
   // Placeholder to add_lineage
-  auto modifier = _taskflow.silent_emplace([this, lib, el] () {
+  reader.work([this, lib, el] () {
     if(el) {
       _merge_celllib(*lib, *el);
     }
@@ -46,12 +52,9 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
     }
   });
 
-  // Reader -> modifier
-  reader.precede(modifier);
+  // Reader -> reader
+  parser.precede(reader);
 
-  // parent -> modifier
-  _add_to_lineage(modifier);
-  
   return *this;
 }
 

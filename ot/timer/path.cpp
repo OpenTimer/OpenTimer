@@ -310,34 +310,34 @@ std::string PathHeap::dump() const {
 
 // ------------------------------------------------------------------------------------------------
 
-// Function: worst_paths 
-// Report the top-k worst_paths
-std::vector<Path> Timer::worst_paths(size_t K) {
+// Function: report_timing 
+// Report the top-k report_timing
+std::vector<Path> Timer::report_timing(size_t K) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(K), K);
+  return _report_timing(_worst_endpoints(K), K);
 }
 
-// Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Split el) {
+// Function: report_timing
+std::vector<Path> Timer::report_timing(size_t K, Split el) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(K, el), K);
+  return _report_timing(_worst_endpoints(K, el), K);
 }
 
-// Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Tran rf) {
+// Function: report_timing
+std::vector<Path> Timer::report_timing(size_t K, Tran rf) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(K, rf), K);
+  return _report_timing(_worst_endpoints(K, rf), K);
 }
 
-// Function: worst_paths
-std::vector<Path> Timer::worst_paths(size_t K, Split el, Tran rf) {
+// Function: report_timing
+std::vector<Path> Timer::report_timing(size_t K, Split el, Tran rf) {
   std::scoped_lock lock(_mutex);
-  return _worst_paths(_worst_endpoints(K, el, rf), K);
+  return _report_timing(_worst_endpoints(K, el, rf), K);
 }
 
-// Function: _worst_paths
-// Report the top-k worst_paths
-std::vector<Path> Timer::_worst_paths(std::vector<Endpoint*>&& epts, size_t K) {
+// Function: _report_timing
+// Report the top-k report_timing
+std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K) {
 
   assert(epts.size() <= K);
   

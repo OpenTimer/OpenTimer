@@ -1,6 +1,6 @@
 // MIT License
 // 
-// Copyright (c) 2018 Tsung-Wei Huang, Chun-Xun Lin, and Martin Wong
+// Copyright (c) 2018 T.-W Huang, C.-X. Lin, G, Guo, and M. Wong
 // 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,8 @@
 #include <iomanip>
 #include <cassert>
 #include <optional>
+#include <exception>
+#include <system_error>
 
 #include "threadpool/threadpool.hpp"
 
@@ -55,20 +57,87 @@
 #endif
 
 // ============================================================================
-
+// Error Handling
+// ============================================================================
 
 namespace tf {
 
-// Procedure: throw_re
-template <typename... ArgsT>
-inline void throw_re(const char* fname, const size_t line, ArgsT&&... args) {
-  std::ostringstream oss(std::ios_base::out);
-  oss << '[' << fname << ':' << line << "] ";
-  (oss << ... << std::forward<ArgsT>(args));
-  throw std::runtime_error(oss.str());
+// The error category that describes the task informaction. 
+struct Error : public std::error_category {
+
+  enum Code : int {
+    SUCCESS = 0,
+    EXECUTOR
+  };
+
+  inline const char* name() const noexcept override final;
+  inline static const std::error_category& get();
+  
+  inline std::string message(int) const override final;
+};
+
+// Function: name
+inline const char* Error::name() const noexcept {
+  return "Taskflow error";
 }
 
-#define TF_THROW(...) throw_re(__FILE__, __LINE__, __VA_ARGS__);
+// Function: get 
+inline const std::error_category& Error::get() {
+  static Error instance;
+  return instance;
+}
+
+// Function: message
+inline std::string Error::message(int code) const {
+  switch(auto ec = static_cast<Error::Code>(code); ec) {
+    case SUCCESS:
+      return "success";
+    break;
+
+    case EXECUTOR:
+      return "executor error";
+    break;
+
+    default:
+      return "unknown";
+    break;
+  };
+}
+
+// Function: make_error_code
+// Argument dependent lookup.
+inline std::error_code make_error_code(Error::Code e) {
+  return std::error_code(static_cast<int>(e), Error::get());
+}
+
+};  // end of namespace tf ----------------------------------------------------
+
+// Register for implicit conversion  
+namespace std {
+  template <>
+  struct is_error_code_enum<tf::Error::Code> : true_type {};
+};
+
+// ----------------------------------------------------------------------------
+
+namespace tf {
+
+// Procedure: throw_se
+// Throws the system error under a given error code.
+template <typename... ArgsT>
+void throw_se(const char* fname, const size_t line, Error::Code c, ArgsT&&... args) {
+  std::ostringstream oss;
+  oss << "[" << fname << ":" << line << "] ";
+  (oss << ... << args);
+  throw std::system_error(c, oss.str());
+}
+
+};  // ------------------------------------------------------------------------
+
+#define TF_THROW(...) tf::throw_se(__FILE__, __LINE__, __VA_ARGS__);
+
+
+namespace tf {
 
 //-----------------------------------------------------------------------------
 // Traits
@@ -129,105 +198,18 @@ struct is_iterable<T, std::void_t<decltype(std::declval<T>().begin()),
 template <typename T>
 inline constexpr bool is_iterable_v = is_iterable<T>::value;
 
-// ----------------------------------------------------------------------------
-// ObjectPool definition
-// ----------------------------------------------------------------------------
-
+// Struct: MoC
+// Move-on-copy wrapper.
 template <typename T>
-class ObjectPool {
+struct MoC {
 
-  public:
+  MoC(T&& rhs) : object(std::move(rhs)) {}
+  MoC(const MoC& other) : object(std::move(other.object)) {}
 
-    using iterator = typename std::list<T>::iterator;
-    using const_iterator = typename std::list<T>::const_iterator;
-
-
-    ObjectPool() = default;
-    ObjectPool(ObjectPool&&);
-    ObjectPool(const ObjectPool&) = delete;
-
-    size_t capacity() const;
-    size_t size() const;
-
-    bool empty() const;
-
-    template <typename... ArgsT>
-    T& emplace_back(ArgsT&&...);
-
-    void recycle(ObjectPool&&);
-
-    iterator begin() noexcept {
-      return _pool.begin();
-    }
-
-    const_iterator begin() const noexcept {
-      return _pool.begin();
-    }
-
-    iterator end() noexcept {
-      return _cur;
-    }
-
-    const_iterator end() const noexcept {
-      return _cur;
-    }
-
-  private:
- 
-    std::list<T> _pool;
-    iterator _cur {_pool.end()};
+  T& get() { return object; }
+  
+  mutable T object; 
 };
-
-// Move constructor
-template <typename T>
-ObjectPool<T>::ObjectPool(ObjectPool&& rhs) : 
-  _pool {std::move(rhs._pool)},
-  _cur  {rhs._cur == rhs._pool.end() ? _pool.end() : rhs._cur} {
-  rhs._cur = rhs._pool.end();
-}
-    
-template <typename T>
-template <typename... ArgsT>
-T& ObjectPool<T>::emplace_back(ArgsT&&... args) {
-  if(_cur == _pool.end()) {
-    T& item = _pool.emplace_back(std::forward<ArgsT>(args)...);
-    return item;
-  }
-  else {
-    _cur->reuse(std::forward<ArgsT>(args)...);
-    return *_cur++;
-  }
-}
-
-template <typename T>
-void ObjectPool<T>::recycle(ObjectPool&& rhs) {
-
-  if(rhs.empty()) {
-    return;
-  }
-
-  if(_cur == _pool.end()) {
-    _cur = rhs._pool.begin();
-  }
-
-  _pool.splice(_pool.end(), std::move(rhs._pool));
-  rhs._cur = rhs._pool.end();
-}
-
-template <typename T>
-size_t ObjectPool<T>::capacity() const { 
-  return _pool.size(); 
-}
-
-template <typename T>
-size_t ObjectPool<T>::size() const {
-  return std::distance(begin(), end());
-}
-
-template <typename T>
-bool ObjectPool<T>::empty() const { 
-  return _pool.empty(); 
-}
 
 //-----------------------------------------------------------------------------
 // Taskflow definition
@@ -239,10 +221,10 @@ class Topology;
 class Task;
 class FlowBuilder;
 class SubflowBuilder;
-class Taskflow;
 
-using Graph = ObjectPool<Node>;
+template <template<typename...> typename E> class BasicTaskflow;
     
+using Graph = std::forward_list<Node>;
 
 // ----------------------------------------------------------------------------
 
@@ -251,7 +233,9 @@ class Node {
 
   friend class Task;
   friend class Topology;
-  friend class Taskflow;
+
+  template <template<typename...> typename E> 
+  friend class BasicTaskflow;
 
   using StaticWork   = std::function<void()>;
   using DynamicWork  = std::function<void(SubflowBuilder&)>;
@@ -261,16 +245,12 @@ class Node {
     Node();
 
     template <typename C>
-    explicit Node(C&&);
-
-    void reuse();
-
-    template <typename C>
-    void reuse(C&&);
+    Node(C&&);
 
     const std::string& name() const;
     
     void precede(Node&);
+    void dump(std::ostream&) const;
 
     size_t num_successors() const;
     size_t num_dependents() const;
@@ -287,8 +267,6 @@ class Node {
     std::optional<Graph> _subgraph;
 
     Topology* _topology;
-
-    void _dump(std::ostream&) const;
 };
 
 // Constructor
@@ -302,27 +280,6 @@ template <typename C>
 inline Node::Node(C&& c) : _work {std::forward<C>(c)} {
   _dependents.store(0, std::memory_order_relaxed);
   _topology = nullptr;
-}
-
-// Reset
-inline void Node::reuse() {
-  _name.clear();
-  _work.emplace<StaticWork>();
-  _successors.clear();
-  _dependents.store(0, std::memory_order_relaxed);
-  _topology = nullptr;
-  _subgraph.reset();
-}
-
-// Reset
-template <typename C>
-inline void Node::reuse(C&& c) {
-  _name.clear();
-  _work = std::forward<C>(c);
-  _successors.clear();
-  _dependents.store(0, std::memory_order_relaxed);
-  _topology = nullptr;
-  _subgraph.reset();
 }
 
 // Procedure: precede
@@ -349,12 +306,12 @@ inline const std::string& Node::name() const {
 // Function: dump
 inline std::string Node::dump() const {
   std::ostringstream os;  
-  _dump(os);
+  dump(os);
   return os.str();
 }
 
-// Function: _dump
-inline void Node::_dump(std::ostream& os) const {
+// Function: dump
+inline void Node::dump(std::ostream& os) const {
   
   if(_name.empty()) os << '\"' << this << '\"';
   else os << std::quoted(_name);
@@ -387,7 +344,7 @@ inline void Node::_dump(std::ostream& os) const {
     os << "\";\n" << "color=blue\n";
 
     for(const auto& n : *_subgraph) {
-      n._dump(os);
+      n.dump(os);
     }
     os << "}\n";
   }
@@ -398,13 +355,15 @@ inline void Node::_dump(std::ostream& os) const {
 // class: Topology
 class Topology {
   
-  friend class Taskflow;
+  template <template<typename...> typename E> 
+  friend class BasicTaskflow;
 
   public:
 
     Topology(Graph&&);
 
     std::string dump() const;
+    void dump(std::ostream&) const;
 
   private:
 
@@ -414,13 +373,11 @@ class Topology {
 
     Node _source;
     Node _target;
-
-    void _dump(std::ostream&) const;
 };
 
 // Constructor
 inline Topology::Topology(Graph&& t) : 
-  _graph{std::move(t)} {
+  _graph(std::move(t)) {
 
   _source._topology = this;
   _target._topology = this;
@@ -451,11 +408,11 @@ inline Topology::Topology(Graph&& t) :
   }
 }
 
-// Procedure: _dump
-inline void Topology::_dump(std::ostream& os) const {
+// Procedure: dump
+inline void Topology::dump(std::ostream& os) const {
 
-  assert(_source._subgraph->empty());
-  assert(_target._subgraph->empty());
+  assert(!(_source._subgraph));
+  assert(!(_target._subgraph));
   
   os << "digraph Topology {\n"
      << _source.dump() 
@@ -471,7 +428,7 @@ inline void Topology::_dump(std::ostream& os) const {
 // Function: dump
 inline std::string Topology::dump() const { 
   std::ostringstream os;
-  _dump(os);
+  dump(os);
   return os.str();
 }
 
@@ -481,7 +438,9 @@ inline std::string Topology::dump() const {
 class Task {
 
   friend class FlowBuilder;
-  friend class Taskflow;
+
+  template <template<typename...> typename E> 
+  friend class BasicTaskflow;
 
   public:
     
@@ -498,20 +457,24 @@ class Task {
     size_t num_dependents() const;
 
     Task& name(const std::string&);
-    Task& precede(Task);
-    Task& broadcast(std::vector<Task>&);
-    Task& broadcast(std::initializer_list<Task>);
-    Task& gather(std::vector<Task>&);
-    Task& gather(std::initializer_list<Task>);
 
     template <typename C>
     Task& work(C&&);
-  
+
+    template <typename... Ts>
+    Task& precede(Ts&&...);
+    
     template <typename... Bs>
     Task& broadcast(Bs&&...);
-
+    
+    Task& broadcast(std::vector<Task>&);
+    Task& broadcast(std::initializer_list<Task>);
+  
     template <typename... Bs>
     Task& gather(Bs&&...);
+
+    Task& gather(std::vector<Task>&);
+    Task& gather(std::initializer_list<Task>);
 
   private:
 
@@ -532,15 +495,9 @@ inline Task::Task(Node& t) : _node {&t} {
 inline Task::Task(const Task& rhs) : _node {rhs._node} {
 }
 
-// Function: precede
-inline Task& Task::precede(Task tgt) {
-  _node->precede(*(tgt._node));
-  return *this;
-}
-
 // Function: broadcast
 template <typename... Bs>
-inline Task& Task::broadcast(Bs&&... tgts) {
+Task& Task::broadcast(Bs&&... tgts) {
   (_node->precede(*(tgts._node)), ...);
   return *this;
 }
@@ -565,16 +522,23 @@ inline Task& Task::broadcast(std::initializer_list<Task> tgts) {
   return *this;
 }
 
+// Function: precede
+template <typename... Ts>
+Task& Task::precede(Ts&&... tgts) {
+  (_node->precede(*(tgts._node)), ...);
+  return *this;
+}
+
 // Function: gather
 template <typename... Bs>
-inline Task& Task::gather(Bs&&... tgts) {
-  (tgts.precede(*this), ...);
+Task& Task::gather(Bs&&... tgts) {
+  (tgts._node->precede(*_node), ...);
   return *this;
 }
 
 // Procedure: _gather
 template <typename S>
-inline void Task::_gather(S& tgts) {
+void Task::_gather(S& tgts) {
   for(auto& from : tgts) {
     from._node->precede(*_node);
   }
@@ -637,7 +601,8 @@ inline size_t Task::num_successors() const {
 class FlowBuilder {
 
   public:
-
+    
+    FlowBuilder(Graph&);
     FlowBuilder(Graph&, size_t);
 
     template <typename C>
@@ -682,6 +647,7 @@ class FlowBuilder {
     void broadcast(Task, std::initializer_list<Task>);
     void gather(std::vector<Task>&, Task);
     void gather(std::initializer_list<Task>, Task);  
+    void partition_factor(size_t);
 
     size_t size() const;
 
@@ -691,21 +657,30 @@ class FlowBuilder {
 
     Graph& _graph;
 
-    size_t _partition_factor;
+    size_t _partition_factor {std::thread::hardware_concurrency()};
 
     template <typename L>
     void _linearize(L&);
 };
+
+// Constructor
+inline FlowBuilder::FlowBuilder(Graph& graph) :
+  _graph {graph} {
+}
 
 inline FlowBuilder::FlowBuilder(Graph& graph, size_t f) : 
   _graph {graph}, 
   _partition_factor {f} {
 }    
 
+// Procedure: partition_factor
+inline void FlowBuilder::partition_factor(size_t f) {
+  _partition_factor = f;
+}
+
 // Procedure: size
 inline size_t FlowBuilder::size() const {
-  return _graph.size();
-  //return std::distance(_graph.begin(), _graph.end());
+  return std::distance(_graph.begin(), _graph.end());
 }
 
 // Function: empty
@@ -724,42 +699,36 @@ inline void FlowBuilder::broadcast(Task from, std::vector<Task>& keys) {
 }
 
 // Procedure: broadcast
-inline void FlowBuilder::broadcast(
-  Task from, std::initializer_list<Task> keys
-) {
+inline void FlowBuilder::broadcast(Task from, std::initializer_list<Task> keys) {
   from.broadcast(keys);
 }
 
 // Function: gather
-inline void FlowBuilder::gather(
-  std::vector<Task>& keys, Task to
-) {
+inline void FlowBuilder::gather(std::vector<Task>& keys, Task to) {
   to.gather(keys);
 }
 
 // Function: gather
-inline void FlowBuilder::gather(
-  std::initializer_list<Task> keys, Task to
-) {
+inline void FlowBuilder::gather(std::initializer_list<Task> keys, Task to) {
   to.gather(keys);
 }
 
 // Function: placeholder
 inline auto FlowBuilder::placeholder() {
-  auto& node = _graph.emplace_back();
+  auto& node = _graph.emplace_front();
   return Task(node);
 }
 
 // Function: silent_emplace
 template <typename... C, std::enable_if_t<(sizeof...(C)>1), void>*>
-inline auto FlowBuilder::silent_emplace(C&&... cs) {
+auto FlowBuilder::silent_emplace(C&&... cs) {
   return std::make_tuple(silent_emplace(std::forward<C>(cs))...);
 }
 
 
 // Function: parallel_for    
 template <typename I, typename C>
-inline auto FlowBuilder::parallel_for(I beg, I end, C&& c, size_t g) {
+auto FlowBuilder::parallel_for(I beg, I end, C&& c, size_t g) {
 
   using category = typename std::iterator_traits<I>::iterator_category;
   
@@ -802,14 +771,14 @@ inline auto FlowBuilder::parallel_for(I beg, I end, C&& c, size_t g) {
 
 // Function: parallel_for
 template <typename T, typename C, std::enable_if_t<is_iterable_v<T>, void>*>
-inline auto FlowBuilder::parallel_for(T& t, C&& c, size_t group) {
+auto FlowBuilder::parallel_for(T& t, C&& c, size_t group) {
   return parallel_for(t.begin(), t.end(), std::forward<C>(c), group);
 }
 
 // Function: reduce_min
 // Find the minimum element over a range of items.
 template <typename I, typename T>
-inline auto FlowBuilder::reduce_min(I beg, I end, T& result) {
+auto FlowBuilder::reduce_min(I beg, I end, T& result) {
   return reduce(beg, end, result, [] (const auto& l, const auto& r) {
     return std::min(l, r);
   });
@@ -818,7 +787,7 @@ inline auto FlowBuilder::reduce_min(I beg, I end, T& result) {
 // Function: reduce_max
 // Find the maximum element over a range of items.
 template <typename I, typename T>
-inline auto FlowBuilder::reduce_max(I beg, I end, T& result) {
+auto FlowBuilder::reduce_max(I beg, I end, T& result) {
   return reduce(beg, end, result, [] (const auto& l, const auto& r) {
     return std::max(l, r);
   });
@@ -826,9 +795,7 @@ inline auto FlowBuilder::reduce_max(I beg, I end, T& result) {
 
 // Function: transform_reduce    
 template <typename I, typename T, typename B, typename U>
-inline auto FlowBuilder::transform_reduce(
-  I beg, I end, T& result, B&& bop, U&& uop
-) {
+auto FlowBuilder::transform_reduce(I beg, I end, T& result, B&& bop, U&& uop) {
 
   using category = typename std::iterator_traits<I>::iterator_category;
   
@@ -884,9 +851,7 @@ inline auto FlowBuilder::transform_reduce(
 
 // Function: transform_reduce    
 template <typename I, typename T, typename B, typename P, typename U>
-inline auto FlowBuilder::transform_reduce(
-  I beg, I end, T& result, B&& bop, P&& pop, U&& uop
-) {
+auto FlowBuilder::transform_reduce(I beg, I end, T& result, B&& bop, P&& pop, U&& uop) {
 
   using category = typename std::iterator_traits<I>::iterator_category;
   
@@ -943,14 +908,11 @@ inline auto FlowBuilder::transform_reduce(
 
 // Procedure: _linearize
 template <typename L>
-inline void FlowBuilder::_linearize(L& keys) {
-  (void) std::adjacent_find(
-    keys.begin(), keys.end(), 
-    [] (auto& from, auto& to) {
-      from._node->precede(*(to._node));
-      return false;
-    }
-  );
+void FlowBuilder::_linearize(L& keys) {
+  std::adjacent_find(keys.begin(), keys.end(), [] (auto& from, auto& to) {
+    from._node->precede(*(to._node));
+    return false;
+  });
 }
 
 // Procedure: linearize
@@ -965,7 +927,7 @@ inline void FlowBuilder::linearize(std::initializer_list<Task> keys) {
 
 // Proceduer: reduce
 template <typename I, typename T, typename B>
-inline auto FlowBuilder::reduce(I beg, I end, T& result, B&& op) {
+auto FlowBuilder::reduce(I beg, I end, T& result, B&& op) {
   
   using category = typename std::iterator_traits<I>::iterator_category;
   
@@ -1041,7 +1003,7 @@ class SubflowBuilder : public FlowBuilder {
 
 // Constructor
 template <typename... Args>
-inline SubflowBuilder::SubflowBuilder(Args&&... args) :
+SubflowBuilder::SubflowBuilder(Args&&... args) :
   FlowBuilder {std::forward<Args>(args)...} {
 }
 
@@ -1067,7 +1029,7 @@ inline bool SubflowBuilder::joined() const {
 
 // Function: emplace
 template <typename C>
-inline auto FlowBuilder::emplace(C&& c) {
+auto FlowBuilder::emplace(C&& c) {
     
   // subflow task
   if constexpr(std::is_invocable_v<C, SubflowBuilder&>) {
@@ -1077,7 +1039,7 @@ inline auto FlowBuilder::emplace(C&& c) {
     auto fu = p.get_future();
   
     if constexpr(std::is_same_v<void, R>) {
-      auto& node = _graph.emplace_back([p=MoC(std::move(p)), c=std::forward<C>(c)]
+      auto& node = _graph.emplace_front([p=MoC(std::move(p)), c=std::forward<C>(c)]
       (SubflowBuilder& fb) mutable {
         if(fb._graph.empty()) {
           c(fb);
@@ -1092,7 +1054,7 @@ inline auto FlowBuilder::emplace(C&& c) {
       return std::make_pair(Task(node), std::move(fu));
     }
     else {
-      auto& node = _graph.emplace_back(
+      auto& node = _graph.emplace_front(
       [p=MoC(std::move(p)), c=std::forward<C>(c), r=std::optional<R>()]
       (SubflowBuilder& fb) mutable {
         if(fb._graph.empty()) {
@@ -1117,7 +1079,7 @@ inline auto FlowBuilder::emplace(C&& c) {
     auto fu = p.get_future();
 
     if constexpr(std::is_same_v<void, R>) {
-      auto& node = _graph.emplace_back(
+      auto& node = _graph.emplace_front(
         [p=MoC(std::move(p)), c=std::forward<C>(c)]() mutable {
           c(); 
           p.get().set_value();
@@ -1126,7 +1088,7 @@ inline auto FlowBuilder::emplace(C&& c) {
       return std::make_pair(Task(node), std::move(fu));
     }
     else {
-      auto& node = _graph.emplace_back(
+      auto& node = _graph.emplace_front(
         [p=MoC(std::move(p)), c=std::forward<C>(c)]() mutable {
           p.get().set_value(c());
         }
@@ -1141,16 +1103,16 @@ inline auto FlowBuilder::emplace(C&& c) {
 
 // Function: emplace
 template <typename... C, std::enable_if_t<(sizeof...(C)>1), void>*>
-inline auto FlowBuilder::emplace(C&&... cs) {
+auto FlowBuilder::emplace(C&&... cs) {
   return std::make_tuple(emplace(std::forward<C>(cs))...);
 }
 
 // Function: silent_emplace
 template <typename C>
-inline auto FlowBuilder::silent_emplace(C&& c) {
+auto FlowBuilder::silent_emplace(C&& c) {
   // subflow task
   if constexpr(std::is_invocable_v<C, SubflowBuilder&>) {
-    auto& n = _graph.emplace_back(
+    auto& n = _graph.emplace_front(
     [c=std::forward<C>(c)] (SubflowBuilder& fb) {
       // first time execution
       if(fb._graph.empty()) {
@@ -1161,7 +1123,7 @@ inline auto FlowBuilder::silent_emplace(C&& c) {
   }
   // regular task
   else if constexpr(std::is_invocable_v<C>) {
-    auto& n = _graph.emplace_back(std::forward<C>(c));
+    auto& n = _graph.emplace_front(std::forward<C>(c));
     return Task(n);
   }
   else {
@@ -1170,11 +1132,13 @@ inline auto FlowBuilder::silent_emplace(C&& c) {
 }
 
 // ============================================================================
-// Taskflow Definition
+// BasicTaskflow Definition
 // ============================================================================
 
-// Class: Taskflow
-class Taskflow : public FlowBuilder {
+// Class: BasicTaskflow
+// template argument E : executor, the threadpool implementation
+template <template <typename...> typename E>
+class BasicTaskflow : public FlowBuilder {
   
   using StaticWork  = typename Node::StaticWork;
   using DynamicWork = typename Node::DynamicWork;
@@ -1185,23 +1149,28 @@ class Taskflow : public FlowBuilder {
     Closure() = default;
     Closure(const Closure&) = delete;
     Closure(Closure&&);
-    Closure(Taskflow&, Node&);
+    Closure(BasicTaskflow&, Node&);
 
     Closure& operator = (Closure&&);
     Closure& operator = (const Closure&) = delete;
     
     void operator ()() const;
 
-    Taskflow* taskflow {nullptr};
-    Node*     node     {nullptr};
+    BasicTaskflow* taskflow {nullptr};
+    Node*          node     {nullptr};
   };
 
   public:
 
-    explicit Taskflow();
-    explicit Taskflow(unsigned);
+  using Executor = E<Closure>;
 
-    ~Taskflow();
+    explicit BasicTaskflow();
+    explicit BasicTaskflow(unsigned);
+    explicit BasicTaskflow(std::shared_ptr<Executor>);
+
+    ~BasicTaskflow();
+    
+    std::shared_ptr<Executor> share_executor();
     
     std::shared_future<void> dispatch();
 
@@ -1209,6 +1178,7 @@ class Taskflow : public FlowBuilder {
     void wait_for_all();
     void wait_for_topologies();
     void dump(std::ostream&) const;
+    void dump_topologies(std::ostream&) const;
 
     size_t num_nodes() const;
     size_t num_workers() const;
@@ -1218,30 +1188,37 @@ class Taskflow : public FlowBuilder {
     std::string dump_topologies() const;
 
   private:
-
-    SpeculativeThreadpool<Closure> _executor;
-
+    
     Graph _graph;
+
+    std::shared_ptr<Executor> _executor;
 
     std::forward_list<Topology> _topologies;
 
     void _schedule(Node&);
 };
 
+// ============================================================================
+// BasicTaskflow::Closure Method Definitions
+// ============================================================================
+
 // Constructor    
-inline Taskflow::Closure::Closure(Closure&& rhs) : 
+template <template <typename...> typename E>
+BasicTaskflow<E>::Closure::Closure(Closure&& rhs) : 
   taskflow {rhs.taskflow}, node {rhs.node} { 
   rhs.taskflow = nullptr;
   rhs.node     = nullptr;
 }
 
 // Constructor
-inline Taskflow::Closure::Closure(Taskflow& t, Node& n) : 
+template <template <typename...> typename E>
+BasicTaskflow<E>::Closure::Closure(BasicTaskflow& t, Node& n) : 
   taskflow{&t}, node {&n} {
 }
 
 // Move assignment
-inline Taskflow::Closure& Taskflow::Closure::operator = (Closure&& rhs) {
+template <template <typename...> typename E>
+typename BasicTaskflow<E>::Closure& BasicTaskflow<E>::Closure::operator = (Closure&& rhs) {
   taskflow = rhs.taskflow;
   node     = rhs.node;
   rhs.taskflow = nullptr;
@@ -1250,7 +1227,8 @@ inline Taskflow::Closure& Taskflow::Closure::operator = (Closure&& rhs) {
 }
 
 // Operator ()
-inline void Taskflow::Closure::operator () () const {
+template <template <typename...> typename E>
+void BasicTaskflow<E>::Closure::operator () () const {
   
   assert(taskflow && node);
 
@@ -1274,11 +1252,11 @@ inline void Taskflow::Closure::operator () () const {
   // to re-execute the work.
   else {
     assert(std::holds_alternative<DynamicWork>(node->_work));
-
-    if(!node->_subgraph.has_value()) {
-      node->_subgraph.emplace();
-    }
-
+		
+    if(!node->_subgraph.has_value()){
+      node->_subgraph.emplace();  // Initialize the _subgraph		
+		}
+    
     SubflowBuilder fb(*(node->_subgraph), taskflow->num_workers());
 
     bool empty_graph = node->_subgraph->empty();
@@ -1288,23 +1266,20 @@ inline void Taskflow::Closure::operator () () const {
     // Need to create a subflow
     if(empty_graph) {
 
-      auto& S = node->_subgraph->emplace_back([](){});
+      auto& S = node->_subgraph->emplace_front([](){});
 
       S._topology = node->_topology;
 
-      //for(auto i = std::next(node->_subgraph->begin()); i != node->_subgraph->end(); ++i) {
-      for(auto& i : *(node->_subgraph)) {
+      for(auto i = std::next(node->_subgraph->begin()); i != node->_subgraph->end(); ++i) {
 
-        if(&i == &S) continue;
+        i->_topology = node->_topology;
 
-        i._topology = node->_topology;
-
-        if(i.num_successors() == 0) {
-          i.precede(fb.detached() ? node->_topology->_target : *node);
+        if(i->num_successors() == 0) {
+          i->precede(fb.detached() ? node->_topology->_target : *node);
         }
 
-        if(i.num_dependents() == 0) {
-          S.precede(i);
+        if(i->num_dependents() == 0) {
+          S.precede(*i);
         }
       }
       
@@ -1329,46 +1304,74 @@ inline void Taskflow::Closure::operator () () const {
   }
 }
 
+// ============================================================================
+// BasicTaskflow Method Definitions
+// ============================================================================
+
 // Constructor
-inline Taskflow::Taskflow() : 
+template <template <typename...> typename E>
+BasicTaskflow<E>::BasicTaskflow() : 
   FlowBuilder {_graph, std::thread::hardware_concurrency()},
-  _executor   {std::thread::hardware_concurrency()} {
+  _executor {std::make_shared<Executor>(std::thread::hardware_concurrency())} {
 }
 
 // Constructor
-inline Taskflow::Taskflow(unsigned N) : 
+template <template <typename...> typename E>
+BasicTaskflow<E>::BasicTaskflow(unsigned N) : 
   FlowBuilder {_graph, N},
-  _executor   {N} {
+  _executor {std::make_shared<Executor>(N)} {
+}
+
+// Constructor
+template <template <typename...> typename E>
+BasicTaskflow<E>::BasicTaskflow(std::shared_ptr<Executor> e) :
+  FlowBuilder {_graph},
+  _executor {std::move(e)} {
+
+  if(_executor == nullptr) {
+    TF_THROW(Error::EXECUTOR, 
+      "failed to construct taskflow (executor cannot be null)"
+    );
+  }
+
+  _partition_factor = _executor->num_workers();
 }
 
 // Destructor
-inline Taskflow::~Taskflow() {
+template <template <typename...> typename E>
+BasicTaskflow<E>::~BasicTaskflow() {
   wait_for_topologies();
 }
 
 // Function: num_nodes
-inline size_t Taskflow::num_nodes() const {
-  return _graph.size();
-  //return _nodes.size();
-  //return std::distance(_graph.begin(), _graph.end());
+template <template <typename...> typename E>
+size_t BasicTaskflow<E>::num_nodes() const {
+  return std::distance(_graph.begin(), _graph.end());
 }
 
 // Function: num_workers
-inline size_t Taskflow::num_workers() const {
-  return _executor.num_workers();
+template <template <typename...> typename E>
+size_t BasicTaskflow<E>::num_workers() const {
+  return _executor->num_workers();
 }
 
 // Function: num_topologies
-inline size_t Taskflow::num_topologies() const {
+template <template <typename...> typename E>
+size_t BasicTaskflow<E>::num_topologies() const {
   return std::distance(_topologies.begin(), _topologies.end());
 }
 
-// Procedure: silent_dispatch 
-inline void Taskflow::silent_dispatch() {
+// Function: share_executor
+template <template <typename...> typename E>
+std::shared_ptr<typename BasicTaskflow<E>::Executor> BasicTaskflow<E>::share_executor() {
+  return _executor;
+}
 
-  if(_graph.empty()) {
-    return;
-  }
+// Procedure: silent_dispatch 
+template <template <typename...> typename E>
+void BasicTaskflow<E>::silent_dispatch() {
+
+  if(_graph.empty()) return;
 
   auto& topology = _topologies.emplace_front(std::move(_graph));
 
@@ -1377,7 +1380,8 @@ inline void Taskflow::silent_dispatch() {
 }
 
 // Procedure: dispatch 
-inline std::shared_future<void> Taskflow::dispatch() {
+template <template <typename...> typename E>
+std::shared_future<void> BasicTaskflow<E>::dispatch() {
 
   if(_graph.empty()) {
     return std::async(std::launch::deferred, [](){}).share();
@@ -1392,7 +1396,8 @@ inline std::shared_future<void> Taskflow::dispatch() {
 }
 
 // Procedure: wait_for_all
-inline void Taskflow::wait_for_all() {
+template <template <typename...> typename E>
+void BasicTaskflow<E>::wait_for_all() {
   if(!_graph.empty()) {
     silent_dispatch();
   }
@@ -1400,42 +1405,51 @@ inline void Taskflow::wait_for_all() {
 }
 
 // Procedure: wait_for_topologies
-inline void Taskflow::wait_for_topologies() {
+template <template <typename...> typename E>
+void BasicTaskflow<E>::wait_for_topologies() {
   for(auto& t: _topologies){
     t._future.get();
-    // We recycle only static graph nodes.
-    _graph.recycle(std::move(t._graph));
   }
-
   _topologies.clear();
 }
 
 // Procedure: _schedule
 // The main procedure to schedule a give task node.
 // Each task node has two types of tasks - regular and subflow.
-inline void Taskflow::_schedule(Node& node) {
-  _executor.emplace(*this, node);
+template <template <typename...> typename E>
+void BasicTaskflow<E>::_schedule(Node& node) {
+  _executor->emplace(*this, node);
 }
 
-// Function: dump_topology
-inline std::string Taskflow::dump_topologies() const {
+// Function: dump_topologies
+template <template <typename...> typename E>
+std::string BasicTaskflow<E>::dump_topologies() const {
   
   std::ostringstream os;
 
   for(const auto& tpg : _topologies) {
-    tpg._dump(os);
+    tpg.dump(os);
   }
   
   return os.str();
 }
 
+// Function: dump_topologies
+template <template <typename...> typename E>
+void BasicTaskflow<E>::dump_topologies(std::ostream& os) const {
+  for(const auto& tpg : _topologies) {
+    tpg.dump(os);
+  }
+}
+
 // Function: dump
-inline void Taskflow::dump(std::ostream& os) const {
+template <template <typename...> typename E>
+void BasicTaskflow<E>::dump(std::ostream& os) const {
 
   os << "digraph Taskflow {\n";
   
   for(const auto& node : _graph) {
-    node._dump(os);
+    node.dump(os);
   }
 
   os << "}\n";
@@ -1443,11 +1457,16 @@ inline void Taskflow::dump(std::ostream& os) const {
 
 // Function: dump
 // Dumps the taskflow in graphviz. The result can be viewed at http://www.webgraphviz.com/.
-inline std::string Taskflow::dump() const {
+template <template <typename...> typename E>
+std::string BasicTaskflow<E>::dump() const {
   std::ostringstream os;
   dump(os); 
   return os.str();
 }
+
+// ----------------------------------------------------------------------------
+
+using Taskflow = BasicTaskflow<SpeculativeThreadpool>;
 
 };  // end of namespace tf. ---------------------------------------------------
 

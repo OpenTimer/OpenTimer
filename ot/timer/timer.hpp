@@ -34,7 +34,7 @@ class Timer {
   public:
     
     // Builder
-    Timer& num_threads(unsigned);
+    Timer& set_num_threads(unsigned);
     Timer& read_celllib(std::filesystem::path, std::optional<Split> = {});
     Timer& read_verilog(std::filesystem::path);
     Timer& read_spef(std::filesystem::path);
@@ -49,42 +49,42 @@ class Timer {
     Timer& connect_pin(std::string, std::string);
     Timer& insert_primary_input(std::string);
     Timer& insert_primary_output(std::string);
-    Timer& at(std::string, Split, Tran, std::optional<float>);
-    Timer& rat(std::string, Split, Tran, std::optional<float>);
-    Timer& slew(std::string, Split, Tran, std::optional<float>);
-    Timer& load(std::string, Split, Tran, std::optional<float>);
-    Timer& clock(std::string, float);
-    Timer& clock(std::string, std::string, float);
+    Timer& set_at(std::string, Split, Tran, std::optional<float>);
+    Timer& set_rat(std::string, Split, Tran, std::optional<float>);
+    Timer& set_slew(std::string, Split, Tran, std::optional<float>);
+    Timer& set_load(std::string, Split, Tran, std::optional<float>);
+    Timer& create_clock(std::string, float);
+    Timer& create_clock(std::string, std::string, float);
     Timer& cppr(bool);
-    Timer& time_unit(second_t);
-    Timer& capacitance_unit(farad_t);
-    Timer& resistance_unit(ohm_t);
-    Timer& voltage_unit(volt_t);
-    Timer& power_unit(watt_t);
-    Timer& current_unit(ampere_t);
+    Timer& set_time_unit(second_t);
+    Timer& set_capacitance_unit(farad_t);
+    Timer& set_resistance_unit(ohm_t);
+    Timer& set_voltage_unit(volt_t);
+    Timer& set_power_unit(watt_t);
+    Timer& set_current_unit(ampere_t);
 
     // Action.
     void update_timing();
 
-    std::optional<float> at(const std::string&, Split, Tran);
-    std::optional<float> rat(const std::string&, Split, Tran);
-    std::optional<float> slew(const std::string&, Split, Tran);
-    std::optional<float> slack(const std::string&, Split, Tran);
-    std::optional<float> load(const std::string&, Split, Tran);
-    std::optional<float> area();
-    std::optional<float> leakage_power();
-    std::optional<float> tns();
-    std::optional<float> wns();
-    std::optional<size_t> fep();
+    std::optional<float> report_at(const std::string&, Split, Tran);
+    std::optional<float> report_rat(const std::string&, Split, Tran);
+    std::optional<float> report_slew(const std::string&, Split, Tran);
+    std::optional<float> report_slack(const std::string&, Split, Tran);
+    std::optional<float> report_load(const std::string&, Split, Tran);
+    std::optional<float> report_area();
+    std::optional<float> report_leakage_power();
+    std::optional<float> report_tns();
+    std::optional<float> report_wns();
+    std::optional<size_t> report_fep();
     
-    std::vector<Path> worst_paths(size_t);
-    std::vector<Path> worst_paths(size_t, Split);
-    std::vector<Path> worst_paths(size_t, Tran);
-    std::vector<Path> worst_paths(size_t, Split, Tran);
+    std::vector<Path> report_timing(size_t);
+    std::vector<Path> report_timing(size_t, Split);
+    std::vector<Path> report_timing(size_t, Tran);
+    std::vector<Path> report_timing(size_t, Split, Tran);
 
     // Accessor
     void dump_graph(std::ostream&) const;
-    void dump_lineage(std::ostream&) const;
+    void dump_taskflow(std::ostream&) const;
     void dump_cell(std::ostream&, const std::string&, Split) const;
     void dump_celllib(std::ostream&, Split) const;
     void dump_net_load(std::ostream&) const;
@@ -94,6 +94,7 @@ class Timer {
     void dump_slew(std::ostream&) const;
     void dump_slack(std::ostream&) const;
     void dump_timer(std::ostream&) const;
+    void dump_verilog(std::ostream&) const;
     
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;
@@ -166,7 +167,7 @@ class Timer {
     std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
 
-    std::vector<Path> _worst_paths(std::vector<Endpoint*>&&, size_t);
+    std::vector<Path> _report_timing(std::vector<Endpoint*>&&, size_t);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
@@ -193,16 +194,15 @@ class Timer {
     void _build_bprop_cands(Pin&);
     void _build_prop_tasks();
     void _clear_prop_tasks();
-    void _spef(spef::Spef&);;
+    void _read_spef(spef::Spef&);;
     void _verilog(vlog::Module&);
     void _timing(tau15::Timing&);
-    void _sdc(sdc::SDC&);
-    void _sdc(sdc::SetInputDelay&);
-    void _sdc(sdc::SetInputTransition&);
-    void _sdc(sdc::SetOutputDelay&);
-    void _sdc(sdc::SetLoad&);
-    void _sdc(sdc::CreateClock&);
-    void _add_to_lineage(const tf::Task&);
+    void _read_sdc(sdc::SDC&);
+    void _read_sdc(sdc::SetInputDelay&);
+    void _read_sdc(sdc::SetInputTransition&);
+    void _read_sdc(sdc::SetOutputDelay&);
+    void _read_sdc(sdc::SetLoad&);
+    void _read_sdc(sdc::CreateClock&);
     void _connect_pin(Pin&, Net&);
     void _disconnect_pin(Pin&);
     void _insert_frontier(Pin&);
@@ -220,10 +220,10 @@ class Timer {
     void _remove_pin(Pin&);
     void _remove_arc(Arc&);
     void _remove_test(Test&);
-    void _at(PrimaryInput&, Split, Tran, std::optional<float>);
-    void _slew(PrimaryInput&, Split, Tran, std::optional<float>);
-    void _rat(PrimaryOutput&, Split, Tran, std::optional<float>);
-    void _load(PrimaryOutput&, Split, Tran, std::optional<float>);
+    void _set_at(PrimaryInput&, Split, Tran, std::optional<float>);
+    void _set_slew(PrimaryInput&, Split, Tran, std::optional<float>);
+    void _set_rat(PrimaryOutput&, Split, Tran, std::optional<float>);
+    void _set_load(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _cppr(bool);
     void _topologize(SfxtCache&, size_t) const;
     void _spfa(SfxtCache&) const;
@@ -237,7 +237,7 @@ class Timer {
     void _spur(Endpoint&, size_t, PathHeap&) const;
     void _spur(PfxtCache&, const PfxtNode&) const;
     void _dump_graph(std::ostream&) const;
-    void _dump_lineage(std::ostream&) const;
+    void _dump_taskflow(std::ostream&) const;
     void _dump_cell(std::ostream&, const std::string&, Split) const;
     void _dump_celllib(std::ostream&, Split) const;
     void _dump_net_load(std::ostream&) const;
@@ -251,6 +251,9 @@ class Timer {
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
+    
+    tf::Task _insert_builder(const std::string&, bool);
+    tf::Task _insert_action(const std::string&);
 
     SfxtCache _sfxt_cache(const Endpoint&) const;
     SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
@@ -265,14 +268,14 @@ class Timer {
     Arc& _insert_arc(Pin&, Pin&, TimingView);
     SCC& _insert_scc(std::vector<Pin*>&);
     Test& _insert_test(Arc&);
-    Clock& _insert_clock(const std::string&, Pin&, float);
-    Clock& _insert_clock(const std::string&, float);
+    Clock& _create_clock(const std::string&, Pin&, float);
+    Clock& _create_clock(const std::string&, float);
 
-    std::optional<float> _at(const std::string&, Split, Tran);
-    std::optional<float> _rat(const std::string&, Split, Tran);
-    std::optional<float> _slew(const std::string&, Split, Tran);
-    std::optional<float> _slack(const std::string&, Split, Tran);
-    std::optional<float> _load(const std::string&, Split, Tran);
+    std::optional<float> _report_at(const std::string&, Split, Tran);
+    std::optional<float> _report_rat(const std::string&, Split, Tran);
+    std::optional<float> _report_slew(const std::string&, Split, Tran);
+    std::optional<float> _report_slack(const std::string&, Split, Tran);
+    std::optional<float> _report_load(const std::string&, Split, Tran);
     std::optional<float> _cppr_credit(const Test&, Split, Tran) const;
     std::optional<float> _cppr_credit(const CpprCache&, Pin&, Split, Tran) const;
     std::optional<float> _cppr_offset(const CpprCache&, Pin&, Split, Tran) const;
@@ -288,6 +291,7 @@ class Timer {
     inline auto _has_state(int) const;
     inline auto _insert_state(int);
     inline auto _remove_state(int = 0);
+
 };
 
 // Procedure: _insert_frontier

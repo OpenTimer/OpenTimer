@@ -11,7 +11,7 @@ void Shell::_set_units() {
     if(token == "-time") {
       _is >> token;
       if(auto unit = make_time_unit(token); unit) {
-        _timer.time_unit(*unit);
+        _timer.set_time_unit(*unit);
       }
       else {
         _es << "time unit syntax error " << std::quoted(token) << '\n';
@@ -20,7 +20,7 @@ void Shell::_set_units() {
     else if(token == "-capacitance") {
       _is >> token;
       if(auto unit = make_capacitance_unit(token); unit) {
-        _timer.capacitance_unit(*unit);
+        _timer.set_capacitance_unit(*unit);
       }
       else {
         _es << "capacitance unit syntax error " << std::quoted(token) << '\n';
@@ -29,7 +29,7 @@ void Shell::_set_units() {
     else if(token == "-resistance") {
       _is >> token;
       if(auto unit = make_resistance_unit(token); unit) {
-        _timer.resistance_unit(*unit);
+        _timer.set_resistance_unit(*unit);
       }
       else {
         _es << "resistance unit syntax error " << std::quoted(token) << '\n';
@@ -38,7 +38,7 @@ void Shell::_set_units() {
     else if(token == "-voltage") {
       _is >> token;
       if(auto unit = make_voltage_unit(token); unit) {
-        _timer.voltage_unit(*unit);
+        _timer.set_voltage_unit(*unit);
       }
       else {
         _es << "voltage unit syntax error " << std::quoted(token) << '\n';
@@ -47,7 +47,7 @@ void Shell::_set_units() {
     else if(token == "-current") {
       _is >> token;
       if(auto unit = make_current_unit(token); unit) {
-        _timer.current_unit(*unit);
+        _timer.set_current_unit(*unit);
       }
       else {
         _es << "current unit syntax error " << std::quoted(token) << '\n';
@@ -56,7 +56,7 @@ void Shell::_set_units() {
     else if(token == "-power") {
       _is >> token;
       if(auto unit = make_power_unit(token); unit) {
-        _timer.power_unit(*unit);
+        _timer.set_power_unit(*unit);
       }
       else {
         _es << "power unit syntax error " << std::quoted(token) << '\n';
@@ -73,7 +73,7 @@ void Shell::_set_units() {
 // Procedure: set_num_threads
 void Shell::_set_num_threads() {
   if(unsigned N = 1; _is >> N) {
-    _timer.num_threads(N);
+    _timer.set_num_threads(N);
   }
 }
 
@@ -168,7 +168,7 @@ void Shell::_set_at() {
     return;
   }
 
-  _timer.at(std::move(pin), el, rf, value);
+  _timer.set_at(std::move(pin), el, rf, value);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -204,7 +204,7 @@ void Shell::_set_slew() {
     return;
   }
 
-  _timer.slew(std::move(pin), el, rf, value);
+  _timer.set_slew(std::move(pin), el, rf, value);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ void Shell::_set_rat() {
     return;
   }
   
-  _timer.rat(std::move(pin), el, rf, value);
+  _timer.set_rat(std::move(pin), el, rf, value);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -276,7 +276,7 @@ void Shell::_set_load() {
     return;
   }
   
-  _timer.load(std::move(pin), el, rf, value ? *value : 0.0f);
+  _timer.set_load(std::move(pin), el, rf, value ? *value : 0.0f);
 }
 
 // ------------------------------------------------------------------------------------------------

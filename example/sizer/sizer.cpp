@@ -23,10 +23,10 @@ int main(int argc, char* argv[]) {
        .read_sdc    ("sizer.sdc");
 
   // Report the timing/power/area
-  std::optional<float> tns  = timer.tns();
-  std::optional<float> wns  = timer.wns();
-  std::optional<float> area = timer.area();
-  std::optional<float> lkp  = timer.leakage_power();
+  std::optional<float> tns  = timer.report_tns();
+  std::optional<float> wns  = timer.report_wns();
+  std::optional<float> area = timer.report_area();
+  std::optional<float> lkp  = timer.report_leakage_power();
   
   std::cout << "\nBefore sizing\n"
             << "TNS          : " << *tns  << '\n'
@@ -42,10 +42,10 @@ int main(int argc, char* argv[]) {
        .repower_gate("inst_4", "NAND2_X1")
        .repower_gate("inst_5", "NAND2_X1");
   
-  tns  = timer.tns();
-  wns  = timer.wns();
-  area = timer.area();
-  lkp  = timer.leakage_power();
+  tns  = timer.report_tns();
+  wns  = timer.report_wns();
+  area = timer.report_area();
+  lkp  = timer.report_leakage_power();
   
   std::cout << "\nDownsize all to NAND2_X1\n"
             << "TNS          : " << *tns  << '\n'
@@ -61,10 +61,10 @@ int main(int argc, char* argv[]) {
        .repower_gate("inst_4", "NAND2_X4")
        .repower_gate("inst_5", "NAND2_X4");
   
-  tns  = timer.tns();
-  wns  = timer.wns();
-  area = timer.area();
-  lkp  = timer.leakage_power();
+  tns  = timer.report_tns();
+  wns  = timer.report_wns();
+  area = timer.report_area();
+  lkp  = timer.report_leakage_power();
   
   std::cout << "\nUpsize all to NAND2_X4\n"
             << "TNS          : " << *tns  << '\n'

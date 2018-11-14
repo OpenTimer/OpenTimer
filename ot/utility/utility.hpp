@@ -13,6 +13,14 @@
 // Miscellaneous
 namespace ot {
 
+// Concatnate a string
+template <typename... Ts>
+std::string to_string(Ts&&... ts) {
+  std::ostringstream oss;
+  (oss << ... << ts);
+  return oss.str();
+}
+
 // Resize a container to fit a given size
 template <typename T>
 void resize_to_fit(size_t N, T& v) {

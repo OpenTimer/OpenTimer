@@ -33,7 +33,7 @@ void Shell::_report_at() {
     return;
   }
 
-  auto at = _timer.at(std::move(pin), el, rf);
+  auto at = _timer.report_at(std::move(pin), el, rf);
   _os << (at ? *at : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
@@ -63,7 +63,7 @@ void Shell::_report_rat() {
     return;
   }
 
-  auto rat = _timer.rat(std::move(pin), el, rf);
+  auto rat = _timer.report_rat(std::move(pin), el, rf);
   _os << (rat ? *rat : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
@@ -93,7 +93,7 @@ void Shell::_report_slack() {
     return;
   }
 
-  auto slack = _timer.slack(std::move(pin), el, rf);
+  auto slack = _timer.report_slack(std::move(pin), el, rf);
   _os << (slack ? *slack : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
@@ -123,7 +123,7 @@ void Shell::_report_slew() {
     return;
   }
 
-  auto slew = _timer.slew(std::move(pin), el, rf);
+  auto slew = _timer.report_slew(std::move(pin), el, rf);
   _os << (slew ? *slew : std::numeric_limits<float>::quiet_NaN()) << '\n';
 }
 
@@ -131,7 +131,7 @@ void Shell::_report_slew() {
 
 // Procedure: report_tns
 void Shell::_report_tns() {
-  if(auto tns = _timer.tns(); tns) {
+  if(auto tns = _timer.report_tns(); tns) {
     _os << *tns << '\n';
   }
   else {
@@ -143,7 +143,7 @@ void Shell::_report_tns() {
 
 // Procedure: report_wns
 void Shell::_report_wns() {
-  if(auto wns = _timer.wns(); wns) {
+  if(auto wns = _timer.report_wns(); wns) {
     _os << *wns << '\n';
   }
   else {
@@ -155,11 +155,11 @@ void Shell::_report_wns() {
 
 // Procedure: report_fep
 void Shell::_report_fep() {
-  if(auto fep = _timer.fep(); fep) {
+  if(auto fep = _timer.report_fep(); fep) {
     _os << *fep << '\n';
   }
   else {
-    _os << "no endpoint found\n";
+    _os << "no failing endpoint found\n";
   }
 }
 
@@ -167,19 +167,7 @@ void Shell::_report_fep() {
 
 // Procedure: report_timing
 void Shell::_report_timing() {
-  if(auto paths = _timer.worst_paths(1); !paths.empty()) {
-    _os << paths[0];
-  }
-  else {
-    _os << "no path found\n";
-  }
-}
-
-// ------------------------------------------------------------------------------------------------
-
-// Procedure: report_path
-void Shell::_report_path() {
-
+  
   std::string token;
   size_t K {1};
 
@@ -192,19 +180,29 @@ void Shell::_report_path() {
     }
   }
 
-  auto paths = _timer.worst_paths(K);
-
-  for(size_t i=0; i<paths.size(); ++i) {
-    if(i) _os << '\n';
-    _os << paths[i];
+  if(auto paths = _timer.report_timing(K); paths.empty()) {
+    _os << "no critical path found\n";
   }
+  else {
+    for(size_t i=0; i<paths.size(); ++i) {
+      if(i) _os << '\n';
+      _os << paths[i];
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
+
+// Procedure: report_path
+void Shell::_report_path() {
+  _report_timing();
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: report_area
 void Shell::_report_area() {
-  if(auto area = _timer.area(); area) {
+  if(auto area = _timer.report_area(); area) {
     _os << *area << '\n';
   }
   else {
@@ -216,7 +214,7 @@ void Shell::_report_area() {
 
 // Procedure: report_leakage_power
 void Shell::_report_leakage_power() {
-  if(auto lp = _timer.leakage_power(); lp) {
+  if(auto lp = _timer.report_leakage_power(); lp) {
     _os << *lp << '\n';
   }
   else {
