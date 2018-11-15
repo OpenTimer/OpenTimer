@@ -378,7 +378,16 @@ void Shell::_cppr() {
   else {
     _es << "usage: cppr -disable|-enable\n";
   }
+}
 
+// Procedure: _enable_cppr
+void Shell::_enable_cppr() {
+  _timer.cppr(true);
+}
+
+// Procedure: _disable_cppr
+void Shell::_disable_cppr() {
+  _timer.cppr(false);
 }
 
 

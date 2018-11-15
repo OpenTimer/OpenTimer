@@ -2,18 +2,24 @@
 
 OpenTimer wiki provides detailed explanation about 
 software architecture, shell commands, C++ API, and input/output supports.
+Many pages are still under construction. Please come back more often!
 
-Many pages are still under construction. Please stayed tune.
+# OpenTimer Cookbook
 
-# Get Started with OpenTimer
-
-+ Compile and Build OpenTimer
-+ Analyze your First Circuit Timing
-+ Program your First OpenTimer Application
++ C0: Get Started with OpenTimer
++ C1: Understand the Builder, Action, and Accessor operations
 
 # OpenTimer Shell
 
-# OpenTimer API
++ [Builder Command](shell/builder.md)
++ [Action Command](shell/action.md)
++ [Accessor Command](shell/accessor.md)
+
+# OpenTimer C++ API
+
++ Builder API
++ Action API
++ Accessor API
 
 # Timing Model
 
@@ -21,10 +27,10 @@ Many pages are still under construction. Please stayed tune.
 
 # Input/Output Files
 
-+ [Cell Library](library.md)
-+ [Verilog Netlist](verilog.md)
-+ [Synopsys Design Constraint (SDC)](sdc.md)
-+ [Standard Parasitic Exchange Format (SPEF)](spef.md)
++ [Cell Library](io/library.md)
++ [Verilog Netlist](io/verilog.md)
++ [Synopsys Design Constraint (SDC)](io/sdc.md)
++ [Standard Parasitic Exchange Format (SPEF)](io/spef.md)
 
 # Frequently Asked Questions
 

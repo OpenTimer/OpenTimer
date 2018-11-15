@@ -97,7 +97,7 @@ The example below demonstrates a valid SPEF file for OpenTimer.
 ```
 
 <p>
-<img src="image/spef_example.png" width="60%">
+<img src="spef_example.png" width="60%">
 Parasitics of net inp2.
 </p>
 

@@ -16,12 +16,12 @@ int main(int argc, char* argv[]) {
   std::filesystem::path stderr_path;
   std::filesystem::path log_path;
 
-  app.add_flag  ("-q,--quiet",   flag_quiet,   "Do not print the welcome on startup");
-  app.add_flag  ("-v,--version", flag_version, "Print version information and exit");
-  app.add_option("-i,--stdin",   stdin_path,   "Redirect stdin to a file");
-  app.add_option("-o,--stdout",  stdout_path,  "Redirect stdout to a file");
-  app.add_option("-e,--stderr",  stderr_path,  "Redirect stderr to a file");
-  app.add_option("--log",        log_path,     "Redirect logging to a file");
+  app.add_flag  ("-q,--quiet",   flag_quiet,   "do not print the welcome on startup");
+  app.add_flag  ("-v,--version", flag_version, "print version information and exit");
+  app.add_option("-i,--stdin",   stdin_path,   "redirect stdin to a file");
+  app.add_option("-o,--stdout",  stdout_path,  "redirect stdout to a file");
+  app.add_option("-e,--stderr",  stderr_path,  "redirect stderr to a file");
+  app.add_option("--log",        log_path,     "redirect logging to a file");
 
   try {
     app.parse(argc, argv);

@@ -81,7 +81,7 @@ endmodule
 ```
 
 <p>
-<img src="image/verilog_example.png" width="70%">
+<img src="verilog_example.png" width="70%">
 Diagram of the design.
 </p>
 

@@ -62,6 +62,8 @@ class Shell {
     void _disconnect_pin         ();
     void _connect_pin            ();
     void _cppr                   ();
+    void _enable_cppr            ();
+    void _disable_cppr           ();
 
     // action
     void _update_timing          ();
@@ -135,6 +137,8 @@ class Shell {
       {"disconnect_pin",          &Shell::_disconnect_pin},
       {"connect_pin",             &Shell::_connect_pin},
       {"cppr",                    &Shell::_cppr},
+      {"enable_cppr",             &Shell::_enable_cppr},
+      {"disable_cppr",            &Shell::_disable_cppr},
 
       // Action
       {"update_timing",           &Shell::_update_timing},
