@@ -11,7 +11,11 @@ This page summarizes the change logs of OpenTimer on a monthly basis.
 ### Improvements
 
 + rename action API, report_at, report_rat, report_slack, etc. to be consistent with shell commands
-
++ added C++ API reference
++ added command reference
++ added static build of OpenTimer
++ cookbook online (two chapters)
++ improved report_timing command and API
 
 ---
 

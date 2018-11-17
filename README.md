@@ -5,7 +5,7 @@
 [![Download](image/download.svg)](https://github.com/OpenTimer/OpenTimer/archive/master.zip)
 [![Version](image/version_badge.svg)](https://github.com/OpenTimer/OpenTimer/tree/master)
 [![AskMe](image/askme.svg)][Github issues]
-[![Insights](image/maintained.svg)][Github insights]
+[![Wiki](image/doc-wiki.svg)][OpenTimer Wiki]
 [![License: MIT](./image/license_badge.svg)](./LICENSE)
 
 A High-Performance Timing Analysis Tool for VLSI Systems
@@ -97,7 +97,7 @@ OpenTimer is very self-contained and has very few dependencies.
 To compile OpenTimer, you need a [C++17][C++17] compiler. 
 We currently support:
 
-+ GNU C++ Compiler v7.2 with -std=c++1z
++ GNU C++ Compiler v7.3 with -std=c++1z
 + Clang C++ Compiler v6.0 with -std=c++17
 
 In addition, you need a tcl shell interpreter:
@@ -189,7 +189,7 @@ with all timing up-to-date.
 The *accessor* operations let you inspect the timer status and dump timing information.
 All accessor operations are declared as *const methods* in the timer class. 
 Calling them promises not to alter any internal members.
-For example, you can dump the timing graph into a dot format and use tools like [GraphViz][GraphViz]
+For example, you can dump the timing graph into a DOT format and use tools like [GraphViz][GraphViz]
 for visualization.
 
 <img align="right" src="image/simple_graph_raw.png" width="70%">
@@ -218,18 +218,16 @@ The table below shows a list of commonly used commands.
 
 | Command | type | Arguments | Description | Example |
 | ------- | ---- | --------- | ----------- | ------- |
-| read_celllib | builder | [-min \| -max] file | read the cell library for early and late splits | read_celllib -min mylib_Early.lib |
-| read_verilog | builder | file | read the verilog netlist | read_verilog mynet.v |
-| read_spef | builder | file | read parasitics in SPEF | read_spef myrc.spef |
+| read_celllib | builder | [-min \| -max] file | read the cell library for early and late splits | read_celllib mylib.lib |
+| read_verilog | builder | file | read the verilog netlist | read_verilog mynetlist.v |
+| read_spef | builder | file | read parasitics in SPEF | read_spef myparasitics.spef |
 | read_sdc | builder | file | read a Synopsys Design Constraint file | read_sdc myrule.sdc |
-| update_timing | action | n/a | update the timing | update_timing |
-| report_timing | action | n/a | report the timing | report_timing |
-| report_path | action | [-num_paths k] | report the top-k critical paths | report_path -num_paths 10 |
-| report_tns | action | n/a | report the total negative slack | report_tns |
-| report_wns | action | n/a | report the worst negative slack | report_wns |
-| dump_graph | accessor | [-o file] | dump the present timing graph to a dot format | dump_graph -o graph.dot |
-| dump_timer | accessor | [-o file] | dump the present timer details | dump_timer -o timer.txt |
-| dump_slack | accessor | [-o file] | dump the present slack values of all pins | dump_slack -o slack.txt |
+| update_timing | action | none | update the timing | update_timing |
+| report_timing | action | [-num_paths k] | report the critical paths | report_timing -num_paths 10 |
+| report_tns | action | none | report the total negative slack | report_tns |
+| report_wns | action | none | report the worst negative slack | report_wns |
+| dump_graph | accessor | [-o file] | dump the timing graph to a DOT format | dump_graph |
+| dump_timer | accessor | [-o file] | dump the design statistics | dump_timer |
 
 To see the full command list, visit [OpenTimer Wiki][OpenTimer Wiki].
 
@@ -302,8 +300,8 @@ The table below summarizes a list of commonly used methods.
 | update_timing | action | void | void | update the timing; all timing values are up-to-date upon return |
 | tns | action | void | optional of float | update the timing and return the total negative slack if exists |
 | wns | action | void | optional of float | update the timing and return the worst negative slack if exists |
-| dump_timer | accessor | ostream | void | dump the present timer details to an ostream |
-| dump_slack | accessor | ostream | void | dump the present slack values of all pins to an ostream |
+| dump_graph | accessor | ostream | void | dump the timing graph in DOT format to an output stream |
+| dump_timer | accessor | ostream | void | dump the design statistics to an output stream |
 
 
 *All public methods are thread-safe* as a result of OpenTimer lineage.
@@ -322,8 +320,8 @@ int main(int argc, char *argv[]) {
        .read_sdc("simple.sdc")                    // read the design constraints (O(1) builder)
        .update_timing();                          // update timing (O(1) builder)
 
-  if(auto tns = timer.tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
-  if(auto wns = timer.wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
+  if(auto tns = timer.report_tns(); tns) std::cout << "TNS: " << *tns << '\n';  // (O(N) action)
+  if(auto wns = timer.report_wns(); wns) std::cout << "WNS: " << *wns << '\n';  // (O(N) action)
   
   timer.dump_timer(std::cout);                    // dump the timer details (O(1) accessor)
   

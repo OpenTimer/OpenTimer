@@ -171,16 +171,46 @@ void Shell::_report_timing() {
   std::string token;
   size_t K {1};
 
+  std::optional<Split> split;
+  std::optional<Tran> tran;
+
   while(_is >> token) {
     if(token == "-num_paths") {
       _is >> K;
+    }
+    else if(token == "-min" || token == "-early") {
+      split = MIN;
+    }
+    else if(token == "-max" || token == "-late") {
+      split = MAX;
+    }
+    else if(token == "-rise") {
+      tran = RISE;
+    }
+    else if(token == "-fall") {
+      tran = FALL;
     }
     else {
       _es << "failed to parse " << std::quoted(token) << '\n';
     }
   }
 
-  if(auto paths = _timer.report_timing(K); paths.empty()) {
+  std::vector<Path> paths;
+  
+  if(split && tran) {
+    paths = _timer.report_timing(K, *split, *tran);
+  }
+  else if(split && !tran) {
+    paths = _timer.report_timing(K, *split);
+  }
+  else if(!split && tran) {
+    paths = _timer.report_timing(K, *tran);
+  }
+  else {
+    paths = _timer.report_timing(K);
+  }
+
+  if(paths.empty()) {
     _os << "no critical path found\n";
   }
   else {

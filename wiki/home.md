@@ -1,33 +1,19 @@
-# Welcome to the OpenTimer Wiki!
-
-OpenTimer wiki provides detailed explanation about 
-software architecture, shell commands, C++ API, and input/output supports.
-Many pages are still under construction. Please come back more often!
-
-# OpenTimer Cookbook
+# Cookbook
 
 + C0: Get Started with OpenTimer
-+ C1: Understand the Builder, Action, and Accessor operations
++ C1: Understand the Builder, Action, and Accessor Operations
 
-# OpenTimer Shell
+# Built-in Shell
 
-+ [Builder Command](shell/builder.md)
-+ [Action Command](shell/action.md)
-+ [Accessor Command](shell/accessor.md)
++ [Command Manual](shell/command_manual.md)
 
-# OpenTimer C++ API
+# C++ API
 
-+ Builder API
-+ Action API
-+ Accessor API
-
-# Timing Model
-
-+ [Non-Linear Delay Model (NLDM)](model/nldm.md)
++ [Timer](api/timer.md)
 
 # Input/Output Files
 
-+ [Cell Library](io/library.md)
++ [Cell Library (Liberty)](io/library.md)
 + [Verilog Netlist](io/verilog.md)
 + [Synopsys Design Constraint (SDC)](io/sdc.md)
 + [Standard Parasitic Exchange Format (SPEF)](io/spef.md)
