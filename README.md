@@ -139,7 +139,7 @@ OpenTimer has a unique software architecture to
 efficiently enable parallel incremental timing.
 We draw two levers on *performance* and *useability*
 by grouping each timing operation to one of the three categories,
-*Builder*, *Action*, and *Accessor*.
+*builder*, *action*, and *accessor*.
 
 | Type |  Description | Example | Time Complexity |
 | -------  |  ----------- |  --- | -- |
