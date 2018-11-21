@@ -135,11 +135,11 @@ industry standard timer and are being used by many EDA researchers.
 
 # Design Philosophy
 
-OpenTimer has very efficient data structures and procedures to
-enable parallel and incremental timing.
-To make the most use of multi-threading,
-each timing operation is divided into three categories,
-*Builder*, *Action*, and *Accessor*.
+OpenTimer has a unique software architecture to
+efficiently enable parallel incremental timing.
+We draw two levers on *performance* and *useability*
+by grouping each timing operation to one of the three categories,
+*builder*, *action*, and *accessor*.
 
 | Type |  Description | Example | Time Complexity |
 | -------  |  ----------- |  --- | -- |
@@ -154,7 +154,7 @@ to create a *task execution plan* (TEP).
 A TEP starts with no dependency and keeps adding tasks to the lineage graph
 every time you call a builder operation.
 It records what transformations need to be executed 
-after an action has been called.
+when an action has been called.
 
 
 ![](image/lineage.png)
