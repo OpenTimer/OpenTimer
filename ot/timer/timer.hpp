@@ -110,6 +110,15 @@ class Timer {
     inline auto current_unit() const;
     inline auto voltage_unit() const;
     inline auto capacitance_unit() const;
+    
+    inline const auto& primary_inputs() const;
+    inline const auto& primary_outputs() const;
+    inline const auto& pins() const;
+    inline const auto& nets() const;
+    inline const auto& gates() const;
+    inline const auto& clocks() const;
+    inline const auto& tests() const;
+    inline const auto& arcs() const;
 
   private:
 
@@ -368,6 +377,54 @@ inline auto Timer::voltage_unit() const {
 // Function: capacitance_unit
 inline auto Timer::capacitance_unit() const {
   return _capacitance_unit;
+}
+
+// Function: primary_inputs
+// expose the primary input data structure to users    
+inline const auto& Timer::primary_inputs() const {
+  return _pis;
+}
+
+// Function: primary_outputs
+// Expose the primary output data structure to users
+inline const auto& Timer::primary_outputs() const {
+  return _pos;
+}
+
+// Function: pins
+// Expose the pin data structure to users
+inline const auto& Timer::pins() const {
+  return _pins;
+}
+
+// Function: nets
+// Expose the net data structure to users
+inline const auto& Timer::nets() const {
+  return _nets;
+}
+
+// Function: gates
+// Expose the gate data structure to users
+inline const auto& Timer::gates() const {
+  return _gates;
+}
+
+// Function: clocks
+// Expose the clock data structure to users
+inline const auto& Timer::clocks() const {
+  return _clocks;
+}
+
+// Function: tests
+// Expose the test data structure to users
+inline const auto& Timer::tests() const {
+  return _tests;
+}
+
+// Function: arcs
+// Expose the arc data structure to users
+inline const auto& Timer::arcs() const {
+  return _arcs;
 }
 
 // Function: _encode_pin

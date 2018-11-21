@@ -43,6 +43,14 @@ Each method belongs to either a builder, an action, or an accessor operation.
 | [num_arcs](#num_arcs)| accessor | queries the number of arcs in the timing graph |
 | [num_gates](#num_gates)| accessor | queries the number of gates in the design |
 | [num_tests](#num_tests)| accessor | queries the number of timing tests (checks) in the design |
+| [primary_inputs](#primary_inputs)| accessor | acquires a const reference to the data structure of primary inputs |
+| [primary_outputs](#primary_outputs)| accessor | acquires a const reference to the data structure of primary outputs |
+| [pins](#pins) | accessor | acquires a const reference to the data structure of pins |
+| [nets](#nets) | accessor | acquires a const reference to the data structure of nets |
+| [gates](#gates) | accessor | acquires a const reference to the data structure of gates |
+| [clocks](#clocks)| accessor | acquires a const reference to the data structure of clocks |
+| [tests](#tests) | accessor | acquires a const reference to the data structure of tests |
+| [arcs](#arcs)| accessor | acquires a const reference to the data structure of arcs |
 
 The above list of methods is consider stable.
 Other methods found in [timer.hpp](../../ot/timer/timer.hpp) but not listed in the table
@@ -922,6 +930,167 @@ none
 An unsigned integer for the number of tests in the design.
 
 <div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## primary_inputs
+
+Acquires a const reference to the data structure of primary inputs.
+
+```cpp
+const std::unordered_map<std::string, Pin>& primary_inputs() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of primary inputs.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## primary_outputs
+
+Acquires a const reference to the data structure of primary outputs.
+
+```cpp
+const std::unordered_map<std::string, Pin>& primary_outputs() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of primary outputs.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## pins
+
+Acquires a const reference to the data structure of pins.
+
+```cpp
+const std::unordered_map<std::string, Pin>& pins() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of pins.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## nets
+
+Acquires a const reference to the data structure of nets.
+
+```cpp
+const std::unordered_map<std::string, Net>& nets() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of nets.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## gates
+
+Acquires a const reference to the data structure of gates.
+
+```cpp
+const std::unordered_map<std::string, Gate>& gates() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of gates.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## clocks
+
+Acquires a const reference to the data structure of clocks.
+
+```cpp
+const std::unordered_map<std::string, Clock>& clocks() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of clocks.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## tests
+
+Acquires a const reference to the data structure of tests (timing checks).
+
+```cpp
+const std::list<Test>& tests() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of tests.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
+---
+
+## arcs
+
+Acquires a const reference to the data structure of arcs.
+
+```cpp
+const std::list<Arc>& arcs() const;
+```
+
+#### Parameters
+
+none
+
+#### Return Value
+
+A constant reference to the data structure of arcs.
+
+<div align="right"><b><a href="#Timer">↥ back to top</a></b></div>
+
 
 * * *
 

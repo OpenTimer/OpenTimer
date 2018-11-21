@@ -41,6 +41,9 @@ class Arc {
 
     TimingView timing_view() const;
 
+    const Pin& from() const;
+    const Pin& to() const;
+
   private:
 
     Pin& _from;
@@ -75,6 +78,15 @@ inline size_t Arc::idx() const {
   return _idx;
 }
 
+// Function: from
+inline const Pin& Arc::from() const {
+  return _from;
+}
+
+// Function: to
+inline const Pin& Arc::to() const {
+  return _to;
+}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

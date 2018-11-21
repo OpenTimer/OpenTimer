@@ -134,7 +134,6 @@ class Pin {
     
     bool is_input() const;
     bool is_output() const;
-    bool is_inout() const;
     bool is_rct_root() const;
     bool is_datapath_source() const;
     bool has_self_loop() const;

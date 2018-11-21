@@ -2,6 +2,7 @@
 #define OT_TIMER_SFXT_HPP_
 
 #include <ot/headerdef.hpp>
+#include <ot/static/logger.hpp>
 
 namespace ot {
 

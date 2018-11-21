@@ -930,7 +930,7 @@ void Timer::_build_prop_tasks() {
   // (4) propagate the arrival time.
   for(auto pin : _fprop_cands) {
     assert(!pin->_ftask);
-    pin->_ftask = _insert_action("fprop_s"s + pin->_name).work([this, pin] () {
+    pin->_ftask = _insert_action("fprop_"s + pin->_name).work([this, pin] () {
       _fprop_rc_timing(*pin);
       _fprop_slew(*pin);
       _fprop_delay(*pin);
@@ -1024,6 +1024,9 @@ void Timer::_update_timing() {
 
   // build propagation tasks
   _build_prop_tasks();
+
+  // debug the graph
+  //_taskflow.dump(std::cout);
 
   // Execute the task
   _taskflow.wait_for_all();
