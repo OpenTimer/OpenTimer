@@ -1,7 +1,7 @@
 # Cookbook
 
-+ C0: Get Started with OpenTimer
-+ C1: Understand the Builder, Action, and Accessor Operations
++ [C0: Get Started with OpenTimer](cookbook/c0.md)
++ [C1: Understand the Builder, Action, and Accessor](cookbook/c1.md)
 
 # Built-in Shell
 

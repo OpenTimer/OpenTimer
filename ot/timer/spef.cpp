@@ -11,7 +11,7 @@ Timer& Timer::read_spef(std::filesystem::path path) {
   std::scoped_lock lock(_mutex);
 
   auto parser = _insert_builder(to_string("parse_spef ", path), false);
-  auto reader = _insert_builder(to_string("read_spef ", path), true);
+  auto reader = _insert_builder(to_string("digest_spef ", path), true);
 
   // Reader task
   parser.work([path=std::move(path), spef] () {

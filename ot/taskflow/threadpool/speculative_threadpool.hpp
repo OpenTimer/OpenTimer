@@ -1,3 +1,7 @@
+// 2018/11/28 - modified by Chun-Xun Lin
+// 
+// Added the method batch to insert a vector of tasks.
+//
 // 2018/10/04 - modified by Tsung-Wei Huang
 // 
 // Removed shutdown, spawn, and wait_for_all to simplify the design
@@ -52,6 +56,8 @@ class SpeculativeThreadpool {
 
     template <typename... ArgsT>
     void emplace(ArgsT&&...);
+
+    void batch(std::vector<Closure>&&);
 
   private:
     
@@ -200,7 +206,7 @@ void SpeculativeThreadpool<Closure>::_spawn(unsigned N) {
 
 template <typename Closure>
 template <typename... ArgsT>
-void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args){
+void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args) {
 
   //no worker thread available
   if(num_workers() == 0){
@@ -209,8 +215,10 @@ void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args){
   }
 
   // speculation
-  if(std::this_thread::get_id() != _owner){
-    auto iter = _this_worker();
+  auto tid = std::this_thread::get_id();
+
+  if(tid != _owner){
+    auto iter = _worker_maps.find(tid);
     if(iter != _worker_maps.end() && !(iter->second->task)){
       iter->second->task.emplace(std::forward<ArgsT>(args)...);
       return ;
@@ -229,6 +237,45 @@ void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args){
     w->cv.notify_one();   
   }
 }
+
+
+template <typename Closure>
+void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
+  size_t consumed {0};
+
+  //no worker thread available
+  if(num_workers() == 0){
+    for(auto& c: tasks){
+      c();
+    }
+    return;
+  }
+
+  // speculation
+  if(std::this_thread::get_id() != _owner){
+    auto iter = _this_worker();
+    if(iter != _worker_maps.end() && !(iter->second->task)){
+      iter->second->task.emplace(std::move(tasks[consumed++]));
+      if(tasks.size() == consumed) {
+        return ;
+      }
+    }
+  }
+
+  std::scoped_lock lock(_mutex);
+  while(!_idlers.empty() && tasks.size() != consumed) {
+    Worker* w = _idlers.back();
+    _idlers.pop_back();
+    w->ready = true;
+    w->task.emplace(std::move(tasks[consumed ++]));
+    w->cv.notify_one();   
+  }
+
+  if(tasks.size() == consumed) return ;
+  _tasks.reserve(_tasks.size() + tasks.size() - consumed);
+  std::move(tasks.begin()+consumed, tasks.end(), std::back_inserter(_tasks));
+}
+
 
 };  // end of namespace tf. ---------------------------------------------------
 

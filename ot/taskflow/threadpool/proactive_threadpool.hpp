@@ -1,3 +1,7 @@
+// 2018/11/28 - modified by Chun-Xun Lin
+// 
+// Added the method batch to insert a vector of tasks.
+//
 // 2018/10/04 - modified by Tsung-Wei Huang
 // 
 // Removed shutdown, spawn, and wait_for_all to simplify the design
@@ -59,6 +63,8 @@ class ProactiveThreadpool {
 
     template <typename... ArgsT>
     void emplace(ArgsT&&...);
+
+    void batch(std::vector<Closure> &&);
 
   private:
 
@@ -202,6 +208,40 @@ void ProactiveThreadpool<Closure>::emplace(ArgsT&&... args) {
       w->task.emplace(std::forward<ArgsT>(args)...);
       w->cv.notify_one();   
     }
+  }
+}
+
+
+// Procedure: batch
+template <typename Closure>
+void ProactiveThreadpool<Closure>::batch(std::vector<Closure> &&tasks) {
+
+  //no worker thread available
+  if(num_workers() == 0){
+    for(auto& t: tasks){
+      t();
+    }
+  }
+  // ask one worker to run the task
+  else {
+    size_t consumed {0};
+    std::scoped_lock lock(_mutex);
+    if(_idlers.empty()){
+      std::move(tasks.begin(), tasks.end(), std::back_inserter(_tasks));
+      return ;
+    } 
+    else{
+      while(consumed != tasks.size() && !_idlers.empty()) {
+        Worker* w = _idlers.back();
+        _idlers.pop_back();
+        w->ready = true;
+        w->task.emplace(std::move(tasks[consumed++]));
+        w->cv.notify_one();   
+      }
+    }
+    if(consumed == tasks.size()) return ;
+    _tasks.reserve(_tasks.size() + tasks.size() - consumed);
+    std::move(tasks.begin()+consumed, tasks.end(), std::back_inserter(_tasks));
   }
 }
 

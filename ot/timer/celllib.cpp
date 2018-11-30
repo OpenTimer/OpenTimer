@@ -32,7 +32,7 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
   // Library parser
   auto parser = _insert_builder(to_string("parse_celllib ", path), false);
   auto reader = _insert_builder(
-    to_string("read_celllib ", path, ' ', (el ? to_string(*el) : ""s)),
+    to_string("digest_celllib ", path, ' ', (el ? to_string(*el) : ""s)),
     true
   );
 

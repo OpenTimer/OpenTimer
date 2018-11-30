@@ -104,7 +104,25 @@ inline bool PathHeap::empty() const {
   return _paths.empty();
 }
 
-};  // end of namespace ot. -----------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+
+// Class: PathGuide
+struct PathGuide {
+  std::optional<size_t> num_paths;
+  std::optional<Split> split;
+  std::optional<Tran> transition;
+  std::vector<std::string> from;
+  std::vector<std::string> rise_from;
+  std::vector<std::string> fall_from;
+  std::vector<std::string> to;
+  std::vector<std::string> rise_to;
+  std::vector<std::string> fall_to;
+  std::vector<std::string> through;
+  std::vector<std::string> rise_through;
+  std::vector<std::string> fall_through;
+};
+
+};  // end of namespace ot. ---------------------------------------------------
 
 
 

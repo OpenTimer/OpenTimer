@@ -335,6 +335,13 @@ std::vector<Path> Timer::report_timing(size_t K, Split el, Tran rf) {
   return _report_timing(_worst_endpoints(K, el, rf), K);
 }
 
+// TODO (Guannan)
+// Function: report_timing
+std::vector<Path> Timer::report_timing(PathGuide guide) {
+  std::scoped_lock lock(_mutex);
+  auto epts = _worst_endpoints(guide);
+}
+
 // Function: _report_timing
 // Report the top-k report_timing
 std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K) {

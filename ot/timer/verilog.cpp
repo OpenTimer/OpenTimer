@@ -12,7 +12,7 @@ Timer& Timer::read_verilog(std::filesystem::path path) {
 
   // parser
   auto parser = _insert_builder(to_string("parse_verilog ", path), false);
-  auto reader = _insert_builder(to_string("read_verilog ", path), true);
+  auto reader = _insert_builder(to_string("digest_verilog ", path), true);
 
   parser.work([module, path=std::move(path)] () {
     *module = vlog::read_verilog(path);

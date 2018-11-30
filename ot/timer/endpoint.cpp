@@ -125,7 +125,19 @@ std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Tran rf) {
   return epts;
 }
 
-//
+// TODO (Guannan)
+// Function: _worst_endpoints
+std::vector<Endpoint*> Timer::_worst_endpoints(const PathGuide& guide) {
+
+  _update_endpoints();
+  
+  std::vector<Endpoint*> epts;
+
+  return epts;
+}
+
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------
+
+

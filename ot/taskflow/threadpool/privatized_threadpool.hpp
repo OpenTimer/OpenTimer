@@ -1,3 +1,7 @@
+// 2018/11/28 - modified by Chun-Xun Lin
+// 
+// Added the method batch to insert a vector of tasks.
+//
 // 2018/10/10 - modified by Tsung-Wei
 //   - merged with Guannan's implementation
 //   - merged with Chun-Xun's implementation
@@ -531,11 +535,11 @@ void PrivatizedThreadpool<Closure>::emplace(ArgsT&&... args){
 // Privatized queue of worker. The lock-free queue is inspired by 
 // http://www.1024cores.net/home/lock-free-algorithms/queues/bounded-mpmc-queue
 template<typename T, size_t C>
-class PrivatizedClosureQueue {
+class PrivatizedWorkQueue {
 
   public:
 
-  PrivatizedClosureQueue() : _buffer_mask(C - 1) {
+  PrivatizedWorkQueue() : _buffer_mask(C - 1) {
     for (size_t i = 0; i < C; i ++){
       _buffer[i].sequence_.store(i, std::memory_order_relaxed);
     }
@@ -543,7 +547,7 @@ class PrivatizedClosureQueue {
     _back.store(0, std::memory_order_relaxed);
   }
 
-  ~PrivatizedClosureQueue(){}
+  ~PrivatizedWorkQueue(){}
 
   bool enqueue(T& data){
     size_t pos = _front.load(std::memory_order_relaxed);
@@ -613,7 +617,7 @@ class PrivatizedThreadpool {
 
   struct Worker{
     std::condition_variable cv;
-    PrivatizedClosureQueue<Closure, 1024> queue;
+    PrivatizedWorkQueue<Closure, 1024> queue;
     std::optional<Closure> cache;
     bool exit {false};
 
@@ -637,6 +641,8 @@ class PrivatizedThreadpool {
 
     template <typename... ArgsT>
     void emplace(ArgsT&&...);
+
+    void batch(std::vector<Closure>&&);
 
   private:
     
@@ -879,6 +885,38 @@ void PrivatizedThreadpool<Closure>::emplace(ArgsT&&... args){
     std::scoped_lock lock(_mutex);
   }
   _workers[id].cv.notify_one();
+}
+
+
+
+template <typename Closure>
+void PrivatizedThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
+
+  //no worker thread available
+  if(num_workers() == 0){
+    for(auto &t: tasks){
+      t();
+    }
+    return;
+  }
+
+  _num_tasks.fetch_add(tasks.size(), std::memory_order_relaxed);
+
+  bool notify_all = tasks.size() > 1;
+  {
+    std::scoped_lock lock(_mutex);
+    std::move(tasks.begin(), tasks.end(), std::back_inserter(_tasks));
+  }
+
+  if(!notify_all) {
+    auto id = _fast_modulo(_randomize(_seed), _workers.size());
+    _workers[id].cv.notify_one();
+  }
+  else {
+    for(size_t i=0; i<_workers.size(); ++i) {
+      _workers[i].cv.notify_one();
+    }
+  }
 }
 
 

@@ -81,6 +81,7 @@ class Timer {
     std::vector<Path> report_timing(size_t, Split);
     std::vector<Path> report_timing(size_t, Tran);
     std::vector<Path> report_timing(size_t, Split, Tran);
+    std::vector<Path> report_timing(PathGuide);
 
     // Accessor
     void dump_graph(std::ostream&) const;
@@ -175,6 +176,7 @@ class Timer {
     std::vector<Endpoint*> _worst_endpoints(size_t, Split);
     std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
+    std::vector<Endpoint*> _worst_endpoints(const PathGuide&);
 
     std::vector<Path> _report_timing(std::vector<Endpoint*>&&, size_t);
     

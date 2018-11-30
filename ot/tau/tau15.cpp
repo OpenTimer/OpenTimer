@@ -73,7 +73,7 @@ Timer& Timer::read_timing(std::filesystem::path path) {
   std::scoped_lock lock(_mutex);
   
   auto parser = _insert_builder(to_string("parse_timing ", path), false);
-  auto reader = _insert_builder(to_string("read_timing ", path), true);
+  auto reader = _insert_builder(to_string("digest_timing ", path), true);
   
   // Library reader
   parser.work([path=std::move(path), timing] () {
