@@ -428,8 +428,49 @@ void Shell::_dump_celllib() {
   }
 }
 
+// ----------------------------------------------------------------------------
 
-};  // end of namespace ot. -----------------------------------------------------------------------
+// Procedure: _dump_verilog
+void Shell::_dump_verilog() {
+
+  std::string token;
+  std::string name;
+  std::filesystem::path output;
+
+  while(_is >> token) {
+    if(token == "-o") {
+      if(!(_is >> output)){
+        _es << "output file not given\n";
+        return;
+      }
+    }
+    else if(token == "-name") {
+      if(!(_is >> name)) {
+        _es << "module name not given\n";
+        return;
+      }
+    }
+    else {
+      _es << "unexpected token " << token << '\n';
+    }
+  }
+
+  std::ostream* tgt = &_os;
+  std::ofstream ofs;
+  
+  if(!output.empty()) {
+    if(ofs.open(output); ofs) {
+      tgt = &ofs;
+    }
+    else {
+      _es << "failed to open " << output << '\n';
+    }
+  }
+
+  _timer.dump_verilog(*tgt, name);
+}
+
+};  // end of namespace ot. ---------------------------------------------------
 
 
 

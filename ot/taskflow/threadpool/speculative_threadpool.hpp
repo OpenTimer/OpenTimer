@@ -34,7 +34,14 @@
 
 namespace tf {
 
-// Class: SpeculativeThreadpool
+/**
+@class: SpeculativeThreadpool
+
+@brief Executor that implements a centralized task queue
+       with a speculative execution strategy.
+
+@tparam Closure closure type
+*/
 template <typename Closure>
 class SpeculativeThreadpool {
 
@@ -46,18 +53,49 @@ class SpeculativeThreadpool {
 
   public:
 
-    SpeculativeThreadpool(unsigned);
+    /**
+    @brief constructs the executor with a given number of worker threads
+
+    @param N the number of worker threads
+    */
+    SpeculativeThreadpool(unsigned N);
+
+    /**
+    @brief destructs the executor
+
+    Destructing the executor immediately forces all worker threads to stop.
+    The executor does not guarantee all tasks to finish upon destruction.
+    */
     ~SpeculativeThreadpool();
 
-    size_t num_tasks() const;
+    /**
+    @brief queries the number of worker threads
+    */
     size_t num_workers() const;
-
+    
+    /**
+    @brief queries if the caller is the owner of the executor
+    */
     bool is_owner() const;
 
-    template <typename... ArgsT>
-    void emplace(ArgsT&&...);
+    /**
+    @brief constructs the closure in place in the executor
 
-    void batch(std::vector<Closure>&&);
+    @tparam ArgsT... argument parameter pack
+
+    @param args... arguments to forward to the constructor of the closure
+    */
+    template <typename... ArgsT>
+    void emplace(ArgsT&&... args);
+
+    /**
+    @brief moves a batch of closures to the executor
+
+    @param closures a vector of closures to move
+    */
+    void batch(std::vector<Closure>&& closures);
+    
+    size_t num_tasks() const;
 
   private:
     
@@ -241,7 +279,10 @@ void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 template <typename Closure>
 void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
-  size_t consumed {0};
+
+  if(tasks.empty()) {
+    return;
+  }
 
   //no worker thread available
   if(num_workers() == 0){
@@ -250,6 +291,8 @@ void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
     }
     return;
   }
+  
+  size_t consumed {0};
 
   // speculation
   if(std::this_thread::get_id() != _owner){

@@ -20,6 +20,7 @@
 #include <cassert>
 #include <optional>
 #include <variant>
+#include <cmath>
 
 namespace tf {
 
@@ -94,5 +95,6 @@ struct MoC {
   
   mutable T object; 
 };
+
 
 };  // end of namespace tf. ---------------------------------------------------

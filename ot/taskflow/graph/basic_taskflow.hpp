@@ -1,13 +1,21 @@
 #pragma once
 
-#include "../threadpool/threadpool.hpp"
-#include "flow_builder.hpp"
+#include "task.hpp"
 #include "framework.hpp"
 
 namespace tf {
 
-// Class: BasicTaskflow
-// template argument E : executor, the threadpool implementation
+/** @class BasicTaskflow
+
+@brief The base class to derive a taskflow class.
+
+@tparam E: executor type to use in this taskflow
+
+This class is the base class to derive a taskflow class. 
+It inherits all public methods of creating tasks from FlowBuilder
+and defines means to execute task dependency graphs.
+
+*/
 template <template <typename...> typename E>
 class BasicTaskflow : public FlowBuilder {
   
@@ -18,12 +26,10 @@ class BasicTaskflow : public FlowBuilder {
   struct Closure {
   
     Closure() = default;
-    Closure(const Closure&) = delete;
-    Closure(Closure&&);
+    Closure(const Closure&) = default;
     Closure(BasicTaskflow&, Node&);
 
-    Closure& operator = (Closure&&);
-    Closure& operator = (const Closure&) = delete;
+    Closure& operator = (const Closure&) = default;
     
     void operator ()() const;
 
@@ -32,37 +38,120 @@ class BasicTaskflow : public FlowBuilder {
   };
 
   public:
+  
+  /**
+  @typedef Executor
 
+  @brief alias of executor type
+  */
   using Executor = E<Closure>;
-
+    
+    /**
+    @brief constructs the taskflow with @std_thread_hardware_concurrency worker threads
+    */
     explicit BasicTaskflow();
-    explicit BasicTaskflow(unsigned);
-    explicit BasicTaskflow(std::shared_ptr<Executor>);
+    
+    /**
+    @brief constructs the taskflow with N worker threads
+    */
+    explicit BasicTaskflow(unsigned N);
+    
+    /**
+    @brief constructs the taskflow with a given executor
+    */
+    explicit BasicTaskflow(std::shared_ptr<Executor> executor);
+    
+    /**
+    @brief destructs the taskflow
 
+    Destructing a taskflow object will first wait for all running topologies to finish
+    and then clean up all associated data storages.
+    */
     ~BasicTaskflow();
     
-    std::shared_ptr<Executor> share_executor();
- 
-    std::shared_future<void> dispatch();
+    /**
+    @brief shares ownership of the executor associated with this taskflow object
 
+    @return a @std_shared_ptr of the executor
+    */
+    std::shared_ptr<Executor> share_executor();
+    
+    /**
+    @brief dispatches the present graph to threads and returns immediately
+
+    @return a @std_shared_future to access the execution status of the dispatched graph
+    */
+    std::shared_future<void> dispatch();
+    
+    /**
+    @brief dispatches the present graph to threads and run a callback when the graph completes
+
+    @return a @std_shared_future to access the execution status of the dispatched graph
+    */
     template <typename C>
     std::shared_future<void> dispatch(C&&);
-
+  
+    /**
+    @brief dispatches the present graph to threads and returns immediately
+    */
     void silent_dispatch();
+    
+    /**
+    @brief dispatches the present graph to threads and run a callback when the graph completes
 
+    @param callable a callable object to execute on completion
+    */
     template <typename C>
-    void silent_dispatch(C&&);
-
+    void silent_dispatch(C&& callable);
+    
+    /**
+    @brief dispatches the present graph to threads and wait for all topologies to complete
+    */
     void wait_for_all();
+
+    /**
+    @brief blocks until all running topologies complete and then
+           cleans up all associated storages
+    */
     void wait_for_topologies();
-    void dump(std::ostream&) const;
-    void dump_topologies(std::ostream&) const;
+    
+    /**
+    @brief dumps the present task dependency graph to a @std_ostream in DOT format
 
+    @param ostream a @std_ostream target
+    */
+    void dump(std::ostream& ostream) const;
+
+    /**
+    @brief dumps the present topologies to a @std_ostream in DOT format
+
+    @param ostream a @std_ostream target
+    */
+    void dump_topologies(std::ostream& ostream) const;
+    
+    /**
+    @brief queries the number of nodes in the present task dependency graph
+    */
     size_t num_nodes() const;
-    size_t num_workers() const;
-    size_t num_topologies() const;
 
+    /**
+    @brief queries the number of worker threads in the associated executor
+    */
+    size_t num_workers() const;
+
+    /**
+    @brief queries the number of existing topologies
+    */
+    size_t num_topologies() const;
+    
+    /**
+    @brief dumps the present task dependency graph in DOT format to a @std_string
+    */
     std::string dump() const;
+    
+    /**
+    @brief dumps the existing topologies in DOT format to a @std_string
+    */
     std::string dump_topologies() const;
 
   private:
@@ -81,35 +170,17 @@ class BasicTaskflow : public FlowBuilder {
 // BasicTaskflow::Closure Method Definitions
 // ============================================================================
 
-// Constructor    
-template <template <typename...> typename E>
-BasicTaskflow<E>::Closure::Closure(Closure&& rhs) : 
-  taskflow {rhs.taskflow}, node {rhs.node} { 
-  rhs.taskflow = nullptr;
-  rhs.node     = nullptr;
-}
-
 // Constructor
 template <template <typename...> typename E>
 BasicTaskflow<E>::Closure::Closure(BasicTaskflow& t, Node& n) : 
   taskflow{&t}, node {&n} {
 }
 
-// Move assignment
-template <template <typename...> typename E>
-typename BasicTaskflow<E>::Closure& BasicTaskflow<E>::Closure::operator = (Closure&& rhs) {
-  taskflow = rhs.taskflow;
-  node     = rhs.node;
-  rhs.taskflow = nullptr;
-  rhs.node     = nullptr;
-  return *this;
-}
-
 // Operator ()
 template <template <typename...> typename E>
 void BasicTaskflow<E>::Closure::operator () () const {
   
-  assert(taskflow && node);
+  //assert(taskflow && node);
 
   // Here we need to fetch the num_successors first to avoid the invalid memory
   // access caused by topology clear.
@@ -130,7 +201,7 @@ void BasicTaskflow<E>::Closure::operator () () const {
   // The second time we enter this context there is no need
   // to re-execute the work.
   else {
-    assert(std::holds_alternative<DynamicWork>(node->_work));
+    //assert(std::holds_alternative<DynamicWork>(node->_work));
 		
     if(!node->_subgraph.has_value()){
       node->_subgraph.emplace();  // Initialize the _subgraph		

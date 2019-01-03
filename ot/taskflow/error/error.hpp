@@ -7,17 +7,36 @@
 
 namespace tf {
 
-// The error category that describes the task informaction. 
-struct Error : public std::error_category {
+/**
+@struct Error 
 
+@brief The error category of taskflow.
+*/
+struct Error : public std::error_category {
+  
+  /**
+  @enum Code 
+  @brief Error code definition.
+  */
   enum Code : int {
     SUCCESS = 0,
+    FLOW_BUILDER,
     EXECUTOR
   };
-
+  
+  /**
+  @brief returns the name of the taskflow error category
+  */
   inline const char* name() const noexcept override final;
+
+  /**
+  @brief acquires the singleton instance of the taskflow error category
+  */
   inline static const std::error_category& get();
   
+  /**
+  @brief query the human-readable string of each error code
+  */
   inline std::string message(int) const override final;
 };
 
@@ -37,6 +56,10 @@ inline std::string Error::message(int code) const {
   switch(auto ec = static_cast<Error::Code>(code); ec) {
     case SUCCESS:
       return "success";
+    break;
+
+    case FLOW_BUILDER:
+      return "flow builder error";
     break;
 
     case EXECUTOR:

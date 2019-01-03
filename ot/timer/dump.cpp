@@ -371,8 +371,96 @@ void Timer::_dump_celllib(std::ostream& os, Split el) const {
     os << "celllib not found\n";
   }
 }
+
+// Function: dump_verilog
+void Timer::dump_verilog(std::ostream& os, const std::string& name) const {
+  std::shared_lock lock(_mutex);
+  _dump_verilog(os, name);
+}
+
+// Function: _dump_verilog
+void Timer::_dump_verilog(std::ostream& os, const std::string& name) const {
+  
+  size_t idx = 0;
+  size_t num_ports = _pis.size() + _pos.size();
+
+  // Module header
+  os << "module " << (name.empty() ? "OpenTimer"s : name) << " (\n";
+  // PI
+  for(const auto& pi : _pis) {
+    if(++idx < num_ports) {
+      os << "  " << pi.first << ",\n";
+    }
+    else {
+      os << "  " << pi.first << '\n';
+    }
+  }
+  // PO
+  for(const auto& po : _pos) {
+    if(++idx < num_ports) {
+      os << "  " << po.first << ",\n";
+    }
+    else {
+      os << "  " << po.first << '\n';
+    }
+  }
+  os << ");\n";
+
+  // Start PIs
+  os << "\n// Start PIs\n";
+  for(const auto& pi : _pis) {
+    os << "input " << pi.first << ";\n";
+  }
+
+  // Start POs
+  os << "\n// Start POs\n";
+  for(const auto& po : _pos) {
+    os << "output " << po.first << ";\n";
+  }
+
+  // Start Wires
+  os << "\n// Start wires\n";
+  for(const auto& net : _nets) {
+    os << "wire " << net.first << ";\n";
+  }
+
+  // Start cells
+  os << "\n// Start cells\n";
+  for(const auto& gate : _gates) {
+    os << gate.second._cell[MIN]->name << ' ' << gate.first << " (";
+
+    for(const auto& pin : gate.second._pins) {
+      if(pin->_net) {
+        os << " ." << pin->cellpin(MIN)->name << '(' << pin->_net->_name << ')';
+      }
+    }
+
+    os << " );\n";
+  }
+
+  // endmodule
+  os << "\nendmodule\n";
+}
+
+// Function: dump_spef
+void Timer::dump_spef(std::ostream& os) const {
+  std::shared_lock lock(_mutex);
+  _dump_spef(os);
+}
+
+// Function: _dump_spef
+void Timer::_dump_spef(std::ostream& os) const {
+  // TODO
+}
     
 };  // end of namespace ot. -----------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 

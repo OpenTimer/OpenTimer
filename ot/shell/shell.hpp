@@ -93,6 +93,7 @@ class Shell {
     void _dump_slew              ();
     void _dump_slack             ();
     void _dump_timer             ();
+    void _dump_verilog           ();
     
     // Obselete
     void _exec_ops               ();
@@ -168,6 +169,7 @@ class Shell {
       {"dump_rat",                &Shell::_dump_rat},
       {"dump_slack",              &Shell::_dump_slack},
       {"dump_timer",              &Shell::_dump_timer},
+      {"dump_verilog",            &Shell::_dump_verilog},
 
       // obselete
       {"exec_ops",                &Shell::_exec_ops},
