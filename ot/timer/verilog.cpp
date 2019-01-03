@@ -15,6 +15,7 @@ Timer& Timer::read_verilog(std::filesystem::path path) {
   auto reader = _insert_builder(to_string("digest_verilog ", path), true);
 
   parser.work([module, path=std::move(path)] () {
+    OT_LOGI("loading netlist ", path);
     *module = vlog::read_verilog(path);
   });
 

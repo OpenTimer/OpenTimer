@@ -102,6 +102,7 @@ class Rct {
     void insert_node(const std::string&, float = 0.0f);
     void insert_edge(const std::string&, const std::string&, float);
     
+    float total_ncap() const;
     float slew(const std::string&, Split, Tran, float) const;
     float delay(const std::string&, Split, Tran) const;
 
@@ -158,6 +159,8 @@ class Net {
     inline const std::string& name() const;
     inline size_t num_pins() const;
 
+    inline const Rct* rct() const;
+
   private:
 
     std::string _name;
@@ -195,6 +198,11 @@ inline const std::string& Net::name() const {
 // Function: num_pins
 inline size_t Net::num_pins() const {
   return _pins.size();
+}
+
+// Function: rct
+inline const Rct* Net::rct() const {
+  return std::get_if<Rct>(&_rct);
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------

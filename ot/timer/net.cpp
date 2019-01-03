@@ -221,6 +221,15 @@ float Rct::delay(const std::string& name, Split m, Tran t) const {
   return itr->second.delay(m, t);
 }
 
+// Function: total_ncap
+float Rct::total_ncap() const {
+  return std::accumulate(_nodes.begin(), _nodes.end(), 0.0f,
+    [] (float v, const auto& pair) {
+      return v + pair.second._ncap[MIN][RISE];
+    }
+  );
+}
+
 // ------------------------------------------------------------------------------------------------
 
 // Constructor

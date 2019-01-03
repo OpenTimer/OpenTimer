@@ -72,6 +72,33 @@ int main(int argc, char* argv[]) {
             << "AREA         : " << *area << '\n'
             << "LEAKAGE_POWER: " << *lkp  << '\n';
 
+  // Output the top-3 critical paths
+  auto paths = timer.report_timing(3);
+  
+  std::cout << "# critical paths: " << paths.size() << '\n';
+
+  for(size_t i=0; i<paths.size(); ++i) {
+
+    std::cout << "Path : " << i+1 << '\n'
+              << "Slack: " << paths[i].slack << '\n'
+              << "Split: " << (paths[i].endpoint->split() == ot::MIN ? "MIN" : "MAX") << '\n';
+    
+    for(const auto& point : paths[i]) {
+
+      std::cout << "  "
+                << point.pin.name() << ' '
+                << (point.transition == ot::RISE ? 'R' : 'F') << ' '
+                << point.at;
+
+      if(auto gate = point.pin.gate()) {
+        std::cout << " (" << gate->name() << ' ' << gate->cell_name() << ')';
+      }
+      std::cout << '\n';
+    }
+
+    std::cout << '\n';
+  }
+
   return 0;
 }
 

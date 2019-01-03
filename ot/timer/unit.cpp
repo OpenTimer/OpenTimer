@@ -270,7 +270,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       OT_LOGI("use celllib capacitance unit ", *_capacitance_unit);
     }
   }
-  else {
+  else if(lib.capacitance_unit) {
     float s = (*lib.capacitance_unit / *_capacitance_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " capacitance to ", *_capacitance_unit);
@@ -284,7 +284,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       OT_LOGI("use celllib current unit ", *_current_unit);
     }
   }
-  else {
+  else if(lib.current_unit) {
     float s = (*lib.current_unit / *_current_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " current to ", *_current_unit);
@@ -298,7 +298,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       OT_LOGI("use celllib voltage unit ", *_voltage_unit);
     }
   }
-  else {
+  else if(lib.voltage_unit) {
     float s = (*lib.voltage_unit / *_voltage_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " voltage to ", *_voltage_unit);
@@ -312,7 +312,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       OT_LOGI("use celllib resistance unit ", *_resistance_unit);
     }
   }
-  else {
+  else if(lib.resistance_unit){
     float s = (*lib.resistance_unit / *_resistance_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " resistance to ", *_resistance_unit);
@@ -326,7 +326,7 @@ void Timer::_rebase_unit(Celllib& lib) {
       OT_LOGI("use celllib power unit ", *_power_unit);
     }
   }
-  else {
+  else if(lib.power_unit) {
     float s = (*lib.power_unit / *_power_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase celllib ", lib.name, " power to ", *_power_unit);
@@ -348,7 +348,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
       OT_LOGI("use spef capacitance unit ", *_capacitance_unit);
     }
   }
-  else {
+  else if(capu) {
     float s = (*capu / *_capacitance_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase spef capacitance to ", *capu);
@@ -362,7 +362,7 @@ void Timer::_rebase_unit(spef::Spef& spef) {
       OT_LOGI("use spef resistance unit ", *_resistance_unit);
     }
   }
-  else {
+  else if(resu){
     float s = (*resu / *_resistance_unit).value();
     if(std::fabs(s - 1.0f) >= 1e-2f) {
       OT_LOGI("rebase spef resistance to ", *resu);

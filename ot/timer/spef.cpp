@@ -15,8 +15,9 @@ Timer& Timer::read_spef(std::filesystem::path path) {
 
   // Reader task
   parser.work([path=std::move(path), spef] () {
+    OT_LOGI("loading spef ", path);
     if(spef->read(path); spef->error) {
-      OT_LOGD("Parser-SPEF error:\n", *spef->error);
+      OT_LOGE("Parser-SPEF error:\n", *spef->error);
     }
     spef->expand_name();
   });

@@ -470,6 +470,41 @@ void Shell::_dump_verilog() {
   _timer.dump_verilog(*tgt, name);
 }
 
+// ----------------------------------------------------------------------------
+
+// Procedure: _dump_spef
+void Shell::_dump_spef() {
+
+  std::string token;
+  std::filesystem::path output;
+
+  while(_is >> token) {
+    if(token == "-o") {
+      if(!(_is >> output)){
+        _es << "output file not given\n";
+        return;
+      }
+    }
+    else {
+      _es << "unexpected token " << token << '\n';
+    }
+  }
+
+  std::ostream* tgt = &_os;
+  std::ofstream ofs;
+  
+  if(!output.empty()) {
+    if(ofs.open(output); ofs) {
+      tgt = &ofs;
+    }
+    else {
+      _es << "failed to open " << output << '\n';
+    }
+  }
+
+  _timer.dump_spef(*tgt);
+}
+
 };  // end of namespace ot. ---------------------------------------------------
 
 

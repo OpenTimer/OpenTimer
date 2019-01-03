@@ -337,10 +337,11 @@ std::vector<Path> Timer::report_timing(size_t K, Split el, Tran rf) {
 
 // TODO (Guannan)
 // Function: report_timing
-std::vector<Path> Timer::report_timing(PathGuide guide) {
-  std::scoped_lock lock(_mutex);
-  auto epts = _worst_endpoints(guide);
-}
+//std::vector<Path> Timer::report_timing(PathGuide guide) {
+//  std::scoped_lock lock(_mutex);
+//  auto epts = _worst_endpoints(guide);
+//  return {};
+//}
 
 // Function: _report_timing
 // Report the top-k report_timing

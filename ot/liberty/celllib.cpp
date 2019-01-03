@@ -594,10 +594,7 @@ void Celllib::read(const std::filesystem::path& path) {
   std::ifstream ifs(path, std::ios::ate);
   
   // return on failure
-  OT_LOGE_RIF(!ifs, "failed to open celllib ", path);
-
-  // Read the file to a local buffer.
-  OT_LOGI("loading celllib ", path, " ...");
+  OT_LOGF_IF(!ifs, "failed to open celllib ", path);
 
   size_t fsize = ifs.tellg();
   ifs.seekg(0, std::ios::beg);

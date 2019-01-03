@@ -71,8 +71,6 @@ std::string Module::info() const {
 // Procedure: read_verilog
 Module read_verilog(const std::filesystem::path& path) {
 
-  OT_LOGI("loading netlist ", path, " ...");
-
   Module module;
   
   static std::string_view delimiters = "(),:;/#[]{}*\"\\";

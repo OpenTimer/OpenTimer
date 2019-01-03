@@ -389,19 +389,19 @@ void Timer::_dump_verilog(std::ostream& os, const std::string& name) const {
   // PI
   for(const auto& pi : _pis) {
     if(++idx < num_ports) {
-      os << "  " << pi.first << ",\n";
+      os << pi.first << ",\n";
     }
     else {
-      os << "  " << pi.first << '\n';
+      os << pi.first << '\n';
     }
   }
   // PO
   for(const auto& po : _pos) {
     if(++idx < num_ports) {
-      os << "  " << po.first << ",\n";
+      os << po.first << ",\n";
     }
     else {
-      os << "  " << po.first << '\n';
+      os << po.first << '\n';
     }
   }
   os << ");\n";
@@ -450,7 +450,109 @@ void Timer::dump_spef(std::ostream& os) const {
 
 // Function: _dump_spef
 void Timer::_dump_spef(std::ostream& os) const {
-  // TODO
+  
+  // Header
+  //  *SPEF "IEEE 1481-1998"
+  //  *DESIGN "c17"
+  //  *DATE "Tue Nov 25 16:54:37 2014"
+  //  *VENDOR "TAU 2015 Contest"
+  //  *PROGRAM "Benchmark Parasitic Generator"
+  //  *VERSION "0.0"
+  //  *DESIGN_FLOW "NETLIST_TYPE_VERILOG"
+  //  *DIVIDER /
+  //  *DELIMITER :
+  //  *BUS_DELIMITER [ ]
+  //  *T_UNIT 1 PS
+  //  *C_UNIT 1 FF
+  //  *R_UNIT 1 KOHM
+  //  *L_UNIT 1 UH
+  os << "*SPEF \"IEEE 1481-1998\"\n"
+     << "*DESIGN \"OpenTimer\"\n"
+     << "*DATE \"2019\"\n"
+     << "*VENDOR \"OpenTimer\"\n"
+     << "*PROGRAM \"OpenTimer\"\n"
+     << "*VERSION \"0\"\n"
+     << "*DESIGN_FLOW \"NETLIST_TYPE_VERILOG\"\n"
+     << "*DIVIDER /\n"
+     << "*DELIMITER :\n"
+     << "*BUS_DELIMITER [ ]\n";
+
+  if(_time_unit) {
+    os << "*T_UNIT " << (*_time_unit).value() * 1e12f << " PS\n";
+  }
+  else {
+    os << "*T_UNIT\n";
+  }
+
+  if(_capacitance_unit) {
+    os << "*C_UNIT " << (*_capacitance_unit).value() * 1e15f << " FF\n";
+  }
+  else {
+    os << "*C_UNIT\n";
+  }
+
+  if(_resistance_unit) {
+    os << "*R_UNIT " << (*_resistance_unit).value() * 1e-3f << " KOHM\n";
+  }
+  else {
+    os << "*R_UNIT\n";
+  }
+
+  os << "*L_UNIT 1 UH\n";
+
+  // RC network
+  for(const auto& [name, net] : _nets) {
+
+    if(auto rct = net.rct(); rct == nullptr) {
+      continue;
+    }
+    else {
+      os << "\n*D_NET " << name << ' ' << rct->total_ncap() << '\n';
+      
+      // *CONN section
+      os << "*CONN\n";
+      for(const auto& pin : net._pins) {
+        if(pin->primary_output() || pin->primary_input()) {
+          os << "*P ";
+        }
+        else {
+          os << "*I ";
+        }
+        os << pin->_name << ' ';
+
+        if(pin->is_input()) {
+          os << "I\n";
+        }
+        else {
+          os << "O\n";
+        }
+      }
+
+      size_t idx {0};
+
+      // *CAP section
+      os << "*CAP\n";
+      for(const auto& node : rct->_nodes) {
+        os << ++idx << ' ' << node.first << ' ' << node.second._ncap[MIN][RISE] << '\n'; 
+      }
+
+      // *RES section
+      idx = 0;
+      os << "*RES\n";
+      for(const auto& edge : rct->_edges) {
+        ++idx;
+        if(idx & 1) {
+          os << idx << ' ' 
+             << edge._from._name << ' '
+             << edge._to._name << ' '
+             << edge._res << '\n';
+        }
+      }
+
+      os << "*END\n";
+    }
+  }
+
 }
     
 };  // end of namespace ot. -----------------------------------------------------------------------

@@ -37,6 +37,7 @@ Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) 
   );
 
   parser.work([path=std::move(path), lib] () {
+    OT_LOGI("loading celllib ", path);
     lib->read(path);
   });
 
