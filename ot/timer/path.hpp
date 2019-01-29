@@ -108,9 +108,8 @@ inline bool PathHeap::empty() const {
 
 // Class: PathGuide
 struct PathGuide {
-  std::optional<size_t> num_paths;
-  std::optional<Split> split;
-  std::optional<Tran> transition;
+  std::optional<size_t> max_paths;
+  std::optional<size_t> num_paths_per_endpoint;
   std::vector<std::string> from;
   std::vector<std::string> rise_from;
   std::vector<std::string> fall_from;

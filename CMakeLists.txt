@@ -175,6 +175,12 @@ add_executable(ot-tau15 main/tau15/tau15.cpp)
 target_link_libraries(ot-tau15 ${OT_LINK_FLAGS})
 message(STATUS "TAU15 executable: ${OT_TAU15}")
 
+# tau18
+set(OT_TAU18 ${PROJECT_SOURCE_DIR}/bin/ot-tau18)
+add_executable(ot-tau18 main/tau18/tau18.cpp)
+target_link_libraries(ot-tau18 ${OT_LINK_FLAGS})
+message(STATUS "TAU18 executable: ${OT_TAU18}")
+
 # utility
 set(OT_UTILITY ${PROJECT_SOURCE_DIR}/bin/ot-utility)
 add_executable(ot-utility main/utility/utility.cpp)
