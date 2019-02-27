@@ -189,7 +189,10 @@ void Path::dump(std::ostream& os) const {
         os << std::setw(w2) << *c << std::setw(w3) << sum << '\n';
       }
 
-      assert(std::fabs(sum - rat) < 1e-2f);
+      OT_LOGW_IF(
+        std::fabs(sum - rat) > 1.0f, 
+        "unstable numerics in PBA and GBA rats: ", sum, " vs ", rat
+      );
     },
     [&] (PrimaryOutput* po) {
       os << std::setw(w1) << "port";
@@ -359,7 +362,13 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
     std::vector<Path> paths;
     paths.emplace_back(epts[0]->slack(), epts[0]);
     auto sfxt = _sfxt_cache(*epts[0]);
-    assert(std::fabs(*sfxt.slack() - paths[0].slack) < 0.1f);
+
+    OT_LOGW_IF(
+      std::fabs(*sfxt.slack() - paths[0].slack) > 1.0f, 
+      "unstable numerics in PBA and GBA slacks: ", *sfxt.slack(), " vs ", paths[0].slack
+    );
+
+    //assert(std::fabs(*sfxt.slack() - paths[0].slack) < 0.1f);
     _recover_datapath(paths[0], sfxt);
     return paths;
   }

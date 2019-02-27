@@ -1160,7 +1160,7 @@ void Timer::_update_endpoints() {
 // Function: tns
 // Update the total negative slack for any transition and timing split. The procedure applies
 // the parallel reduction to compute the value.
-std::optional<float> Timer::report_tns() {
+std::optional<float> Timer::report_tns(std::optional<Split> el, std::optional<Tran> rf) {
 
   std::scoped_lock lock(_mutex);
 
@@ -1168,8 +1168,23 @@ std::optional<float> Timer::report_tns() {
 
   std::optional<float> v;
 
-  FOR_EACH_EL_RF_IF(el, rf, _tns[el][rf]) {
-    v = !v ? _tns[el][rf] : *v + *(_tns[el][rf]);
+  if(!el && !rf) {
+    FOR_EACH_EL_RF_IF(s, t, _tns[s][t]) {
+      v = !v ? _tns[s][t] : *v + *(_tns[s][t]);
+    }
+  }
+  else if(el && !rf) {
+    FOR_EACH_RF_IF(t, _tns[*el][t]) {
+      v = !v ? _tns[*el][t] : *v + *(_tns[*el][t]);
+    }
+  }
+  else if(!el && rf) {
+    FOR_EACH_EL_IF(s, _tns[s][*rf]) {
+      v = !v ? _tns[s][*rf] : *v + *(_tns[s][*rf]);
+    }
+  }
+  else {
+    v = _tns[*el][*rf];
   }
 
   return v;
@@ -1178,16 +1193,31 @@ std::optional<float> Timer::report_tns() {
 // Function: wns
 // Update the total negative slack for any transition and timing split. The procedure apply
 // the parallel reduction to compute the value.
-std::optional<float> Timer::report_wns() {
+std::optional<float> Timer::report_wns(std::optional<Split> el, std::optional<Tran> rf) {
 
   std::scoped_lock lock(_mutex);
 
   _update_endpoints();
 
   std::optional<float> v;
-
-  FOR_EACH_EL_RF_IF(el, rf, _wns[el][rf]) {
-    v = !v ? _wns[el][rf] : std::min(*v, *(_wns[el][rf]));
+  
+  if(!el && !rf) {
+    FOR_EACH_EL_RF_IF(s, t, _wns[s][t]) {
+      v = !v ? _wns[s][t] : std::min(*v, *(_wns[s][t]));
+    }
+  }
+  else if(el && !rf) {
+    FOR_EACH_RF_IF(t, _wns[*el][t]) {
+      v = !v ? _wns[*el][t] : std::min(*v, *(_wns[*el][t]));
+    }
+  }
+  else if(!el && rf) {
+    FOR_EACH_EL_IF(s, _wns[s][*rf]) {
+      v = !v ? _wns[s][*rf] : std::min(*v, *(_wns[s][*rf]));
+    }
+  }
+  else {
+    v = _wns[*el][*rf];
   }
 
   return v;
@@ -1195,7 +1225,7 @@ std::optional<float> Timer::report_wns() {
 
 // Function: fep
 // Update the failing end points
-std::optional<size_t> Timer::report_fep() {
+std::optional<size_t> Timer::report_fep(std::optional<Split> el, std::optional<Tran> rf) {
   
   std::scoped_lock lock(_mutex);
 
@@ -1203,8 +1233,23 @@ std::optional<size_t> Timer::report_fep() {
 
   std::optional<size_t> v;
 
-  FOR_EACH_EL_RF_IF(el, rf, _fep[el][rf]) {
-    v = !v ? _fep[el][rf] : *_fep[el][rf] + *v;
+  if(!el && !rf) {
+    FOR_EACH_EL_RF_IF(s, t, _fep[s][t]) {
+      v = !v ? _fep[s][t] : *v + *(_fep[s][t]);
+    }
+  }
+  else if(el && !rf) {
+    FOR_EACH_RF_IF(t, _fep[*el][t]) {
+      v = !v ? _fep[*el][t] : *v + *(_fep[*el][t]);
+    }
+  }
+  else if(!el && rf) {
+    FOR_EACH_EL_IF(s, _fep[s][*rf]) {
+      v = !v ? _fep[s][*rf] : *v + *(_fep[s][*rf]);
+    }
+  }
+  else {
+    v = _fep[*el][*rf];
   }
 
   return v;

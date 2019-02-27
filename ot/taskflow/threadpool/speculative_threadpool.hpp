@@ -1,3 +1,9 @@
+// 2019/02/15 - modified by Tsung-Wei Huang
+//  - batch to take reference not move
+//
+// 2019/02/10 - modified by Tsung-Wei Huang
+//  - removed num_tasks method
+//
 // 2018/11/28 - modified by Chun-Xun Lin
 // 
 // Added the method batch to insert a vector of tasks.
@@ -30,7 +36,7 @@
 #include <unordered_set>
 #include <unordered_map>
 #include <optional>
-
+#include <cassert>
 
 namespace tf {
 
@@ -91,12 +97,10 @@ class SpeculativeThreadpool {
     /**
     @brief moves a batch of closures to the executor
 
-    @param closures a vector of closures to move
+    @param closures a vector of closures
     */
-    void batch(std::vector<Closure>&& closures);
+    void batch(std::vector<Closure>& closures);
     
-    size_t num_tasks() const;
-
   private:
     
     const std::thread::id _owner {std::this_thread::get_id()};
@@ -135,12 +139,6 @@ SpeculativeThreadpool<Closure>::~SpeculativeThreadpool(){
 template <typename Closure>
 bool SpeculativeThreadpool<Closure>::is_owner() const {
   return std::this_thread::get_id() == _owner;
-}
-
-// Function: num_tasks
-template <typename Closure>
-size_t SpeculativeThreadpool<Closure>::num_tasks() const { 
-  return _tasks.size(); 
 }
 
 // Function: num_workers
@@ -278,7 +276,7 @@ void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 
 template <typename Closure>
-void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
+void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>& tasks){
 
   if(tasks.empty()) {
     return;
@@ -320,7 +318,7 @@ void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>&& tasks){
 }
 
 
-};  // end of namespace tf. ---------------------------------------------------
+}  // end of namespace tf. ---------------------------------------------------
 
 
 

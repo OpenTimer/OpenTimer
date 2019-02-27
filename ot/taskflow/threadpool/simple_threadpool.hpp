@@ -1,3 +1,9 @@
+// 2019/02/15 - modified by Tsung-Wei Huang
+//  - batch to take reference not move
+//
+// 2019/02/13 - modified by Tsung-Wei Huang
+//  - remove num_tasks method
+// 
 // 2018/11/28 - modified by Chun-Xun Lin
 // 
 // Added the method batch to insert a vector of tasks.
@@ -27,6 +33,7 @@
 #include <condition_variable>
 #include <memory>
 #include <future>
+#include <cassert>
 #include <unordered_set>
 
 namespace tf {
@@ -72,9 +79,9 @@ class SimpleThreadpool {
     /**
     @brief moves a batch of closures to the executor
 
-    @param closures a vector of closures to move
+    @param closures a vector of closures
     */
-    void batch(std::vector<Closure>&& closures);
+    void batch(std::vector<Closure>& closures);
 
     /**
     @brief queries the number of worker threads
@@ -86,8 +93,6 @@ class SimpleThreadpool {
     */
     bool is_owner() const;
     
-    size_t num_tasks() const;
-
   private:
 
     const std::thread::id _owner {std::this_thread::get_id()};
@@ -114,16 +119,6 @@ SimpleThreadpool<Closure>::SimpleThreadpool(unsigned N) {
 template <typename Closure>
 SimpleThreadpool<Closure>::~SimpleThreadpool() {
   _shutdown();
-}
-
-// Function: num_tasks
-// Return the number of "unfinished" tasks. 
-// Notice that this value is not necessary equal to the size of the task_queue 
-// since the task can be popped out from the task queue while 
-// not yet finished.
-template <typename Closure>
-size_t SimpleThreadpool<Closure>::num_tasks() const {
-  return _tasks.size();
 }
 
 template <typename Closure>
@@ -196,7 +191,7 @@ void SimpleThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 // Function: emplace
 template <typename Closure>
-void SimpleThreadpool<Closure>::batch(std::vector<Closure>&& tasks) {
+void SimpleThreadpool<Closure>::batch(std::vector<Closure>& tasks) {
 
   // No worker, do this right away.
   if(num_workers() == 0) {
@@ -244,5 +239,5 @@ void SimpleThreadpool<Closure>::_shutdown() {
   _stop = false;
 } 
 
-};  // end of namespace tf. ---------------------------------------------------
+}  // end of namespace tf. ---------------------------------------------------
 

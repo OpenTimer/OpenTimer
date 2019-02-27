@@ -73,9 +73,9 @@ class Timer {
     std::optional<float> report_load(const std::string&, Split, Tran);
     std::optional<float> report_area();
     std::optional<float> report_leakage_power();
-    std::optional<float> report_tns();
-    std::optional<float> report_wns();
-    std::optional<size_t> report_fep();
+    std::optional<float> report_tns(std::optional<Split> = {}, std::optional<Tran> = {});
+    std::optional<float> report_wns(std::optional<Split> = {}, std::optional<Tran> = {});
+    std::optional<size_t> report_fep(std::optional<Split> = {}, std::optional<Tran> = {});
     
     std::vector<Path> report_timing(size_t);
     std::vector<Path> report_timing(size_t, Split);

@@ -131,7 +131,23 @@ void Shell::_report_slew() {
 
 // Procedure: report_tns
 void Shell::_report_tns() {
-  if(auto tns = _timer.report_tns(); tns) {
+  
+  std::string token;
+  
+  std::optional<Split> el;
+  std::optional<Tran> rf;
+
+  while(_is >> token) {
+    if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
+    else if(token == "-rise" ) rf = RISE;
+    else if(token == "-fall" ) rf = FALL;
+    else {
+      _es << "failed to parse " << std::quoted(token) << '\n';
+    }
+  }
+
+  if(auto tns = _timer.report_tns(el, rf); tns) {
     _os << *tns << '\n';
   }
   else {
@@ -143,7 +159,23 @@ void Shell::_report_tns() {
 
 // Procedure: report_wns
 void Shell::_report_wns() {
-  if(auto wns = _timer.report_wns(); wns) {
+  
+  std::string token;
+  
+  std::optional<Split> el;
+  std::optional<Tran> rf;
+
+  while(_is >> token) {
+    if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
+    else if(token == "-rise" ) rf = RISE;
+    else if(token == "-fall" ) rf = FALL;
+    else {
+      _es << "failed to parse " << std::quoted(token) << '\n';
+    }
+  }
+
+  if(auto wns = _timer.report_wns(el, rf); wns) {
     _os << *wns << '\n';
   }
   else {
@@ -155,7 +187,23 @@ void Shell::_report_wns() {
 
 // Procedure: report_fep
 void Shell::_report_fep() {
-  if(auto fep = _timer.report_fep(); fep) {
+  
+  std::string token;
+  
+  std::optional<Split> el;
+  std::optional<Tran> rf;
+
+  while(_is >> token) {
+    if(token == "-min" || token == "-early") el = MIN;
+    else if(token == "-max" || token == "-late" ) el = MAX;
+    else if(token == "-rise" ) rf = RISE;
+    else if(token == "-fall" ) rf = FALL;
+    else {
+      _es << "failed to parse " << std::quoted(token) << '\n';
+    }
+  }
+
+  if(auto fep = _timer.report_fep(el, rf); fep) {
     _os << *fep << '\n';
   }
   else {

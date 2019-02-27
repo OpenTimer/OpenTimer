@@ -1,3 +1,9 @@
+// 2019/02/15 - modified by Tsung-Wei Huang
+//  - batch to take reference not move
+//
+// 2019/02/10 - modified by Tsung-Wei Huang
+//  - removed num_tasks method
+//
 // 2018/11/28 - modified by Chun-Xun Lin
 // 
 // Added the method batch to insert a vector of tasks.
@@ -37,6 +43,7 @@
 #include <future>
 #include <unordered_set>
 #include <optional>
+#include <cassert>
 
 namespace tf {
   
@@ -98,12 +105,10 @@ class ProactiveThreadpool {
     /**
     @brief moves a batch of closures to the executor
 
-    @param closures a vector of closures to move
+    @param closures a vector of closures
     */
-    void batch(std::vector<Closure> && closures);
+    void batch(std::vector<Closure>& closures);
     
-    size_t num_tasks() const;
-
   private:
 
     std::thread::id _owner {std::this_thread::get_id()};
@@ -136,12 +141,6 @@ ProactiveThreadpool<Closure>::~ProactiveThreadpool(){
 template <typename Closure>
 bool ProactiveThreadpool<Closure>::is_owner() const {
   return std::this_thread::get_id() == _owner;
-}
-
-// Ftion: num_tasks    
-template <typename Closure>
-size_t ProactiveThreadpool<Closure>::num_tasks() const { 
-  return _tasks.size(); 
 }
 
 // Ftion: num_workers
@@ -252,7 +251,7 @@ void ProactiveThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 // Procedure: batch
 template <typename Closure>
-void ProactiveThreadpool<Closure>::batch(std::vector<Closure> &&tasks) {
+void ProactiveThreadpool<Closure>::batch(std::vector<Closure>& tasks) {
 
   //no worker thread available
   if(num_workers() == 0){
@@ -283,7 +282,7 @@ void ProactiveThreadpool<Closure>::batch(std::vector<Closure> &&tasks) {
   }
 }
 
-};  // namespace tf -----------------------------------------------------------
+}  // namespace tf -----------------------------------------------------------
 
 
 

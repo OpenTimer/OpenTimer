@@ -1,7 +1,25 @@
+// 2019/02/11 - modified by Tsung-Wei Huang
+//  - refactored run_until
+//  - added allocator to topologies
+//  - changed to list for topologies
+//
+// 2019/02/10 - modified by Chun-Xun Lin
+//  - added run_n to execute framework
+//  - finished first peer-review with TW
+//
+// 2018/07 - 2019/02/09 - missing logs
+//
+// 2018/06/30 - created by Tsung-Wei Huang
+//  - added BasicTaskflow template
+
+// TODO items:
+// 1. come up with a better way to remove the "joined" links 
+//    during the execution of a static node (1st layer)
+//
+
 #pragma once
 
-#include "task.hpp"
-#include "framework.hpp"
+#include "topology.hpp"
 
 namespace tf {
 
@@ -12,7 +30,7 @@ namespace tf {
 @tparam E: executor type to use in this taskflow
 
 This class is the base class to derive a taskflow class. 
-It inherits all public methods of creating tasks from FlowBuilder
+It inherits all public methods to create tasks from tf::FlowBuilder
 and defines means to execute task dependency graphs.
 
 */
@@ -47,7 +65,7 @@ class BasicTaskflow : public FlowBuilder {
   using Executor = E<Closure>;
     
     /**
-    @brief constructs the taskflow with @std_thread_hardware_concurrency worker threads
+    @brief constructs the taskflow with std::thread::hardware_concurrency worker threads
     */
     explicit BasicTaskflow();
     
@@ -72,21 +90,21 @@ class BasicTaskflow : public FlowBuilder {
     /**
     @brief shares ownership of the executor associated with this taskflow object
 
-    @return a @std_shared_ptr of the executor
+    @return a std::shared_ptr of the executor
     */
     std::shared_ptr<Executor> share_executor();
     
     /**
     @brief dispatches the present graph to threads and returns immediately
 
-    @return a @std_shared_future to access the execution status of the dispatched graph
+    @return a std::shared_future to access the execution status of the dispatched graph
     */
     std::shared_future<void> dispatch();
     
     /**
     @brief dispatches the present graph to threads and run a callback when the graph completes
 
-    @return a @std_shared_future to access the execution status of the dispatched graph
+    @return a std::shared_future to access the execution status of the dispatched graph
     */
     template <typename C>
     std::shared_future<void> dispatch(C&&);
@@ -116,16 +134,16 @@ class BasicTaskflow : public FlowBuilder {
     void wait_for_topologies();
     
     /**
-    @brief dumps the present task dependency graph to a @std_ostream in DOT format
+    @brief dumps the present task dependency graph to a std::ostream in DOT format
 
-    @param ostream a @std_ostream target
+    @param ostream a std::ostream target
     */
     void dump(std::ostream& ostream) const;
 
     /**
-    @brief dumps the present topologies to a @std_ostream in DOT format
+    @brief dumps the present topologies to a std::ostream in DOT format
 
-    @param ostream a @std_ostream target
+    @param ostream a std::ostream target
     */
     void dump_topologies(std::ostream& ostream) const;
     
@@ -145,14 +163,79 @@ class BasicTaskflow : public FlowBuilder {
     size_t num_topologies() const;
     
     /**
-    @brief dumps the present task dependency graph in DOT format to a @std_string
+    @brief dumps the present task dependency graph in DOT format to a std::string
     */
     std::string dump() const;
     
     /**
-    @brief dumps the existing topologies in DOT format to a @std_string
+    @brief dumps the existing topologies in DOT format to a std::string
     */
     std::string dump_topologies() const;
+
+    /**
+    @brief runs the framework once
+    
+    @param framework a tf::Framework object
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    std::shared_future<void> run(Framework& framework);
+
+    /**
+    @brief runs the framework once and invoke a callback upon completion
+
+    @param framework a tf::Framework object 
+    @param callable a callable object to be invoked after this run
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    template<typename C>
+    std::shared_future<void> run(Framework& framework, C&& callable);
+
+    /**
+    @brief runs the framework for N times
+    
+    @param framework a tf::Framework object
+    @param N number of runs
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    std::shared_future<void> run_n(Framework& framework, size_t N);
+
+    /**
+    @brief runs the framework for N times and invokes a callback upon completion
+
+    @param framework a tf::Framework 
+    @param N number of runs
+    @param callable a callable object to be invoked after this run
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    template<typename C>
+    std::shared_future<void> run_n(Framework& framework, size_t N, C&& callable);
+
+    /**
+    @brief runs the framework multiple times until the predicate becomes true and invoke a callback
+
+    @param framework a tf::Framework 
+    @param predicate a boolean predicate to return true for stop
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    template<typename P>
+    std::shared_future<void> run_until(Framework& framework, P&& predicate);
+
+    /**
+    @brief runs the framework multiple times until the predicate becomes true and invoke a callback
+
+    @param framework a tf::Framework 
+    @param predicate a boolean predicate to return true for stop
+    @param callable a callable object to be invoked after this run
+
+    @return a std::shared_future to access the execution status of the framework
+    */
+    template<typename P, typename C>
+    std::shared_future<void> run_until(Framework& framework, P&& predicate, C&& callable);
 
   private:
     
@@ -160,15 +243,136 @@ class BasicTaskflow : public FlowBuilder {
 
     std::shared_ptr<Executor> _executor;
 
-    std::forward_list<Topology> _topologies;
+    std::list<Topology, SingularAllocator<Topology>> _topologies;
 
     void _schedule(Node&);
-    void _schedule(std::vector<Node*>&);
+    void _schedule(PassiveVector<Node*>&);
 };
 
 // ============================================================================
 // BasicTaskflow::Closure Method Definitions
 // ============================================================================
+
+// Function: run
+template <template <typename...> typename E>
+std::shared_future<void> BasicTaskflow<E>::run(Framework& f) {
+  return run_n(f, 1, [](){});
+}
+
+// Function: run
+template <template <typename...> typename E>
+template <typename C>
+std::shared_future<void> BasicTaskflow<E>::run(Framework& f, C&& c) {
+  static_assert(std::is_invocable<C>::value);
+  return run_n(f, 1, std::forward<C>(c));
+}
+
+// Function: run_n
+template <template <typename...> typename E>
+std::shared_future<void> BasicTaskflow<E>::run_n(Framework& f, size_t repeat) {
+  return run_n(f, repeat, [](){});
+}
+
+// Function: run_n
+template <template <typename...> typename E>
+template <typename C>
+std::shared_future<void> BasicTaskflow<E>::run_n(Framework& f, size_t repeat, C&& c) {
+  return run_until(f, [repeat]() mutable { return repeat-- == 0; }, std::forward<C>(c));
+}
+
+// Function: run_until
+template <template <typename...> typename E>
+template <typename P>
+std::shared_future<void> BasicTaskflow<E>::run_until(Framework& f, P&& predicate) {
+  return run_until(f, std::forward<P>(predicate), [](){});
+}
+
+// Function: run_until
+template <template <typename...> typename E>
+template <typename P, typename C>
+std::shared_future<void> BasicTaskflow<E>::run_until(Framework& f, P&& predicate, C&& c) {
+
+  // Predicate must return a boolean value
+  static_assert(std::is_invocable_v<C> && std::is_invocable_v<P>);
+
+  if(std::invoke(predicate)) {
+    return std::async(std::launch::deferred, [](){}).share();
+  }
+  
+  // create a topology for this run
+  auto &tpg = _topologies.emplace_back(f, std::forward<P>(predicate));
+
+  // Iterative execution to avoid stack overflow
+  if(num_workers() == 0) {
+
+    // Clear last execution data & Build precedence between nodes and target
+    tpg._bind(f._graph);
+
+    do {
+      _schedule(tpg._sources);
+      tpg._recover_num_sinks();
+    } while(!std::invoke(tpg._predicate));
+
+    std::invoke(c);
+    tpg._promise.set_value();
+
+    return tpg._future;
+  }
+
+  // Multi-threaded execution.
+  std::scoped_lock lock(f._mtx);
+
+  f._topologies.push_back(&tpg);
+
+  bool run_now = (f._topologies.size() == 1);
+
+  if(run_now) {
+    tpg._bind(f._graph);
+  }
+
+  tpg._work = [&f, c=std::forward<C>(c), this] () mutable {
+      
+    // case 1: we still need to run the topology again
+    if(!std::invoke(f._topologies.front()->_predicate)) {
+      f._topologies.front()->_recover_num_sinks();
+      _schedule(f._topologies.front()->_sources); 
+    }
+    // case 2: the final run of this topology
+    else {
+      std::invoke(c);
+
+      f._mtx.lock();
+
+      // If there is another run (interleave between lock)
+      if(f._topologies.size() > 1) {
+
+        // Set the promise
+        f._topologies.front()->_promise.set_value();
+        f._topologies.pop_front();
+        f._topologies.front()->_bind(f._graph);
+        f._mtx.unlock();
+        _schedule(f._topologies.front()->_sources);
+      }
+      else {
+        assert(f._topologies.size() == 1);
+        // Need to back up the promise first here becuz framework might be 
+        // destroy before taskflow leaves
+        auto &p = f._topologies.front()->_promise; 
+        f._topologies.pop_front();
+        f._mtx.unlock();
+       
+        // We set the promise in the end in case framework leaves before taskflow
+        p.set_value();
+      }
+    }
+  };
+
+  if(run_now) {
+    _schedule(tpg._sources);
+  }
+
+  return tpg._future;
+}
 
 // Constructor
 template <template <typename...> typename E>
@@ -179,8 +383,6 @@ BasicTaskflow<E>::Closure::Closure(BasicTaskflow& t, Node& n) :
 // Operator ()
 template <template <typename...> typename E>
 void BasicTaskflow<E>::Closure::operator () () const {
-  
-  //assert(taskflow && node);
 
   // Here we need to fetch the num_successors first to avoid the invalid memory
   // access caused by topology clear.
@@ -195,70 +397,82 @@ void BasicTaskflow<E>::Closure::operator () () const {
   }
   // subflow node type 
   else {
-
-    bool first_time {false};  // To stop creating subflow in second time 
     
-    // The first time we enter into the subflow context, subgraph must be nullopt.
-    if(!(node->_subgraph)){
-      node->_subgraph.emplace();  // Initialize the _subgraph   
-      first_time = true;
+    // Clear the subgraph before the task execution
+    if(!node->is_spawned()) {
+      node->_subgraph.emplace();
     }
-    
+   
     SubflowBuilder fb(*(node->_subgraph));
 
     std::invoke(std::get<DynamicWork>(node->_work), fb);
     
-    // Need to create a subflow if first time & subgraph is not empty
-    if(first_time && !(node->_subgraph->empty())) {
-      //// small optimization on one task
-      //if(std::next(node->_subgraph->begin()) == node->_subgraph->end()){
-      //  // If the subgraph has only one node, directly execute this static task 
-      //  // regardless of detached or join since this task will be eventually executed 
-      //  // some time before the end of the graph.
-      //  if(auto &f = node->_subgraph->front(); f._work.index() == 0) { 
-      //    std::invoke(std::get<StaticWork>(f._work));
-      //  }
-      //  else {
-      //    f.precede(fb.detached() ? node->_topology->_target : *node);
-      //    f._topology = node->_topology;
-      //    Closure c(*taskflow, f);
-      //    c();
-      //    // The reason to return here is this f might spawn new subflows (grandchildren)
-      //    // and we need to make sure grandchildren finish before f's parent. So we need to 
-      //    // return here. Otherwise, we might execute f's parent even grandchildren are not scheduled 
-      //    if(!fb.detached()) {
-      //      return;
-      //    }
-      //  }
-      //}
-      //else {
+    // Need to create a subflow if first time & subgraph is not empty 
+    if(!node->is_spawned()) {
+      node->set_spawned();
+      if(!node->_subgraph->empty()) {
         // For storing the source nodes
-        std::vector<Node*> src; 
-        for(auto n = node->_subgraph->begin(); n != node->_subgraph->end(); ++n) {
-          n->_topology = node->_topology;
-          if(n->num_successors() == 0) {
-            n->precede(fb.detached() ? node->_topology->_target : *node);
+        PassiveVector<Node*> src; 
+        for(auto& n : *(node->_subgraph)) {
+          n._topology = node->_topology;
+          n.set_subtask();
+          if(n.num_successors() == 0) {
+            if(fb.detached()) {
+              node->_topology->_num_sinks ++;
+            }
+            else {
+              n.precede(*node);
+            }
           }
-          if(n->num_dependents() == 0) {
-            src.emplace_back(&(*n));
+          if(n.num_dependents() == 0) {
+            src.push_back(&n);
           }
         }
 
-        for(auto& n: src) {
-          taskflow->_schedule(*n);
-        }
+        taskflow->_schedule(src);
 
         if(!fb.detached()) {
           return;
         }
-      //}
+      }
+    }
+  } // End of DynamicWork -----------------------------------------------------
+  
+  // Recover the runtime change due to dynamic tasking except the target & spawn tasks 
+  // This must be done before scheduling the successors, otherwise this might cause 
+  // race condition on the _dependents
+  //if(num_successors && !node->_subtask) {
+  if(!node->is_subtask()) {
+    // Only dynamic tasking needs to restore _dependents
+    // TODO:
+    if(node->_work.index() == 1 &&  !node->_subgraph->empty()) {
+      while(!node->_dependents.empty() && node->_dependents.back()->is_subtask()) {
+        node->_dependents.pop_back();
+      }
+    }
+    node->_num_dependents = node->_dependents.size();
+    node->clear_status();
+  }
+
+  // At this point, the node storage might be destructed.
+  for(size_t i=0; i<num_successors; ++i) {
+    if(--(node->_successors[i]->_num_dependents) == 0) {
+      taskflow->_schedule(*(node->_successors[i]));
     }
   }
-  
-  // At this point, the node/node storage might be destructed.
-  for(size_t i=0; i<num_successors; ++i) {
-    if(--(node->_successors[i]->_dependents) == 0) {
-      taskflow->_schedule(*(node->_successors[i]));
+
+  // A node without any successor should check the termination of topology
+  if(num_successors == 0) {
+    if(--(node->_topology->_num_sinks) == 0) {
+
+      // This is the last executing node 
+      bool is_framework = node->_topology->_handle.index() == 1;
+      if(node->_topology->_work != nullptr) {
+        std::invoke(node->_topology->_work);
+      }
+      if(!is_framework) {
+        node->_topology->_promise.set_value();
+      }
     }
   }
 }
@@ -315,7 +529,7 @@ size_t BasicTaskflow<E>::num_workers() const {
 // Function: num_topologies
 template <template <typename...> typename E>
 size_t BasicTaskflow<E>::num_topologies() const {
-  return std::distance(_topologies.begin(), _topologies.end());
+  return _topologies.size();
 }
 
 // Function: share_executor
@@ -330,7 +544,7 @@ void BasicTaskflow<E>::silent_dispatch() {
 
   if(_graph.empty()) return;
 
-  auto& topology = _topologies.emplace_front(std::move(_graph));
+  auto& topology = _topologies.emplace_back(std::move(_graph));
 
   _schedule(topology._sources);
 }
@@ -346,7 +560,7 @@ void BasicTaskflow<E>::silent_dispatch(C&& c) {
     return;
   }
 
-  auto& topology = _topologies.emplace_front(std::move(_graph), std::forward<C>(c));
+  auto& topology = _topologies.emplace_back(std::move(_graph), std::forward<C>(c));
 
   _schedule(topology._sources);
 }
@@ -359,7 +573,7 @@ std::shared_future<void> BasicTaskflow<E>::dispatch() {
     return std::async(std::launch::deferred, [](){}).share();
   }
 
-  auto& topology = _topologies.emplace_front(std::move(_graph));
+  auto& topology = _topologies.emplace_back(std::move(_graph));
  
   _schedule(topology._sources);
 
@@ -377,7 +591,7 @@ std::shared_future<void> BasicTaskflow<E>::dispatch(C&& c) {
     return std::async(std::launch::deferred, [](){}).share();
   }
 
-  auto& topology = _topologies.emplace_front(std::move(_graph), std::forward<C>(c));
+  auto& topology = _topologies.emplace_back(std::move(_graph), std::forward<C>(c));
 
   _schedule(topology._sources);
 
@@ -415,13 +629,13 @@ void BasicTaskflow<E>::_schedule(Node& node) {
 // The main procedure to schedule a set of task nodes.
 // Each task node has two types of tasks - regular and subflow.
 template <template <typename...> typename E>
-void BasicTaskflow<E>::_schedule(std::vector<Node*>& nodes) {
+void BasicTaskflow<E>::_schedule(PassiveVector<Node*>& nodes) {
   std::vector<Closure> closures;
   closures.reserve(nodes.size());
   for(auto src : nodes) {
     closures.emplace_back(*this, *src);
   }
-  _executor->batch(std::move(closures));
+  _executor->batch(closures);
 }
 
 // Function: dump_topologies
@@ -468,5 +682,5 @@ std::string BasicTaskflow<E>::dump() const {
   return os.str();
 }
 
-};  // end of namespace tf ----------------------------------------------------
+}  // end of namespace tf ----------------------------------------------------
 

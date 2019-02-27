@@ -137,7 +137,7 @@ class Pin {
     bool is_rct_root() const;
     bool is_datapath_source() const;
     bool has_self_loop() const;
-    
+
     std::optional<float> slew(Split, Tran) const;
     std::optional<float> at(Split, Tran) const;
     std::optional<float> rat(Split, Tran) const;

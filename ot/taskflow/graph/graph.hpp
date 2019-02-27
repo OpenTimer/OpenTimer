@@ -1,7 +1,10 @@
 #pragma once
 
 #include "../error/error.hpp"
-#include "../utility/utility.hpp"
+#include "../utility/traits.hpp"
+#include "../utility/singular_allocator.hpp"
+#include "../utility/passive_vector.hpp"
+#include <bitset>
 
 namespace tf {
 
@@ -11,8 +14,10 @@ class Topology;
 class Task;
 class FlowBuilder;
 class SubflowBuilder;
+class Framework;
 
-using Graph = std::list<Node>;
+//using Graph = std::list<Node>;
+using Graph = std::list<Node, tf::SingularAllocator<Node>>;
 
 // ----------------------------------------------------------------------------
 
@@ -27,6 +32,9 @@ class Node {
 
   using StaticWork   = std::function<void()>;
   using DynamicWork  = std::function<void(SubflowBuilder&)>;
+
+  constexpr static int SPAWNED = 0x1;
+  constexpr static int SUBTASK = 0x2;
 
   public:
 
@@ -46,31 +54,42 @@ class Node {
 
     std::string dump() const;
 
+    // Status-related functions
+    bool is_spawned() const { return _status & SPAWNED; }
+    bool is_subtask() const { return _status & SUBTASK; }
+    void set_spawned()  { _status |= SPAWNED; }
+    void set_subtask()  { _status |= SUBTASK; }
+    void clear_status() { _status = 0; }
+
   private:
     
     std::string _name;
     std::variant<StaticWork, DynamicWork> _work;
-    std::vector<Node*> _successors;
-    std::atomic<int> _dependents;
+
+    tf::PassiveVector<Node*> _successors;
+    tf::PassiveVector<Node*> _dependents;
+
+    std::atomic<int> _num_dependents;
 
     std::optional<Graph> _subgraph;
 
     Topology* _topology;
+
+    int _status {0};
 };
 
 // Constructor
 inline Node::Node() {
-  _dependents.store(0, std::memory_order_relaxed);
+  _num_dependents.store(0, std::memory_order_relaxed);
   _topology = nullptr;
 }
 
 // Constructor
 template <typename C>
 inline Node::Node(C&& c) : _work {std::forward<C>(c)} {
-  _dependents.store(0, std::memory_order_relaxed);
+  _num_dependents.store(0, std::memory_order_relaxed);
   _topology = nullptr;
 }
-
 
 // Destructor
 inline Node::~Node() {
@@ -96,7 +115,8 @@ inline Node::~Node() {
 // Procedure: precede
 inline void Node::precede(Node& v) {
   _successors.push_back(&v);
-  v._dependents.fetch_add(1, std::memory_order_relaxed);
+  v._dependents.push_back(this);
+  v._num_dependents.fetch_add(1, std::memory_order_relaxed);
 }
 
 // Function: num_successors
@@ -106,7 +126,7 @@ inline size_t Node::num_successors() const {
 
 // Function: dependents
 inline size_t Node::num_dependents() const {
-  return _dependents.load(std::memory_order_relaxed);
+  return _dependents.size();
 }
 
 // Function: name
@@ -161,125 +181,6 @@ inline void Node::dump(std::ostream& os) const {
   }
 }
 
-// ----------------------------------------------------------------------------
-  
-// class: Topology
-class Topology {
-  
-  template <template<typename...> typename E> 
-  friend class BasicTaskflow;
+}  // end of namespace tf. ---------------------------------------------------
 
-  public:
-
-    Topology(Graph&&);
-
-    template <typename C>
-    Topology(Graph&&, C&&);
-
-    std::string dump() const;
-    void dump(std::ostream&) const;
-
-  private:
-
-    Graph _graph;
-
-    std::shared_future<void> _future;
-
-    std::vector<Node*> _sources;
-
-    Node _target;
-};
-
-// TODO: remove duplicate code in the two constructors
-
-// Constructor
-inline Topology::Topology(Graph&& t) : 
-  _graph(std::move(t)) {
-
-  _target._topology = this;
-  
-  std::promise<void> promise;
-
-  _future = promise.get_future().share();
-
-  _target._work = [p=MoC{std::move(promise)}] () mutable { 
-    p.get().set_value(); 
-  };
-
-  // Build the super source and super target.
-  for(auto& node : _graph) {
-
-    node._topology = this;
-
-    if(node.num_dependents() == 0) {
-      _sources.push_back(&node);
-    }
-
-    if(node.num_successors() == 0) {
-      node.precede(_target);
-    }
-  }
-}
-
-
-// Constructor
-template <typename C>
-inline Topology::Topology(Graph&& t, C&& c) : 
-  _graph(std::move(t)) {
-
-  //_source._topology = this;
-  _target._topology = this;
-  
-  std::promise<void> promise;
-
-  _future = promise.get_future().share();
-
-  _target._work = [p=MoC{std::move(promise)}, c{std::forward<C>(c)}] () mutable { 
-    p.get().set_value();
-    c();
-  };
-
-  // Build the super source and super target.
-  for(auto& node : _graph) {
-
-    node._topology = this;
-
-    if(node.num_dependents() == 0) {
-      _sources.push_back(&node);
-    }
-
-    if(node.num_successors() == 0) {
-      node.precede(_target);
-    }
-  }
-}
-
-
-// Procedure: dump
-inline void Topology::dump(std::ostream& os) const {
-
-  assert(!(_target._subgraph));
-  
-  os << "digraph Topology {\n"
-     << _target.dump();
-
-  for(const auto& node : _graph) {
-    os << node.dump();
-  }
-
-  os << "}\n";
-}
-  
-// Function: dump
-inline std::string Topology::dump() const { 
-  std::ostringstream os;
-  dump(os);
-  return os.str();
-}
-
-// ----------------------------------------------------------------------------
-
-
-
-};  // end of namespace tf. ---------------------------------------------------
 
