@@ -4,7 +4,6 @@
 #include "../utility/traits.hpp"
 #include "../utility/singular_allocator.hpp"
 #include "../utility/passive_vector.hpp"
-#include <bitset>
 
 namespace tf {
 
@@ -16,7 +15,6 @@ class FlowBuilder;
 class SubflowBuilder;
 class Framework;
 
-//using Graph = std::list<Node>;
 using Graph = std::list<Node, tf::SingularAllocator<Node>>;
 
 // ----------------------------------------------------------------------------
@@ -26,6 +24,7 @@ class Node {
 
   friend class Task;
   friend class Topology;
+  friend class Framework;
 
   template <template<typename...> typename E> 
   friend class BasicTaskflow;
@@ -57,9 +56,12 @@ class Node {
     // Status-related functions
     bool is_spawned() const { return _status & SPAWNED; }
     bool is_subtask() const { return _status & SUBTASK; }
-    void set_spawned()  { _status |= SPAWNED; }
-    void set_subtask()  { _status |= SUBTASK; }
-    void clear_status() { _status = 0; }
+
+    void set_spawned()   { _status |= SPAWNED;  }
+    void set_subtask()   { _status |= SUBTASK;  }
+    void unset_spawned() { _status &= ~SPAWNED; }
+    void unset_subtask() { _status &= ~SUBTASK; }
+    void clear_status()  { _status = 0;         }
 
   private:
     
@@ -74,14 +76,16 @@ class Node {
     std::optional<Graph> _subgraph;
 
     Topology* _topology;
-
-    int _status {0};
+    Framework* _module;
+    int _status;
 };
 
 // Constructor
 inline Node::Node() {
   _num_dependents.store(0, std::memory_order_relaxed);
   _topology = nullptr;
+  _module = nullptr;
+  _status = 0;
 }
 
 // Constructor
@@ -89,10 +93,14 @@ template <typename C>
 inline Node::Node(C&& c) : _work {std::forward<C>(c)} {
   _num_dependents.store(0, std::memory_order_relaxed);
   _topology = nullptr;
+  _module = nullptr;
+  _status = 0;
 }
 
 // Destructor
 inline Node::~Node() {
+  
+  // this is to avoid stack overflow
   if(_subgraph.has_value()) {
     std::list<Graph> gs; 
     gs.push_back(std::move(*_subgraph));
@@ -143,33 +151,25 @@ inline std::string Node::dump() const {
 
 // Function: dump
 inline void Node::dump(std::ostream& os) const {
+
+  os << 'p' << this << "[label=\"";
+  if(_name.empty()) os << 'p' << this;
+  else os << _name;
+  os << "\"];\n";
   
-  if(_name.empty()) os << '\"' << this << '\"';
-  else os << std::quoted(_name);
-  os << ";\n";
-
   for(const auto s : _successors) {
-
-    if(_name.empty()) os << '\"' << this << '\"';
-    else os << std::quoted(_name);
-
-    os << " -> ";
-    
-    if(s->name().empty()) os << '\"' << s << '\"';
-    else os << std::quoted(s->name());
-
-    os << ";\n";
+    os << 'p' << this << " -> " << 'p' << s << ";\n";
   }
   
   if(_subgraph && !_subgraph->empty()) {
 
     os << "subgraph cluster_";
-    if(_name.empty()) os << this;
+    if(_name.empty()) os << 'p' << this;
     else os << _name;
     os << " {\n";
 
-    os << "label = \"Subflow_";
-    if(_name.empty()) os << this;
+    os << "label=\"Subflow_";
+    if(_name.empty()) os << 'p' << this;
     else os << _name;
 
     os << "\";\n" << "color=blue\n";

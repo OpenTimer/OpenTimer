@@ -18,6 +18,7 @@ preventing direct access to the internal data storage.
 class Task {
 
   friend class FlowBuilder;
+  friend class Framework;
 
   template <template<typename...> typename E> 
   friend class BasicTaskflow;
@@ -87,7 +88,7 @@ class Task {
 
     @tparam Ts... parameter pack
 
-    @param tasks... one or multiple tasks
+    @param tasks one or multiple tasks
 
     @return @c *this
     */
@@ -117,7 +118,7 @@ class Task {
 
     @tparam Ts parameter pack 
 
-    @param tasks... one or multiple tasks
+    @param tasks one or multiple tasks
 
     @return @c *this
     */
@@ -268,7 +269,13 @@ inline Task::Task(Task&& rhs) : _node{rhs._node} {
 // Function: work
 template <typename C>
 inline Task& Task::work(C&& c) {
+
+  if(_node->_module) {
+    TF_THROW(Error::FRAMEWORK, "can't assign work to a module task");
+  }
+
   _node->_work = std::forward<C>(c);
+
   return *this;
 }
 

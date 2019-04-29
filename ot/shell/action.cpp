@@ -221,6 +221,9 @@ void Shell::_report_timing() {
 
   std::optional<Split> split;
   std::optional<Tran> tran;
+  
+  // TODO: make the following format extensible
+  bool tau18 {false};
 
   while(_is >> token) {
     if(token == "-num_paths") {
@@ -237,6 +240,12 @@ void Shell::_report_timing() {
     }
     else if(token == "-fall") {
       tran = FALL;
+    }
+    else if(token == "-format") {
+      _is >> token;
+      if(token == "tau18") {
+        tau18 = true;
+      }
     }
     else {
       _es << "failed to parse " << std::quoted(token) << '\n';
@@ -264,7 +273,13 @@ void Shell::_report_timing() {
   else {
     for(size_t i=0; i<paths.size(); ++i) {
       if(i) _os << '\n';
-      _os << paths[i];
+
+      if(tau18) {
+        paths[i].dump_tau18(_os);
+      }
+      else {
+        _os << paths[i];
+      }
     }
   }
 }

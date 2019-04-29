@@ -11,7 +11,7 @@
 // 2018/10/04 - modified by Tsung-Wei Huang
 // 
 // Removed shutdown, spawn, and wait_for_all to simplify the design
-// of the threadpool. The threadpool now can operates on fixed memory
+// of the executor. The executor now can operates on fixed memory
 // closure to improve the performance.
 //
 // 2018/09/14 - modified by Guannan
@@ -19,7 +19,7 @@
 //
 // 2018/04/01 - contributed by Tsung-Wei Huang and Chun-Xun Lin
 // 
-// The basic threadpool implementation based on C++17.
+// The basic executor implementation based on C++17.
 
 #pragma once
 
@@ -36,10 +36,12 @@
 #include <cassert>
 #include <unordered_set>
 
+#include "observer.hpp"
+
 namespace tf {
 
 /**
-@class: SimpleThreadpool
+@class: SimpleExecutor
 
 @brief Executor that implements a centralized task queue with a simple 
        execution strategy.
@@ -47,7 +49,7 @@ namespace tf {
 @tparam Closure closure type
 */
 template <typename Closure>
-class SimpleThreadpool {
+class SimpleExecutor {
 
   public:
 
@@ -56,7 +58,7 @@ class SimpleThreadpool {
     
     @param N the number of worker threads
     */
-    explicit SimpleThreadpool(unsigned N);
+    explicit SimpleExecutor(unsigned N);
 
     /**
     @brief destructs the executor
@@ -64,14 +66,14 @@ class SimpleThreadpool {
     Destructing the executor immediately forces all worker threads to stop.
     The executor does not guarantee all tasks to finish upon destruction.
     */
-    ~SimpleThreadpool();
+    ~SimpleExecutor();
     
     /**
     @brief constructs the closure in place in the executor
 
     @tparam ArgsT... argument parameter pack
 
-    @param args... arguments to forward to the constructor of the closure
+    @param args arguments to forward to the constructor of the closure
     */
     template <typename... ArgsT>
     void emplace(ArgsT&&... args);
@@ -93,6 +95,22 @@ class SimpleThreadpool {
     */
     bool is_owner() const;
     
+    /**
+    @brief constructs an observer to inspect the activities of worker threads
+
+    Each executor manages at most one observer at a time through std::unique_ptr.
+    Createing multiple observers will only keep the lastest one.
+    
+    @tparam Observer observer type derived from tf::ExecutorObserverInterface
+    @tparam ArgsT... argument parameter pack
+
+    @param args arguments to forward to the constructor of the observer
+    
+    @return a raw pointer to the observer associated with this executor
+    */
+    template<typename Observer, typename... Args>
+    Observer* make_observer(Args&&... args);
+    
   private:
 
     const std::thread::id _owner {std::this_thread::get_id()};
@@ -105,30 +123,32 @@ class SimpleThreadpool {
     
     bool _stop {false};
 
+    std::unique_ptr<ExecutorObserverInterface> _observer;
+
     void _spawn(unsigned);
     void _shutdown();
 };
 
 // Constructor
 template <typename Closure>
-SimpleThreadpool<Closure>::SimpleThreadpool(unsigned N) {
+SimpleExecutor<Closure>::SimpleExecutor(unsigned N) {
   _spawn(N);
 }
 
 // Destructor
 template <typename Closure>
-SimpleThreadpool<Closure>::~SimpleThreadpool() {
+SimpleExecutor<Closure>::~SimpleExecutor() {
   _shutdown();
 }
 
 template <typename Closure>
-size_t SimpleThreadpool<Closure>::num_workers() const {
+size_t SimpleExecutor<Closure>::num_workers() const {
   return _threads.size();
 }
 
 // Function: is_owner
 template <typename Closure>
-bool SimpleThreadpool<Closure>::is_owner() const {
+bool SimpleExecutor<Closure>::is_owner() const {
   return std::this_thread::get_id() == _owner;
 }
 
@@ -136,13 +156,13 @@ bool SimpleThreadpool<Closure>::is_owner() const {
 // The procedure spawns "n" threads monitoring the task queue and executing each task. 
 // After the task is finished, the thread reacts to the returned signal.
 template <typename Closure>
-void SimpleThreadpool<Closure>::_spawn(unsigned N) {
+void SimpleExecutor<Closure>::_spawn(unsigned N) {
 
   assert(is_owner());
     
   for(size_t i=0; i<N; ++i) {
       
-    _threads.emplace_back([this] () -> void { 
+    _threads.emplace_back([this, me=i] () -> void { 
         
       Closure task;
           
@@ -156,7 +176,16 @@ void SimpleThreadpool<Closure>::_spawn(unsigned N) {
 
           // execute the task
           lock.unlock();
+
+          if(_observer) {
+            _observer->on_entry(me);
+          }
+
           task();
+
+          if(_observer) {
+            _observer->on_exit(me);
+          }
           lock.lock();
         }
         else {
@@ -174,7 +203,7 @@ void SimpleThreadpool<Closure>::_spawn(unsigned N) {
 // Function: emplace
 template <typename Closure>
 template <typename... ArgsT>
-void SimpleThreadpool<Closure>::emplace(ArgsT&&... args) {
+void SimpleExecutor<Closure>::emplace(ArgsT&&... args) {
   
   // No worker, do this right away.
   if(num_workers() == 0) {
@@ -191,7 +220,7 @@ void SimpleThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 // Function: emplace
 template <typename Closure>
-void SimpleThreadpool<Closure>::batch(std::vector<Closure>& tasks) {
+void SimpleExecutor<Closure>::batch(std::vector<Closure>& tasks) {
 
   // No worker, do this right away.
   if(num_workers() == 0) {
@@ -219,9 +248,9 @@ void SimpleThreadpool<Closure>::batch(std::vector<Closure>& tasks) {
 
 
 // Procedure: shutdown
-// Shut down the threadpool - only the owner can do this.
+// Shut down the executor - only the owner can do this.
 template <typename Closure>
-void SimpleThreadpool<Closure>::_shutdown() {
+void SimpleExecutor<Closure>::_shutdown() {
   
   assert(is_owner());
 
@@ -238,6 +267,15 @@ void SimpleThreadpool<Closure>::_shutdown() {
   _threads.clear();
   _stop = false;
 } 
+
+// Function: make_observer    
+template <typename Closure>
+template<typename Observer, typename... Args>
+Observer* SimpleExecutor<Closure>::make_observer(Args&&... args) {
+  _observer = std::make_unique<Observer>(std::forward<Args>(args)...);
+  _observer->set_up(_threads.size());
+  return static_cast<Observer*>(_observer.get());
+}
 
 }  // end of namespace tf. ---------------------------------------------------
 

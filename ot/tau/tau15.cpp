@@ -72,23 +72,20 @@ Timer& Timer::read_timing(std::filesystem::path path) {
 
   std::scoped_lock lock(_mutex);
   
-  auto parser = _insert_builder(to_string("parse_timing ", path), false);
-  auto reader = _insert_builder(to_string("digest_timing ", path), true);
-  
-  // Library reader
-  parser.work([path=std::move(path), timing] () {
+  auto parser = _taskflow.emplace([path=std::move(path), timing] () {
     OT_LOGI("loading timing ", path, " ...");
     timing->read(path);
   });
 
-  // Placeholder to add_lineage
-  reader.work([this, timing] () {
+  auto reader = _taskflow.emplace([this, timing] () {
     OT_LOGI("add ", timing->assertions.size(), " timing assertions");
     _timing(*timing);
   });
 
   // Reader -> modifier
   parser.precede(reader);
+
+  _add_to_lineage(reader);
 
   return *this;
 }

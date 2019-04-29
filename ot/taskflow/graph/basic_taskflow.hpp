@@ -1,3 +1,9 @@
+// 2019/04/09 - modified by Tsung-Wei Huang
+//  - removed silent_dispatch method
+//
+// 2019/03/12 - modified by Chun-Xun Lin
+//  - added framework
+//
 // 2019/02/11 - modified by Tsung-Wei Huang
 //  - refactored run_until
 //  - added allocator to topologies
@@ -36,12 +42,13 @@ and defines means to execute task dependency graphs.
 */
 template <template <typename...> typename E>
 class BasicTaskflow : public FlowBuilder {
-  
+
   using StaticWork  = typename Node::StaticWork;
   using DynamicWork = typename Node::DynamicWork;
   
-  // Closure
   struct Closure {
+
+    friend class BasicTaskflow;
   
     Closure() = default;
     Closure(const Closure&) = default;
@@ -54,7 +61,7 @@ class BasicTaskflow : public FlowBuilder {
     BasicTaskflow* taskflow {nullptr};
     Node*          node     {nullptr};
   };
-
+  
   public:
   
   /**
@@ -109,19 +116,6 @@ class BasicTaskflow : public FlowBuilder {
     template <typename C>
     std::shared_future<void> dispatch(C&&);
   
-    /**
-    @brief dispatches the present graph to threads and returns immediately
-    */
-    void silent_dispatch();
-    
-    /**
-    @brief dispatches the present graph to threads and run a callback when the graph completes
-
-    @param callable a callable object to execute on completion
-    */
-    template <typename C>
-    void silent_dispatch(C&& callable);
-    
     /**
     @brief dispatches the present graph to threads and wait for all topologies to complete
     */
@@ -247,6 +241,7 @@ class BasicTaskflow : public FlowBuilder {
 
     void _schedule(Node&);
     void _schedule(PassiveVector<Node*>&);
+    void _set_module_node(Node&);
 };
 
 // ============================================================================
@@ -391,8 +386,17 @@ void BasicTaskflow<E>::Closure::operator () () const {
   // regular node type
   // The default node work type. We only need to execute the callback if any.
   if(auto index=node->_work.index(); index == 0) {
-    if(auto &f = std::get<StaticWork>(node->_work); f != nullptr){
-      std::invoke(f);
+    if(node->_module != nullptr) {
+      bool first_time = !node->is_spawned();
+      std::invoke(std::get<StaticWork>(node->_work));
+      if(first_time) {
+        return ;
+      }
+    }
+    else {
+      if(auto &f = std::get<StaticWork>(node->_work); f != nullptr){
+        std::invoke(f);
+      }
     }
   }
   // subflow node type 
@@ -450,8 +454,8 @@ void BasicTaskflow<E>::Closure::operator () () const {
         node->_dependents.pop_back();
       }
     }
-    node->_num_dependents = node->_dependents.size();
-    node->clear_status();
+    node->_num_dependents = static_cast<int>(node->_dependents.size());
+    node->unset_spawned();
   }
 
   // At this point, the node storage might be destructed.
@@ -538,33 +542,6 @@ std::shared_ptr<typename BasicTaskflow<E>::Executor> BasicTaskflow<E>::share_exe
   return _executor;
 }
 
-// Procedure: silent_dispatch 
-template <template <typename...> typename E>
-void BasicTaskflow<E>::silent_dispatch() {
-
-  if(_graph.empty()) return;
-
-  auto& topology = _topologies.emplace_back(std::move(_graph));
-
-  _schedule(topology._sources);
-}
-
-
-// Procedure: silent_dispatch with registered callback
-template <template <typename...> typename E>
-template <typename C>
-void BasicTaskflow<E>::silent_dispatch(C&& c) {
-
-  if(_graph.empty()) {
-    c();
-    return;
-  }
-
-  auto& topology = _topologies.emplace_back(std::move(_graph), std::forward<C>(c));
-
-  _schedule(topology._sources);
-}
-
 // Procedure: dispatch 
 template <template <typename...> typename E>
 std::shared_future<void> BasicTaskflow<E>::dispatch() {
@@ -602,7 +579,7 @@ std::shared_future<void> BasicTaskflow<E>::dispatch(C&& c) {
 template <template <typename...> typename E>
 void BasicTaskflow<E>::wait_for_all() {
   if(!_graph.empty()) {
-    silent_dispatch();
+    dispatch();
   }
   wait_for_topologies();
 }
@@ -621,6 +598,9 @@ void BasicTaskflow<E>::wait_for_topologies() {
 // Each task node has two types of tasks - regular and subflow.
 template <template <typename...> typename E>
 void BasicTaskflow<E>::_schedule(Node& node) {
+  if(node._module != nullptr && !node.is_spawned()) {
+    _set_module_node(node);
+  }
   _executor->emplace(*this, node);
 }
 
@@ -633,10 +613,49 @@ void BasicTaskflow<E>::_schedule(PassiveVector<Node*>& nodes) {
   std::vector<Closure> closures;
   closures.reserve(nodes.size());
   for(auto src : nodes) {
+    if(src->_module != nullptr && !src->is_spawned()) {
+      _set_module_node(*src);
+    }
     closures.emplace_back(*this, *src);
   }
   _executor->batch(closures);
 }
+
+
+template <template <typename...> typename E>
+void BasicTaskflow<E>::_set_module_node(Node& node) {
+
+  node._work = [&node, this, tgt{PassiveVector<Node*>()}] () mutable {
+
+    // second time to enter this context
+    if(node.is_spawned()) {
+      node._dependents.resize(node._dependents.size()-tgt.size());
+      for(auto& t: tgt) {
+        t->_successors.clear();
+      }
+      return ;
+    }
+
+    // first time to enter this context
+    node.set_spawned();
+
+    PassiveVector<Node*> src;
+
+    for(auto &n: node._module->_graph) {
+      n._topology = node._topology;
+      if(n.num_dependents() == 0) {
+        src.push_back(&n);
+      }
+      if(n.num_successors() == 0) {
+        n.precede(node);
+        tgt.push_back(&n);
+      }
+    }
+
+    _schedule(src);
+  };
+}
+
 
 // Function: dump_topologies
 template <template <typename...> typename E>
@@ -681,6 +700,7 @@ std::string BasicTaskflow<E>::dump() const {
   dump(os); 
   return os.str();
 }
+
 
 }  // end of namespace tf ----------------------------------------------------
 

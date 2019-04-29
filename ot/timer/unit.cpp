@@ -11,13 +11,11 @@ Timer& Timer::set_time_unit(second_t unit) {
   std::scoped_lock lock(_mutex);
 
   // timer task
-  auto task = _insert_builder(
-    to_string("set_time_unit ", unit.value(), " s"), true
-  ); 
-
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_time_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }
@@ -64,13 +62,11 @@ Timer& Timer::set_capacitance_unit(farad_t unit) {
   std::scoped_lock lock(_mutex);
 
   // task
-  auto task = _insert_builder(
-    to_string("set_capacitance_unit ", unit.value(), " farad"), true
-  );
-  
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_capacitance_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }
@@ -112,13 +108,11 @@ Timer& Timer::set_resistance_unit(ohm_t unit) {
   std::scoped_lock lock(_mutex);
 
   // task
-  auto task = _insert_builder(
-    to_string("set_resistance_unit ", unit.value(), " ohm"), true
-  );
-  
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_resistance_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }
@@ -154,13 +148,11 @@ Timer& Timer::set_voltage_unit(volt_t unit) {
   std::scoped_lock lock(_mutex);
 
   // task
-  auto task = _insert_builder(
-    to_string("set_voltage_unit ", unit.value(), " V"), true
-  );
-
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_voltage_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }
@@ -187,13 +179,11 @@ Timer& Timer::set_current_unit(ampere_t unit) {
   std::scoped_lock lock(_mutex);
 
   // task
-  auto task = _insert_builder(
-    to_string("set_current_unit ", unit.value(), " A"), true
-  );
-
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_current_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }
@@ -220,13 +210,11 @@ Timer& Timer::set_power_unit(watt_t unit) {
   std::scoped_lock lock(_mutex);
 
   // task
-  auto task = _insert_builder(
-    to_string("set_power_unit ", unit.value(), " W"), true
-  );
-
-  task.work([this, unit=std::move(unit)] () {
+  auto task = _taskflow.emplace([this, unit=std::move(unit)] () {
     _to_power_unit(unit);
   });
+
+  _add_to_lineage(task);
 
   return *this;
 }

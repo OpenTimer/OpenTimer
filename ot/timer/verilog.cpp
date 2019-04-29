@@ -10,23 +10,21 @@ Timer& Timer::read_verilog(std::filesystem::path path) {
 
   std::scoped_lock lock(_mutex);
 
-  // parser
-  auto parser = _insert_builder(to_string("parse_verilog ", path), false);
-  auto reader = _insert_builder(to_string("digest_verilog ", path), true);
-
-  parser.work([module, path=std::move(path)] () {
+  auto parser = _taskflow.emplace([module, path=std::move(path)] () {
     OT_LOGI("loading netlist ", path);
     *module = vlog::read_verilog(path);
   });
 
   // reader
-  reader.work([this, module] () mutable {
+  auto reader = _taskflow.emplace([this, module] () mutable {
     _verilog(*module);
     OT_LOGI("added ", module->info());
   });
 
   // Build the task dependency
   parser.precede(reader);
+
+  _add_to_lineage(reader);
   
   return *this;
 }

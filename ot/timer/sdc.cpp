@@ -10,23 +10,21 @@ Timer& Timer::read_sdc(std::filesystem::path path) {
 
   std::scoped_lock lock(_mutex);
   
-  // sdc tasks
-  auto parser = _insert_builder(to_string("parse_sdc ", path), false);
-  auto reader = _insert_builder(to_string("read_sdc ", path), true);
-  
   // parser
-  parser.work([sdc, path=std::move(path)] () {
+  auto parser = _taskflow.emplace([sdc, path=std::move(path)] () {
     sdc->read(path);
   });
 
   // reader
-  reader.work([this, sdc] () mutable {
+  auto reader = _taskflow.emplace([this, sdc] () mutable {
     _read_sdc(*sdc);
     OT_LOGI("added ", sdc->commands.size(), " sdc commands");
   });
 
   // Build the task dependency
   parser.precede(reader);
+
+  _add_to_lineage(reader);
 
   return *this;
 }

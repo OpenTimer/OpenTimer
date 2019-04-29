@@ -189,6 +189,7 @@ class Timer {
     void _to_power_unit(const watt_t&);
     void _to_current_unit(const ampere_t&);
     void _to_voltage_unit(const volt_t&);
+    void _add_to_lineage(tf::Task);
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
     void _update_timing();
@@ -266,9 +267,6 @@ class Timer {
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
     
-    tf::Task _insert_builder(const std::string&, bool);
-    tf::Task _insert_action(const std::string&);
-
     SfxtCache _sfxt_cache(const Endpoint&) const;
     SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
     SfxtCache _sfxt_cache(const Test&, Split, Tran) const;

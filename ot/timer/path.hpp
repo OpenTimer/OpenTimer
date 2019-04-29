@@ -33,6 +33,7 @@ struct Path : std::list<Point> {
   Path& operator = (Path&&) = default;
   
   void dump(std::ostream&) const;
+  void dump_tau18(std::ostream&) const;
 
   float slack {std::numeric_limits<float>::quiet_NaN()};
   

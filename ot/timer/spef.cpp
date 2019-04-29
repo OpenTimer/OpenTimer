@@ -10,11 +10,8 @@ Timer& Timer::read_spef(std::filesystem::path path) {
   
   std::scoped_lock lock(_mutex);
 
-  auto parser = _insert_builder(to_string("parse_spef ", path), false);
-  auto reader = _insert_builder(to_string("digest_spef ", path), true);
-
   // Reader task
-  parser.work([path=std::move(path), spef] () {
+  auto parser = _taskflow.emplace([path=std::move(path), spef] () {
     OT_LOGI("loading spef ", path);
     if(spef->read(path); spef->error) {
       OT_LOGE("Parser-SPEF error:\n", *spef->error);
@@ -23,7 +20,7 @@ Timer& Timer::read_spef(std::filesystem::path path) {
   });
   
   // Spef update task (this has to be after parser)
-  reader.work([this, spef] () {
+  auto reader = _taskflow.emplace([this, spef] () {
     if(!(spef->error)) {
       _rebase_unit(*spef);
       _read_spef(*spef);
@@ -34,6 +31,8 @@ Timer& Timer::read_spef(std::filesystem::path path) {
   // Build the task dependency.
   parser.precede(reader);
   
+  _add_to_lineage(reader);
+
   return *this;
 }
 

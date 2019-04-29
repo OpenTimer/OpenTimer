@@ -11,12 +11,12 @@
 // 2018/10/04 - modified by Tsung-Wei Huang
 // 
 // Removed shutdown, spawn, and wait_for_all to simplify the design
-// of the threadpool. The threadpool now can operates on fixed memory
+// of the executor. The executor now can operates on fixed memory
 // closure to improve the performance.
 //
 // 2018/09/12 - created by Tsung-Wei Huang and Chun-Xun Lin
 //
-// Speculative threadpool is similar to proactive threadpool except
+// Speculative executor is similar to proactive executor except
 // each thread will speculatively move a new task to its local worker
 // data structure to reduce extract hit to the task queue.
 // This can save time from locking the mutex during dynamic tasking.
@@ -38,10 +38,12 @@
 #include <optional>
 #include <cassert>
 
+#include "observer.hpp"
+
 namespace tf {
 
 /**
-@class: SpeculativeThreadpool
+@class: SpeculativeExecutor
 
 @brief Executor that implements a centralized task queue
        with a speculative execution strategy.
@@ -49,7 +51,7 @@ namespace tf {
 @tparam Closure closure type
 */
 template <typename Closure>
-class SpeculativeThreadpool {
+class SpeculativeExecutor {
 
   struct Worker {
     std::condition_variable cv;
@@ -64,7 +66,7 @@ class SpeculativeThreadpool {
 
     @param N the number of worker threads
     */
-    SpeculativeThreadpool(unsigned N);
+    SpeculativeExecutor(unsigned N);
 
     /**
     @brief destructs the executor
@@ -72,7 +74,7 @@ class SpeculativeThreadpool {
     Destructing the executor immediately forces all worker threads to stop.
     The executor does not guarantee all tasks to finish upon destruction.
     */
-    ~SpeculativeThreadpool();
+    ~SpeculativeExecutor();
 
     /**
     @brief queries the number of worker threads
@@ -89,7 +91,7 @@ class SpeculativeThreadpool {
 
     @tparam ArgsT... argument parameter pack
 
-    @param args... arguments to forward to the constructor of the closure
+    @param args arguments to forward to the constructor of the closure
     */
     template <typename... ArgsT>
     void emplace(ArgsT&&... args);
@@ -100,6 +102,22 @@ class SpeculativeThreadpool {
     @param closures a vector of closures
     */
     void batch(std::vector<Closure>& closures);
+    
+    /**
+    @brief constructs an observer to inspect the activities of worker threads
+
+    Each executor manages at most one observer at a time through std::unique_ptr.
+    Createing multiple observers will only keep the lastest one.
+    
+    @tparam Observer observer type derived from tf::ExecutorObserverInterface
+    @tparam ArgsT... argument parameter pack
+
+    @param args arguments to forward to the constructor of the observer
+    
+    @return a raw pointer to the observer associated with this executor
+    */
+    template<typename Observer, typename... Args>
+    Observer* make_observer(Args&&... args);
     
   private:
     
@@ -114,49 +132,51 @@ class SpeculativeThreadpool {
     std::unordered_map<std::thread::id, Worker*> _worker_maps;    
 
     bool _exiting {false};
+    
+    std::unique_ptr<ExecutorObserverInterface> _observer;
 
     auto _this_worker() const;
     
     void _shutdown();
     void _spawn(unsigned);
 
-};  // class BasicSpeculativeThreadpool. --------------------------------------
+};  // class BasicSpeculativeExecutor. --------------------------------------
 
 // Constructor
 template <typename Closure>
-SpeculativeThreadpool<Closure>::SpeculativeThreadpool(unsigned N) : 
+SpeculativeExecutor<Closure>::SpeculativeExecutor(unsigned N) : 
   _workers {N} {
   _spawn(N);
 }
 
 // Destructor
 template <typename Closure>
-SpeculativeThreadpool<Closure>::~SpeculativeThreadpool(){
+SpeculativeExecutor<Closure>::~SpeculativeExecutor(){
   _shutdown();
 }
 
 // Function: is_owner
 template <typename Closure>
-bool SpeculativeThreadpool<Closure>::is_owner() const {
+bool SpeculativeExecutor<Closure>::is_owner() const {
   return std::this_thread::get_id() == _owner;
 }
 
 // Function: num_workers
 template <typename Closure>
-size_t SpeculativeThreadpool<Closure>::num_workers() const { 
+size_t SpeculativeExecutor<Closure>::num_workers() const { 
   return _threads.size();  
 }
     
 // Function: _this_worker
 template <typename Closure>
-auto SpeculativeThreadpool<Closure>::_this_worker() const {
+auto SpeculativeExecutor<Closure>::_this_worker() const {
   auto id = std::this_thread::get_id();
   return _worker_maps.find(id);
 }
 
 // Function: shutdown
 template <typename Closure>
-void SpeculativeThreadpool<Closure>::_shutdown(){
+void SpeculativeExecutor<Closure>::_shutdown(){
 
   assert(is_owner());
 
@@ -186,7 +206,7 @@ void SpeculativeThreadpool<Closure>::_shutdown(){
 
 // Function: spawn 
 template <typename Closure>
-void SpeculativeThreadpool<Closure>::_spawn(unsigned N) {
+void SpeculativeExecutor<Closure>::_spawn(unsigned N) {
 
   assert(is_owner() && _workers.size() == N);
 
@@ -195,9 +215,11 @@ void SpeculativeThreadpool<Closure>::_spawn(unsigned N) {
 
   for(size_t i=0; i<N; ++i){
 
-    _threads.emplace_back([this, &w=_workers[i]]() -> void {
+    _threads.emplace_back([this, me=i]() -> void {
 
        std::optional<Closure> t;
+
+       auto& w = _workers[me];
 
        std::unique_lock lock(_mutex);
        
@@ -222,7 +244,17 @@ void SpeculativeThreadpool<Closure>::_spawn(unsigned N) {
            lock.unlock();
            // speculation loop
            while(t) {
+
+             if(_observer) {
+               _observer->on_entry(me);
+             }
+
              (*t)();
+             
+             if(_observer) {
+               _observer->on_exit(me);
+             }
+
              if(w.task) {
                t = std::move(w.task);
                w.task = std::nullopt;
@@ -242,7 +274,7 @@ void SpeculativeThreadpool<Closure>::_spawn(unsigned N) {
 
 template <typename Closure>
 template <typename... ArgsT>
-void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args) {
+void SpeculativeExecutor<Closure>::emplace(ArgsT&&... args) {
 
   //no worker thread available
   if(num_workers() == 0){
@@ -276,7 +308,7 @@ void SpeculativeThreadpool<Closure>::emplace(ArgsT&&... args) {
 
 
 template <typename Closure>
-void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>& tasks){
+void SpeculativeExecutor<Closure>::batch(std::vector<Closure>& tasks){
 
   if(tasks.empty()) {
     return;
@@ -315,6 +347,15 @@ void SpeculativeThreadpool<Closure>::batch(std::vector<Closure>& tasks){
   if(tasks.size() == consumed) return ;
   _tasks.reserve(_tasks.size() + tasks.size() - consumed);
   std::move(tasks.begin()+consumed, tasks.end(), std::back_inserter(_tasks));
+}
+
+// Function: make_observer    
+template <typename Closure>
+template<typename Observer, typename... Args>
+Observer* SpeculativeExecutor<Closure>::make_observer(Args&&... args) {
+  _observer = std::make_unique<Observer>(std::forward<Args>(args)...);
+  _observer->set_up(_threads.size());
+  return static_cast<Observer*>(_observer.get());
 }
 
 

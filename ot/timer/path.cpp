@@ -17,6 +17,52 @@ Path::Path(float slk, const Endpoint* ept) :
   endpoint {ept} {
 }
 
+// Procedure: dump_tau18
+void Path::dump_tau18(std::ostream& os) const{
+
+  std::regex replace(":");
+
+  auto el = endpoint->split();
+  auto rf = endpoint->transition();
+
+  os << "Endpoint: " << std::regex_replace(back().pin.name(), replace, "/")  << '\n';
+  os << "Beginpoint: " << std::regex_replace(front().pin.name(), replace, "/") << '\n';
+  //os << "= Required Time " << '\n'; //TODO: ignore RAT for tau18 benchmark
+  float rat = 0.0;
+  if(endpoint->test() != nullptr){
+    rat = *(endpoint->test()->rat(el, rf));
+  }
+  else{
+    rat = *(endpoint->primary_output()->rat(el, rf));
+  }
+  auto beg_at = front().at;
+  auto end_at = back().at;
+  auto path_slack = el == MIN ? ((end_at - beg_at) - rat) : (rat - (end_at - beg_at));
+  os << "= Required Time " << rat << '\n';
+  //Arrival Time is the total delay
+  os << "- Arrival Time " << end_at - beg_at << '\n';
+  //os << "- Arrival Time " << back().at << '\n';
+  os << "= Slack Time " << path_slack << '\n';
+
+  float at_offset = front().at;
+  std::optional<float> pi_at;
+
+  for(const auto& p : *this) {
+
+    if(!pi_at){ os << "- "; }
+    else{ os << p.at-*pi_at << " "; }
+    os << p.at-at_offset << " ";
+
+    if(p.transition == RISE){ os << "^ "; }
+    else{ os << "v "; }
+
+    os << std::regex_replace(p.pin.name(), replace, "/") << '\n';
+    pi_at = p.at;
+  }
+  os << '\n';
+
+}
+
 // Procedure: dump
 // dump the path in the following format:
 //
