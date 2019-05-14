@@ -22,6 +22,8 @@ class Framework : public FlowBuilder {
   
   friend class Topology;
 
+  friend class Executor;
+
   public:
 
     /**

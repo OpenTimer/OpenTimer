@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <random>
+
 #include "notifier.hpp"
 
 namespace tf {
@@ -228,13 +230,13 @@ class EigenWorkStealingExecutor {
     
   struct Worker {
     EigenWorkStealingQueue<Closure> queue;
-    std::optional<Closure> cache;
   };
     
   struct PerThread {
     EigenWorkStealingExecutor* pool {nullptr}; 
     int worker_id {-1};
     uint64_t seed {std::hash<std::thread::id>()(std::this_thread::get_id())};
+    std::minstd_rand rdgen { std::random_device{}() };
   };
 
   public:
@@ -300,7 +302,7 @@ class EigenWorkStealingExecutor {
 
     unsigned _randomize(uint64_t&) const;
     unsigned _fast_modulo(unsigned, unsigned) const;
-    unsigned _find_victim(unsigned) const;
+    unsigned _find_victim(unsigned);
     
     PerThread& _per_thread() const;
 
@@ -387,13 +389,7 @@ void EigenWorkStealingExecutor<Closure>::_spawn(unsigned N) {
         
         while(t) {
           (*t)();
-          if(worker.cache) {
-            t = std::move(worker.cache);
-            worker.cache = std::nullopt;
-          }
-          else {
-            t = worker.queue.pop();
-          }
+          t = worker.queue.pop();
         }
 
         // stealing loop
@@ -444,15 +440,20 @@ size_t EigenWorkStealingExecutor<Closure>::num_workers() const {
 
 // Function: _non_empty_queue
 template <typename Closure>
-unsigned EigenWorkStealingExecutor<Closure>::_find_victim(unsigned thief) const {
+unsigned EigenWorkStealingExecutor<Closure>::_find_victim(unsigned thief) {
 
   //assert(_workers[thief].queue.empty());
 
   // try to find a victim candidate
   auto &pt = _per_thread();
-  auto rnd = _randomize(pt.seed);
-  auto inc = _coprimes[_fast_modulo(rnd, _coprimes.size())];
-  auto vtm = _fast_modulo(rnd, _workers.size());
+  //auto rnd = _randomize(pt.seed);
+  //auto inc = _coprimes[_fast_modulo(rnd, _coprimes.size())];
+  //auto vtm = _fast_modulo(rnd, _workers.size());
+
+  const unsigned r1 = _coprimes.size() - 1;
+  const unsigned r2 = _workers.size() - 1;
+  unsigned inc = _coprimes[ std::uniform_int_distribution<unsigned>{0u, r1}(pt.rdgen) ];
+  unsigned vtm = std::uniform_int_distribution<unsigned>{0u, r2}( pt.rdgen );
 
   for(unsigned i=0; i<_workers.size(); ++i) {
     if(!_workers[vtm].queue.empty()) {
@@ -471,9 +472,14 @@ template <typename Closure>
 std::optional<Closure> EigenWorkStealingExecutor<Closure>::_steal() {
   
   auto &pt = _per_thread();
-  auto rnd = _randomize(pt.seed);
-  auto inc = _coprimes[_fast_modulo(rnd, _coprimes.size())];
-  auto vtm = _fast_modulo(rnd, _workers.size());
+  //auto rnd = _randomize(pt.seed);
+  //auto inc = _coprimes[_fast_modulo(rnd, _coprimes.size())];
+  //auto vtm = _fast_modulo(rnd, _workers.size());
+
+  const unsigned r1 = _coprimes.size() - 1;
+  const unsigned r2 = _workers.size() - 1;
+  unsigned inc = _coprimes[ std::uniform_int_distribution<unsigned>{0u, r1}(pt.rdgen) ];
+  unsigned vtm = std::uniform_int_distribution<unsigned>{0u, r2}(pt.rdgen);
 
   for(unsigned i=0; i<_workers.size(); ++i) {
     if(auto task = _workers[vtm].queue.steal(); task) {
@@ -534,21 +540,16 @@ void EigenWorkStealingExecutor<Closure>::emplace(ArgsT&&... args){
 
   // caller is a worker to this pool
   if(auto& pt = _per_thread(); pt.pool == this) {
-    if(!_workers[pt.worker_id].cache) {
-      _workers[pt.worker_id].cache.emplace(std::forward<ArgsT>(args)...);
+    Closure c{std::forward<ArgsT>(args)...};
+    if(_workers[pt.worker_id].queue.push(c) == true) {
+      _notifier.notify(false);
       return;
     }
+    // TODO: sure this?
     else {
-      Closure c{std::forward<ArgsT>(args)...};
-      if(_workers[pt.worker_id].queue.push(c) == true) {
-        _notifier.notify(false);
-        return;
-      }
-      // TODO: sure this?
-      else {
-        std::invoke(c);
-      }
+      std::invoke(c);
     }
+    
   }
   // other threads
   else {
@@ -556,8 +557,10 @@ void EigenWorkStealingExecutor<Closure>::emplace(ArgsT&&... args){
     //_queue.push(Closure{std::forward<ArgsT>(args)...});
     Closure c{std::forward<ArgsT>(args)...};
 
-    auto victim = _fast_modulo(_randomize(pt.seed), _workers.size()); 
-
+    //auto victim = _fast_modulo(_randomize(pt.seed), _workers.size()); 
+    const unsigned r =  _workers.size()-1u;
+    auto victim = std::uniform_int_distribution<unsigned>{0u, r}(pt.rdgen);
+    
     if(_workers[victim].queue.assign(c) == true) {
       _notifier.notify(false);
     }
@@ -588,13 +591,7 @@ void EigenWorkStealingExecutor<Closure>::batch(std::vector<Closure>& tasks) {
   // schedule the work
   if(auto& pt = _per_thread(); pt.pool == this) {
     
-    size_t i = 0;
-
-    if(!_workers[pt.worker_id].cache) {
-      _workers[pt.worker_id].cache = std::move(tasks[i++]);
-    }
-
-    for(; i<tasks.size(); ++i) {
+    for(size_t i=0; i<tasks.size(); ++i) {
       if(_workers[pt.worker_id].queue.push(tasks[i]) == true) {
         _notifier.notify(false);
       }
@@ -606,8 +603,11 @@ void EigenWorkStealingExecutor<Closure>::batch(std::vector<Closure>& tasks) {
   }
   // free-standing thread
   else {
+
+    const unsigned r =  _workers.size()-1u;
     for(size_t k=0; k<tasks.size(); ++k) {
-      auto victim = _fast_modulo(_randomize(pt.seed), _workers.size()); 
+      //auto victim = _fast_modulo(_randomize(pt.seed), _workers.size()); 
+      auto victim = std::uniform_int_distribution<unsigned>{0u, r}(pt.rdgen);
       if(_workers[victim].queue.assign(tasks[k]) == true) {
         _notifier.notify(false);
       }

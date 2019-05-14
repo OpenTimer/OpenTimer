@@ -15,7 +15,8 @@ class FlowBuilder;
 class SubflowBuilder;
 class Framework;
 
-using Graph = std::list<Node, tf::SingularAllocator<Node>>;
+//using Graph = std::list<Node, tf::SingularAllocator<Node>>;
+using Graph = std::list<Node>;
 
 // ----------------------------------------------------------------------------
 
@@ -25,6 +26,8 @@ class Node {
   friend class Task;
   friend class Topology;
   friend class Framework;
+
+  friend class Executor;
 
   template <template<typename...> typename E> 
   friend class BasicTaskflow;

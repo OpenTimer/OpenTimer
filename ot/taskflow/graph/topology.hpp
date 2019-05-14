@@ -13,6 +13,8 @@ class Topology {
   friend class BasicTaskflow; 
 
   friend class Framework;
+
+  friend class Executor;
   
   // TODO: make graph/framework handle uniform
   //struct GraphHandle {
