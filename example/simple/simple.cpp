@@ -9,9 +9,7 @@
 
 int main(int argc, char *argv[]) {
 
-  // 
-
-
+  // create a timer object
   ot::Timer timer;
   
   // Read design
