@@ -1,5 +1,5 @@
 // This program demonstrates how to use OpenTimer C++ API to 
-// construct a timing analysis graph incrementally.
+// construct a timing analysis graph from the ground up.
 //
 // Library: osu018_stdcells.lib
 

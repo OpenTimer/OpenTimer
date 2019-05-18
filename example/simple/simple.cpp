@@ -1,5 +1,5 @@
 // This program demonstrates the basica usage of OpenTimer C++ API
-// on timing report and path reports.
+// to get the critical path information of a simple sequential design.
 //
 // Design : simple.v
 // SDC    : simple.sdc

@@ -74,9 +74,13 @@ Module read_verilog(const std::filesystem::path& path) {
   Module module;
   
   static std::string_view delimiters = "(),:;/#[]{}*\"\\";
-  static std::string_view exceptions = "().";
+  static std::string_view exceptions = "().;";
   
   auto tokens = tokenize(path, delimiters, exceptions);
+
+  //for(const auto& token : tokens) {
+  //  std::cout << token << std::endl;
+  //}
 
   // Set up the iterator
   auto itr = tokens.begin();
@@ -93,37 +97,32 @@ Module read_verilog(const std::filesystem::path& path) {
     module.name = std::move(*itr);
   }
 
-  // Read the ports
-  if(itr = on_next_parentheses(
-    itr, 
-    end, 
-    [&] (auto& str) mutable { module.ports.push_back(std::move(str)); }); itr == end) {
-    OT_LOGF("syntax error in module ports");
+  while(++itr != end && *itr != ";") {
+    if(*itr != "(" && *itr != ")") {
+      module.ports.push_back(std::move(*itr));
+    }
   }
-  
+
   // Parse the content.
   while(++itr != end) {
     
-    if(*itr == "input") {
-      if(++itr == end) {
-        OT_LOGF("syntax error in input");
+    if(*itr == "endmodule") {
+      break;
+    }
+    else if(*itr == "input") {
+      while(++itr != end && *itr != ";") {
+        module.inputs.push_back(std::move(*itr));
       }
-      module.inputs.push_back(std::move(*itr));
     }
     else if(*itr == "output") {
-      if(++itr == end) {
-        OT_LOGF("syntax error in output");
+      while(++itr != end && *itr != ";") {
+        module.outputs.push_back(std::move(*itr));
       }
-      module.outputs.push_back(std::move(*itr));
     }
     else if(*itr == "wire") {
-      if(++itr == end) {
-        OT_LOGF("syntax error in wire");
+      while(++itr != end && *itr != ";") {
+        module.wires.push_back(std::move(*itr));
       }
-      module.wires.push_back(std::move(*itr));
-    }
-    else if(*itr == "endmodule") {
-      break;
     }
     else {
       
@@ -155,6 +154,10 @@ Module read_verilog(const std::filesystem::path& path) {
 
       if(itr == end) {
         OT_LOGF("syntax error in gate pin-net mapping");
+      }
+
+      if(*(++itr) != ";") {
+        OT_LOGF("missing ; in instance declaration");
       }
       
       module.gates.push_back(std::move(inst));
