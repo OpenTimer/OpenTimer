@@ -337,6 +337,7 @@ add_test(it.shell.aes_core ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} a
 add_test(it.shell.des_perf ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} des_perf)
 add_test(it.shell.vga_lcd ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} vga_lcd)
 
-
-
+# Integration test on tau18 benchmark (golden is from iTimer)
+set(OT_TAU18_CHECKER ${PROJECT_SOURCE_DIR}/inttest/tau18.py)
+add_test(it.tau18.vga_lcd ${OT_TAU18_CHECKER} ${OT_TAU18} ${OT_BENCHMARK_DIR}/tau18 vga_lcd)
 

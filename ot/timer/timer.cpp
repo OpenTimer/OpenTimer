@@ -781,7 +781,8 @@ void Timer::_fprop_test(Pin& pin) {
     // Update the rat
     for(auto test : pin._tests) {
       // TODO: currently we assume a single clock...
-      test->_fprop_rat(_clocks.begin()->second._period);
+      // PathGuide
+      test->_fprop_rat(_clocks.begin()->second._period, _ideal_clock);
       
       // compute the cppr credit if any
       if(_cppr_analysis) {
@@ -1026,6 +1027,16 @@ void Timer::_update_timing() {
 
   // clear the state
   _remove_state();
+
+
+  // PathGuide
+  // We need to clear those data structures for path guide when the timing has been updated
+  _idx2rank.clear();
+  _dirty_rank.clear();
+
+  _idx2rank.resize(_idx2pin.size() << 1, std::nullopt);
+  _max_rank = 0;
+  _sort_cnt = 0;
 }
 
 // Procedure: _update_area

@@ -81,7 +81,7 @@ class Timer {
     std::vector<Path> report_timing(size_t, Split);
     std::vector<Path> report_timing(size_t, Tran);
     std::vector<Path> report_timing(size_t, Split, Tran);
-    std::vector<Path> report_timing(PathGuide);
+    std::vector<Path> report_timing(PathGuide&);
 
     // Accessor
     void dump_graph(std::ostream&) const;
@@ -121,6 +121,9 @@ class Timer {
     inline const auto& clocks() const;
     inline const auto& tests() const;
     inline const auto& arcs() const;
+
+    // PathGuide 
+    inline void set_ideal_clock() { _ideal_clock = true; }
 
   private:
 
@@ -177,9 +180,8 @@ class Timer {
     std::vector<Endpoint*> _worst_endpoints(size_t, Split);
     std::vector<Endpoint*> _worst_endpoints(size_t, Tran);
     std::vector<Endpoint*> _worst_endpoints(size_t, Split, Tran);
-    std::vector<Endpoint*> _worst_endpoints(const PathGuide&);
 
-    std::vector<Path> _report_timing(std::vector<Endpoint*>&&, size_t);
+    std::vector<Path> _report_timing(std::vector<Endpoint*>&&, size_t, PathGuide* = nullptr);
     
     bool _is_redundant_timing(const Timing&, Split) const;
 
@@ -238,17 +240,17 @@ class Timer {
     void _set_rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _set_load(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _cppr(bool);
-    void _topologize(SfxtCache&, size_t) const;
+    void _topologize(SfxtCache&, size_t, PathGuide* = nullptr) const;
     void _spfa(SfxtCache&) const;
-    void _spdp(SfxtCache&) const;
+    void _spdp(SfxtCache&, PathGuide* = nullptr) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_datapath(Path&, const SfxtCache&) const;
     void _recover_datapath(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
-    void _spur(Endpoint&, size_t, PathHeap&) const;
-    void _spur(PfxtCache&, const PfxtNode&) const;
+    void _spur(Endpoint&, size_t, PathHeap&, PathGuide* = nullptr) const;
+    void _spur(PfxtCache&, const PfxtNode&, PathGuide* = nullptr) const;
     void _dump_graph(std::ostream&) const;
     void _dump_taskflow(std::ostream&) const;
     void _dump_cell(std::ostream&, const std::string&, Split) const;
@@ -267,9 +269,9 @@ class Timer {
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
     
-    SfxtCache _sfxt_cache(const Endpoint&) const;
-    SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran) const;
-    SfxtCache _sfxt_cache(const Test&, Split, Tran) const;
+    SfxtCache _sfxt_cache(const Endpoint&, PathGuide* = nullptr) const;
+    SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran, PathGuide* = nullptr) const;
+    SfxtCache _sfxt_cache(const Test&, Split, Tran, PathGuide* = nullptr) const;
     CpprCache _cppr_cache(const Test&, Split, Tran) const;
     PfxtCache _pfxt_cache(const SfxtCache&) const;
 
@@ -304,6 +306,28 @@ class Timer {
     inline auto _insert_state(int);
     inline auto _remove_state(int = 0);
 
+
+    // Below are PathGuide related members
+    bool _ideal_clock {false};
+    size_t _max_rank {0};
+    size_t _sort_cnt {0};
+    std::vector<std::optional<size_t>> _idx2rank;
+    std::vector<size_t> _dirty_rank;
+
+    void _update_path_guide(PathGuide&);
+    void _build_rank(PathGuide&, Pin&, size_t&);
+    void _collect_pins(PathGuide&);
+    void _bfs_forward(PathGuide&, size_t);
+    void _dfs_backward(PathGuide&, size_t);
+    bool _is_fanin_inbound(const PathGuide&, size_t, size_t) const ;
+    bool _is_fanout_inbound(const PathGuide&, size_t, size_t) const ;
+    bool _is_from_inbound(const PathGuide&, size_t, size_t) const;
+    bool _is_to_inbound(const PathGuide&, size_t, size_t) const;
+    void _clear_visited_list(PathGuide&);
+    void _build_level(PathGuide&, size_t, size_t);
+    void _update_pathguide_endpoints(PathGuide&, std::optional<Tran>);
+    void _update_tail_connection(PathGuide&);
+    std::vector<Endpoint*> _worst_endpoints(PathGuide&);
 };
 
 // Procedure: _insert_frontier

@@ -85,7 +85,7 @@ void Test::_reset() {
 }
 
 // Procedure: _fprop_rat
-void Test::_fprop_rat(float period) {
+void Test::_fprop_rat(float period, bool ideal_clock) {
 
   auto tv = _arc.timing_view();
 
@@ -110,10 +110,22 @@ void Test::_fprop_rat(float period) {
     }
     
     if(el == MIN) {
-      _related_at[el][rf] = *_arc._from._at[fel][frf];
+      // PathGuide
+      if(!ideal_clock) {
+        _related_at[el][rf] = *_arc._from._at[fel][frf];
+      }
+      else {
+        _related_at[el][rf] = 0;
+      }
     }
     else {
-      _related_at[el][rf] = *_arc._from._at[fel][frf] + period;
+      // PathGuide
+      if(!ideal_clock) {
+        _related_at[el][rf] = *_arc._from._at[fel][frf] + period;
+      }
+      else {
+        _related_at[el][rf] = period;
+      }
     }
 
     _constraint[el][rf] = tv[el]->constraint(

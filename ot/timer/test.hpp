@@ -46,7 +46,8 @@ class Test {
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _related_at;
 
     void _reset();
-    void _fprop_rat(float);
+    // PathGuide
+    void _fprop_rat(float, bool=false);
     
     Pin& _constrained_pin();
     Pin& _related_pin();

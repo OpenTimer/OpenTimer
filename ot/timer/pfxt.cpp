@@ -75,9 +75,9 @@ PfxtCache Timer::_pfxt_cache(const SfxtCache& sfxt) const {
 // Procedure: _spur
 // Spur the path and expands the search space. The procedure iteratively scan the present
 // critical path and performs spur operation along the path to generate other candidates.
-void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
+void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap, PathGuide* pg) const {
 
-  auto sfxt = _sfxt_cache(ept);
+  auto sfxt = _sfxt_cache(ept, pg);
   auto pfxt = _pfxt_cache(sfxt);
 
   for(size_t k=0; k<K; ++k) {
@@ -103,12 +103,12 @@ void Timer::_spur(Endpoint& ept, size_t K, PathHeap& heap) const {
     heap.fit(K);
 
     // expand the search space
-    _spur(pfxt, *node);
+    _spur(pfxt, *node, pg);
   }
 }
 
 // Procedure: _spur
-void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
+void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx, PathGuide* pg) const {
   
   auto el = pfxt._sfxt._el;
   auto u  = pfx.to;
@@ -125,6 +125,12 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
 
         // skip if the edge goes outside the sfxt
         auto v = _encode_pin(arc->_to, vrf);
+
+        //if there is a guide but node is not in range
+        if(pg != nullptr && !_is_to_inbound(*pg, u, v)){
+          continue;
+        }
+
         if(!pfxt._sfxt.__dist[v]) {
           continue;
         }

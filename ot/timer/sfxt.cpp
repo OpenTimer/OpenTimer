@@ -51,7 +51,7 @@ SfxtCache::~SfxtCache() {
 // ----------------------------------------------------------------------------
 
 // Procedure: _topologize
-void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
+void Timer::_topologize(SfxtCache& sfxt, size_t v, PathGuide* pg) const {
 
   sfxt.__spfa[v] = true;
 
@@ -62,8 +62,14 @@ void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
     for(auto arc : pin->_fanin) {
       FOR_EACH_RF_IF(urf, arc->_delay[sfxt._el][urf][vrf]) {
         auto u = _encode_pin(arc->_from, urf);
+
+        //if sftx is linked with guide, but node is not in range, ignore it 
+        if(pg != nullptr && !pg->_in_tail(v, u)){ 
+          continue;
+        }
+
         if(!sfxt.__spfa[u]) {
-          _topologize(sfxt, u);
+          _topologize(sfxt, u, pg);
         }
       }
     }
@@ -73,11 +79,15 @@ void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
 }
 
 // Procedure: _spdp
-void Timer::_spdp(SfxtCache& sfxt) const {
+void Timer::_spdp(SfxtCache& sfxt, PathGuide* pg) const {
   
   assert(sfxt._pins.empty());
   
-  _topologize(sfxt, sfxt._T);
+  if(pg != nullptr) {
+    sfxt._pins = pg->_runtime.pins;
+  }
+
+  _topologize(sfxt, sfxt._T, pg);
   
   assert(!sfxt._pins.empty());
 
@@ -100,6 +110,11 @@ void Timer::_spdp(SfxtCache& sfxt) const {
     for(auto arc : pin->_fanin) {
       FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
         auto u = _encode_pin(arc->_from, urf);
+        //if sftx is linked with guide, but node is not in range, ignore it 
+        if(pg != nullptr && !_is_from_inbound(*pg, v, u)){
+          continue;
+        }
+
         auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
         sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d);
       }
@@ -150,7 +165,7 @@ void Timer::_spfa(SfxtCache& sfxt) const {
 
 // Function: _sfxt_cache
 // Find the suffix tree rooted at the primary output po.
-SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
+SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf, PathGuide* pg) const {
   
   assert(po._rat[el][rf]);
 
@@ -165,7 +180,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
   sfxt.__dist[v] = (el == MIN) ? -(*po._rat[el][rf]) : *po._rat[el][rf];
 
   // shortest path dynamic programming
-  _spdp(sfxt);
+  _spdp(sfxt, pg);
 
   // shortest path fast algorithm
   //_spfa(sfxt);
@@ -182,7 +197,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf) const {
 
 // Function: _sfxt_cache
 // Find the suffix tree rooted at the test
-SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
+SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf, PathGuide* pg) const {
 
   assert(test._rat[el][rf]);
 
@@ -196,7 +211,7 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
   sfxt.__dist[v] = (el == MIN) ? -(*test._rat[el][rf]) : *test._rat[el][rf];
   
   // shortest path dynamic programming
-  _spdp(sfxt);
+  _spdp(sfxt, pg);
   
   // shortest path fast algorithm
   //_spfa(sfxt);
@@ -223,9 +238,9 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf) const {
 }
 
 // Function: _sfxt_cache
-SfxtCache Timer::_sfxt_cache(const Endpoint& ept) const {
-  return std::visit([this, &ept] (auto&& handle) {
-    return _sfxt_cache(*handle, ept._el, ept._rf);
+SfxtCache Timer::_sfxt_cache(const Endpoint& ept, PathGuide *pg) const {
+  return std::visit([this, &ept, pg] (auto&& handle) {
+    return _sfxt_cache(*handle, ept._el, ept._rf, pg);
   }, ept._handle);
 }
 
@@ -235,7 +250,14 @@ std::optional<float> Timer::_sfxt_offset(const SfxtCache& sfxt, size_t v) const 
   auto [pin, rf] = _decode_pin(v);
   
   if(auto at = pin->_at[sfxt._el][rf]; at) {
+    //return sfxt._el == MIN ? *at : -*at;
+
+    // PathGuide
+    if(_ideal_clock && pin->primary_input() == nullptr) {
+      return 0.0f;
+    }
     return sfxt._el == MIN ? *at : -*at;
+
   }
   else {
     return std::nullopt;

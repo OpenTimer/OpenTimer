@@ -31,11 +31,13 @@ int main(int argc, char* argv[]) {
        .read_celllib(late_celllib, ot::MAX)
        .read_verilog(verilog)
        .read_spef(spef)
-       .read_timing(timing);
+       .read_timing(timing)
+       .set_ideal_clock();  // PathGuide, tau18 assumes ideal clock (latency=0)
 
        // TODO: in 2018, we consider cppr?
        //.cppr(true);
   
+
   std::string line, token, pin;
   
   // ------------------------------------------------------
@@ -53,15 +55,22 @@ int main(int argc, char* argv[]) {
     if(tokens.empty()) break;
 
     if(tokens[0] == "report_timing")  {
-      OT_LOGD("report_timing command received: ");
-      for(const auto& token : tokens) {
-        std::cout << token << ' '; 
-      }
-      std::cout << std::endl;
+      //OT_LOGD("report_timing command received: ");
+      //for(const auto& token : tokens) {
+      //  std::cout << token << ' '; 
+      //}
+      //std::cout << std::endl;
 
-      // TODO: transform tokens to ot::PathGuide
-      ot::PathGuide pg;
-      auto paths = timer.report_timing(std::move(pg));
+      // Assumption of tau18:
+      //   1. Ideal clock
+      //   2. Only test MAX split
+      ot::PathGuide pg {line};
+      pg.split(ot::MAX);
+      auto paths = timer.report_timing(pg);
+
+      for(auto &p: paths) {
+        p.dump_tau18(ofs);
+      }
     }
     else {
       throw std::runtime_error("unexpected operation "s + line);
@@ -72,12 +81,4 @@ int main(int argc, char* argv[]) {
 
   return 0;
 }
-
-
-
-
-
-
-
-
 

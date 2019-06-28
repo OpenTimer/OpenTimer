@@ -18,6 +18,7 @@ Path::Path(float slk, const Endpoint* ept) :
 }
 
 // Procedure: dump_tau18
+/*
 void Path::dump_tau18(std::ostream& os) const{
 
   std::regex replace(":");
@@ -55,6 +56,63 @@ void Path::dump_tau18(std::ostream& os) const{
 
     if(p.transition == RISE){ os << "^ "; }
     else{ os << "v "; }
+
+    os << std::regex_replace(p.pin.name(), replace, "/") << '\n';
+    pi_at = p.at;
+  }
+  os << '\n';
+
+} 
+*/
+
+// Procedure: dump_tau18
+void Path::dump_tau18(std::ostream& os) const{
+
+  std::regex replace(":");
+
+  auto el = endpoint->split();
+  auto rf = endpoint->transition();
+
+  os << std::setw(20) << "Endpoint: "   
+     << std::setw(10) << std::regex_replace(back().pin.name(), replace, "/")  << '\n';
+  os << std::setw(20) << "Beginpoint: " 
+     << std::setw(10) << std::regex_replace(front().pin.name(), replace, "/") << '\n';
+  //os << "= Required Time " << '\n'; //TODO: ignore RAT for tau18 benchmark
+  float rat = 0.0;
+  if(endpoint->test() != nullptr){
+    rat = *(endpoint->test()->rat(el, rf));
+  }
+  else{
+    rat = *(endpoint->primary_output()->rat(el, rf));
+  }
+  auto beg_at = front().at;
+  auto end_at = back().at;
+  auto path_slack = el == MIN ? ((end_at - beg_at) - rat) : (rat - (end_at - beg_at));
+  os << std::setw(20) << "= Required Time " << std::setw(10) << rat << '\n';
+  //Arrival Time is the total delay
+  os << std::setw(20) << "- Arrival Time " << std::setw(10) << end_at - beg_at << '\n';
+  //os << "- Arrival Time " << back().at << '\n';
+  os << std::setw(20) << "= Slack Time " << std::setw(10) << path_slack << '\n';
+
+  float at_offset = front().at;
+  std::optional<float> pi_at;
+
+  for(const auto& p : *this) {
+    os << std::setw(10);
+    
+    if(!pi_at){ os << "- "; }
+    else{ os << p.at-*pi_at << " "; }
+
+    os << std::setw(10);
+
+    os << p.at-at_offset << " ";
+
+    os << std::setw(3);
+
+    if(p.transition == RISE){ os << "^ "; }
+    else{ os << "v "; }
+
+    os << std::setw(20);
 
     os << std::regex_replace(p.pin.name(), replace, "/") << '\n';
     pi_at = p.at;
@@ -384,19 +442,12 @@ std::vector<Path> Timer::report_timing(size_t K, Split el, Tran rf) {
   return _report_timing(_worst_endpoints(K, el, rf), K);
 }
 
-// TODO (Guannan)
-// Function: report_timing
-std::vector<Path> Timer::report_timing(PathGuide guide) {
-  std::scoped_lock lock(_mutex);
-  auto epts = _worst_endpoints(guide);
-  return {};
-}
-
 // Function: _report_timing
 // Report the top-k report_timing
-std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K) {
+std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K, PathGuide* pg) {
 
-  assert(epts.size() <= K);
+  // Comment out this for PathGuide
+  //assert(epts.size() <= K);
   
   // No need to report anything.
   if(K == 0 || epts.empty()) {
@@ -407,12 +458,13 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
   if(K == 1) {
     std::vector<Path> paths;
     paths.emplace_back(epts[0]->slack(), epts[0]);
-    auto sfxt = _sfxt_cache(*epts[0]);
+    auto sfxt = _sfxt_cache(*epts[0], pg);
 
-    OT_LOGW_IF(
-      std::fabs(*sfxt.slack() - paths[0].slack) > 1.0f, 
-      "unstable numerics in PBA and GBA slacks: ", *sfxt.slack(), " vs ", paths[0].slack
-    );
+    // Comment this out for PathGuide
+    //OT_LOGW_IF(
+    //  std::fabs(*sfxt.slack() - paths[0].slack) > 1.0f, 
+    //  "unstable numerics in PBA and GBA slacks: ", *sfxt.slack(), " vs ", paths[0].slack
+    //);
 
     //assert(std::fabs(*sfxt.slack() - paths[0].slack) < 0.1f);
     _recover_datapath(paths[0], sfxt);
@@ -427,13 +479,13 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
       l.merge_and_fit(std::move(r), K);
       return l;
     },
-    [&] (PathHeap heap, Endpoint* ept) {
-      _spur(*ept, K, heap);
+    [&, pg] (PathHeap heap, Endpoint* ept) {
+      _spur(*ept, K, heap, pg);
       return heap;
     },
-    [&] (Endpoint* ept) {
+    [&, pg] (Endpoint* ept) {
       PathHeap heap;
-      _spur(*ept, K, heap);
+      _spur(*ept, K, heap, pg);
       return heap;
     }
   );
@@ -522,7 +574,495 @@ void Timer::_recover_datapath(
     auto at = path.back().at + *arc->_delay[sfxt._el][frf][trf]; 
     path.emplace_back(*upin, urf, at);
   }
+}
 
+
+
+// ------------------------------------------------------------------------------------------------
+// PathGuide Related Functions  
+
+// Function: report_timing
+std::vector<Path> Timer::report_timing(PathGuide& guide) {
+  std::scoped_lock lock(_mutex);
+  _update_timing();
+  _update_path_guide(guide);
+  return _report_timing(std::move(_worst_endpoints(guide)), guide._num_request_paths.value(), &guide);
+}
+
+// DFS backward: Modify has_pin, dirty_entry, idx2rank
+void Timer::_build_rank(PathGuide& pg, Pin& pin, size_t& rank) {
+  //mark both rise and fall as visited
+  size_t pin_idx = pin.idx();
+  pg._has_pin[pin_idx] = true;
+  pg._runtime.dirty_entry.push_back(pin_idx);
+  _dirty_rank.push_back(_encode_pin(pin, RISE));
+  _dirty_rank.push_back(_encode_pin(pin, FALL));
+
+  // Stop at the data source
+  if(!pin.is_datapath_source()) {
+    for(auto arc : pin._fanin) {
+
+      bool is_arc = false;
+      FOR_EACH_EL_RF_RF(el, urf, vrf){
+        is_arc = is_arc || arc->_delay[el][urf][vrf].has_value();
+      }    
+
+      //There is a possbile arc
+      if(is_arc) {
+        auto u = arc->_from.idx();
+        if(!pg._has_pin[u] && !_idx2rank[u]) {
+          _build_rank(pg, arc->_from, rank);
+        }
+      }
+    }
+  }
+
+  //for the same pin, RISE and FALL are adjacent 
+  _idx2rank[_encode_pin(pin, RISE)] = rank;
+  _idx2rank[_encode_pin(pin, FALL)] = rank+1;
+  rank += 2;
+}
+
+void Timer::_update_path_guide(PathGuide& pg) {
+
+  if(_pins.find(pg._through.back().name) == _pins.end()) {
+    throw std::runtime_error("Invalid to pin " + pg._through.back().name);
+  }
+
+  auto last_pin = &(_pins.find(pg._through.back().name)->second);
+
+  pg._runtime.last_pin_is_endpoint = (!last_pin->_tests.empty() || last_pin->primary_output() != nullptr);
+
+  pg._runtime.s = _idx2pin.size() << 1;
+  if(pg._through.back().rf.has_value() && *pg._through.back().rf == RISE){
+    pg._runtime.t = _encode_pin(*last_pin, RISE);
+  }
+  else {
+    pg._runtime.t = _encode_pin(*last_pin, FALL);
+  }
+
+  resize_to_fit(std::max(pg._runtime.s, pg._runtime.t)+1, pg._idx2lvl, pg._has_pin);
+
+  // This is a heuristic. We clear ranks after reusing certain number of times
+  if(_sort_cnt == 32) {
+    for(const auto& p : _dirty_rank){
+      _idx2rank[p].reset();
+    }
+    _dirty_rank.clear();
+    _max_rank = 0; 
+    _sort_cnt = 0; 
+  }
+
+  // If ranks are not built yet
+  if(!_idx2rank[last_pin->idx()]){
+    size_t rank_offset {_max_rank};
+
+    // Assign ranks to visited nodes
+    _build_rank(pg, *last_pin, rank_offset);
+
+    _max_rank = rank_offset;
+    _sort_cnt ++;
+
+    // Must clear the temporary storage: has_pin & dirty_entry  
+    _clear_visited_list(pg);
+  }
+
+  // Assign ranks to through nodes
+  for(auto &node: pg._through) {
+    if(_pins.find(node.name) == _pins.end()) {
+      throw std::runtime_error("Invalid through pin " + node.name);
+    }
+
+    auto thru_pin = &(_pins.find(node.name)->second);
+    size_t thru_pinr = _encode_pin(*thru_pin, RISE);
+    size_t thru_pinf = _encode_pin(*thru_pin, FALL);
+
+    // No rise fall specified
+    if(!node.rf){
+      node.indices.push_back(thru_pinr);
+      node.indices.push_back(thru_pinf);
+      //thru with no rise/fall specified, let rank be RISE
+      node.rank = _idx2rank[thru_pinr].value();
+    }    
+    // Rise
+    else if(*node.rf == RISE){
+      node.indices.push_back(thru_pinr);
+      node.rank = _idx2rank[thru_pinr].value();
+    }    
+    // Fall
+    else{
+      node.indices.push_back(thru_pinf);
+      node.rank =  _idx2rank[thru_pinf].value();
+    }  
+  }
+
+  std::sort(pg._through.begin(), pg._through.end(), [](const auto& a, const auto& b){ return a.rank < b.rank;});
+
+  _collect_pins(pg);  
+}
+
+
+bool Timer::_is_fanin_inbound(const PathGuide& pg, size_t from, size_t dst_level) const {
+  if(!_idx2rank[from]){
+    return false;
+  }
+
+  //decode level
+  size_t level = dst_level % pg._through.size();
+
+  if(level == 0){
+    return true;
+  }
+
+  size_t from_rank = _idx2rank[from].value();
+  //src_lvl = dst_lvl-1
+  const auto& node = pg._through[level-1];
+  if(!node.rf){
+    return from_rank >= node.rank;
+  }
+  else if(*node.rf == RISE){
+    return from_rank == node.rank || (from_rank > (node.rank+1));
+  }
+  else{
+    return from_rank >= node.rank;
+  }
+}
+
+// Check if the to pin is in range, level is the destination level
+bool Timer::_is_fanout_inbound(const PathGuide& pg, size_t to, size_t dst_level) const {
+
+  if(!_idx2rank[to]){
+    return false;
+  }
+
+  const size_t max_level = pg._through.size();
+  size_t level = dst_level % max_level;
+  if(dst_level >= max_level && level < (max_level-1)){
+    level++;
+  }
+
+  size_t to_rank = _idx2rank[to].value();
+  const auto& thru_node = pg._through[level];
+
+  // Two conditions: 
+  //   1. the to_pin is the same as the through node
+  //   2. the to_pin is a different node
+  if(!thru_node.rf){
+    return to_rank < (thru_node.rank+2);
+  }
+  else if(*thru_node.rf == RISE){
+    return to_rank <= thru_node.rank;
+  }
+  else{
+    return (to_rank < (thru_node.rank-1)) || to_rank == thru_node.rank;
+  }
+}
+
+void Timer::_clear_visited_list(PathGuide& pg) {
+  for(const auto& p: pg._runtime.dirty_entry){
+    pg._has_pin[p].reset();
+  }
+  pg._runtime.dirty_entry.clear();
+}
+
+
+// Modify idx2lvl, pins
+void Timer::_build_level(PathGuide& pg, size_t v, size_t level){
+
+  pg._idx2lvl[v] = level;
+  auto [pin, vrf] = _decode_pin(v);
+
+  // Stop at the data source only at the first level
+  if(!pin->is_datapath_source() || level > 0) {
+    for(auto arc : pin->_fanin) {
+      //TODO: Question: el affect connection between pins?
+      FOR_EACH_EL_RF_IF(el, urf, arc->_delay[el][urf][vrf]) {
+        auto u = _encode_pin(arc->_from, urf);
+        //if the pin is not visited before AND reachable from source AND a fanin arc in range
+        if(!pg._idx2lvl[u] && 
+           (pg._has_pin[u] || level==0) && 
+           _is_fanin_inbound(pg, u, level)) {
+          _build_level(pg, u, level);
+        }
+      }
+    }
+  }
+
+  pg._runtime.pins.push_back(v);
+}
+
+// Modify: idx2lvl, pins
+// DFS backward
+void Timer::_dfs_backward(PathGuide& pg, size_t dst_level) {
+  const auto& node = pg._through[dst_level];
+  for(auto idx : node.indices){
+    if(dst_level == 0 || pg._has_pin[idx]){
+      _build_level(pg, idx, dst_level);
+    }
+
+    // requires a special encoding to differentiate internal nodes and boundary nodes
+    // dst_level + _though.size() denotes the boundary nodes
+    if(pg._idx2lvl[idx]) {
+      pg._idx2lvl[idx] = pg._through.size() + dst_level;
+      if(dst_level == pg._through.size()-1) { //last level
+        pg._runtime.pins.pop_back(); 
+      }
+    }
+  }
+
+  // If this is the last level 
+  if(dst_level == pg._through.size()-1){
+
+    _clear_visited_list(pg);
+
+    for(auto idx : node.indices){
+      if(pg._idx2lvl[idx].has_value()){
+        // We leave only the last level as marked
+        // to find the tail section later
+        pg._has_pin[idx] = true;
+        pg._runtime.dirty_entry.push_back(idx);
+      }
+    }
+  }
+}
+
+
+// Modify: has_pin, dirty_entry
+// BFS forward
+void Timer::_bfs_forward(PathGuide& pg, size_t src_level) {
+  const auto& src_node = pg._through[src_level];
+  std::queue<size_t> queue;
+  
+  for(auto idx: src_node.indices) {
+    pg._has_pin[idx] = true;
+    queue.push(idx);
+  }
+  
+  while(!queue.empty()) {
+    size_t u = queue.front();
+    pg._runtime.dirty_entry.push_back(u);
+    queue.pop();
+
+    auto [pin_u, urf] = _decode_pin(u);
+
+    for(auto arc: pin_u->_fanout) {
+      FOR_EACH_EL_RF_IF(el, vrf, arc->_delay[el][urf][vrf]){
+        size_t v = _encode_pin(arc->_to, vrf);
+        if(_is_fanout_inbound(pg, v, src_level+1) && !pg._has_pin[v]){
+          pg._has_pin[v] = true;
+          queue.push(v); 
+        } 
+      }
+    }
+  }
+
+}
+
+void Timer::_update_pathguide_endpoints(PathGuide& pg, std::optional<Tran> rf) {
+  
+  FOR_EACH_EL_RF(el, rf){ pg._runtime.endpoints[el][rf].clear(); }
+
+  //get the ptr to the last pin
+  auto to_pin = &(_pins.find(pg._through.back().name)->second);
+  std::optional<Split> el = pg._el;
+
+  if(!el && !rf){
+    FOR_EACH_EL_RF(tel, trf){
+      auto po = to_pin->_primary_output();    
+      if(po != nullptr && po->slack(tel, trf).has_value()) {
+        pg._runtime.endpoints[tel][trf].emplace_back(tel, trf, *po);
+      }  
+   
+      for(auto test : to_pin->_tests){
+        if(test != nullptr && test->slack(tel, trf).has_value()){
+          pg._runtime.endpoints[tel][trf].emplace_back(tel, trf, *test);
+        }
+      }    
+    }
+  }
+  else if(el && !rf) {
+    FOR_EACH_RF(trf){
+      auto po = to_pin->_primary_output();    
+			if(po != nullptr && po->slack(*el, trf).has_value()) {
+				pg._runtime.endpoints[*el][trf].emplace_back(*el, trf, *po);
+			}
+   
+      for(auto test : to_pin->_tests){
+        if(test != nullptr && test->slack(*el, trf).has_value()){
+          pg._runtime.endpoints[*el][trf].emplace_back(*el, trf, *test);
+        }
+      }
+    }
+  }
+  else if(!el && rf){
+    FOR_EACH_EL(tel){
+      auto po = to_pin->_primary_output();
+			if(po != nullptr && po->slack(tel, *rf).has_value()) {
+				pg._runtime.endpoints[tel][*rf].emplace_back(tel, *rf, *po);
+			}
+   
+      for(auto test : to_pin->_tests){
+        if(test != nullptr && test->slack(tel, *rf).has_value()){
+          pg._runtime.endpoints[tel][*rf].emplace_back(tel, *rf, *test);
+        }
+      }
+    }
+  }
+  else{
+    auto po = to_pin->_primary_output();
+		if(po != nullptr && po->slack(*el, *rf).has_value()) {
+			pg._runtime.endpoints[*el][*rf].emplace_back(*el, *rf, *po);
+		}
+   
+    for(auto test : to_pin->_tests){
+      if(test != nullptr && test->slack(*el, *rf).has_value()){
+        pg._runtime.endpoints[*el][*rf].emplace_back(*el, *rf, *test);
+      }
+    } 
+  }
+}
+
+
+void Timer::_update_tail_connection(PathGuide& pg) {
+  const auto& last_node = pg._through.back();
+  std::queue<size_t> queue;
+
+  for(auto idx : last_node.indices){
+    if(pg._has_pin[idx]){
+      queue.push(idx); //only index connected from previous thru pins are added
+    }
+  }
+
+  while(!queue.empty()) {
+    size_t u = queue.front();
+    pg._runtime.dirty_entry.push_back(u);
+    queue.pop();
+
+    auto [pin, urf] = _decode_pin(u);
+
+    if(!pin->_tests.empty() || pin->primary_output() != nullptr) {
+      if(!pg._el){
+        FOR_EACH_EL(el){
+          auto po = pin->_primary_output();
+          if(po != nullptr && po->slack(el, urf).has_value()) {
+              pg._runtime.endpoints[el][urf].emplace_back(el, urf, *po);
+          }
+          for(auto test : pin->_tests){
+            if(test != nullptr && test->slack(el, urf).has_value()){
+              pg._runtime.endpoints[el][urf].emplace_back(el, urf, *test);
+            }
+          }
+        }
+      }
+      else{
+        auto po = pin->_primary_output();
+        Split el = *pg._el;
+        if(po != nullptr && po->slack(el, urf).has_value()) {
+          pg._runtime.endpoints[el][urf].emplace_back(el, urf, *po);
+        }
+        for(auto test : pin->_tests){
+          if(test != nullptr && test->slack(el, urf).has_value()){
+            pg._runtime.endpoints[el][urf].emplace_back(el, urf, *test);
+          }
+        }
+      }
+    }
+
+    //check all fanout edges 
+    for(auto arc : pin->_fanout){
+      FOR_EACH_EL_RF_IF(el, vrf, arc->_delay[el][urf][vrf]){
+        size_t v = _encode_pin(arc->_to, vrf);
+        //arc is in range and pin v is not visited
+        if(!pg._has_pin[v].has_value()){
+          pg._has_pin[v] = true;
+          queue.push(v);
+        }
+      }
+    }
+  }
+}
+
+void Timer::_collect_pins(PathGuide& pg) {
+
+  for(size_t l=0; l < pg._through.size(); l++) {
+    if(l > 0) {
+      _bfs_forward(pg, l-1); // BFS
+    } 
+    _dfs_backward(pg, l); // DFS
+  }
+
+  if(pg._runtime.last_pin_is_endpoint){
+    // tau18 assumption: use MAX
+    // By default, generate endpoints on both Split=min/max
+    _update_pathguide_endpoints(pg, pg._through.back().rf);
+  }
+  else{
+    //TODO: redo the arrival time forward propogation if to pin is not specified
+    _update_tail_connection(pg);
+  }
+}
+
+
+
+bool Timer::_is_from_inbound(const PathGuide& pg, size_t self, size_t from) const {
+  // Both pins in the tail
+  if(pg._has_pin[self] && pg._has_pin[from]){
+    return true;
+  }
+
+  if(!pg._idx2lvl[self] || !pg._idx2lvl[from]){
+    return false;
+  } 
+
+  return _is_fanin_inbound(pg, from, pg._idx2lvl[self].value());
+}
+
+
+bool Timer::_is_to_inbound(const PathGuide& pg, size_t self, size_t to) const {
+  // Both pins in the tail
+  if(pg._has_pin[self] && pg._has_pin[to]){
+    return true;
+  }
+  if(!pg._idx2lvl[self] || !pg._idx2lvl[to]){
+    return false;
+  }
+  
+  return _is_fanout_inbound(pg, to, pg._idx2lvl[self].value());
+}
+
+
+// Ctor
+PathGuide::PathGuide(const std::string& cmd) {
+  std::string whitespace {" "};
+  auto tokens = ot::split(cmd, whitespace);
+
+  // The number of tokens must be odd & first token (command) must be report_timing
+  if(!(tokens.size() & 1) || tokens[0] != "report_timing") {
+    throw std::runtime_error("PathGuide only accepts report_timing");
+  }
+
+  const std::regex replace("/");
+
+  for(unsigned i=1; i<tokens.size(); i+=2) {
+    if(tokens[i] == "-through" || tokens[i] == "-from" || tokens[i] == "-to") {
+      //_through.emplace_back(std::regex_replace(tokens[i+1], replace, ":"), std::nullopt);
+      // Use RISE by default?  
+      _through.emplace_back(std::regex_replace(tokens[i+1], replace, ":"), std::nullopt);
+    }
+    else if(tokens[i] == "-rise_through" || tokens[i] == "-rise_from" || tokens[i] == "-rise_to") {
+      _through.emplace_back(std::regex_replace(tokens[i+1], replace, ":"), RISE);
+    }
+    else if(tokens[i] == "-fall_through" || tokens[i] == "-fall_from" || tokens[i] == "-fall_to") {
+      _through.emplace_back(std::regex_replace(tokens[i+1], replace, ":"), FALL);
+    }
+    else if(tokens[i] == "-max_path") {
+      _num_request_paths = std::stoi(tokens[i+1]);
+    }
+    else {
+      OT_LOGE("Not supported option: ", tokens[i]);
+      assert(false);
+    }
+  }
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------
