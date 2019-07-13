@@ -76,12 +76,16 @@ class Timer {
     std::optional<float> report_tns(std::optional<Split> = {}, std::optional<Tran> = {});
     std::optional<float> report_wns(std::optional<Split> = {}, std::optional<Tran> = {});
     std::optional<size_t> report_fep(std::optional<Split> = {}, std::optional<Tran> = {});
-    
-    std::vector<Path> report_timing(size_t);
-    std::vector<Path> report_timing(size_t, Split);
-    std::vector<Path> report_timing(size_t, Tran);
-    std::vector<Path> report_timing(size_t, Split, Tran);
-    std::vector<Path> report_timing(PathGuide&);
+  
+    PathSet report_timing(size_t);
+    PathSet report_timing(size_t, Split);
+    PathSet report_timing(size_t, Tran);
+    PathSet report_timing(size_t, Split, Tran);
+    PathSet report_timing(PathConstraint&);
+
+    // This is currently used for tau18 
+    inline void set_ideal_clock() { _ideal_clock = true; }
+    std::vector<PathSet> report_timing_batch(std::filesystem::path); 
 
     // Accessor
     void dump_graph(std::ostream&) const;
@@ -122,14 +126,13 @@ class Timer {
     inline const auto& tests() const;
     inline const auto& arcs() const;
 
-    // PathGuide 
-    inline void set_ideal_clock() { _ideal_clock = true; }
-
   private:
 
     mutable std::shared_mutex _mutex;
 
-    tf::Taskflow _taskflow {std::thread::hardware_concurrency()};
+    // _num_threads is to initialize per-thread data structure
+    const unsigned _num_threads = std::thread::hardware_concurrency();
+    tf::Taskflow _taskflow {_num_threads};
 
     int _state {0};
     
@@ -240,17 +243,17 @@ class Timer {
     void _set_rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _set_load(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _cppr(bool);
-    void _topologize(SfxtCache&, size_t, PathGuide* = nullptr) const;
+    void _topologize(SfxtCache&, size_t, const PathGuide* = nullptr) const;
     void _spfa(SfxtCache&) const;
-    void _spdp(SfxtCache&, PathGuide* = nullptr) const;
+    void _spdp(SfxtCache&, const PathGuide* = nullptr) const;
     void _recover_prefix(Path&, const SfxtCache&, size_t) const;
     void _recover_datapath(Path&, const SfxtCache&) const;
     void _recover_datapath(Path&, const SfxtCache&, const PfxtNode*, size_t) const;
     void _enable_full_timing_update();
     void _merge_celllib(Celllib&, Split);
     void _insert_full_timing_frontiers();
-    void _spur(Endpoint&, size_t, PathHeap&, PathGuide* = nullptr) const;
-    void _spur(PfxtCache&, const PfxtNode&, PathGuide* = nullptr) const;
+    void _spur(Endpoint&, size_t, PathHeap&, const PathGuide* = nullptr) const;
+    void _spur(PfxtCache&, const PfxtNode&, const PathGuide* = nullptr) const;
     void _dump_graph(std::ostream&) const;
     void _dump_taskflow(std::ostream&) const;
     void _dump_cell(std::ostream&, const std::string&, Split) const;
@@ -269,11 +272,11 @@ class Timer {
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);
     
-    SfxtCache _sfxt_cache(const Endpoint&, PathGuide* = nullptr) const;
-    SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran, PathGuide* = nullptr) const;
-    SfxtCache _sfxt_cache(const Test&, Split, Tran, PathGuide* = nullptr) const;
+    SfxtCache _sfxt_cache(const Endpoint&, const PathGuide* = nullptr) const;
+    SfxtCache _sfxt_cache(const PrimaryOutput&, Split, Tran, const PathGuide* = nullptr) const;
+    SfxtCache _sfxt_cache(const Test&, Split, Tran, const PathGuide* = nullptr) const;
     CpprCache _cppr_cache(const Test&, Split, Tran) const;
-    PfxtCache _pfxt_cache(const SfxtCache&) const;
+    PfxtCache _pfxt_cache(const SfxtCache&, const PathGuide* = nullptr) const;
 
     Net& _insert_net(const std::string&);
     Pin& _insert_pin(const std::string&);
@@ -307,14 +310,21 @@ class Timer {
     inline auto _remove_state(int = 0);
 
 
-    // Below are PathGuide related members
+    // Currently ideal_clock is only used for tau2018 contest
     bool _ideal_clock {false};
-    size_t _max_rank {0};
-    size_t _sort_cnt {0};
-    std::vector<std::optional<size_t>> _idx2rank;
-    std::vector<size_t> _dirty_rank;
 
-    void _update_path_guide(PathGuide&);
+    // Those are per-thread data structures for PBA & report_timing_batch
+    std::vector<size_t> _max_rank = decltype(_max_rank)(_num_threads, 0);
+    std::vector<size_t> _sort_cnt = decltype(_sort_cnt)(_num_threads, 0);
+    std::vector<std::vector<std::optional<size_t>>> _idx2rank = decltype(_idx2rank)(_num_threads);
+    std::vector<std::vector<size_t>> _dirty_rank = decltype(_dirty_rank)(_num_threads);
+    std::vector<std::vector<std::optional<size_t>>> _idx2lvl = decltype(_idx2lvl)(_num_threads);
+    std::vector<std::vector<std::optional<bool>>> _has_pin = decltype(_has_pin)(_num_threads);
+
+    std::vector<Endpoint*> _worst_endpoints(PathSet&);
+
+    // Those are PBA related functions 
+    void _setup_path_guide(PathGuide&, PathSet&);
     void _build_rank(PathGuide&, Pin&, size_t&);
     void _collect_pins(PathGuide&);
     void _bfs_forward(PathGuide&, size_t);
@@ -325,9 +335,10 @@ class Timer {
     bool _is_to_inbound(const PathGuide&, size_t, size_t) const;
     void _clear_visited_list(PathGuide&);
     void _build_level(PathGuide&, size_t, size_t);
-    void _update_pathguide_endpoints(PathGuide&, std::optional<Tran>);
-    void _update_tail_connection(PathGuide&);
-    std::vector<Endpoint*> _worst_endpoints(PathGuide&);
+    void _update_pathguide_endpoints(PathGuide&, std::optional<Tran>, PathSet&);
+    void _update_tail_connection(PathGuide&, PathSet&);
+    bool _in_tail(size_t, size_t, size_t) const;
+    void _reset_level(PathGuide*);
 };
 
 // Procedure: _insert_frontier

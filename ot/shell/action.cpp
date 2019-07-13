@@ -217,6 +217,98 @@ void Shell::_report_fep() {
 void Shell::_report_timing() {
   
   std::string token;
+  bool batch {false};
+  size_t K {1};
+
+  std::optional<Split> split;
+  std::optional<Tran> tran;
+
+  PathConstraint pc;
+
+  while(_is >> token) {
+    if(token == "-batch") {
+      _is >> token;
+      batch = true;
+      break;
+    }
+    else if(token == "-nworst") {
+      _is >> K;
+    }
+    else if(token == "-through") {
+      _is >> token;
+      pc.through(token);
+    }
+    else if(token == "-rise_through") {
+      _is >> token;
+      pc.through(token, RISE);
+    }
+    else if(token == "-fall_through") {
+      _is >> token;
+      pc.through(token, FALL);
+    }
+    else if(token == "-min" || token == "-early") {
+      split = MIN;
+    }
+    else if(token == "-max" || token == "-late") {
+      split = MAX;
+    }
+    else if(token == "-rise") {
+      tran = RISE;
+    }
+    else if(token == "-fall") {
+      tran = FALL;
+    }
+    else if(token == "report_timing") {
+      // In op file, the first token will be the command,
+      // so we just ignore the command for user's convenience (users don't need to remove the command).
+    }
+    else {
+      _es << "failed to parse " << std::quoted(token) << '\n';
+    }
+  }
+
+  std::vector<PathSet> pathsets;
+
+  if(batch) {
+    pathsets = _timer.report_timing_batch(token);
+  }
+  else if(pc.num_through_pins() != 0) {
+    pc.max_paths(K);
+    if(split) pc.split(*split);
+    pathsets.emplace_back(_timer.report_timing(pc));
+  }
+  else if(split && tran) {
+    pathsets.emplace_back(_timer.report_timing(K, *split, *tran));
+  }
+  else if(split && !tran) {
+    pathsets.emplace_back(_timer.report_timing(K, *split));
+  }
+  else if(!split && tran) {
+    pathsets.emplace_back(_timer.report_timing(K, *tran));
+  }
+  else {
+    pathsets.emplace_back(_timer.report_timing(K));
+  }
+
+  if(pathsets.empty()) {
+    _os << "no critical path found\n";
+  }
+  else {
+    for(auto &paths: pathsets) {
+      for(size_t i=0; i<paths.size(); ++i) {
+        if(i) _os << '\n';
+        if(batch) {
+          paths[i].dump_tau18(_os);
+        }
+        else {
+          _os << paths[i];
+        }
+      }
+    }
+  }
+
+  /*
+  std::string token;
   size_t K {1};
 
   std::optional<Split> split;
@@ -282,6 +374,7 @@ void Shell::_report_timing() {
       }
     }
   }
+  */
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -316,12 +409,6 @@ void Shell::_report_leakage_power() {
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------
-
-
-
-
-
-
 
 
 

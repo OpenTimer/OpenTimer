@@ -107,91 +107,114 @@ inline bool PathHeap::empty() const {
 
 // ----------------------------------------------------------------------------
 
-// Class: PathGuide
-struct PathGuide {
 
-  //std::optional<size_t> max_paths;
-  //std::optional<size_t> num_paths_per_endpoint;
-  //std::vector<std::string> from;
-  //std::vector<std::string> rise_from;
-  //std::vector<std::string> fall_from;
-  //std::vector<std::string> to;
-  //std::vector<std::string> rise_to;
-  //std::vector<std::string> fall_to;
-  //std::vector<std::string> through;
-  //std::vector<std::string> rise_through;
-  //std::vector<std::string> fall_through;
+// Class: PathConstraint
+// A PathConstraint records the constraints specified by users 
+struct PathConstraint {
 
-  friend class PathGuideData; 
   friend class Timer;
+  friend class PathGuide;
 
-  PathGuide(const std::string&);
-  void split(Split el) { _el = el; }
+  PathConstraint() = default;
+  PathConstraint(const std::string&);
 
-  ~PathGuide() {
-    // Must clear the static variables in Dtor 
-    _idx2lvl[_runtime.s].reset();
-    _has_pin[_runtime.s].reset();
-    for(const auto& p: _runtime.pins){
-      _idx2lvl[p].reset();
-    }
+  void from_string(const std::string& cmd);
+  void split(Split);
 
-    const auto& last_node = _through.back();
-    for(size_t idx : last_node.indices){
-      _idx2lvl[idx].reset();
-    }
+  void max_paths(unsigned);  //  -max_paths count
 
-    for(const auto& p: _runtime.dirty_entry){
-      _has_pin[p].reset();
-    }
-  }
- 
+  void from(const std::string&, std::optional<Tran> = std::nullopt);
+  void through(const std::string&, std::optional<Tran> = std::nullopt);
+  void to(const std::string&, std::optional<Tran> = std::nullopt);
+
+  // These two functions are to set the range of slack
+  void slack_upper_bound(float);
+  void slack_lower_bound(float);
+
+  void clear();
+  void reset(const std::string&);
+
+  unsigned num_through_pins() const { return _through.size(); }
+
   private:
 
-   struct GuideNode{
-     std::string name;
-     std::optional<Tran> rf; 
-   
-     std::vector<size_t> indices;
-    
-     // 2n=RISE, 2n+1=FALL, 2n & idices has size 2= RISE & FALL  
-     size_t rank;
-   
-     GuideNode(const std::string& name, const std::optional<Tran>& rf):  name{name}, rf{rf} {}
-   };
+    struct GuideNode{
+      std::string name;
+      std::optional<Tran> rf; 
+  
+      std::vector<size_t> indices;
+  
+      // 2n=RISE, 2n+1=FALL, 2n & idices has size 2= RISE & FALL  
+      size_t rank;
+  
+      GuideNode(const std::string& name, const std::optional<Tran>& rf):  name{name}, rf{rf} {}
+    };
 
-   // PathGuideData stores the runtime data for building paths 
-   struct PathGuideRuntime {
-     size_t s {0};
-     size_t t {0};
-   
-     TimingData<std::vector<Endpoint>, MAX_SPLIT, MAX_TRAN> endpoints;
-   
-     std::vector<size_t> dirty_entry;
-     std::vector<size_t> pins;
-
-     bool last_pin_is_endpoint {false};
-   };
-
-   PathGuideRuntime _runtime;
-   std::vector<GuideNode> _through;
-
-   // TAU18 only requires reporting setup checks. So 
-   // you should call split(MAX) when testing tau18 benchmarks
-   std::optional<Split> _el; 
-   std::optional<size_t> _num_request_paths {1};
-
-   inline static std::vector<std::optional<size_t>> _idx2lvl;
-   inline static std::vector<std::optional<bool>> _has_pin;
-
-   bool _in_tail(size_t, size_t) const;
-
+    std::vector<GuideNode> _through;
+    // TAU18 only requires reporting setup checks. So 
+    // you should call split(MAX) when testing tau18 benchmarks
+    std::optional<Split> _el;  
+    // By default we report the top-1 worst path
+    std::optional<size_t> _num_request_paths {1};
+    std::optional<float> _slack_upper_bound;
+    std::optional<float> _slack_lower_bound;
 };
 
-// Function: _in_tail
-inline bool PathGuide::_in_tail(size_t pin1, size_t pin2) const {
-  return _has_pin[pin1] && _has_pin[pin2];
-}
+// Class: PathGuide 
+// A PathGuide is associated with a PathConstraint. PathGuide stores the runtime data related to 
+// each PathConstraint
+struct PathGuide {
+
+  friend class PathSet;
+  friend class Timer;
+
+  PathGuide() = default;
+  PathGuide(PathConstraint& pc) : constraint(&pc) {}
+
+  // id is the index of the per-thread data structure that 
+  // to be used in PBA
+  size_t id;  
+  size_t s {0};
+  size_t t {0};
+  std::vector<size_t> dirty_entry;
+  std::vector<size_t> pins;
+  void reset();
+
+  PathConstraint* constraint {nullptr};
+};
+
+// Class: PathSet
+// For each PathConstraint, OpenTimer returns a PathSet to the users. A PathSet contains 
+// a set of paths that satisfy the constraint.
+struct PathSet {
+
+  PathSet() = default;
+  PathSet(std::vector<Path> &&paths): paths(std::move(paths)) {}
+
+  // Move Ctor
+  PathSet(PathSet&& other) : paths(std::move(other.paths)) {
+    std::swap(endpoints, other.endpoints);
+  }
+
+  // Move assignment
+  PathSet& operator=(PathSet&& other) {
+    paths = std::move(other.paths);
+    std::swap(endpoints, other.endpoints);
+    return *this;
+  }
+
+  // Disable copy constructor & assignment
+  PathSet & operator=(const PathSet&) = delete;
+  PathSet(const PathSet&) = delete;  
+
+  bool empty() const { return paths.empty(); }
+  unsigned size() const { return paths.size(); }
+  Path& operator[] (unsigned i) { return paths[i]; }
+
+  std::vector<Path> paths;
+  TimingData<std::vector<Endpoint>, MAX_SPLIT, MAX_TRAN> endpoints;
+};
+
 
 };  // end of namespace ot. ---------------------------------------------------
 

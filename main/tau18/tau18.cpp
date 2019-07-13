@@ -39,7 +39,24 @@ int main(int argc, char* argv[]) {
   
 
   std::string line, token, pin;
+  //// This calls the report_timing_batch to calculate paths for all queries at one time
+  //if(1){
+  //  auto t1 = std::chrono::high_resolution_clock::now();
+  //  auto path_sets = timer.report_timing_batch(ops);  
+  //  auto t2 = std::chrono::high_resolution_clock::now();
+  //  std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1e3 << std::endl; 
+  //  // Dump the paths 
+  //  std::ofstream ofs(output);
+  //  for(auto &ps: path_sets) {
+  //    for(auto &p: ps.paths) {
+  //      p.dump_tau18(ofs);
+  //    }   
+  //  }   
+  //  return 0;
+  //}
+
   
+  // This calls the report_timing to do PBA one by one
   // ------------------------------------------------------
   // Read ops file.
   // ------------------------------------------------------
@@ -64,11 +81,11 @@ int main(int argc, char* argv[]) {
       // Assumption of tau18:
       //   1. Ideal clock
       //   2. Only test MAX split
-      ot::PathGuide pg {line};
-      pg.split(ot::MAX);
-      auto paths = timer.report_timing(pg);
+      ot::PathConstraint constraint {line};
+      constraint.split(ot::MAX);
+      auto path_sets = timer.report_timing(constraint);
 
-      for(auto &p: paths) {
+      for(auto &p: path_sets.paths) {
         p.dump_tau18(ofs);
       }
     }
@@ -77,7 +94,6 @@ int main(int argc, char* argv[]) {
       break;
     }
   }
-  
 
   return 0;
 }

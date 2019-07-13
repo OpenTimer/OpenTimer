@@ -1029,14 +1029,6 @@ void Timer::_update_timing() {
   _remove_state();
 
 
-  // PathGuide
-  // We need to clear those data structures for path guide when the timing has been updated
-  _idx2rank.clear();
-  _dirty_rank.clear();
-
-  _idx2rank.resize(_idx2pin.size() << 1, std::nullopt);
-  _max_rank = 0;
-  _sort_cnt = 0;
 }
 
 // Procedure: _update_area
@@ -1523,6 +1515,170 @@ void Timer::_set_load(PrimaryOutput& po, Split m, Tran t, std::optional<float> v
     _insert_frontier(arc->_from);
   }
   _insert_frontier(po._pin);
+}
+
+
+
+
+// Procedure: _in_tail
+bool Timer::_in_tail(size_t id, size_t pin1, size_t pin2) const {
+  return _has_pin[id][pin1] && _has_pin[id][pin2];
+}
+
+// Procedure: _reset_level
+void Timer::_reset_level(PathGuide *pg) {
+  // Must clear the static variables after report timing for each query
+  _idx2lvl[pg->id][pg->s].reset();
+  _has_pin[pg->id][pg->s].reset();
+  for(const auto& p: pg->pins){
+    _idx2lvl[pg->id][p].reset();
+  }
+
+  const auto& last_node = pg->constraint->_through.back();
+  for(size_t idx : last_node.indices){
+    _idx2lvl[pg->id][idx].reset();
+  }
+
+  for(const auto& p: pg->dirty_entry){
+    _has_pin[pg->id][p].reset();
+  }
+}
+
+// Procedure: report_timing_batch 
+// This function processes all path queries in a given file in parallel
+std::vector<PathSet> Timer::report_timing_batch(std::filesystem::path path) {
+  std::scoped_lock lock(_mutex);
+
+  std::ifstream ifs(path);
+  if(!ifs.good()) {
+    return {};
+  }
+
+  // Read the path queries
+  std::vector<std::string> queries; 
+  for(std::string line; std::getline(ifs, line);) {
+    queries.push_back(std::move(line));
+  }
+
+  // Check if update timing is needed (after _update_timing, _lineage will be cleared)
+  bool is_timing_update = _lineage.has_value();
+
+  _update_timing();
+
+  // Do this after timing is update
+  if(is_timing_update) {
+    for(unsigned i=0; i<_idx2rank.size(); i++) {
+      _idx2rank[i].clear();
+      _dirty_rank[i].clear();
+            
+      _idx2rank[i].resize(_idx2pin.size() << 1, std::nullopt);
+      _max_rank[i] = 0;
+      _sort_cnt[i] = 0;
+    }
+  }
+
+  const auto num_workers = _taskflow.num_workers();
+
+  // Per query data structure: path_set & ept
+  std::vector<PathSet> path_sets (queries.size());
+  std::vector<std::vector<Endpoint*>> epts (queries.size());
+
+  // Per worker data structure: constraint & guide & heap & qid & flow
+  std::vector<PathConstraint> constraints (num_workers);
+  std::vector<PathGuide> guides (num_workers);
+  std::vector<PathHeap> heaps(num_workers);
+  std::vector<unsigned> qids(num_workers);  // The current query id processed by each worker
+  std::vector<tf::Framework> flows(num_workers);
+
+  std::iota(qids.begin(), qids.end(), 0);
+
+  for(unsigned i=0; i<num_workers; i++) {
+    flows[i].emplace(
+      [&, qid_ptr=&(qids[i]), tid = i] (auto &subflow) mutable {
+
+        while(*qid_ptr < queries.size()) {
+          int qid = *qid_ptr;
+
+          constraints[tid].reset(queries[qid]);
+          constraints[tid].split(MAX);
+
+          guides[tid].constraint = &constraints[tid];
+          guides[tid].id = tid;
+          guides[tid].reset();
+
+          _setup_path_guide(guides[tid], path_sets[qid]);
+          epts[qid] = _worst_endpoints(path_sets[qid]);
+ 
+          // If only one path is requested
+          if(constraints[tid]._num_request_paths == 1) {
+            auto &paths = path_sets[qid].paths;
+            paths.emplace_back(epts[qid][0]->slack(), epts[qid][0]);
+            auto sfxt = _sfxt_cache(*epts[qid][0], &(guides[tid]));
+            _recover_datapath(paths[0], sfxt);
+            _reset_level(&(guides[tid]));
+
+            // Advance to next query
+            *qid_ptr += num_workers;
+          }
+          else if (constraints[tid]._num_request_paths > 0 && !epts[qid].empty()) {
+
+            // Clear the path heap before use
+            heaps[tid]._paths.clear();
+
+            auto task_pair = subflow.transform_reduce(epts[qid].begin(), epts[qid].end(), heaps[tid],
+              [&, K=constraints[tid]._num_request_paths.value()] (PathHeap l, PathHeap r) {
+                l.merge_and_fit(std::move(r), K);
+                return l;
+              },
+              [&, pg=&(guides[tid])] (PathHeap heap, Endpoint* ept) mutable {
+                auto K = pg->constraint->_num_request_paths.value();
+                _spur(*ept, K, heap, pg);
+                return heap;
+              },
+              [&, pg=&(guides[tid])] (Endpoint* ept) {
+                PathHeap heap;
+                auto K = pg->constraint->_num_request_paths.value();
+                _spur(*ept, K, heap, pg);
+                return heap;              
+              }
+            );
+
+            // This task cleans up the runtime data after transform_reduce completes
+            std::get<1>(task_pair).precede(subflow.emplace(
+              [&, tid=tid, qid=qid]() { 
+                path_sets[qid].paths = heaps[tid].extract();
+                _reset_level(&(guides[tid]));
+              }
+            ));
+
+            *qid_ptr += num_workers;
+            break;
+          }
+          else {
+            *qid_ptr += num_workers;
+          }
+        }
+
+      }
+    );
+  }
+
+
+  for(unsigned i=0; i<num_workers; i++) {
+    _taskflow.run_until(flows[i], [&, i=i](){
+      if(qids[i] < queries.size()) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  //auto t1 = std::chrono::high_resolution_clock::now();
+  _taskflow.wait_for_all();
+  //auto t2 = std::chrono::high_resolution_clock::now();
+  //std::cout << std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count()/1e3 << std::endl;
+
+  return path_sets;
 }
 
 

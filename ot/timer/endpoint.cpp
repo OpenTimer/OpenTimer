@@ -125,22 +125,19 @@ std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Tran rf) {
   return epts;
 }
 
-// TODO (Guannan)
-// Function: _worst_endpoints
-std::vector<Endpoint*> Timer::_worst_endpoints(PathGuide& pg) {
-
-  //_update_endpoints();
+// Function: _worst_endpoints for PBA
+std::vector<Endpoint*> Timer::_worst_endpoints(PathSet& ps) {
   
   std::vector<Endpoint*> epts;
-  FOR_EACH_EL_RF_IF(el, rf, !pg._runtime.endpoints[el][rf].empty()){
-    for(size_t i=0; i<pg._runtime.endpoints[el][rf].size(); i++){
-      epts.push_back(&(pg._runtime.endpoints[el][rf][i]));
+
+  FOR_EACH_EL_RF_IF(el, rf, !ps.endpoints[el][rf].empty()){
+    for(size_t i=0; i<ps.endpoints[el][rf].size(); i++){
+      epts.push_back(&(ps.endpoints[el][rf][i]));
     }    
   }
 
   return epts;
 }
-
 
 
 };  // end of namespace ot. -----------------------------------------------------------------------

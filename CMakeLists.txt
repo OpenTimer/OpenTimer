@@ -339,5 +339,9 @@ add_test(it.shell.vga_lcd ${OT_SHELL_CHECKER} ${OT_SHELL} ${OT_BENCHMARK_DIR} vg
 
 # Integration test on tau18 benchmark (golden is from iTimer)
 set(OT_TAU18_CHECKER ${PROJECT_SOURCE_DIR}/inttest/tau18.py)
-add_test(it.tau18.vga_lcd ${OT_TAU18_CHECKER} ${OT_TAU18} ${OT_BENCHMARK_DIR}/tau18 vga_lcd)
+add_test(it.tau18.vga_lcd ${OT_TAU18_CHECKER} ${OT_TAU18} ${OT_BENCHMARK_DIR}/tau18 vga_lcd) 
+# leon3mp_iccad takes around 2~3 minutes to finish. 
+#add_test(it.tau18.leon3mp_iccad ${OT_TAU18_CHECKER} ${OT_TAU18} ${OT_BENCHMARK_DIR}/tau18 leon3mp_iccad)
+
+
 

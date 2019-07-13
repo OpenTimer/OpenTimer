@@ -51,7 +51,7 @@ SfxtCache::~SfxtCache() {
 // ----------------------------------------------------------------------------
 
 // Procedure: _topologize
-void Timer::_topologize(SfxtCache& sfxt, size_t v, PathGuide* pg) const {
+void Timer::_topologize(SfxtCache& sfxt, size_t v, const PathGuide* pg) const {
 
   sfxt.__spfa[v] = true;
 
@@ -64,7 +64,7 @@ void Timer::_topologize(SfxtCache& sfxt, size_t v, PathGuide* pg) const {
         auto u = _encode_pin(arc->_from, urf);
 
         //if sftx is linked with guide, but node is not in range, ignore it 
-        if(pg != nullptr && !pg->_in_tail(v, u)){ 
+        if(pg != nullptr && !_in_tail(pg->id, v, u)){ 
           continue;
         }
 
@@ -79,12 +79,12 @@ void Timer::_topologize(SfxtCache& sfxt, size_t v, PathGuide* pg) const {
 }
 
 // Procedure: _spdp
-void Timer::_spdp(SfxtCache& sfxt, PathGuide* pg) const {
+void Timer::_spdp(SfxtCache& sfxt, const PathGuide* pg) const {
   
   assert(sfxt._pins.empty());
   
   if(pg != nullptr) {
-    sfxt._pins = pg->_runtime.pins;
+    sfxt._pins = pg->pins;
   }
 
   _topologize(sfxt, sfxt._T, pg);
@@ -98,7 +98,11 @@ void Timer::_spdp(SfxtCache& sfxt, PathGuide* pg) const {
     auto v = *itr;
     auto [pin, vrf] = _decode_pin(v);
 
-    assert(sfxt.__dist[v]);
+    //assert(sfxt.__dist[v]);
+    //_pins obey topological order but some pin may not connect to _T
+    if(!sfxt.__dist[v]){
+      continue;
+    }
     
     // Stop at the data source
     if(pin->is_datapath_source()) {
@@ -165,7 +169,7 @@ void Timer::_spfa(SfxtCache& sfxt) const {
 
 // Function: _sfxt_cache
 // Find the suffix tree rooted at the primary output po.
-SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf, PathGuide* pg) const {
+SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf, const PathGuide* pg) const {
   
   assert(po._rat[el][rf]);
 
@@ -197,7 +201,7 @@ SfxtCache Timer::_sfxt_cache(const PrimaryOutput& po, Split el, Tran rf, PathGui
 
 // Function: _sfxt_cache
 // Find the suffix tree rooted at the test
-SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf, PathGuide* pg) const {
+SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf, const PathGuide* pg) const {
 
   assert(test._rat[el][rf]);
 
@@ -238,7 +242,7 @@ SfxtCache Timer::_sfxt_cache(const Test& test, Split el, Tran rf, PathGuide* pg)
 }
 
 // Function: _sfxt_cache
-SfxtCache Timer::_sfxt_cache(const Endpoint& ept, PathGuide *pg) const {
+SfxtCache Timer::_sfxt_cache(const Endpoint& ept, const PathGuide *pg) const {
   return std::visit([this, &ept, pg] (auto&& handle) {
     return _sfxt_cache(*handle, ept._el, ept._rf, pg);
   }, ept._handle);
@@ -252,7 +256,7 @@ std::optional<float> Timer::_sfxt_offset(const SfxtCache& sfxt, size_t v) const 
   if(auto at = pin->_at[sfxt._el][rf]; at) {
     //return sfxt._el == MIN ? *at : -*at;
 
-    // PathGuide
+    // In tau18 contest, ideal_clock is used
     if(_ideal_clock && pin->primary_input() == nullptr) {
       return 0.0f;
     }
@@ -265,11 +269,6 @@ std::optional<float> Timer::_sfxt_offset(const SfxtCache& sfxt, size_t v) const 
 }
 
 };  // end of namespace ot. -----------------------------------------------------------------------
-
-
-
-
-
 
 
 

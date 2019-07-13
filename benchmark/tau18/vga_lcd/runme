@@ -1,7 +1,0 @@
-#!/bin/csh -f
-
-set testcase = "vga_lcd"
-set prog = "../../bin/OpenTimer-tau16"
-
-$prog $testcase.tau2018 $testcase.timing $testcase.ops $testcase.output
-
