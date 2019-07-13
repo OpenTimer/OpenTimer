@@ -38,5 +38,6 @@ we calculate the correlation coefficient between OT & OpenSTA:
   python3 correlation.py OT_output OpenSTA_output vga_lcd. 
 ```
   You will see three numbers: `path count` `Pearson Correlation Coefficient` `Coefficient of determination (R2)`
+
 4. The correlation should be close to 1
 
