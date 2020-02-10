@@ -97,6 +97,7 @@ class Timer {
     void dump_timer(std::ostream&) const;
     void dump_verilog(std::ostream&, const std::string&) const;
     void dump_spef(std::ostream&) const;
+    void dump_rctree(std::ostream&) const;
     
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;
@@ -264,6 +265,7 @@ class Timer {
     void _dump_timing(std::ostream&) const;
     void _dump_verilog(std::ostream&, const std::string&) const;
     void _dump_spef(std::ostream&) const;
+    void _dump_rctree(std::ostream&) const;
 
     template <typename... T, std::enable_if_t<(sizeof...(T)>1), void>* = nullptr >
     void _insert_frontier(T&&...);

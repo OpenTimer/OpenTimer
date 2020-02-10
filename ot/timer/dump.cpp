@@ -442,6 +442,79 @@ void Timer::_dump_verilog(std::ostream& os, const std::string& name) const {
   os << "\nendmodule\n";
 }
 
+// Procedure: dump_rctree
+void Timer::dump_rctree(std::ostream& os) const {
+  std::shared_lock lock(_mutex);
+  _dump_rctree(os);
+}
+
+// Procedure: _dump_rctree
+void Timer::_dump_rctree(std::ostream& os) const {
+  
+  os << "Total Nets: " << _nets.size() << '\n'; 
+  
+  for(const auto& [net_name, net] : _nets) {
+
+    os << net_name << ' ';
+    
+    auto rct = std::get_if<Rct>(&net._rct);
+
+    if(rct == nullptr) {
+      os << "0 0 nil\n";
+      continue;
+    }
+  
+    os << rct->_nodes.size() << ' ' 
+       << rct->_edges.size() << ' '
+       << rct->_root->_name  << '\n';
+
+    for(const auto& [node_name, node] : rct->_nodes) {
+      os << node_name << ' ' << node._ncap[MIN][RISE] << '\n';
+
+      //os << "ures:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._ures[el][rf];
+      //}
+      //os << '\n';
+      //
+      //os << "load:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._load[el][rf];
+      //}
+      //os << '\n';
+      //
+      //os << "beta:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._beta[el][rf];
+      //}
+      //os << '\n';
+      //
+      //os << "delay:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._delay[el][rf];
+      //}
+      //os << '\n';
+      //
+      //os << "ldelay:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._ldelay[el][rf];
+      //}
+      //os << '\n';
+
+      //os << "impulse:";
+      //FOR_EACH_EL_RF(el, rf) {
+      //  os << ' ' << node._impulse[el][rf];
+      //}
+      //os << '\n';
+    }
+
+    for(const auto& edge : rct->_edges) {
+      os << edge._from._name << ' ' << edge._to._name << ' ' << edge._res << '\n';
+    }
+  }
+
+}
+
 // Function: dump_spef
 void Timer::dump_spef(std::ostream& os) const {
   std::shared_lock lock(_mutex);

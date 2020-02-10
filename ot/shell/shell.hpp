@@ -95,6 +95,7 @@ class Shell {
     void _dump_timer             ();
     void _dump_verilog           ();
     void _dump_spef              ();
+    void _dump_rctree            ();
     
     // Obselete
     void _exec_ops               ();
@@ -172,6 +173,7 @@ class Shell {
       {"dump_timer",              &Shell::_dump_timer},
       {"dump_verilog",            &Shell::_dump_verilog},
       {"dump_spef",               &Shell::_dump_spef},
+      {"dump_rctree",             &Shell::_dump_rctree},
 
       // obselete
       {"exec_ops",                &Shell::_exec_ops},
