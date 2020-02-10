@@ -438,7 +438,8 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
     }
   );
 
-  _taskflow.wait_for_all();
+  _executor.run(_taskflow).wait();
+  _taskflow.clear();
 
   return heap.extract();
 }

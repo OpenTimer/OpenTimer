@@ -126,7 +126,8 @@ class Timer {
 
     mutable std::shared_mutex _mutex;
 
-    tf::Taskflow _taskflow {std::thread::hardware_concurrency()};
+    tf::Taskflow _taskflow;
+    tf::Executor _executor;
 
     int _state {0};
     

@@ -1001,7 +1001,8 @@ void Timer::_update_timing() {
   }
 
   // materialize the lineage
-  _taskflow.wait_for_all();
+  _executor.run(_taskflow).wait();
+  _taskflow.clear();
   _lineage.reset();
   
   // Check if full update is required
@@ -1016,7 +1017,8 @@ void Timer::_update_timing() {
   //_taskflow.dump(std::cout);
 
   // Execute the task
-  _taskflow.wait_for_all();
+  _executor.run(_taskflow).wait();
+  _taskflow.clear();
   
   // Clear the propagation tasks.
   _clear_prop_tasks();
@@ -1139,7 +1141,8 @@ void Timer::_update_endpoints() {
   }
 
   // run tasks
-  _taskflow.wait_for_all();
+  _executor.run(_taskflow).wait();
+  _taskflow.clear();
 
   _insert_state(EPTS_UPDATED);
 }
