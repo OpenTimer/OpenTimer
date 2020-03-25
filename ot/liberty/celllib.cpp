@@ -278,6 +278,8 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   size_t size1 = 1;
   size_t size2 = 1;
 
+  bool use_lut_template = true;
+
   while(stack && ++itr != end) {
 
     if(*itr == "index_1") { 
@@ -290,6 +292,7 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
       }
 
       size1 = lut.indices1.size();
+      use_lut_template = false;
     }
     else if(*itr == "index_2") {
       itr = on_next_parentheses(itr, end, [&] (auto& v) mutable {
@@ -301,8 +304,31 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
       }
       
       size2 = lut.indices2.size();
+      use_lut_template = false;
     }
     else if(*itr == "values") {
+
+      if(use_lut_template) {
+        if(lut.lut_template == nullptr) {
+          if(size1 != 1 or size2 != 1) {
+            OT_LOGF("can't find lut template for non-scalar lut ", lut.name);
+          }
+        }
+        else {
+          std::copy(
+            lut.lut_template->indices1.begin(),
+            lut.lut_template->indices1.end(),
+            std::back_inserter(lut.indices1)
+          );
+          std::copy(
+            lut.lut_template->indices2.begin(),
+            lut.lut_template->indices2.end(),
+            std::back_inserter(lut.indices2)
+          );
+          size1 = lut.indices1.size();
+          size2 = lut.indices2.size();
+        }
+      }
 
       if(lut.indices1.empty()) {
         if(size1 != 1) {
