@@ -281,7 +281,7 @@ you need `-std=c++1z` and `-lstdc++fs` flags
 to enable C++17 standard and [filesystem](https://en.cppreference.com/w/cpp/experimental/fs) libraries.
 
 ```bash
-~$ g++ app.cpp -std=c++1z -lstdc++fs -O2 -I include -L lib -lOpenTimer -o app.out
+~$ g++ app.cpp -std=c++1z -O2 -I include -L lib -lOpenTimer -lpthread -o app.out "-lstdc++fs "
 ~$ ./app.out
 ```
 
