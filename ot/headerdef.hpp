@@ -63,10 +63,6 @@
 // Top header declaration.
 #include <ot/config.hpp>
 
-namespace std {
-  namespace filesystem = experimental::filesystem;
-};
-
 namespace ot {
 
 using Json = nlohmann::json;
@@ -75,6 +71,7 @@ using Json = nlohmann::json;
 
 using namespace std::chrono_literals;
 using namespace std::literals::string_literals;
+namespace filesystem = std::experimental::filesystem;
 
 enum Split {
   MIN = 0,

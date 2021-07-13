@@ -3,7 +3,7 @@
 namespace ot {
 
 // Function: user_home
-std::filesystem::path user_home() {
+ot::filesystem::path user_home() {
 
   auto home = ::getenv("HOME");
 
@@ -11,7 +11,7 @@ std::filesystem::path user_home() {
     home = ::getpwuid(::getuid())->pw_dir;
   }
 
-  return home ? home : std::filesystem::current_path();
+  return home ? home : ot::filesystem::current_path();
 }
 
 // Function: c_args

@@ -589,7 +589,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
 }
 
 // Procedure: read
-void Celllib::read(const std::filesystem::path& path) {
+void Celllib::read(const ot::filesystem::path& path) {
   
   std::ifstream ifs(path, std::ios::ate);
   

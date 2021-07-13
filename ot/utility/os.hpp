@@ -10,14 +10,12 @@
 #include <pwd.h>
 #include <experimental/filesystem>
 
-namespace std {
-  namespace filesystem = experimental::filesystem;
-};
-
 namespace ot {
 
+namespace filesystem = std::experimental::filesystem;
+
 // Function: user_home
-std::filesystem::path user_home();
+filesystem::path user_home();
 
 // Function: c_args
 std::unique_ptr<char*, std::function<void(char**)>> c_args(const std::vector<std::string>&);

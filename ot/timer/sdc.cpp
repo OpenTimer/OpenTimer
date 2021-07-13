@@ -3,7 +3,7 @@
 namespace ot {
 
 // Function: read_sdc
-Timer& Timer::read_sdc(std::filesystem::path path) {
+Timer& Timer::read_sdc(ot::filesystem::path path) {
 
   // Create a shared sdc object
   auto sdc = std::make_shared<sdc::SDC>();

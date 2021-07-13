@@ -4,7 +4,7 @@
 namespace ot::tau15 {
 
 // Procedure: read
-void Timing::read(const std::filesystem::path& path) {
+void Timing::read(const ot::filesystem::path& path) {
   
   std::string line, token, pin;
   
@@ -66,7 +66,7 @@ void Timing::read(const std::filesystem::path& path) {
 namespace ot {
 
 // Function: read_timing
-Timer& Timer::read_timing(std::filesystem::path path) {
+Timer& Timer::read_timing(ot::filesystem::path path) {
 
   auto timing = std::make_shared<tau15::Timing>();
 
