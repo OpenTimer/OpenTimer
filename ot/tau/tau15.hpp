@@ -47,7 +47,7 @@ using Assertion = std::variant<
 // Struct: Timing
 struct Timing {
   std::vector<Assertion> assertions;
-  void read(const std::filesystem::path&);
+  void read(const ot::filesystem::path&);
 };
 
 

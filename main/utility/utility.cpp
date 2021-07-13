@@ -1,7 +1,7 @@
 #include <ot/timer/timer.hpp>
 
 // Procedure: compress_spef
-void compress_spef(const std::filesystem::path& ori, const std::filesystem::path& cmp) {
+void compress_spef(const ot::filesystem::path& ori, const ot::filesystem::path& cmp) {
   
   // Open the spef file
   spef::Spef spef;
@@ -20,7 +20,7 @@ void compress_spef(const std::filesystem::path& ori, const std::filesystem::path
 }
 
 // Procedure: timing_to_sdc
-void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::path& sdc) {
+void timing_to_sdc(const ot::filesystem::path& timing, const ot::filesystem::path& sdc) {
   
   // Open the timing file and sdc output
   std::ifstream tfs(timing);
@@ -163,12 +163,12 @@ void timing_to_sdc(const std::filesystem::path& timing, const std::filesystem::p
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: tau15_to_shell
-void tau15_to_shell(const std::filesystem::path& tau15, const std::filesystem::path& shell) {
+void tau15_to_shell(const ot::filesystem::path& tau15, const ot::filesystem::path& shell) {
 
-  std::filesystem::path early_celllib;
-  std::filesystem::path late_celllib;
-  std::filesystem::path spef;
-  std::filesystem::path verilog;
+  ot::filesystem::path early_celllib;
+  ot::filesystem::path late_celllib;
+  ot::filesystem::path spef;
+  ot::filesystem::path verilog;
 
   // open tau folder
   if(std::ifstream ifs(tau15); ifs) {
@@ -179,8 +179,8 @@ void tau15_to_shell(const std::filesystem::path& tau15, const std::filesystem::p
   }
 
   // Convert the timing to sdc
-  std::filesystem::path timing = tau15.stem().string() + ".timing";
-  std::filesystem::path sdc = tau15.stem().string() + ".sdc";
+  ot::filesystem::path timing = tau15.stem().string() + ".timing";
+  ot::filesystem::path sdc = tau15.stem().string() + ".sdc";
   timing_to_sdc(timing, sdc);
   
   // Open shell output 
@@ -212,9 +212,9 @@ int main(int argc, char* argv[]) {
 
   ot::ArgParse app {"ot-utility"};
 
-  std::vector<std::filesystem::path> t2s;
-  std::vector<std::filesystem::path> o2s;
-  std::vector<std::filesystem::path> spef;
+  std::vector<ot::filesystem::path> t2s;
+  std::vector<ot::filesystem::path> o2s;
+  std::vector<ot::filesystem::path> spef;
 
   app.add_option("--timing-to-sdc", t2s, "convert a TAU15 timing file to sdc format")
      ->expected(2);

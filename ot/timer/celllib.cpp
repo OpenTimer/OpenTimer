@@ -23,7 +23,7 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 }
 
 // Function: read_celllib
-Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) {
+Timer& Timer::read_celllib(ot::filesystem::path path, std::optional<Split> el) {
   
   auto lib = std::make_shared<Celllib>();
   

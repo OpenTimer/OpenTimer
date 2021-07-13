@@ -3,7 +3,7 @@
 namespace ot {
 
 // Function: read_verilog
-Timer& Timer::read_verilog(std::filesystem::path path) {
+Timer& Timer::read_verilog(ot::filesystem::path path) {
   
   // Create a verilog module
   auto module = std::make_shared<vlog::Module>();

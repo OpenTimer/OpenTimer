@@ -7,7 +7,7 @@
 namespace ot::sdc {
 
 // Function: home
-std::filesystem::path home();
+ot::filesystem::path home();
 
 // SetInputDelay
 struct SetInputDelay {
@@ -142,7 +142,7 @@ using Command = std::variant<
 // Class: SDC
 struct SDC {
   std::vector<Command> commands;
-  void read(const std::filesystem::path&);
+  void read(const ot::filesystem::path&);
 };
 
 };  // end of namespace ot::sdc. ------------------------------------------------------------------

@@ -139,10 +139,10 @@ std::ostream& operator << (std::ostream& os, const Spef& spef) {
 // *C_UNIT 1 FF
 // *R_UNIT 1 KOHM
 // *L_UNIT 1 UH
-void Spef::read(const std::filesystem::path& path) {
+void Spef::read(const ot::filesystem::path& path) {
   
   OT_LOGE_RIF(
-    path.empty() || !std::filesystem::exists(path),
+    path.empty() || !ot::filesystem::exists(path),
     "spef ", path, " doesn't exist"
   );
 

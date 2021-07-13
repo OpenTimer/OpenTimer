@@ -69,7 +69,7 @@ std::string Module::info() const {
 }
 
 // Procedure: read_verilog
-Module read_verilog(const std::filesystem::path& path) {
+Module read_verilog(const ot::filesystem::path& path) {
 
   Module module;
   
