@@ -55,7 +55,7 @@ struct Celllib {
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
 
-  void read(const ot::filesystem::path&);
+  void read(const std::filesystem::path&);
   void scale_time(float);
   void scale_resistance(float);
   void scale_power(float);

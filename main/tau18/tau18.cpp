@@ -8,14 +8,14 @@ int main(int argc, char* argv[]) {
     OT_LOGF("usage: ot-tau18 <file>.tau2018 <file>.timing <file>.ops output");
   }
 
-  ot::filesystem::path tau2018 = argv[1];
-  ot::filesystem::path timing = argv[2];
-  ot::filesystem::path ops = argv[3];
-  ot::filesystem::path output = argv[4];
-  ot::filesystem::path early_celllib;
-  ot::filesystem::path late_celllib;
-  ot::filesystem::path spef;
-  ot::filesystem::path verilog;
+  std::filesystem::path tau2018 = argv[1];
+  std::filesystem::path timing = argv[2];
+  std::filesystem::path ops = argv[3];
+  std::filesystem::path output = argv[4];
+  std::filesystem::path early_celllib;
+  std::filesystem::path late_celllib;
+  std::filesystem::path spef;
+  std::filesystem::path verilog;
 
   if(std::ifstream ifs(tau2018); ifs) {
     ifs >> early_celllib >> late_celllib >> spef >> verilog; 

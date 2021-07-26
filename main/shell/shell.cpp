@@ -11,10 +11,10 @@ int main(int argc, char* argv[]) {
   auto flag_quiet {false};
   auto flag_version {false};
 
-  ot::filesystem::path stdin_path;
-  ot::filesystem::path stdout_path;
-  ot::filesystem::path stderr_path;
-  ot::filesystem::path log_path;
+  std::filesystem::path stdin_path;
+  std::filesystem::path stdout_path;
+  std::filesystem::path stderr_path;
+  std::filesystem::path log_path;
 
   app.add_flag  ("-q,--quiet",   flag_quiet,   "do not print the welcome on startup");
   app.add_flag  ("-v,--version", flag_version, "print version information and exit");

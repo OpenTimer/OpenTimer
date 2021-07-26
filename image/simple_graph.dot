@@ -1,7 +1,7 @@
 digraph TimingGraph {
   rankdir="LR"
-  "inp1" [shape=ellipse style=filled fillcolor=red fontcolor=white]
   "u1:A" [shape=ellipse style=filled fillcolor=red fontcolor=white]
+  "inp1" [shape=ellipse style=filled fillcolor=red fontcolor=white]
   "tau2015_clk";
   "f1:D" [shape=ellipse style=filled fillcolor=red fontcolor=white];
   "out";

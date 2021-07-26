@@ -3,17 +3,17 @@
 namespace ot::sdc {
 
 // Function: home
-ot::filesystem::path home() {
+std::filesystem::path home() {
   
-  auto path = ot::filesystem::path(OT_HOME) / "ot" / "sdc";
+  auto path = std::filesystem::path(OT_HOME) / "ot" / "sdc";
 
-  if(ot::filesystem::exists(path)) {
+  if(std::filesystem::exists(path)) {
     return path;
   }
 
-  path = ot::filesystem::path(OT_INSTALL_PREFIX) / "include" / "ot" / "sdc";
+  path = std::filesystem::path(OT_INSTALL_PREFIX) / "include" / "ot" / "sdc";
 
-  if(ot::filesystem::exists(path)) {
+  if(std::filesystem::exists(path)) {
     return path;
   }
   
@@ -21,20 +21,20 @@ ot::filesystem::path home() {
 }
 
 // Procedure: read
-void SDC::read(const ot::filesystem::path& path) {
+void SDC::read(const std::filesystem::path& path) {
 
-  OT_LOGE_RIF(!ot::filesystem::exists(path), "sdc ", path, " doesn't exist");
+  OT_LOGE_RIF(!std::filesystem::exists(path), "sdc ", path, " doesn't exist");
 
   auto sdc_home = home();
 
   OT_LOGE_RIF(
-    sdc_home.empty() || !ot::filesystem::exists(sdc_home), 
+    sdc_home.empty() || !std::filesystem::exists(sdc_home), 
     "sdc home ", sdc_home, " doesn't exist"
   );
   
   OT_LOGI("loading sdc ", path, " ...");
 
-  auto sdc_path = ot::filesystem::absolute(path);
+  auto sdc_path = std::filesystem::absolute(path);
   auto sdc_json = sdc_path;
   sdc_json.replace_extension(".json");
     
@@ -113,7 +113,7 @@ void SDC::read(const ot::filesystem::path& path) {
     }
 
     try {
-      ot::filesystem::remove(sdc_json);
+      std::filesystem::remove(sdc_json);
     }
     catch(const std::exception& e) {
       OT_LOGW("can't remove ", sdc_json, ": ", e.what());

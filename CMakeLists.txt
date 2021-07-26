@@ -1,5 +1,5 @@
 # CMake setup
-cmake_minimum_required (VERSION 3.9)
+cmake_minimum_required (VERSION 3.12)
 MESSAGE(STATUS "CMAKE_ROOT: " ${CMAKE_ROOT})
 
 # Project name
@@ -59,9 +59,9 @@ message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 # The version number
 set(OT_VERSION_MAJOR "2")
-set(OT_VERSION_MINOR "0")
+set(OT_VERSION_MINOR "1")
 set(OT_VERSION_PATCH "0")
-set(OT_VERSION "${OT_VERSION_MAJOR}.${OT_VERSION_MINOR}.${OT_VERSION_PATCH} (alpha)")
+set(OT_VERSION "${OT_VERSION_MAJOR}.${OT_VERSION_MINOR}.${OT_VERSION_PATCH}")
 set(OT_HOME ${PROJECT_SOURCE_DIR})
 set(OT_BENCHMARK_DIR ${PROJECT_SOURCE_DIR}/benchmark)
 set(OT_UNITTEST_DIR ${PROJECT_SOURCE_DIR}/unittest)

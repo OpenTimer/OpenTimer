@@ -40,14 +40,12 @@
 #include <cstring>
 #include <fstream>
 #include <string_view>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <cassert>
 
 // ------------------------------------------------------------------------------------------------
 
 namespace prompt {
-
-namespace filesystem = std::experimental::filesystem;
 
 // Procedure: read_line
 // Read one line from an input stream
@@ -474,7 +472,7 @@ class Prompt {
     Prompt(
       const std::string&,   // Welcome message 
       const std::string&,   // prompt
-      const filesystem::path& = filesystem::current_path()/".prompt_history",  // history log path
+      const std::filesystem::path& = std::filesystem::current_path()/".prompt_history",  // history log path
       FILE* = stdin,
       std::ostream& = std::cout,
       std::ostream& = std::cerr
@@ -492,7 +490,7 @@ class Prompt {
   private: 
   
     std::string _prompt;  
-    filesystem::path _history_path;
+    std::filesystem::path _history_path;
     
     // TODO: replace these with FILE* _is, _os, _es;
     // fix inserters and extractors
@@ -542,15 +540,15 @@ class Prompt {
     void _autocomplete_command();
     void _autocomplete_folder();
 
-    std::vector<std::string> _files_in_folder(const filesystem::path&) const;
-    std::vector<std::string> _files_match_prefix(const filesystem::path&) const;
-    std::string _dump_files(const std::vector<std::string>&, const filesystem::path&);
+    std::vector<std::string> _files_in_folder(const std::filesystem::path&) const;
+    std::vector<std::string> _files_match_prefix(const std::filesystem::path&) const;
+    std::string _dump_files(const std::vector<std::string>&, const std::filesystem::path&);
     std::string _dump_options(const std::vector<std::string>&);
     std::string _next_prefix(const std::vector<std::string>&, const size_t);
 
 
-    filesystem::path _user_home() const;
-    bool _has_read_access(const filesystem::path&) const;
+    std::filesystem::path _user_home() const;
+    bool _has_read_access(const std::filesystem::path&) const;
 
     // Key handling subroutine
     void _key_backspace(LineInfo&);
@@ -609,7 +607,7 @@ inline void Prompt::LineInfo::operator = (const LineInfo& l){
 inline Prompt::Prompt(
   const std::string& welcome_msg, 
   const std::string& pmt, 
-  const filesystem::path& path,
+  const std::filesystem::path& path,
   FILE* in,
   std::ostream& out, 
   std::ostream& err
@@ -624,8 +622,8 @@ inline Prompt::Prompt(
   if(::isatty(::fileno(_is))){
     _cout << welcome_msg;
     _columns = _terminal_columns();
-    if(filesystem::exists(_history_path)){
-      if(std::error_code ec; not filesystem::is_regular_file(_history_path, ec)){
+    if(std::filesystem::exists(_history_path)){
+      if(std::error_code ec; not std::filesystem::is_regular_file(_history_path, ec)){
         _cerr << "The history file is not a regular file\n";
       }
       else{
@@ -679,7 +677,7 @@ inline void Prompt::_save_history(){
 // Procedure: _load_history 
 // Load history commands from a file
 inline void Prompt::_load_history(){
-  if(filesystem::exists(_history_path)){
+  if(std::filesystem::exists(_history_path)){
     std::ifstream ifs(_history_path);
     std::string placeholder;
     while(std::getline(ifs, placeholder)){
@@ -891,18 +889,18 @@ inline size_t Prompt::_terminal_columns(){
 
 // Procedure: user_home
 // Return the home folder of user
-inline filesystem::path Prompt::_user_home() const{
+inline std::filesystem::path Prompt::_user_home() const{
   auto home = ::getenv("HOME");
   if(home == nullptr) {
     home = ::getpwuid(::getuid())->pw_dir;
   }
-  return home ? home : filesystem::current_path();
+  return home ? home : std::filesystem::current_path();
 }
 
 
 // Procedure: _has_read_access 
 // Check a file has read access grant to the user
-inline bool Prompt::_has_read_access(const filesystem::path &path) const {
+inline bool Prompt::_has_read_access(const std::filesystem::path &path) const {
   if(auto rval=::access(path.c_str(), F_OK); rval == 0){
     if(rval = ::access(path.c_str(), R_OK); rval == 0){
       return true;
@@ -1036,15 +1034,15 @@ inline void Prompt::_autocomplete_command(){
 // Procedure: _files_match_prefix
 // Find all the files in a folder that match the prefix
 inline std::vector<std::string> Prompt::_files_match_prefix(
-  const filesystem::path& path
+  const std::filesystem::path& path
 ) const {
   // Need to check in case path is a file in current folder (parent_path = "")
-  auto folder = path.filename() == path ? filesystem::current_path() : path.parent_path();
+  auto folder = path.filename() == path ? std::filesystem::current_path() : path.parent_path();
   std::string prefix(path.filename());
 
   std::vector<std::string> matches; 
-  if(std::error_code ec; _has_read_access(folder) and filesystem::is_directory(folder, ec)){
-    for(const auto& p: filesystem::directory_iterator(folder)){
+  if(std::error_code ec; _has_read_access(folder) and std::filesystem::is_directory(folder, ec)){
+    for(const auto& p: std::filesystem::directory_iterator(folder)){
       std::string fname {p.path().filename()};
       if(fname.compare(0, prefix.size(), prefix) == 0){
         matches.emplace_back(std::move(fname));
@@ -1058,13 +1056,13 @@ inline std::vector<std::string> Prompt::_files_match_prefix(
 // Procedure: _files_in_folder
 // List all files in a given folder
 inline std::vector<std::string> Prompt::_files_in_folder(
-  const filesystem::path& path
+  const std::filesystem::path& path
 ) const {
-  auto p = path.empty() ? filesystem::current_path() : path;
+  auto p = path.empty() ? std::filesystem::current_path() : path;
   std::vector<std::string> matches;
   // Check permission 
   if(_has_read_access(p)){
-    for(const auto& p: filesystem::directory_iterator(p)){
+    for(const auto& p: std::filesystem::directory_iterator(p)){
       matches.emplace_back(p.path().filename());
     }
   }
@@ -1076,7 +1074,7 @@ inline std::vector<std::string> Prompt::_files_in_folder(
 // Format the strings for pretty print in terminal.
 inline std::string Prompt::_dump_files(
   const std::vector<std::string>& v, 
-  const filesystem::path& path)
+  const std::filesystem::path& path)
 {
   if(v.empty()){
     return {};
@@ -1101,7 +1099,7 @@ inline std::string Prompt::_dump_files(
       s.append("\n\r\x1b[0K");
     }
 
-    if(filesystem::is_directory(path.native() + "/" + v[i], ec)){
+    if(std::filesystem::is_directory(path.native() + "/" + v[i], ec)){
       // A typical color code example : \033[31;1;4m 
       //   \033[ : begin of color code, 31 : red color,  1 : bold,  4 : underlined
       s.append(seq, strlen(seq));
@@ -1122,13 +1120,13 @@ inline void Prompt::_autocomplete_folder(){
   std::string s;
   size_t ws_index = _line.buf.rfind(' ', _line.cur_pos) + 1;
 
-  filesystem::path p(
+  std::filesystem::path p(
     _line.buf[ws_index] != '~' ? 
     _line.buf.substr(ws_index, _line.cur_pos - ws_index) : 
     _user_home().native() + _line.buf.substr(ws_index+1, _line.cur_pos-ws_index-1)
   );
 
-  if(std::error_code ec; p.empty() or filesystem::is_directory(p, ec)) {
+  if(std::error_code ec; p.empty() or std::filesystem::is_directory(p, ec)) {
     s = _dump_files(_files_in_folder(p), p);
   }
   else{
@@ -1140,7 +1138,7 @@ inline void Prompt::_autocomplete_folder(){
         _line.cur_pos += suffix.size();
         p += suffix;
         // Append a '/' if is a folder and not the prefix of other files
-        if(filesystem::is_directory(p, ec) and 
+        if(std::filesystem::is_directory(p, ec) and 
             std::count_if(match.begin(), match.end(), 
               [p = p.filename().native()](const auto& m)
               { return (m.size() >= p.size() and m.compare(0, p.size(), p) == 0); }) == 1){

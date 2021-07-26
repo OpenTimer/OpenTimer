@@ -111,7 +111,7 @@ struct Spef {
 
   std::vector<Net> nets;
 
-  void read(const ot::filesystem::path&);
+  void read(const std::filesystem::path&);
   void to_capacitance_unit(const CapacitanceUnit&);
   void to_resistance_unit(const ResistanceUnit&);
 

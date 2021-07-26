@@ -39,7 +39,7 @@ under the `bin` directory.
   ____              _______              
  / __ \___  ___ ___/_  __(_)_ _  ___ ____
 / /_/ / _ \/ -_) _ \/ / / /  ' \/ -_) __/
-\____/ .__/\__/_//_/_/ /_/_/_/_/\__/_/       v2.0.0 (alpha)
+\____/ .__/\__/_//_/_/ /_/_/_/_/\__/_/       v2
     /_/                                     
 MIT License: type "license" to see more details.
 For help, type "help".

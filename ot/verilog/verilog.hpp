@@ -35,7 +35,7 @@ std::ostream& operator << (std::ostream&, const Module&);
 
 // ------------------------------------------------------------------------------------------------
 
-Module read_verilog(const ot::filesystem::path&);
+Module read_verilog(const std::filesystem::path&);
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

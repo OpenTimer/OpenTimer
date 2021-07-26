@@ -39,7 +39,7 @@
 #include <random>
 #include <regex>
 #include <ratio>
-#include <experimental/filesystem>
+#include <filesystem>
 #include <optional>
 #include <unistd.h>
 #include <sys/wait.h>
@@ -71,7 +71,6 @@ using Json = nlohmann::json;
 
 using namespace std::chrono_literals;
 using namespace std::literals::string_literals;
-namespace filesystem = std::experimental::filesystem;
 
 enum Split {
   MIN = 0,

@@ -8,11 +8,10 @@
 #include <iostream>
 #include <algorithm>
 #include <regex>
-#include <experimental/filesystem>
+#include <filesystem>
 
 namespace ot {
 
-namespace filesystem = std::experimental::filesystem;
 
 // string conversion
 std::string to_lower(std::string);
@@ -125,7 +124,7 @@ auto on_next_parentheses(const I b, const I e, C&& c) {
 
 
 // Function: tokenize
-std::vector<std::string> tokenize(const filesystem::path&, std::string_view="", std::string_view="");
+std::vector<std::string> tokenize(const std::filesystem::path&, std::string_view="", std::string_view="");
 
 // Function: split
 std::vector<std::string> split(const std::string&, std::string_view="");
