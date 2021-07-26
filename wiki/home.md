@@ -24,8 +24,3 @@
 + [Compilation Issues](faq/compilation.md)
 + [Programming Questions](faq/programming.md)
 
-# Milestones
-
-+ [Monthly Technical Reports](milestones/logs.md)
-
-

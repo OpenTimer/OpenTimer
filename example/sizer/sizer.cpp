@@ -75,6 +75,7 @@ int main(int argc, char* argv[]) {
   // Output the top-3 critical paths
   auto paths = timer.report_timing(3);
   
+  // report the critical paths
   std::cout << "# critical paths: " << paths.size() << '\n';
 
   for(size_t i=0; i<paths.size(); ++i) {

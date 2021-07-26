@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "coverting tau files to industrial formats ..."
+
 # Get and enter the directory of the script
 sbin=`dirname $0`
 sbin=`cd $sbin; pwd`
@@ -21,3 +23,5 @@ do
   cd "$benchmark/${ckt}/"; ${converter} --tau15-to-shell ${ckt}.tau2015 ${ckt}.shell;
   echo "done"
 done
+
+
