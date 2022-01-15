@@ -18,7 +18,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
     message(FATAL_ERROR "\nOpenTimer requires clang++ at least v6.0")
-  endif() 
+  endif()
 else()
   message(FATAL_ERROR "\n\
 OpenTimer currently supports the following compilers:\n\
@@ -95,6 +95,15 @@ if (NOT TCL_TCLSH)
 OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
+
+option(USE_SYSTEM_JSON "Use an external JSON library" OFF)
+if(USE_SYSTEM_JSON)
+    find_package(nlohmann_json 3.10.5 REQUIRED)
+else()
+    set(JSON_BuildTests OFF CACHE INTERNAL "")
+    add_subdirectory(third_party/nlohmann_json)
+endif()
+
 # CTest
 include(CTest)
 
@@ -155,7 +164,7 @@ set(OT_CPP
 
 # Add OpenTimer library
 add_library(OpenTimer ${OT_CPP})
-
+target_link_libraries(OpenTimer PRIVATE nlohmann_json::nlohmann_json)
 
 ###########################################################
 # Executables
@@ -167,6 +176,7 @@ list(APPEND OT_LINK_FLAGS "")
 list(APPEND OT_LINK_FLAGS OpenTimer)
 list(APPEND OT_LINK_FLAGS Threads::Threads)
 list(APPEND OT_LINK_FLAGS stdc++fs)
+list(APPEND OT_LINK_FLAGS nlohmann_json::nlohmann_json)
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15
@@ -251,7 +261,7 @@ install(TARGETS ot-shell DESTINATION bin)
 # Test
 ###########################################################
 
-# Test 
+# Test
 enable_testing()
 
 # Unittest
