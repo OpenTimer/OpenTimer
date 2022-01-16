@@ -122,6 +122,15 @@ else()
     add_library(Parser-SPEF::Parser-SPEF ALIAS Parser-SPEF)
 endif()
 
+# Taskflow
+option(USE_SYSTEM_TASKFLOW "Use external Taskflow library" OFF)
+if(USE_SYSTEM_TASKFLOW)
+    find_package(Cpp-Taskflow 2.2.0 REQUIRED)
+else()
+    add_subdirectory(third_party/taskflow EXCLUDE_FROM_ALL)
+    add_library(Cpp-Taskflow::Cpp-Taskflow ALIAS Cpp-Taskflow)
+endif()
+
 # CTest
 include(CTest)
 
@@ -186,6 +195,7 @@ target_link_libraries(OpenTimer PRIVATE
   nlohmann_json::nlohmann_json
   units::units
   Parser-SPEF::Parser-SPEF
+  Cpp-Taskflow::Cpp-Taskflow
 )
 
 ###########################################################
@@ -201,6 +211,7 @@ list(APPEND OT_LINK_FLAGS stdc++fs)
 list(APPEND OT_LINK_FLAGS nlohmann_json::nlohmann_json)
 list(APPEND OT_LINK_FLAGS units::units)
 list(APPEND OT_LINK_FLAGS Parser-SPEF::Parser-SPEF)
+list(APPEND OT_LINK_FLAGS Cpp-Taskflow::Cpp-Taskflow)
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15
@@ -233,28 +244,28 @@ message(STATUS "OpenTimer shell: ${OT_SHELL}")
 
 # simple
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/simple)
-add_executable(simple example/simple/simple.cpp)
-target_link_libraries(simple ${OT_LINK_FLAGS})
+add_executable(ot-simple example/simple/simple.cpp)
+target_link_libraries(ot-simple ${OT_LINK_FLAGS})
 
 # incremental
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/incremental)
-add_executable(incremental example/incremental/incremental.cpp)
-target_link_libraries(incremental ${OT_LINK_FLAGS})
+add_executable(ot-incremental example/incremental/incremental.cpp)
+target_link_libraries(ot-incremental ${OT_LINK_FLAGS})
 
 # unit
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/unit)
-add_executable(unit example/unit/unit.cpp)
-target_link_libraries(unit ${OT_LINK_FLAGS})
+add_executable(ot-unit example/unit/unit.cpp)
+target_link_libraries(ot-unit ${OT_LINK_FLAGS})
 
 # optimizer
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/optimizer)
-add_executable(optimizer example/optimizer/optimizer.cpp)
-target_link_libraries(optimizer ${OT_LINK_FLAGS})
+add_executable(ot-optimizer example/optimizer/optimizer.cpp)
+target_link_libraries(ot-optimizer ${OT_LINK_FLAGS})
 
 # sizer
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/sizer)
-add_executable(sizer example/sizer/sizer.cpp)
-target_link_libraries(sizer ${OT_LINK_FLAGS})
+add_executable(ot-sizer example/sizer/sizer.cpp)
+target_link_libraries(ot-sizer ${OT_LINK_FLAGS})
 
 ##aes_cipher
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/aes_cipher)
@@ -292,8 +303,8 @@ enable_testing()
 message(STATUS "Building unit tests ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/unittest)
 
-add_executable(utility unittest/utility.cpp)
-target_link_libraries(utility ${OT_LINK_FLAGS})
+add_executable(ot-ut-utility unittest/utility.cpp)
+target_link_libraries(ot-ut-utility ${OT_LINK_FLAGS})
 
 add_executable(path unittest/path.cpp)
 target_link_libraries(path ${OT_LINK_FLAGS})
