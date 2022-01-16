@@ -101,7 +101,7 @@ if(USE_SYSTEM_JSON)
     find_package(nlohmann_json 3.10.5 REQUIRED)
 else()
     set(JSON_BuildTests OFF CACHE INTERNAL "")
-    add_subdirectory(third_party/nlohmann_json)
+    add_subdirectory(third_party/nlohmann_json EXCLUDE_FROM_ALL)
 endif()
 
 # Units
@@ -109,8 +109,17 @@ option(USE_SYSTEM_UNITS "Use external Units library" OFF)
 if(USE_SYSTEM_UNITS)
     find_package(units 2.3.1 REQUIRED)
 else()
-    add_subdirectory(third_party/units)
+    add_subdirectory(third_party/units EXCLUDE_FROM_ALL)
     add_library(units::units ALIAS units)
+endif()
+
+# Parser-SPEF
+option(USE_SYSTEM_PARSER_SPEF "Use external Parser-SPEF library" OFF)
+if(USE_SYSTEM_PARSER_SPEF)
+    find_package(Parser-SPEF 3.9 REQUIRED)
+else()
+    add_subdirectory(third_party/Parser-SPEF EXCLUDE_FROM_ALL)
+    add_library(Parser-SPEF::Parser-SPEF ALIAS Parser-SPEF)
 endif()
 
 # CTest
@@ -176,6 +185,7 @@ add_library(OpenTimer ${OT_CPP})
 target_link_libraries(OpenTimer PRIVATE
   nlohmann_json::nlohmann_json
   units::units
+  Parser-SPEF::Parser-SPEF
 )
 
 ###########################################################
@@ -190,6 +200,7 @@ list(APPEND OT_LINK_FLAGS Threads::Threads)
 list(APPEND OT_LINK_FLAGS stdc++fs)
 list(APPEND OT_LINK_FLAGS nlohmann_json::nlohmann_json)
 list(APPEND OT_LINK_FLAGS units::units)
+list(APPEND OT_LINK_FLAGS Parser-SPEF::Parser-SPEF)
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15

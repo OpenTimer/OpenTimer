@@ -57,7 +57,7 @@
 // third-party include
 #include <ot/taskflow/taskflow.hpp>
 #include <nlohmann/json.hpp>
-#include <ot/parser-spef/parser-spef.hpp>
+#include <parser-spef.hpp>
 #include <units.h>
 
 // Top header declaration.

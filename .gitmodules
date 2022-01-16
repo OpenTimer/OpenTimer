@@ -4,3 +4,6 @@
 [submodule "third_party/units"]
 	path = third_party/units
 	url = https://github.com/nholthaus/units
+[submodule "third_party/Parser-SPEF"]
+	path = third_party/Parser-SPEF
+	url = https://github.com/oliverbunting/Parser-SPEF
