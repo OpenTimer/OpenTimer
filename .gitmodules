@@ -1,3 +1,6 @@
 [submodule "third_party/nlohmann_json"]
 	path = third_party/nlohmann_json
 	url = https://github.com/nlohmann/json
+[submodule "third_party/units"]
+	path = third_party/units
+	url = https://github.com/nholthaus/units

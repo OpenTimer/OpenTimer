@@ -95,13 +95,22 @@ if (NOT TCL_TCLSH)
 OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
-
-option(USE_SYSTEM_JSON "Use an external JSON library" OFF)
+# Json
+option(USE_SYSTEM_JSON "Use external JSON library" OFF)
 if(USE_SYSTEM_JSON)
     find_package(nlohmann_json 3.10.5 REQUIRED)
 else()
     set(JSON_BuildTests OFF CACHE INTERNAL "")
     add_subdirectory(third_party/nlohmann_json)
+endif()
+
+# Units
+option(USE_SYSTEM_UNITS "Use external Units library" OFF)
+if(USE_SYSTEM_UNITS)
+    find_package(units 2.3.1 REQUIRED)
+else()
+    add_subdirectory(third_party/units)
+    add_library(units::units ALIAS units)
 endif()
 
 # CTest
@@ -164,7 +173,10 @@ set(OT_CPP
 
 # Add OpenTimer library
 add_library(OpenTimer ${OT_CPP})
-target_link_libraries(OpenTimer PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(OpenTimer PRIVATE
+  nlohmann_json::nlohmann_json
+  units::units
+)
 
 ###########################################################
 # Executables
@@ -177,6 +189,7 @@ list(APPEND OT_LINK_FLAGS OpenTimer)
 list(APPEND OT_LINK_FLAGS Threads::Threads)
 list(APPEND OT_LINK_FLAGS stdc++fs)
 list(APPEND OT_LINK_FLAGS nlohmann_json::nlohmann_json)
+list(APPEND OT_LINK_FLAGS units::units)
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15
