@@ -8,6 +8,15 @@ project(OpenTimer)
 # Turn on the verbose
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+###########################################################
+# Options
+###########################################################
+option(USE_SYSTEM_JSON "Use external JSON library" OFF)
+option(USE_SYSTEM_UNITS "Use external Units library" OFF)
+option(USE_SYSTEM_PARSER_SPEF "Use external Parser-SPEF library" OFF)
+option(USE_SYSTEM_TASKFLOW "Use external Taskflow library" OFF)
+
+
 # CXX target properties
 ## g++
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -95,41 +104,7 @@ if (NOT TCL_TCLSH)
 OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
-# Json
-option(USE_SYSTEM_JSON "Use external JSON library" OFF)
-if(USE_SYSTEM_JSON)
-    find_package(nlohmann_json 3.10.5 REQUIRED)
-else()
-    set(JSON_BuildTests OFF CACHE INTERNAL "")
-    add_subdirectory(third_party/nlohmann_json EXCLUDE_FROM_ALL)
-endif()
-
-# Units
-option(USE_SYSTEM_UNITS "Use external Units library" OFF)
-if(USE_SYSTEM_UNITS)
-    find_package(units 2.3.1 REQUIRED)
-else()
-    add_subdirectory(third_party/units EXCLUDE_FROM_ALL)
-    add_library(units::units ALIAS units)
-endif()
-
-# Parser-SPEF
-option(USE_SYSTEM_PARSER_SPEF "Use external Parser-SPEF library" OFF)
-if(USE_SYSTEM_PARSER_SPEF)
-    find_package(Parser-SPEF 3.9 REQUIRED)
-else()
-    add_subdirectory(third_party/Parser-SPEF EXCLUDE_FROM_ALL)
-    add_library(Parser-SPEF::Parser-SPEF ALIAS Parser-SPEF)
-endif()
-
-# Taskflow
-option(USE_SYSTEM_TASKFLOW "Use external Taskflow library" OFF)
-if(USE_SYSTEM_TASKFLOW)
-    find_package(Cpp-Taskflow 2.2.0 REQUIRED)
-else()
-    add_subdirectory(third_party/taskflow EXCLUDE_FROM_ALL)
-    add_library(Cpp-Taskflow::Cpp-Taskflow ALIAS Cpp-Taskflow)
-endif()
+add_subdirectory(third_party)
 
 # CTest
 include(CTest)
