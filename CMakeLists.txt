@@ -8,6 +8,15 @@ project(OpenTimer)
 # Turn on the verbose
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
+###########################################################
+# Options
+###########################################################
+option(USE_SYSTEM_JSON "Use external JSON library" OFF)
+option(USE_SYSTEM_UNITS "Use external Units library" OFF)
+option(USE_SYSTEM_PARSER_SPEF "Use external Parser-SPEF library" OFF)
+option(USE_SYSTEM_TASKFLOW "Use external Taskflow library" OFF)
+
+
 # CXX target properties
 ## g++
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -18,7 +27,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
     message(FATAL_ERROR "\nOpenTimer requires clang++ at least v6.0")
-  endif() 
+  endif()
 else()
   message(FATAL_ERROR "\n\
 OpenTimer currently supports the following compilers:\n\
@@ -95,6 +104,8 @@ if (NOT TCL_TCLSH)
 OpenTimer requires tclsh to build. Visit: https://www.tcl.tk/software/tcltk/")
 endif(NOT TCL_TCLSH)
 
+add_subdirectory(third_party)
+
 # CTest
 include(CTest)
 
@@ -155,7 +166,12 @@ set(OT_CPP
 
 # Add OpenTimer library
 add_library(OpenTimer ${OT_CPP})
-
+target_link_libraries(OpenTimer PRIVATE
+  nlohmann_json::nlohmann_json
+  units::units
+  Parser-SPEF::Parser-SPEF
+  Cpp-Taskflow::Cpp-Taskflow
+)
 
 ###########################################################
 # Executables
@@ -167,6 +183,10 @@ list(APPEND OT_LINK_FLAGS "")
 list(APPEND OT_LINK_FLAGS OpenTimer)
 list(APPEND OT_LINK_FLAGS Threads::Threads)
 list(APPEND OT_LINK_FLAGS stdc++fs)
+list(APPEND OT_LINK_FLAGS nlohmann_json::nlohmann_json)
+list(APPEND OT_LINK_FLAGS units::units)
+list(APPEND OT_LINK_FLAGS Parser-SPEF::Parser-SPEF)
+list(APPEND OT_LINK_FLAGS Cpp-Taskflow::Cpp-Taskflow)
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15
@@ -199,28 +219,28 @@ message(STATUS "OpenTimer shell: ${OT_SHELL}")
 
 # simple
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/simple)
-add_executable(simple example/simple/simple.cpp)
-target_link_libraries(simple ${OT_LINK_FLAGS})
+add_executable(ot-simple example/simple/simple.cpp)
+target_link_libraries(ot-simple ${OT_LINK_FLAGS})
 
 # incremental
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/incremental)
-add_executable(incremental example/incremental/incremental.cpp)
-target_link_libraries(incremental ${OT_LINK_FLAGS})
+add_executable(ot-incremental example/incremental/incremental.cpp)
+target_link_libraries(ot-incremental ${OT_LINK_FLAGS})
 
 # unit
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/unit)
-add_executable(unit example/unit/unit.cpp)
-target_link_libraries(unit ${OT_LINK_FLAGS})
+add_executable(ot-unit example/unit/unit.cpp)
+target_link_libraries(ot-unit ${OT_LINK_FLAGS})
 
 # optimizer
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/optimizer)
-add_executable(optimizer example/optimizer/optimizer.cpp)
-target_link_libraries(optimizer ${OT_LINK_FLAGS})
+add_executable(ot-optimizer example/optimizer/optimizer.cpp)
+target_link_libraries(ot-optimizer ${OT_LINK_FLAGS})
 
 # sizer
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/sizer)
-add_executable(sizer example/sizer/sizer.cpp)
-target_link_libraries(sizer ${OT_LINK_FLAGS})
+add_executable(ot-sizer example/sizer/sizer.cpp)
+target_link_libraries(ot-sizer ${OT_LINK_FLAGS})
 
 ##aes_cipher
 #set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/example/aes_cipher)
@@ -251,15 +271,15 @@ install(TARGETS ot-shell DESTINATION bin)
 # Test
 ###########################################################
 
-# Test 
+# Test
 enable_testing()
 
 # Unittest
 message(STATUS "Building unit tests ...")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/unittest)
 
-add_executable(utility unittest/utility.cpp)
-target_link_libraries(utility ${OT_LINK_FLAGS})
+add_executable(ot-ut-utility unittest/utility.cpp)
+target_link_libraries(ot-ut-utility ${OT_LINK_FLAGS})
 
 add_executable(path unittest/path.cpp)
 target_link_libraries(path ${OT_LINK_FLAGS})
