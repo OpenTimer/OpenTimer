@@ -19,6 +19,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "6.0")
     message(FATAL_ERROR "\nOpenTimer requires clang++ at least v6.0")
   endif() 
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
 else()
   message(FATAL_ERROR "\n\
 OpenTimer currently supports the following compilers:\n\
@@ -166,7 +167,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 list(APPEND OT_LINK_FLAGS "")
 list(APPEND OT_LINK_FLAGS OpenTimer)
 list(APPEND OT_LINK_FLAGS Threads::Threads)
-list(APPEND OT_LINK_FLAGS stdc++fs)
+if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "10.0")
+  list(APPEND OT_LINK_FLAGS stdc++fs)
+endif()
 message(STATUS "OT_LINK_FLAGS: ${OT_LINK_FLAGS}")
 
 # tau15

@@ -49,7 +49,11 @@
 // https://gcc.gnu.org/viewcvs/gcc?view=revision&revision=258854
 // to get rid of this.
 #if defined(__clang__)
+#if __clang_major__ > 12
+  #include <variant>
+#else
   #include <ot/patch/clang_variant.hpp>
+#endif
 #else
   #include <variant>
 #endif
