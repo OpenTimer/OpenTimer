@@ -23,7 +23,8 @@ inline const std::unordered_map<std::string_view, LutVar> lut_vars {
   {"input_net_transition",         LutVar::INPUT_NET_TRANSITION},
   {"constrained_pin_transition",   LutVar::CONSTRAINED_PIN_TRANSITION},
   {"related_pin_transition",       LutVar::RELATED_PIN_TRANSITION},
-  {"input_transition_timing",      LutVar::INPUT_TRANSITION_TIME}
+  {"input_transition_timing",      LutVar::INPUT_TRANSITION_TIME},
+  {"input_transition_time",        LutVar::INPUT_TRANSITION_TIME}
 };
 
 // Function: is_time_lut_var

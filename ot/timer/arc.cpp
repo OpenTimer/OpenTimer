@@ -76,6 +76,7 @@ void Arc::_remap_timing(Split el, const Timing& timing) {
 void Arc::_reset_delay() {
   FOR_EACH_EL_RF_RF(el, frf, trf) {
     _delay[el][frf][trf].reset();
+    _ipower[el][frf][trf].reset();
   }
 }
 
@@ -128,7 +129,12 @@ void Arc::_fprop_delay() {
       FOR_EACH_EL_RF_RF_IF(el, frf, trf, (tv[el] && _from._slew[el][frf])) {
         auto lc = (_to._net) ? _to._net->_load(el, trf) : 0.0f;
         auto si = *_from._slew[el][frf];
-        _delay[el][frf][trf] = tv[el]->delay(frf, trf, si, lc);
+        auto delay = tv[el]->delay(frf, trf, si, lc);
+        _delay[el][frf][trf] = delay;
+        auto ipower = tv[el]->internal_power.power(frf, trf, si, lc);
+        _ipower[el][frf][trf] = ipower;
+
+        //std::cout << " name:" << _from._name << " delay:" << *delay << " slew:" << si << " lc:" << lc << " ipower:" << *ipower << "\n";
       }
     }
   }, _handle);

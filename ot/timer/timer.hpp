@@ -85,6 +85,7 @@ class Timer {
 
     // Accessor
     void dump_graph(std::ostream&) const;
+    void dump_power(std::ostream&) const;
     void dump_taskflow(std::ostream&) const;
     void dump_cell(std::ostream&, const std::string&, Split) const;
     void dump_celllib(std::ostream&, Split) const;
@@ -252,6 +253,7 @@ class Timer {
     void _spur(Endpoint&, size_t, PathHeap&) const;
     void _spur(PfxtCache&, const PfxtNode&) const;
     void _dump_graph(std::ostream&) const;
+    void _dump_power(std::ostream&) const;
     void _dump_taskflow(std::ostream&) const;
     void _dump_cell(std::ostream&, const std::string&, Split) const;
     void _dump_celllib(std::ostream&, Split) const;

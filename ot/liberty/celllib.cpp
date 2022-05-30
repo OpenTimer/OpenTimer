@@ -342,6 +342,51 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   return lut;
 }
 
+// Function: _extract_internal_power
+InternalPower Celllib::_extract_internal_power(token_iterator& itr, const token_iterator end) {
+
+  InternalPower power;
+
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find group brace '{' in timing");
+  }
+
+  int stack = 1;
+
+  while(stack && ++itr != end) {
+
+    if (*itr == "rise_power") {
+      power.rise_power = _extract_lut(itr, end);
+    }
+    else if (*itr == "fall_power") {                  // Rise delay.
+      power.fall_power = _extract_lut(itr, end);
+    }
+    else if (*itr == "related_pin") {
+
+      if(++itr == end) {
+        OT_LOGF("syntax error in related_pin");
+      }
+
+      power.related_pin = *itr;
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find group brace '}' in internal_power");
+  }
+
+  return power;
+}
+
 // Function: _extract_timing
 Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
 
@@ -513,8 +558,39 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = *itr;
     }
+    else if(*itr == "internal_power") {
+      auto ipower = _extract_internal_power(itr, end);
+      bool found = false;
+      for(auto &t:cellpin.timings) {
+        if (t.related_pin != ipower.related_pin)
+          continue;
+
+        t.internal_power = ipower;
+        found = true;
+        break;
+      }
+      if (!found) {
+        Timing t;
+        t.related_pin    = ipower.related_pin;
+        t.internal_power = ipower;
+        cellpin.timings.emplace_back(t);
+      }
+    }
     else if(*itr == "timing") {
-      cellpin.timings.push_back(_extract_timing(itr, end));
+      auto ti = _extract_timing(itr, end);
+      bool found = false;
+      for(auto &t:cellpin.timings) {
+        if (t.related_pin != ti.related_pin)
+          continue;
+        auto ipower_copy = t.internal_power;
+        t = ti;
+        t.internal_power = ipower_copy;
+        found = true;
+        break;
+      }
+      if (!found) {
+        cellpin.timings.push_back(ti);
+      }
     }
     else if(*itr == "}") {
       stack--;
@@ -635,6 +711,10 @@ void Celllib::read(const std::filesystem::path& path) {
   while(stack && ++itr != end) {
     
     if(*itr == "lu_table_template") {
+      auto lut = _extract_lut_template(itr, end);
+      lut_templates[lut.name] = lut;
+    }
+    else if(*itr == "power_lut_template") {
       auto lut = _extract_lut_template(itr, end);
       lut_templates[lut.name] = lut;
     }
