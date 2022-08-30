@@ -45,37 +45,13 @@ void Timer::_dump_power(std::ostream& os) const {
   for(const auto& kvp : _pins) {
 
     const auto& pin = kvp.second;
-    float pin_total_cap=0.0;
-    FOR_EACH_EL_RF(el, rf) {
-      pin_total_cap += pin.cap(el, rf);
-    }
-    pin_total_cap /= 4; // EL_RF
-
-    float pin_total_ipower=0.0;
-    int   pin_total_num = 0;
-    for(const auto& arc : pin._fanout) {
-
-      FOR_EACH_EL_RF(el, rf) {
-        if (arc->_ipower[el][rf][rf] ) {
-          auto pw = *arc->_ipower[el][rf][rf];
-          // os << "  \"" << arc->_from._name << "\" -> \"" << arc->_to._name << " power:" << pw << "\n";
-          pin_total_ipower += pw;
-          pin_total_num++;
-        }
-      }
-    }
-
-    if (pin_total_num == 0 && total_cap <= 0.0)
-      continue;
+    auto [pin_total_cap, pin_total_ipower] = pin.power();
 
     os << std::setw(10) << pin_total_cap << "  ";
+    os << std::setw(10) << pin_total_ipower<< "  ";
 
-    if (pin_total_num) {
-      os << std::setw(10) << pin_total_ipower/pin_total_num << "  ";
-      total_ipower += pin_total_ipower/pin_total_num;
-    }else{
-      os << std::setw(10) << 0 << "  ";
-    }
+    total_ipower += pin_total_ipower;
+
     os << std::setw(plen) << pin._name << '\n';
 
     total_cap    += pin_total_cap;
