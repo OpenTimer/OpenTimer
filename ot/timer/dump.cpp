@@ -109,7 +109,15 @@ void Timer::_dump_timer(std::ostream& os) const {
     os << "Power unit       : "  << *_power_unit << '\n';
   }
 
+  {
+    auto v = cell_voltage();
+    if (v) {
+      os << "Voltage          : "  << *v << '\n';
+    }
+  }
+
   size_t num_cells = 0;
+
 
   FOR_EACH_EL_IF(el, _celllib[el]) {
     num_cells = std::max(num_cells, _celllib[el]->cells.size());

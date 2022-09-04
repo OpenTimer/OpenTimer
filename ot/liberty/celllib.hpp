@@ -44,6 +44,8 @@ struct Celllib {
   std::optional<ampere_t> current_unit;
   std::optional<volt_t> voltage_unit;
 
+  std::optional<float> voltage;
+
   std::optional<float> default_cell_leakage_power;
   std::optional<float> default_inout_pin_cap;
   std::optional<float> default_input_pin_cap;
@@ -71,6 +73,7 @@ struct Celllib {
 
   private:
 
+    std::optional<float> _extract_operating_conditions(token_iterator& itr, const token_iterator end);
     LutTemplate   _extract_lut_template  (token_iterator&, const token_iterator);
     Lut           _extract_lut           (token_iterator&, const token_iterator);
     Cell          _extract_cell          (token_iterator&, const token_iterator);

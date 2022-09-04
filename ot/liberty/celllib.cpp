@@ -173,6 +173,56 @@ Cell* Celllib::cell(const std::string& name) {
   }
 }
 
+// Function: _extract_operating_conditions
+std::optional<float> Celllib::_extract_operating_conditions(token_iterator& itr, const token_iterator end) {
+
+  std::optional<float> voltage;
+  std::string operating_condition_name;
+
+  if(itr=on_next_parentheses(
+    itr, 
+    end, 
+    [&] (auto& name) mutable { operating_condition_name = name; }); itr == end) {
+    OT_LOGF("can't find lut template name");
+  }
+  
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find lut template group brace '{'");
+  }
+
+  //std::cout << lt.name << std::endl;
+
+  int stack = 1;
+  
+  while(stack && ++itr != end) {
+    
+    // variable 1
+    if(*itr == "voltage") {                       // Read the variable.
+
+      if(++itr == end) {
+        OT_LOGF("volate error in operating_conditions template ", operating_condition_name);
+      }
+
+      voltage = std::strtof(std::string(*itr).c_str(), nullptr);
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+  
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find operating_conditions template group brace '}'");
+  }
+
+  return voltage;
+}
+
 // Function: _extract_lut_template
 LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iterator end) {
 
@@ -755,8 +805,11 @@ void Celllib::read(const std::filesystem::path& path) {
       OT_LOGF_IF(++itr == end, "syntax error in default_max_transition");
       default_max_transition = std::strtof(itr->data(), nullptr);
     }
+    else if(*itr == "operating_conditions") {
+      OT_LOGF_IF(++itr == end, "syntax error in operating_conditions");
+      voltage = _extract_operating_conditions(itr, end);
     // TODO: Unit field.
-    else if(*itr == "time_unit") {
+    }else if(*itr == "time_unit") {
       OT_LOGF_IF(++itr == end, "time_unit syntax error");
       time_unit = make_time_unit(*itr);
     }
