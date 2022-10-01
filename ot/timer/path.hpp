@@ -16,8 +16,9 @@ struct Point {
   const Pin& pin;     // pin reference
   Tran  transition;   // rise/fall
   float at;           // arrival
+  float ipower;       // internal power
 
-  Point(const Pin&, Tran, float);
+  Point(const Pin&, Tran, float, float);
 };
 
 // ------------------------------------------------------------------------------------------------

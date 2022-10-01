@@ -3,10 +3,11 @@
 namespace ot {
 
 // Constructor
-Point::Point(const Pin& p, Tran t, float v) :
+Point::Point(const Pin& p, Tran t, float v, float pw) :
   pin        {p},
   transition {t},
-  at         {v} {
+  at         {v},
+  ipower     {pw} {
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -143,6 +144,9 @@ void Path::dump(std::ostream& os) const {
     
     // arrival time
     os << std::setw(w3) << p.at;
+
+    // internal power 
+    os << std::setw(w3) << p.ipower;
 
     // transition
     os << std::setw(w4) << to_string(p.transition);
@@ -453,7 +457,7 @@ void Timer::_recover_prefix(Path& path, const SfxtCache& sfxt, size_t idx) const
 
   assert(v->_at[el][rf]);
   
-  path.emplace_front(*v, rf, *v->_at[el][rf]);
+  path.emplace_front(*v, rf, *v->_at[el][rf], 0.0);
 
   if(auto arc = v->_at[el][rf]->pi_arc; arc) {
     _recover_prefix(path, sfxt, _encode_pin(arc->_from, v->_at[el][rf]->pi_rf));
@@ -473,7 +477,7 @@ void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
 
   // data path source
   assert(upin->_at[sfxt._el][urf]);
-  path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf]);
+  path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf], 0.0);
   
   // recursive
   while(u != sfxt._T) {
@@ -483,7 +487,8 @@ void Timer::_recover_datapath(Path& path, const SfxtCache& sfxt) const {
     std::tie(upin, urf) = _decode_pin(u);
     assert(path.back().transition == frf && urf == trf);
     auto at = path.back().at + *arc->_delay[sfxt._el][frf][trf];
-    path.emplace_back(*upin, urf, at);
+    auto ip = *arc->_ipower[sfxt._el][frf][trf];
+    path.emplace_back(*upin, urf, at, ip);
   }
 }
 
@@ -505,13 +510,14 @@ void Timer::_recover_datapath(
   // data path source
   if(node->from == sfxt._S) {
     assert(upin->_at[sfxt._el][urf]);
-    path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf]);
+    path.emplace_back(*upin, urf, *upin->_at[sfxt._el][urf], 0.0);
   }
   // internal deviation
   else {
     assert(!path.empty());
     auto at = path.back().at + *node->arc->_delay[sfxt._el][path.back().transition][urf];
-    path.emplace_back(*upin, urf, at);
+    auto ip = *node->arc->_ipower[sfxt._el][path.back().transition][urf];
+    path.emplace_back(*upin, urf, at, ip);
   }
 
   while(u != v) {
@@ -521,7 +527,8 @@ void Timer::_recover_datapath(
     std::tie(upin, urf) = _decode_pin(u);
     assert(path.back().transition == frf && urf == trf);
     auto at = path.back().at + *arc->_delay[sfxt._el][frf][trf]; 
-    path.emplace_back(*upin, urf, at);
+    auto ip = *arc->_ipower[sfxt._el][frf][trf];
+    path.emplace_back(*upin, urf, at, ip);
   }
 
 }

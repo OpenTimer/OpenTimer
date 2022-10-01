@@ -374,6 +374,8 @@ void Timing::scale_time(float s) {
   if(fall_constraint) {
     fall_constraint->scale_time(s);
   }
+
+  internal_power.scale_time(s);
 }
 
 // Procedure: scale_capacitance
@@ -402,6 +404,8 @@ void Timing::scale_capacitance(float s) {
   if(fall_constraint) {
     fall_constraint->scale_capacitance(s);
   }
+
+  internal_power.scale_capacitance(s);
 }
 
 // Function: delay
@@ -694,6 +698,10 @@ std::ostream& operator << (std::ostream& os, const Timing& timing) {
   
   // Write the ending group symbol.
   os << "    }\n";
+
+  if (!timing.internal_power.related_pin.empty()) {
+    os << timing.internal_power;
+  }
 
   return os;
 }

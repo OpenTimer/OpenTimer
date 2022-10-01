@@ -27,7 +27,9 @@ int main(int argc, char *argv[]) {
   }
 
   // dump the timing graph to dot format for debugging
-  timer.dump_graph(std::cout);
+  //timer.dump_graph(std::cout);
+  timer.dump_at(std::cout);
+  timer.dump_power(std::cout);
 
   return 0;
 }

@@ -173,6 +173,56 @@ Cell* Celllib::cell(const std::string& name) {
   }
 }
 
+// Function: _extract_operating_conditions
+std::optional<float> Celllib::_extract_operating_conditions(token_iterator& itr, const token_iterator end) {
+
+  std::optional<float> voltage;
+  std::string operating_condition_name;
+
+  if(itr=on_next_parentheses(
+    itr, 
+    end, 
+    [&] (auto& name) mutable { operating_condition_name = name; }); itr == end) {
+    OT_LOGF("can't find lut template name");
+  }
+  
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find lut template group brace '{'");
+  }
+
+  //std::cout << lt.name << std::endl;
+
+  int stack = 1;
+  
+  while(stack && ++itr != end) {
+    
+    // variable 1
+    if(*itr == "voltage") {                       // Read the variable.
+
+      if(++itr == end) {
+        OT_LOGF("volate error in operating_conditions template ", operating_condition_name);
+      }
+
+      voltage = std::strtof(std::string(*itr).c_str(), nullptr);
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+  
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find operating_conditions template group brace '}'");
+  }
+
+  return voltage;
+}
+
 // Function: _extract_lut_template
 LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iterator end) {
 
@@ -340,6 +390,51 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   }
 
   return lut;
+}
+
+// Function: _extract_internal_power
+InternalPower Celllib::_extract_internal_power(token_iterator& itr, const token_iterator end) {
+
+  InternalPower power;
+
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find group brace '{' in timing");
+  }
+
+  int stack = 1;
+
+  while(stack && ++itr != end) {
+
+    if (*itr == "rise_power") {
+      power.rise_power = _extract_lut(itr, end);
+    }
+    else if (*itr == "fall_power") {                  // Rise delay.
+      power.fall_power = _extract_lut(itr, end);
+    }
+    else if (*itr == "related_pin") {
+
+      if(++itr == end) {
+        OT_LOGF("syntax error in related_pin");
+      }
+
+      power.related_pin = *itr;
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find group brace '}' in internal_power");
+  }
+
+  return power;
 }
 
 // Function: _extract_timing
@@ -513,8 +608,39 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = *itr;
     }
+    else if(*itr == "internal_power") {
+      auto ipower = _extract_internal_power(itr, end);
+      bool found = false;
+      for(auto &t:cellpin.timings) {
+        if (t.related_pin != ipower.related_pin)
+          continue;
+
+        t.internal_power = ipower;
+        found = true;
+        break;
+      }
+      if (!found) {
+        Timing t;
+        t.related_pin    = ipower.related_pin;
+        t.internal_power = ipower;
+        cellpin.timings.emplace_back(t);
+      }
+    }
     else if(*itr == "timing") {
-      cellpin.timings.push_back(_extract_timing(itr, end));
+      auto ti = _extract_timing(itr, end);
+      bool found = false;
+      for(auto &t:cellpin.timings) {
+        if (t.related_pin != ti.related_pin)
+          continue;
+        auto ipower_copy = t.internal_power;
+        t = ti;
+        t.internal_power = ipower_copy;
+        found = true;
+        break;
+      }
+      if (!found) {
+        cellpin.timings.push_back(ti);
+      }
     }
     else if(*itr == "}") {
       stack--;
@@ -638,6 +764,10 @@ void Celllib::read(const std::filesystem::path& path) {
       auto lut = _extract_lut_template(itr, end);
       lut_templates[lut.name] = lut;
     }
+    else if(*itr == "power_lut_template") {
+      auto lut = _extract_lut_template(itr, end);
+      lut_templates[lut.name] = lut;
+    }
     else if(*itr == "delay_model") {
       OT_LOGF_IF(++itr == end, "syntax error in delay_model");
       if(auto ditr = delay_models.find(*itr); ditr != delay_models.end()) {
@@ -675,8 +805,11 @@ void Celllib::read(const std::filesystem::path& path) {
       OT_LOGF_IF(++itr == end, "syntax error in default_max_transition");
       default_max_transition = std::strtof(itr->data(), nullptr);
     }
+    else if(*itr == "operating_conditions") {
+      OT_LOGF_IF(++itr == end, "syntax error in operating_conditions");
+      voltage = _extract_operating_conditions(itr, end);
     // TODO: Unit field.
-    else if(*itr == "time_unit") {
+    }else if(*itr == "time_unit") {
       OT_LOGF_IF(++itr == end, "time_unit syntax error");
       time_unit = make_time_unit(*itr);
     }

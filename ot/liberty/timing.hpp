@@ -2,6 +2,7 @@
 #define OT_LIBERTY_TIMING_HPP_
 
 #include <ot/liberty/lut.hpp>
+#include <ot/liberty/power.hpp>
 
 namespace ot {
 
@@ -104,6 +105,8 @@ struct Timing {
   std::optional<Lut> fall_transition;       
   std::optional<Lut> rise_constraint;       
   std::optional<Lut> fall_constraint;       
+
+  InternalPower internal_power;
 
   bool is_combinational() const;
   bool is_constraint() const; 

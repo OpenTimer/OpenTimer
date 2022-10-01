@@ -8,18 +8,58 @@ void Timer::dump_graph(std::ostream& os) const {
   _dump_graph(os);
 }
 
+// Function: dump_power
+void Timer::dump_power(std::ostream& os) const {
+  std::shared_lock lock(_mutex);
+  _dump_power(os);
+}
+
 // Function: _dump_graph
 void Timer::_dump_graph(std::ostream& os) const {
-  
+
   os << "digraph TimingGraph {\n";
   for(const auto& pin : _pins) {
     os << "  \"" << pin.second._name << "\";\n";
   }
 
   for(const auto& arc : _arcs) {
-    os << "  \"" << arc._from._name << "\" -> \"" << arc._to._name << "\";\n";  
+    os << "  \"" << arc._from._name << "\" -> \"" << arc._to._name << "\";\n";
   }
   os << "}\n";
+}
+
+void Timer::_dump_power(std::ostream& os) const {
+
+  float total_ipower = 0.0;
+  float total_cap    = 0.0;
+
+  auto plen = _max_pin_name_size();
+
+  os << std::setfill('-') << std::setw(49 + plen) << '\n'
+    << std::setfill(' ') << std::setw(10) << "switch" << "  "
+    << std::setfill(' ') << std::setw(10) << "internal" << "  "
+    << std::setw(2 + plen)  << "Pin"   << '\n';
+
+  os << std::setfill(' ') << std::fixed << std::setprecision(3);
+
+  for(const auto& kvp : _pins) {
+
+    const auto& pin = kvp.second;
+    auto [pin_total_cap, pin_total_ipower] = pin.power();
+
+    os << std::setw(10) << pin_total_cap << "  ";
+    os << std::setw(10) << pin_total_ipower<< "  ";
+
+    total_ipower += pin_total_ipower;
+
+    os << std::setw(plen) << pin._name << '\n';
+
+    total_cap    += pin_total_cap;
+  }
+
+  os << std::setw(10) << total_cap << "  ";
+  os << std::setw(10) << total_ipower << "  ";
+  os << std::setw(plen) << "total" << '\n';
 }
 
 // Function: dump_taskflow
@@ -43,12 +83,12 @@ void Timer::dump_timer(std::ostream& os) const {
 void Timer::_dump_timer(std::ostream& os) const {
 
   os << "OpenTimer " << OT_VERSION << '\n';
-  
+
   // units
   if(_time_unit) {
     os << "Time unit        : " << *_time_unit << '\n';
   }
-  
+
   if(_capacitance_unit) {
     os << "Capacitance unit : " << *_capacitance_unit << '\n';
   }
@@ -69,7 +109,15 @@ void Timer::_dump_timer(std::ostream& os) const {
     os << "Power unit       : "  << *_power_unit << '\n';
   }
 
+  {
+    auto v = cell_voltage();
+    if (v) {
+      os << "Voltage          : "  << *v << '\n';
+    }
+  }
+
   size_t num_cells = 0;
+
 
   FOR_EACH_EL_IF(el, _celllib[el]) {
     num_cells = std::max(num_cells, _celllib[el]->cells.size());
@@ -95,7 +143,7 @@ void Timer::dump_net_load(std::ostream& os) const {
 
 // Function: _dump_net_load
 void Timer::_dump_net_load(std::ostream& os) const {
-  
+
   os << "Net Load [nets:" << _nets.size() << "]\n";
 
   if(!_nets.empty())  {
@@ -104,10 +152,10 @@ void Timer::_dump_net_load(std::ostream& os) const {
     auto nlen = _max_net_name_size();
 
     os << std::setfill('-') << std::setw(49 + nlen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + nlen)  << "Net"   << '\n'
         << std::setfill('-') << std::setw(49 + nlen) << '\n';
 
@@ -115,7 +163,7 @@ void Timer::_dump_net_load(std::ostream& os) const {
     for(const auto& kvp : _nets) {
 
       const auto& net = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10) << net._load(el, rf) << "  ";
       }
@@ -134,8 +182,8 @@ void Timer::dump_pin_cap(std::ostream& os) const {
 
 // Function: _dump_pin_cap
 void Timer::_dump_pin_cap(std::ostream& os) const {
-  
-  os << "Pin Capacitance [pins:" << _pins.size() 
+
+  os << "Pin Capacitance [pins:" << _pins.size()
       << "]\n";
 
   if(!_pins.empty())  {
@@ -144,10 +192,10 @@ void Timer::_dump_pin_cap(std::ostream& os) const {
     auto plen = _max_pin_name_size();
 
     os << std::setfill('-') << std::setw(49 + plen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
@@ -155,7 +203,7 @@ void Timer::_dump_pin_cap(std::ostream& os) const {
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10) << pin.cap(el, rf) << "  ";
       }
@@ -174,7 +222,7 @@ void Timer::dump_slew(std::ostream& os) const {
 
 // Function: _dump_slew
 void Timer::_dump_slew(std::ostream& os) const {
-  
+
   os << "Slew [pins:" << _pins.size() << "]\n";
 
   if(!_pins.empty())  {
@@ -183,10 +231,10 @@ void Timer::_dump_slew(std::ostream& os) const {
     auto plen = _max_pin_name_size();
 
     os << std::setfill('-') << std::setw(49 + plen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
@@ -194,7 +242,7 @@ void Timer::_dump_slew(std::ostream& os) const {
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10);
         if(auto slew = pin.slew(el, rf); slew) os << *slew;
@@ -225,10 +273,10 @@ void Timer::_dump_slack(std::ostream& os) const {
     auto plen = _max_pin_name_size();
 
     os << std::setfill('-') << std::setw(49 + plen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
@@ -236,7 +284,7 @@ void Timer::_dump_slack(std::ostream& os) const {
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10);
         if(auto slack = pin.slack(el, rf); slack) os << *slack;
@@ -267,10 +315,10 @@ void Timer::_dump_at(std::ostream& os) const {
     auto plen = _max_pin_name_size();
 
     os << std::setfill('-') << std::setw(49 + plen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
@@ -278,7 +326,7 @@ void Timer::_dump_at(std::ostream& os) const {
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10);
         if(auto at = pin.at(el, rf); at) os << *at;
@@ -287,6 +335,20 @@ void Timer::_dump_at(std::ostream& os) const {
       }
 
       os << std::setw(plen) << pin._name << '\n';
+
+#if 0
+      auto sr = pin.slew(MAX, RISE);
+      auto sf = pin.slew(MAX, FALL);
+      float slew_max = 0;
+      if (sr)
+        slew_max = *sr;
+      if (sf && *sf>slew_max) {
+        slew_max = *sf;
+      }
+      if (slew_max>0) {
+        os << std::setw(plen) << slew_max << " " << pin._name << '\n';
+      }
+#endif
     }
     os << std::setfill('-') << std::setw(49 + plen) << '\n';
   }
@@ -300,8 +362,8 @@ void Timer::dump_rat(std::ostream& os) const {
 
 // Function: _dump_rat
 void Timer::_dump_rat(std::ostream& os) const {
-  
-  os << "Required arrival time [pins:" << _pins.size() 
+
+  os << "Required arrival time [pins:" << _pins.size()
       << "]\n";
 
   if(!_pins.empty())  {
@@ -310,10 +372,10 @@ void Timer::_dump_rat(std::ostream& os) const {
     auto plen = _max_pin_name_size();
 
     os << std::setfill('-') << std::setw(49 + plen) << '\n'
-        << std::setfill(' ') << std::setw(10) << "E/R"  
+        << std::setfill(' ') << std::setw(10) << "E/R"
                              << std::setw(12) << "E/F"
                              << std::setw(12) << "L/R"
-                             << std::setw(12) << "L/F" 
+                             << std::setw(12) << "L/F"
                              << std::setw(2 + plen)  << "Pin"   << '\n'
         << std::setfill('-') << std::setw(49 + plen) << '\n';
 
@@ -321,7 +383,7 @@ void Timer::_dump_rat(std::ostream& os) const {
     for(const auto& kvp : _pins) {
 
       const auto& pin = kvp.second;
-      
+
       FOR_EACH_EL_RF(el, rf) {
         os << std::setw(10);
         if(auto rat = pin.rat(el, rf); rat) os << *rat;
@@ -380,7 +442,7 @@ void Timer::dump_verilog(std::ostream& os, const std::string& name) const {
 
 // Function: _dump_verilog
 void Timer::_dump_verilog(std::ostream& os, const std::string& name) const {
-  
+
   size_t idx = 0;
   size_t num_ports = _pis.size() + _pos.size();
 
@@ -450,21 +512,21 @@ void Timer::dump_rctree(std::ostream& os) const {
 
 // Procedure: _dump_rctree
 void Timer::_dump_rctree(std::ostream& os) const {
-  
-  os << "Total Nets: " << _nets.size() << '\n'; 
-  
+
+  os << "Total Nets: " << _nets.size() << '\n';
+
   for(const auto& [net_name, net] : _nets) {
 
     os << net_name << ' ';
-    
+
     auto rct = std::get_if<Rct>(&net._rct);
 
     if(rct == nullptr) {
       os << "0 0 nil\n";
       continue;
     }
-  
-    os << rct->_nodes.size() << ' ' 
+
+    os << rct->_nodes.size() << ' '
        << rct->_edges.size() << ' '
        << rct->_root->_name  << '\n';
 
@@ -523,7 +585,7 @@ void Timer::dump_spef(std::ostream& os) const {
 
 // Function: _dump_spef
 void Timer::_dump_spef(std::ostream& os) const {
-  
+
   // Header
   //  *SPEF "IEEE 1481-1998"
   //  *DESIGN "c17"
@@ -581,7 +643,7 @@ void Timer::_dump_spef(std::ostream& os) const {
     }
     else {
       os << "\n*D_NET " << name << ' ' << rct->total_ncap() << '\n';
-      
+
       // *CONN section
       os << "*CONN\n";
       for(const auto& pin : net._pins) {
@@ -606,7 +668,7 @@ void Timer::_dump_spef(std::ostream& os) const {
       // *CAP section
       os << "*CAP\n";
       for(const auto& node : rct->_nodes) {
-        os << ++idx << ' ' << node.first << ' ' << node.second._ncap[MIN][RISE] << '\n'; 
+        os << ++idx << ' ' << node.first << ' ' << node.second._ncap[MIN][RISE] << '\n';
       }
 
       // *RES section
@@ -615,7 +677,7 @@ void Timer::_dump_spef(std::ostream& os) const {
       for(const auto& edge : rct->_edges) {
         ++idx;
         if(idx & 1) {
-          os << idx << ' ' 
+          os << idx << ' '
              << edge._from._name << ' '
              << edge._to._name << ' '
              << edge._res << '\n';
@@ -627,7 +689,7 @@ void Timer::_dump_spef(std::ostream& os) const {
   }
 
 }
-    
+
 };  // end of namespace ot. -----------------------------------------------------------------------
 
 

@@ -247,6 +247,33 @@ std::optional<float> Pin::slew(Split el, Tran rf) const {
   return _slew[el][rf];
 }
 
+std::pair<float,float> Pin::power() const {
+
+  float pin_total_cap=0.0;
+  FOR_EACH_EL_RF(el, rf) {
+    pin_total_cap += cap(el, rf);
+  }
+  pin_total_cap /= 4; // EL_RF
+
+  float pin_total_ipower=0.0;
+  int   pin_total_num = 0;
+  for(const auto& arc : _fanout) {
+
+    FOR_EACH_EL_RF(el, rf) {
+      if (arc->_ipower[el][rf][rf] ) {
+        auto pw = *arc->_ipower[el][rf][rf];
+        // os << "  \"" << arc->_from._name << "\" -> \"" << arc->_to._name << " power:" << pw << "\n";
+        pin_total_ipower += pw;
+        pin_total_num++;
+      }
+    }
+  }
+  if (pin_total_num)
+    pin_total_ipower /= pin_total_num;
+
+  return std::pair(pin_total_cap, pin_total_ipower);
+}
+
 // Function: slack
 std::optional<float> Pin::slack(Split el, Tran rf) const {
   if(_at[el][rf] && _rat[el][rf]) {

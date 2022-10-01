@@ -85,6 +85,7 @@ class Timer {
 
     // Accessor
     void dump_graph(std::ostream&) const;
+    void dump_power(std::ostream&) const;
     void dump_taskflow(std::ostream&) const;
     void dump_cell(std::ostream&, const std::string&, Split) const;
     void dump_celllib(std::ostream&, Split) const;
@@ -113,6 +114,7 @@ class Timer {
     inline auto current_unit() const;
     inline auto voltage_unit() const;
     inline auto capacitance_unit() const;
+    inline std::optional<float> cell_voltage() const;
     
     inline const auto& primary_inputs() const;
     inline const auto& primary_outputs() const;
@@ -252,6 +254,7 @@ class Timer {
     void _spur(Endpoint&, size_t, PathHeap&) const;
     void _spur(PfxtCache&, const PfxtNode&) const;
     void _dump_graph(std::ostream&) const;
+    void _dump_power(std::ostream&) const;
     void _dump_taskflow(std::ostream&) const;
     void _dump_cell(std::ostream&, const std::string&, Split) const;
     void _dump_celllib(std::ostream&, Split) const;
@@ -378,6 +381,23 @@ inline auto Timer::current_unit() const {
 // Function: voltage_unit
 inline auto Timer::voltage_unit() const {
   return _voltage_unit;
+}
+
+inline std::optional<float> Timer::cell_voltage() const {
+  int n_volt=0;
+  float voltage=0;
+
+  FOR_EACH_EL_IF(el, _celllib[el]) {
+    if (_celllib[el]->voltage) {
+      n_volt++;
+      voltage += _celllib[el]->voltage.value();
+    }
+  }
+
+  if (n_volt) {
+    return {voltage/n_volt};
+  }
+  return std::nullopt;
 }
 
 // Function: capacitance_unit
