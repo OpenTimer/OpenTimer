@@ -121,6 +121,7 @@ class Timer {
     inline const auto& pins() const;
     inline const auto& nets() const;
     inline const auto& gates() const;
+    inline const auto& celllib(Split el) const;
     inline const auto& clocks() const;
     inline const auto& tests() const;
     inline const auto& arcs() const;
@@ -433,6 +434,12 @@ inline const auto& Timer::nets() const {
 // Expose the gate data structure to users
 inline const auto& Timer::gates() const {
   return _gates;
+}
+
+// Function: celllib
+// Expose the celllib data structure to users
+inline const auto& Timer::celllib(Split el) const {
+  return _celllib[el];
 }
 
 // Function: clocks
