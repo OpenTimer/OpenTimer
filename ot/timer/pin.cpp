@@ -249,29 +249,47 @@ std::optional<float> Pin::slew(Split el, Tran rf) const {
 
 std::pair<float,float> Pin::power() const {
 
-  float pin_total_cap=0.0;
-  FOR_EACH_EL_RF(el, rf) {
-    pin_total_cap += cap(el, rf);
-  }
-  pin_total_cap /= 4; // EL_RF
+  float net_total_cap=0.0;
+  float ipwr_total =0;
+  float n_computations = 0;
 
-  float pin_total_ipower=0.0;
-  int   pin_total_num = 0;
-  for(const auto& arc : _fanout) {
+  bool req_related = is_output();
 
     FOR_EACH_EL_RF(el, rf) {
-      if (arc->_ipower[el][rf][rf] ) {
-        auto pw = *arc->_ipower[el][rf][rf];
-        // os << "  \"" << arc->_from._name << "\" -> \"" << arc->_to._name << " power:" << pw << "\n";
-        pin_total_ipower += pw;
-        pin_total_num++;
+    const auto *cp = cellpin(el);
+    if (!cp)
+      continue;
+
+
+    auto s = slew(el, rf);
+    auto sc = s?*s:0.0f;
+    auto lc = net() ? net()->load(el, rf) : 0.0f;
+    net_total_cap += lc;
+
+    for(const auto &p:cp->internal_power) {
+      auto ip = p.power(rf, sc, lc);
+      if (!ip) {
+        continue;
       }
+      ipwr_total += *ip;
+      n_computations += 1;
     }
   }
-  if (pin_total_num)
-    pin_total_ipower /= pin_total_num;
 
-  return std::pair(pin_total_cap, pin_total_ipower);
+  //std::cout << "name:" << _name <<  ":" << name();
+  //std::cout << " ipwr_total:" << ipwr_total;
+  //std::cout << " net_cap   :" << net_total_cap;
+  //std::cout << "\n";
+
+  if (n_computations>1) {
+    ipwr_total    /= n_computations;
+    net_total_cap /= n_computations;
+  }
+
+  if (is_output())
+    return std::pair(net_total_cap, ipwr_total);
+  else
+    return std::pair(0, ipwr_total);
 }
 
 // Function: slack

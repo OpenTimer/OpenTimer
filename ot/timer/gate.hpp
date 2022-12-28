@@ -25,6 +25,8 @@ class Gate {
 
     const std::string& cell_name() const;
 
+    const std::vector<Pin*> &pins() const { return _pins; }
+
   private:
 
     std::string _name;
