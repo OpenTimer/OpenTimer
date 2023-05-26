@@ -1,37 +1,31 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_PEEK_CHAR_HPP
 #define TAO_PEGTL_INTERNAL_PEEK_CHAR_HPP
 
 #include <cstddef>
 
-#include "../config.hpp"
+#include "data_and_size.hpp"
 
-#include "input_pair.hpp"
-
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   struct peek_char
    {
-      namespace internal
+      using data_t = char;
+      using pair_t = data_and_size< char >;
+
+      template< typename ParseInput >
+      [[nodiscard]] static pair_t peek( ParseInput& in ) noexcept( noexcept( in.empty() ) )
       {
-         struct peek_char
-         {
-            using data_t = char;
-            using pair_t = input_pair< char >;
+         if( in.empty() ) {
+            return { 0, 0 };
+         }
+         return { in.peek_char(), 1 };
+      }
+   };
 
-            template< typename Input >
-            static pair_t peek( Input& in, const std::size_t o = 0 ) noexcept( noexcept( in.Input::peek_char( 0 ) ) )
-            {
-               return { in.peek_char( o ), 1 };
-            }
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace tao::pegtl::internal
 
 #endif

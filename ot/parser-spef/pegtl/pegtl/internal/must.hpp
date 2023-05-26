@@ -1,79 +1,68 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_MUST_HPP
 #define TAO_PEGTL_INTERNAL_MUST_HPP
 
-#include "../config.hpp"
+#if !defined( __cpp_exceptions )
+#error "Exception support required for tao/pegtl/internal/must.hpp"
+#else
 
-#include "raise.hpp"
-#include "rule_conjunction.hpp"
-#include "skip_control.hpp"
+#include "enable_control.hpp"
+#include "seq.hpp"
+#include "success.hpp"
 
 #include "../apply_mode.hpp"
 #include "../rewind_mode.hpp"
+#include "../type_list.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   // The general case applies must<> to each of the
+   // rules in the 'Rules' parameter pack individually.
+
+   template< typename... Rules >
+   struct must
+      : seq< must< Rules >... >
+   {};
+
+   template<>
+   struct must<>
+      : success
+   {};
+
+   // While in theory the implementation for a single rule could
+   // be simplified to must< Rule > = sor< Rule, raise< Rule > >, this
+   // would result in some unnecessary run-time overhead.
+
+   template< typename Rule >
+   struct must< Rule >
    {
-      namespace internal
+      using rule_t = must;
+      using subs_t = type_list< Rule >;
+
+      template< apply_mode A,
+                rewind_mode,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
-         // The general case applies must<> to each of the
-         // rules in the 'Rules' parameter pack individually.
+         if( !Control< Rule >::template match< A, rewind_mode::dontcare, Action, Control >( in, st... ) ) {
+            Control< Rule >::raise( static_cast< const ParseInput& >( in ), st... );
+         }
+         return true;
+      }
+   };
 
-         template< typename... Rules >
-         struct must
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::SEQ, Rules... >;
+   template< typename... Rules >
+   inline constexpr bool enable_control< must< Rules... > > = false;
 
-            template< apply_mode A,
-                      rewind_mode M,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               return rule_conjunction< must< Rules >... >::template match< A, M, Action, Control >( in, st... );
-            }
-         };
+}  // namespace tao::pegtl::internal
 
-         // While in theory the implementation for a single rule could
-         // be simplified to must< Rule > = sor< Rule, raise< Rule > >, this
-         // would result in some unnecessary run-time overhead.
-
-         template< typename Rule >
-         struct must< Rule >
-         {
-            using analyze_t = typename Rule::analyze_t;
-
-            template< apply_mode A,
-                      rewind_mode,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               if( !Control< Rule >::template match< A, rewind_mode::DONTCARE, Action, Control >( in, st... ) ) {
-                  raise< Rule >::template match< A, rewind_mode::DONTCARE, Action, Control >( in, st... );
-               }
-               return true;
-            }
-         };
-
-         template< typename... Rules >
-         struct skip_control< must< Rules... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
-
+#endif
 #endif

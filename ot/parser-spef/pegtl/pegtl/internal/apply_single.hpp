@@ -1,42 +1,33 @@
-// Copyright (c) 2017-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2017-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_APPLY_SINGLE_HPP
 #define TAO_PEGTL_INTERNAL_APPLY_SINGLE_HPP
 
-#include "../config.hpp"
-
 #include <type_traits>
 
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename Action >
+   struct apply_single
    {
-      namespace internal
+      template< typename ActionInput, typename... States >
+      [[nodiscard]] static auto match( const ActionInput& in, States&&... st ) noexcept( noexcept( Action::apply( in, st... ) ) )
+         -> std::enable_if_t< std::is_same_v< decltype( Action::apply( in, st... ) ), void >, bool >
       {
-         template< typename Action >
-         struct apply_single
-         {
-            template< typename Input, typename... States >
-            static auto match( const Input& i2, States&&... st )
-               -> typename std::enable_if< std::is_same< decltype( Action::apply( i2, st... ) ), void >::value, bool >::type
-            {
-               Action::apply( i2, st... );
-               return true;
-            }
+         Action::apply( in, st... );
+         return true;
+      }
 
-            template< typename Input, typename... States >
-            static auto match( const Input& i2, States&&... st )
-               -> typename std::enable_if< std::is_same< decltype( Action::apply( i2, st... ) ), bool >::value, bool >::type
-            {
-               return Action::apply( i2, st... );
-            }
-         };
+      template< typename ActionInput, typename... States >
+      [[nodiscard]] static auto match( const ActionInput& in, States&&... st ) noexcept( noexcept( Action::apply( in, st... ) ) )
+         -> std::enable_if_t< std::is_same_v< decltype( Action::apply( in, st... ) ), bool >, bool >
+      {
+         return Action::apply( in, st... );
+      }
+   };
 
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace tao::pegtl::internal
 
 #endif
