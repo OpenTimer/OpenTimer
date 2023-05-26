@@ -1,107 +1,88 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_ISTRING_HPP
 #define TAO_PEGTL_INTERNAL_ISTRING_HPP
 
 #include <type_traits>
 
-#include "../config.hpp"
-
 #include "bump_help.hpp"
+#include "enable_control.hpp"
+#include "one.hpp"
 #include "result_on_found.hpp"
-#include "skip_control.hpp"
-#include "trivial.hpp"
+#include "success.hpp"
 
-#include "../analysis/counted.hpp"
+#include "../type_list.hpp"
 
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< char C >
+   inline constexpr bool is_alpha = ( ( 'a' <= C ) && ( C <= 'z' ) ) || ( ( 'A' <= C ) && ( C <= 'Z' ) );
+
+   template< char C >
+   [[nodiscard]] constexpr bool ichar_equal( const char c ) noexcept
    {
-      namespace internal
+      if constexpr( is_alpha< C > ) {
+         return ( C | 0x20 ) == ( c | 0x20 );
+      }
+      else {
+         return c == C;
+      }
+   }
+
+   template< char... Cs >
+   [[nodiscard]] constexpr bool istring_equal( const char* r ) noexcept
+   {
+      return ( ichar_equal< Cs >( *r++ ) && ... );
+   }
+
+   template< char... Cs >
+   struct istring;
+
+   template<>
+   struct istring<>
+      : success
+   {};
+
+   // template< char C >
+   // struct istring< C >
+   //    : std::conditional_t< is_alpha< C >, one< result_on_found::success, peek_char, C | 0x20, C & ~0x20 >, one< result_on_found::success, peek_char, C > >
+   // {};
+
+   template< char... Cs >
+   struct istring
+   {
+      using rule_t = istring;
+      using subs_t = empty_list;
+
+      [[nodiscard]] static constexpr bool test_one( const char c ) noexcept
       {
-         template< char C >
-         using is_alpha = std::integral_constant< bool, ( ( 'a' <= C ) && ( C <= 'z' ) ) || ( ( 'A' <= C ) && ( C <= 'Z' ) ) >;
+         static_assert( sizeof...( Cs ) == 1 );
+         return one< result_on_found::success, peek_char, Cs... >::test_one( c );
+      }
 
-         template< char C, bool A = is_alpha< C >::value >
-         struct ichar_equal;
+      [[nodiscard]] static constexpr bool test_any( const char c ) noexcept
+      {
+         return one< result_on_found::success, peek_char, Cs... >::test_one( c );
+      }
 
-         template< char C >
-         struct ichar_equal< C, true >
-         {
-            static bool match( const char c ) noexcept
-            {
-               return ( C | 0x20 ) == ( c | 0x20 );
-            }
-         };
-
-         template< char C >
-         struct ichar_equal< C, false >
-         {
-            static bool match( const char c ) noexcept
-            {
-               return c == C;
-            }
-         };
-
-         template< char... Cs >
-         struct istring_equal;
-
-         template<>
-         struct istring_equal<>
-         {
-            static bool match( const char* /*unused*/ ) noexcept
-            {
+      template< typename ParseInput >
+      [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( in.size( 0 ) ) )
+      {
+         if( in.size( sizeof...( Cs ) ) >= sizeof...( Cs ) ) {
+            if( istring_equal< Cs... >( in.current() ) ) {
+               bump_help< istring >( in, sizeof...( Cs ) );
                return true;
             }
-         };
+         }
+         return false;
+      }
+   };
 
-         template< char C, char... Cs >
-         struct istring_equal< C, Cs... >
-         {
-            static bool match( const char* r ) noexcept
-            {
-               return ichar_equal< C >::match( *r ) && istring_equal< Cs... >::match( r + 1 );
-            }
-         };
+   template< char... Cs >
+   inline constexpr bool enable_control< istring< Cs... > > = false;
 
-         template< char... Cs >
-         struct istring;
-
-         template<>
-         struct istring<>
-            : trivial< true >
-         {
-         };
-
-         template< char... Cs >
-         struct istring
-         {
-            using analyze_t = analysis::counted< analysis::rule_type::ANY, sizeof...( Cs ) >;
-
-            template< typename Input >
-            static bool match( Input& in ) noexcept( noexcept( in.size( 0 ) ) )
-            {
-               if( in.size( sizeof...( Cs ) ) >= sizeof...( Cs ) ) {
-                  if( istring_equal< Cs... >::match( in.current() ) ) {
-                     bump_help< result_on_found::SUCCESS, Input, char, Cs... >( in, sizeof...( Cs ) );
-                     return true;
-                  }
-               }
-               return false;
-            }
-         };
-
-         template< char... Cs >
-         struct skip_control< istring< Cs... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace tao::pegtl::internal
 
 #endif

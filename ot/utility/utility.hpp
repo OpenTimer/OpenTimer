@@ -1,6 +1,8 @@
 #ifndef OT_UTILITY_UTILITY_HPP_
 #define OT_UTILITY_UTILITY_HPP_
 
+#include <type_traits>
+
 #include <ot/utility/lambda.hpp>
 #include <ot/utility/logger.hpp>
 #include <ot/utility/tokenizer.hpp>

@@ -106,8 +106,6 @@ struct Timing {
   std::optional<Lut> rise_constraint;       
   std::optional<Lut> fall_constraint;       
 
-  InternalPower internal_power;
-
   bool is_combinational() const;
   bool is_constraint() const; 
   bool is_min_constraint() const;

@@ -1,91 +1,87 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_UNTIL_HPP
 #define TAO_PEGTL_INTERNAL_UNTIL_HPP
 
-#include "../config.hpp"
-
 #include "bytes.hpp"
+#include "enable_control.hpp"
 #include "eof.hpp"
 #include "not_at.hpp"
-#include "rule_conjunction.hpp"
-#include "skip_control.hpp"
+#include "seq.hpp"
 #include "star.hpp"
 
 #include "../apply_mode.hpp"
 #include "../rewind_mode.hpp"
+#include "../type_list.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename Cond, typename... Rules >
+   struct until
+      : until< Cond, seq< Rules... > >
+   {};
+
+   template< typename Cond >
+   struct until< Cond >
    {
-      namespace internal
+      using rule_t = until;
+      using subs_t = type_list< Cond >;
+
+      template< apply_mode A,
+                rewind_mode M,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
-         template< typename Cond, typename... Rules >
-         struct until;
+         auto m = in.template auto_rewind< M >();
 
-         template< typename Cond >
-         struct until< Cond >
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::SEQ, star< not_at< Cond >, not_at< eof >, bytes< 1 > >, Cond >;
-
-            template< apply_mode A,
-                      rewind_mode M,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               auto m = in.template mark< M >();
-
-               while( !Control< Cond >::template match< A, rewind_mode::REQUIRED, Action, Control >( in, st... ) ) {
-                  if( in.empty() ) {
-                     return false;
-                  }
-                  in.bump();
-               }
-               return m( true );
+         while( !Control< Cond >::template match< A, rewind_mode::required, Action, Control >( in, st... ) ) {
+            if( in.empty() ) {
+               return false;
             }
-         };
+            in.bump();
+         }
+         return m( true );
+      }
+   };
 
-         template< typename Cond, typename... Rules >
-         struct until
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::SEQ, star< not_at< Cond >, not_at< eof >, Rules... >, Cond >;
+   template< typename Cond, typename Rule >
+   struct until< Cond, Rule >
+   {
+      using rule_t = until;
+      using subs_t = type_list< Cond, Rule >;
 
-            template< apply_mode A,
-                      rewind_mode M,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               auto m = in.template mark< M >();
-               using m_t = decltype( m );
+      template< apply_mode A,
+                rewind_mode M,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
+      {
+         auto m = in.template auto_rewind< M >();
+         using m_t = decltype( m );
 
-               while( !Control< Cond >::template match< A, rewind_mode::REQUIRED, Action, Control >( in, st... ) ) {
-                  if( !rule_conjunction< Rules... >::template match< A, m_t::next_rewind_mode, Action, Control >( in, st... ) ) {
-                     return false;
-                  }
-               }
-               return m( true );
+         while( !Control< Cond >::template match< A, rewind_mode::required, Action, Control >( in, st... ) ) {
+            if( !Control< Rule >::template match< A, m_t::next_rewind_mode, Action, Control >( in, st... ) ) {
+               return false;
             }
-         };
+         }
+         return m( true );
+      }
+   };
 
-         template< typename Cond, typename... Rules >
-         struct skip_control< until< Cond, Rules... > > : std::true_type
-         {
-         };
+   template< typename Cond, typename... Rules >
+   inline constexpr bool enable_control< until< Cond, Rules... > > = false;
 
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace tao::pegtl::internal
 
 #endif

@@ -609,38 +609,10 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.original_pin = *itr;
     }
     else if(*itr == "internal_power") {
-      auto ipower = _extract_internal_power(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ipower.related_pin)
-          continue;
-
-        t.internal_power = ipower;
-        found = true;
-        break;
+      cellpin.internal_power.emplace_back(_extract_internal_power(itr, end));
       }
-      if (!found) {
-        Timing t;
-        t.related_pin    = ipower.related_pin;
-        t.internal_power = ipower;
-        cellpin.timings.emplace_back(t);
-      }
-    }
     else if(*itr == "timing") {
-      auto ti = _extract_timing(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ti.related_pin)
-          continue;
-        auto ipower_copy = t.internal_power;
-        t = ti;
-        t.internal_power = ipower_copy;
-        found = true;
-        break;
-      }
-      if (!found) {
-        cellpin.timings.push_back(ti);
-      }
+      cellpin.timings.emplace_back(_extract_timing(itr, end));
     }
     else if(*itr == "}") {
       stack--;

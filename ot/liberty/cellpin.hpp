@@ -41,6 +41,7 @@ struct Cellpin {
   std::optional<bool> is_clock;          // Is clock pin.
 
   std::vector<Timing> timings;
+  std::vector<InternalPower> internal_power; // Input and/or output pin related
 
   const Timing* isomorphic_timing(const Timing&) const;
 

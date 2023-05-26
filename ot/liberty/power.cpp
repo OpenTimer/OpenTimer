@@ -24,7 +24,7 @@ void InternalPower::scale_capacitance(float s) {
   }
 }
 
-std::optional<float> InternalPower::power(Tran irf, Tran orf, float time, float load) const {
+std::optional<float> InternalPower::power(Tran orf, float time, float load) const {
 
   const Lut* lut {nullptr};
 

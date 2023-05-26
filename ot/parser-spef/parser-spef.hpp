@@ -145,7 +145,7 @@ struct Spef {
 
 namespace double_
 {
-  using namespace tao::TAO_PEGTL_NAMESPACE;  // NOLINT
+  using namespace tao::pegtl;  // NOLINT
 
   struct plus_minus : opt< one< '+', '-' > > {}; 
   struct dot : one< '.' > {}; 
@@ -589,7 +589,7 @@ inline std::ostream& operator << (std::ostream& os, const Spef::Error& err) {
 // Begin of PEG rules
 // ------------------------------------------------------------------------------------------------
 
-namespace pegtl = tao::TAO_PEGTL_NAMESPACE;
+namespace pegtl = tao::pegtl;
 
 using RuleToken = pegtl::until<pegtl::at<pegtl::sor<pegtl::space, pegtl::one<'*'>, pegtl::eof>>>;
 using RuleDontCare = pegtl::star<pegtl::space>;
@@ -1150,7 +1150,7 @@ struct Control : tao::pegtl::normal<Rule>
 
 template<typename T> 
 const std::string Control<T>::error_message = 
-  "Fail to match the Spef rule: " + tao::pegtl::internal::demangle<T>() ;
+  "Fail to match the Spef rule: " + std::string(tao::pegtl::demangle<T>());
 
 // API for parsing --------------------------------------------------------------------------------
 
@@ -1196,15 +1196,15 @@ inline bool Spef::read(const std::filesystem::path &p){
   }
 
   // Use Lazy mode to avoid performance hit!!! (very important...)
-  tao::pegtl::memory_input<pegtl::tracking_mode::LAZY> in(buffer, "");
+  tao::pegtl::memory_input<pegtl::tracking_mode::lazy> in(buffer, "");
 
   try{
     tao::pegtl::parse<spef::RuleSpef, spef::Action, spef::Control>(in, *this);
     return true;
   }
   catch(const tao::pegtl::parse_error& e){
-    const auto& p = e.positions.front();
-    error = Error{in.line_as_string(p), p.line, p.byte_in_line};
+    const auto p = e.positions().front();
+    error = Error{e.what(), p.line, p.column};
     return false;
   }
 }

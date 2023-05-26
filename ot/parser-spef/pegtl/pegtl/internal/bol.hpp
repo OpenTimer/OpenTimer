@@ -1,41 +1,31 @@
-// Copyright (c) 2017-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2017-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_BOL_HPP
 #define TAO_PEGTL_INTERNAL_BOL_HPP
 
-#include "../config.hpp"
+#include "../type_list.hpp"
 
-#include "skip_control.hpp"
+#include "enable_control.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   struct bol
    {
-      namespace internal
+      using rule_t = bol;
+      using subs_t = empty_list;
+
+      template< typename ParseInput >
+      [[nodiscard]] static bool match( ParseInput& in ) noexcept
       {
-         struct bol
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::OPT >;
+         return in.column() == 1;
+      }
+   };
 
-            template< typename Input >
-            static bool match( Input& in ) noexcept
-            {
-               return in.byte_in_line() == 0;
-            }
-         };
+   template<>
+   inline constexpr bool enable_control< bol > = false;
 
-         template<>
-         struct skip_control< bol > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace tao::pegtl::internal
 
 #endif

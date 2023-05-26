@@ -160,6 +160,7 @@ class Net {
     inline size_t num_pins() const;
 
     inline const Rct* rct() const;
+    float load(Split s, Tran t) const { return _load(s,t); }
 
   private:
 

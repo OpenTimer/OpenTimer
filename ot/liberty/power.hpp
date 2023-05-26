@@ -16,7 +16,7 @@ struct InternalPower {
   void scale_time(float s);
   void scale_capacitance(float s);
 
-  std::optional<float> power(Tran, Tran, float, float) const;
+  std::optional<float> power(Tran, float, float) const;
 };
 
 std::ostream& operator << (std::ostream&, const InternalPower&);
