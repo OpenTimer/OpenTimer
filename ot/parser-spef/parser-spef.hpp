@@ -146,6 +146,10 @@ struct Spef {
 namespace double_
 {
   using namespace tao::TAO_PEGTL_NAMESPACE;  // NOLINT
+  using namespace tao::pegtl::ascii; // Ensure ascii definitions are in scope
+
+  using digit = tao::pegtl::ascii::digit;   // Explicit import for digit
+  using xdigit = tao::pegtl::ascii::xdigit; 
 
   struct plus_minus : opt< one< '+', '-' > > {}; 
   struct dot : one< '.' > {}; 
