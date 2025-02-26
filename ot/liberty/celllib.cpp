@@ -704,8 +704,15 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   int stack = 1;
   
   while(stack && ++itr != end) {
-    
-    if(*itr == "cell_leakage_power") {               // Read the leakage power.
+    if(*itr == "ff"){
+      OT_LOGF_IF(++itr == end, "syntax error in ff");
+      cell.is_sequential = (*itr == "true") ? true : false;
+    }
+    else if(*itr == "latch"){
+      OT_LOGF_IF(++itr == end, "syntax error in latch");
+      cell.is_sequential = (*itr == "true") ? true : false;
+    }
+    else if(*itr == "cell_leakage_power") {               // Read the leakage power.
       OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
       cell.leakage_power = std::strtof(itr->data(), nullptr);
     }

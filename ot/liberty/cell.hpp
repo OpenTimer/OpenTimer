@@ -13,7 +13,7 @@ struct Cell {
 
   std::optional<float> leakage_power;
   std::optional<float> area;
-
+  std::optional<bool> is_sequential;
   std::unordered_map<std::string, Cellpin> cellpins;
 
   void scale_time(float s);
