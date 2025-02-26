@@ -843,7 +843,7 @@ struct Action<RulePortBeg>
 };
 
 struct RulePort: pegtl::seq<
-  pegtl::not_at<TAO_PEGTL_STRING("*D_NET")>, TAO_PEGTL_STRING("*"),
+  pegtl::not_at<TAO_PEGTL_STRING("*D_NET")>,
   pegtl::must<
     RuleToken, RuleSpace,
     pegtl::must<pegtl::one<'I','O','B'>>,
@@ -868,7 +868,7 @@ struct Action<RulePort>
   template <typename Input>
   static bool apply(const Input& in, Spef& d){
     split_on_space(in.begin(), in.end(), d._tokens); 
-
+    
     d.ports.emplace_back(std::string{d._tokens[0]});
 
     // Set up port direction

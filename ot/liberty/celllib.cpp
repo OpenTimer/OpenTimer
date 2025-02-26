@@ -49,7 +49,7 @@ void Celllib::_uncomment(std::vector<char>& buffer) {
 // Procedure: _tokenize
 void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string_view>& tokens) {
 
-  static std::string_view dels = "(),:;/#[]{}*\"\\";
+  static std::string_view dels = "(),:/#[]{}*\"\\";
 
   // get the position
   const char* beg = buf.data();
@@ -544,9 +544,10 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
   //std::cout << "  -->" << cellpin.name << std::endl;
 
   int stack = 1;
-  
+
   while(stack && ++itr != end) {
-    
+    //print itr
+
     if(*itr == "direction") {
 
       if(++itr == end) {
@@ -564,6 +565,30 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get the capacitance in cellpin ", cellpin.name);
       cellpin.capacitance = std::strtof(itr->data(), nullptr);
     }
+    else if (*itr == "function") { 
+      OT_LOGF_IF(++itr == end, "can't get the function in cellpin ", cellpin.name);
+
+      std::string func_str;
+      
+      // Collect tokens until we reach the semicolon
+      for (; itr != end; ++itr) {
+        if (*itr == ";") {
+          break; // Stop at the semicolon
+        }
+        
+        if (!func_str.empty()) {
+          func_str += " "; // Add space between tokens
+        }
+        func_str += std::string(*itr);
+      }
+
+      if (func_str.empty()) {
+        OT_LOGF("Unterminated function definition in cellpin ", cellpin.name);
+      }
+
+      cellpin.function = func_str;
+    }
+
     else if(*itr == "max_capacitance") {
       OT_LOGF_IF(++itr == end, "can't get the max_capacitance in cellpin ", cellpin.name);
       cellpin.max_capacitance = std::strtof(itr->data(), nullptr);

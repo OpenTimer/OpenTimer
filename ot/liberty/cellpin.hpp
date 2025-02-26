@@ -26,6 +26,8 @@ struct Cellpin {
 
   std::string name;
   std::string original_pin;
+  std::string function;
+
 
   std::optional<CellpinDirection> direction;
   std::optional<float> capacitance;      // Pin capacitance
