@@ -18,7 +18,11 @@ inline const std::unordered_map<std::string_view, CellpinDirection> cellpin_dire
   {"input",    CellpinDirection::INPUT},
   {"output",   CellpinDirection::OUTPUT},
   {"inout",    CellpinDirection::INOUT},
-  {"internal", CellpinDirection::INTERNAL}
+  {"internal", CellpinDirection::INTERNAL},
+  {"input;",    CellpinDirection::INPUT}, //Sus 
+  {"output;",   CellpinDirection::OUTPUT},
+  {"inout;",    CellpinDirection::INOUT},
+  {"internal;", CellpinDirection::INTERNAL}
 };
 
 // Class: Cellpin

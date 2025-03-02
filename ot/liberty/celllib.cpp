@@ -481,6 +481,15 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
       }
       else if(*itr == "non_unate") {                 // Non unate.
         timing.sense = TimingSense::NON_UNATE;
+      } //Massive kludge because some pdks have """" and some have ""
+      else if (*itr == "negative_unate;"){
+        timing.sense = TimingSense::NEGATIVE_UNATE;
+      }
+      else if (*itr == "positive_unate;"){
+        timing.sense = TimingSense::POSITIVE_UNATE;
+      }
+      else if (*itr == "non_unate;"){
+        timing.sense = TimingSense::NON_UNATE;
       }
       else {
         OT_LOGF("unexpected timing sense ", *itr);
@@ -728,6 +737,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
       auto pin = _extract_cellpin(itr, end);
       cell.cellpins[pin.name] = std::move(pin);
     }
+
     else if(*itr == "}") {
       stack--;
     }
@@ -744,6 +754,54 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   }
 
   return cell;
+}
+
+Wireload Celllib::_extract_wireload(token_iterator& itr, const token_iterator end) {
+  
+  Wireload wl;
+  
+  if(itr=on_next_parentheses(
+    itr, 
+    end, 
+    [&] (auto& name) mutable { wl.name = name; }); itr==end) {
+    OT_LOGF("can't find wireload name");
+  }
+
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find group brace '{' in wireload ", wl.name);
+  }
+
+  int stack = 1;
+  
+  while(stack && ++itr != end) {
+    if(*itr == "capacitance") {
+      OT_LOGF_IF(++itr == end, "can't get capacitance in wireload ", wl.name);
+      wl.capacitance = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "slope") {
+      OT_LOGF_IF(++itr == end, "can't get slope in wireload ", wl.name);
+      wl.slope = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "resistance") {
+      OT_LOGF_IF(++itr == end, "can't get resistance in wireload ", wl.name);
+      wl.resistance = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find group brace '}' in wireload ", wl.name);
+  }
+
+  return wl;
 }
 
 // Procedure: read
@@ -870,6 +928,11 @@ void Celllib::read(const std::filesystem::path& path) {
         OT_LOGF("capacitive_load_unit syntax error");
       }
       capacitance_unit = make_capacitance_unit(unit);
+    }
+    else if(*itr == "wire_load") {
+      // std::cout << "wire_load" << std::endl;
+      auto wl = _extract_wireload(itr, end);
+      wireloads[wl.name] = wl;
     }
     else if(*itr == "cell") { 
       auto cell = _extract_cell(itr, end);

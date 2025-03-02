@@ -3,6 +3,7 @@
 
 #include <ot/liberty/cell.hpp>
 #include <ot/unit/unit.hpp>
+#include <ot/liberty/wireload.hpp>
 
 namespace ot {
 
@@ -22,7 +23,13 @@ inline const std::unordered_map<std::string_view, DelayModel> delay_models {
   {"cmos2",          DelayModel::CMOS2},
   {"piecewise_cmos", DelayModel::PIECEWISE_CMOS},
   {"dcm",            DelayModel::DCM},
-  {"polynomial",     DelayModel::POLYNOMIAL}
+  {"polynomial",     DelayModel::POLYNOMIAL},
+  {"generic_cmos;",   DelayModel::GENERIC_CMOS},
+  {"table_lookup;",   DelayModel::TABLE_LOOKUP},
+  {"cmos2;",          DelayModel::CMOS2},
+  {"piecewise_cmos;", DelayModel::PIECEWISE_CMOS},
+  {"dcm;",            DelayModel::DCM},
+  {"polynomial;",     DelayModel::POLYNOMIAL}
 };
 
 // Function: to_string
@@ -56,6 +63,7 @@ struct Celllib {
 
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
+  std::unordered_map<std::string, Wireload> wireloads;
 
   void read(const std::filesystem::path&);
   void scale_time(float);
@@ -80,6 +88,7 @@ struct Celllib {
     Cellpin       _extract_cellpin       (token_iterator&, const token_iterator);
     InternalPower _extract_internal_power(token_iterator&, const token_iterator);
     Timing        _extract_timing        (token_iterator&, const token_iterator);
+    Wireload      _extract_wireload      (token_iterator&, const token_iterator);
 
     void _apply_default_values();
     void _uncomment(std::vector<char>&);
