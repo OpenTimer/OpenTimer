@@ -1,3 +1,13 @@
+bin/
+example/incremental/incremental
+example/optimizer/optimizer
+example/simple/simple
+example/sizer/sizer
+example/unit/unit
+ot/config.hpp
+unittest/path
+unittest/utility
+
 # Compiled Object files
 *.slo
 *.lo
