@@ -141,7 +141,7 @@ struct Timing {
   std::optional<Lut> rise_constraint;       
   std::optional<Lut> fall_constraint;       
 
-  InternalPower internal_power;
+  //InternalPower internal_power;
 
   bool is_combinational() const;
   bool is_constraint() const; 
@@ -161,6 +161,14 @@ struct Timing {
   std::optional<float> delay(Tran, Tran, float, float) const;
   std::optional<float> slew(Tran, Tran, float, float) const;
   std::optional<float> constraint(Tran, Tran, float, float) const;
+
+
+  ~Timing() {
+    // std::cout << "[DEBUG] Destroying Timing object: " 
+    //           << (related_pin.empty() ? "(Unnamed)" : related_pin) 
+    //           << std::endl;
+  }
+
 };
 
 std::ostream& operator << (std::ostream&, const Timing&);
@@ -168,6 +176,41 @@ std::ostream& operator << (std::ostream&, const Timing&);
 // Alias
 using TimingView = TimingData<const Timing*, MAX_SPLIT>;
 
+inline void printTiming(const Timing &t) {
+    std::cout << "Timing Info:" << std::endl;
+    std::cout << "  related_pin: " << t.related_pin << std::endl;
+
+    std::cout << "  timing_sense: ";
+    if (t.sense) {
+        switch(t.sense.value()) {
+            case TimingSense::NEGATIVE_UNATE: std::cout << "negative_unate"; break;
+            case TimingSense::POSITIVE_UNATE: std::cout << "positive_unate"; break;
+            case TimingSense::NON_UNATE:      std::cout << "non_unate";      break;
+        }
+    } else {
+        std::cout << "N/A";
+    }
+    std::cout << std::endl;
+
+    // Print timing type if available
+    std::cout << "  timing_type: ";
+    if (t.type) {
+        std::cout << to_string(t.type.value()); // Use the to_string function to get a readable name
+    } else {
+        std::cout << "N/A";
+    }
+    std::cout << std::endl;
+
+    std::cout << "  cell_rise: " << (t.cell_rise ? "present" : "N/A") << std::endl;
+    std::cout << "  cell_fall: " << (t.cell_fall ? "present" : "N/A") << std::endl;
+    std::cout << "  rise_transition: " << (t.rise_transition ? "present" : "N/A") << std::endl;
+    std::cout << "  fall_transition: " << (t.fall_transition ? "present" : "N/A") << std::endl;
+    std::cout << "  rise_constraint: " << (t.rise_constraint ? "present" : "N/A") << std::endl;
+    std::cout << "  fall_constraint: " << (t.fall_constraint ? "present" : "N/A") << std::endl;
+
+    // Instead of printing the member function, just indicate its existence.
+    std::cout << "  internal_power: " << "[function pointer - not printed]" << std::endl;
+}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

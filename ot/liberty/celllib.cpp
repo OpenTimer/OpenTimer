@@ -1,3 +1,13 @@
+// -----------------------------------------------------------------------------
+// Copyright (c) 2024 Partcl, Inc. All rights reserved.
+//
+// This software is proprietary and confidential. Unauthorized copying, sharing,
+// modification, or distribution of this file, via any medium, is strictly prohibited
+// without prior written permission from Partcl, Inc.
+//
+// For inquiries regarding licensing, please contact: contact@partcleda.com
+// -----------------------------------------------------------------------------
+
 #include <ot/liberty/celllib.hpp>
 
 namespace ot {
@@ -500,8 +510,8 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
       if(++itr == end) {
         OT_LOGF("syntax error in timing_type");
       }
-
       if(auto titr = timing_types.find(*itr); titr != timing_types.end()) {
+        
         timing.type = titr->second;
       }
       else {
@@ -553,6 +563,9 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
   //std::cout << "  -->" << cellpin.name << std::endl;
 
   int stack = 1;
+
+  //std::cout << "cellpin: " << cellpin.name << std::endl;
+  std::unordered_map<std::string, InternalPower> pending_internal_power;
 
   while(stack && ++itr != end) {
     //print itr
@@ -642,39 +655,17 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = *itr;
     }
-    else if(*itr == "internal_power") {
-      auto ipower = _extract_internal_power(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ipower.related_pin)
-          continue;
+    // else if (*itr == "internal_power") {
+    //     // Extract internal power information and store in map
+    //     pending_internal_power.emplace(_extract_internal_power(itr, end).related_pin, _extract_internal_power(itr, end));
+    // }
 
-        t.internal_power = ipower;
-        found = true;
-        break;
-      }
-      if (!found) {
-        Timing t;
-        t.related_pin    = ipower.related_pin;
-        t.internal_power = ipower;
-        cellpin.timings.emplace_back(t);
-      }
-    }
-    else if(*itr == "timing") {
-      auto ti = _extract_timing(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ti.related_pin)
-          continue;
-        auto ipower_copy = t.internal_power;
-        t = ti;
-        t.internal_power = ipower_copy;
-        found = true;
-        break;
-      }
-      if (!found) {
+    else if (*itr == "timing") {
+        // Extract timing information
+        auto ti = _extract_timing(itr, end);
+        ot::printTiming(ti);
         cellpin.timings.push_back(ti);
-      }
+        
     }
     else if(*itr == "}") {
       stack--;
@@ -952,6 +943,16 @@ void Celllib::read(const std::filesystem::path& path) {
     OT_LOGF("can't find library group brace '}'");
   }
 
+  //iterate thru the timings and print cell name then printTiming()
+  // for(auto& ckvp : cells) {
+  //   auto& cell = ckvp.second;
+  //   for(auto& pkvp : cell.cellpins) {
+  //     auto& cpin = pkvp.second;
+  //     for(auto& t : cpin.timings) {
+  //       ot::printTiming(t);
+  //     }
+  //   }
+  // }
   _apply_default_values();
 }
   

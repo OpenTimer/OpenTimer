@@ -131,8 +131,8 @@ void Arc::_fprop_delay() {
         auto si = *_from._slew[el][frf];
         auto delay = tv[el]->delay(frf, trf, si, lc);
         _delay[el][frf][trf] = delay;
-        auto ipower = tv[el]->internal_power.power(frf, trf, si, lc);
-        _ipower[el][frf][trf] = ipower;
+        //auto ipower = tv[el]->internal_power.power(frf, trf, si, lc);
+        //_ipower[el][frf][trf] = ipower;
 
         //std::cout << " name:" << _from._name << " delay:" << *delay << " slew:" << si << " lc:" << lc << " ipower:" << *ipower << "\n";
       }
