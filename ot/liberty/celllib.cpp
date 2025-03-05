@@ -663,7 +663,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     else if (*itr == "timing") {
         // Extract timing information
         auto ti = _extract_timing(itr, end);
-        ot::printTiming(ti);
+        // ot::printTiming(ti);
         cellpin.timings.push_back(ti);
         
     }
