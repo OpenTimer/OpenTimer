@@ -665,7 +665,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
         auto ti = _extract_timing(itr, end);
         // ot::printTiming(ti);
         cellpin.timings.push_back(ti);
-        
+        //std::cout << "Timing added, count: " << cellpin.timings.size() << std::endl;
     }
     else if(*itr == "}") {
       stack--;
@@ -724,10 +724,32 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
       OT_LOGF_IF(++itr == end, "can't get area in cell ", cell.name);
       cell.area = std::strtof(itr->data(), nullptr);
     }
-    else if(*itr == "pin") {                         // Read the cell pin group.
+    else if(*itr == "pin") {  // Read the cell pin group.
       auto pin = _extract_cellpin(itr, end);
-      cell.cellpins[pin.name] = std::move(pin);
-    }
+  
+      // Debug before insertion
+      // std::cout << "[DEBUG] Before insertion: Pin '" << pin.name 
+      //           << "' has " << pin.timings.size() << " timings." << std::endl;
+  
+      auto [it, inserted] = cell.cellpins.emplace(pin.name, std::move(pin));
+  
+      if (!inserted) {
+          // std::cout << "[DEBUG] Merging timings for existing pin: '" 
+          //           << it->second.name << "'." << std::endl;
+  
+          // Merge timing information if the pin already exists
+          it->second.timings.insert(
+              it->second.timings.end(),
+              std::make_move_iterator(pin.timings.begin()),
+              std::make_move_iterator(pin.timings.end())
+          );
+      }
+  
+      // // Debug after insertion
+      // std::cout << "[DEBUG] After insertion: Pin '" << it->second.name 
+      //           << "' now has " << it->second.timings.size() << " timings." << std::endl;
+  }
+  
 
     else if(*itr == "}") {
       stack--;
@@ -743,7 +765,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   if(stack != 0 || *itr != "}") {
     OT_LOGF("can't find group brace '}' in cell ", cell.name);
   }
-
+  // std::cout << "Cell added: " << cell.name << std::endl;
   return cell;
 }
 
@@ -953,6 +975,16 @@ void Celllib::read(const std::filesystem::path& path) {
   //     }
   //   }
   // }
+  // for (auto& cell : cells) {
+  //   std::cout << "Cell: " << cell.first << std::endl;
+  //   for (auto& cellpin : cell.second.cellpins) {
+  //       std::cout << "  Cellpin: " << cellpin.first << std::endl;
+  //       for (auto& timing : cellpin.second.timings) {
+  //           std::cout << "    Timing: " << timing << std::endl;
+  //       }
+  //   }
+  // }
+
   _apply_default_values();
 }
   
