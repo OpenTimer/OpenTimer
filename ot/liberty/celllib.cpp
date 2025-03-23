@@ -57,56 +57,39 @@ void Celllib::_uncomment(std::vector<char>& buffer) {
 }
 
 // Procedure: _tokenize
-void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string_view>& tokens) {
-
-  static std::string_view dels = "(),:/#[]{}*\"\\";
-
-  // get the position
+void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string>& tokens) {
+  static const std::string dels = "(),:/#[]{}*\"\\";
   const char* beg = buf.data();
   const char* end = buf.data() + buf.size();
-
-  // Parse the token.
-  const char *token {nullptr};
-  size_t len {0};
-
   tokens.clear();
 
-  for(const char* itr = beg; itr != end && *itr != 0; ++itr) {
-    
-    // extract the entire quoted string as a token
-    bool is_del = (dels.find(*itr) != std::string_view::npos);
+  const char* token = nullptr;
+  size_t len = 0;
 
-    if(std::isspace(*itr) || is_del) {
-      if(len > 0) {                            // Add the current token.
-        tokens.push_back({token, len});
+  for (const char* itr = beg; itr != end && *itr != 0; ++itr) {
+    bool is_del = (dels.find(*itr) != std::string::npos);
+
+    if (std::isspace(*itr) || is_del) {
+      if (len > 0) {
+        tokens.emplace_back(token, len);  // Use std::string to copy data safely
         token = nullptr;
         len = 0;
       }
-      // group delimiter is liberty token
-      if(*itr == '(' || *itr == ')' || *itr == '{' || *itr == '}') {
-        tokens.push_back({itr, 1});
+
+      if (*itr == '(' || *itr == ')' || *itr == '{' || *itr == '}') {
+        tokens.emplace_back(1, *itr);
       }
-      // extract the entire quoted string (this is buggy now...)
-      //else if(*itr == '"') {
-      //  for(++itr; itr != end && *itr != '"'; ++itr, ++len) ;
-      //  if(len > 0) {
-      //    tokens.push_back({itr-len, len});
-      //    len = 0;
-      //  }
-      //}
-    } 
-    else {
-      if(len == 0) {
-        token = itr;
-      }
+    } else {
+      if (len == 0) token = itr;
       ++len;
     }
   }
 
-  if(len > 0) {
-    tokens.push_back({token, len});
-  } 
+  if (len > 0) {
+    tokens.emplace_back(token, len);
+  }
 }
+
 
 // ------------------------------------------------------------------------------------------------
 
@@ -231,6 +214,76 @@ std::optional<float> Celllib::_extract_operating_conditions(token_iterator& itr,
   }
 
   return voltage;
+}
+
+// Function: _extract_sequential_info
+SequentialInfo Celllib::_extract_sequential_info(token_iterator& itr, const token_iterator end) {
+
+  SequentialInfo info;
+
+  if(itr=on_next_parentheses(
+    itr, 
+    end, 
+    [&] (auto& name) mutable { info.clocked_on = name; }); itr == end) {
+    OT_LOGF("can't find sequential info");
+  }
+  
+  // Extract the lut template group
+  if(itr = std::find(itr, end, "{"); itr == end) {
+    OT_LOGF("can't find sequential info group brace '{'");
+  }
+
+  //std::cout << lt.name << std::endl;
+
+  int stack = 1;
+  
+  while(stack && ++itr != end) {
+    if(*itr == "clocked_on"){
+      if(++itr == end) {
+        OT_LOGF("clocked_on error in sequential info ", info.clocked_on);
+      }
+
+      info.clocked_on = *itr;
+    }
+    else if(*itr == "next_state") {                       // Read the variable.
+
+      if(++itr == end) {
+        OT_LOGF("next_state error in sequential info ", info.clocked_on);
+      }
+
+      info.next_state = *itr;
+    }
+    else if(*itr == "data_in") {                       // Read the variable.
+
+      if(++itr == end) {
+        OT_LOGF("data_in error in sequential info ", info.clocked_on);
+      }
+
+      info.data_in = *itr;
+    }
+    else if(*itr == "enable") {                       // Read the variable.
+
+      if(++itr == end) {
+        OT_LOGF("enable error in sequential info ", info.clocked_on);
+      }
+
+      info.enable = *itr;
+    }
+    else if(*itr == "}") {
+      stack--;
+    }
+    else if(*itr == "{") {
+      stack++;
+    }
+    else {
+    }
+  }
+  
+  if(stack != 0 || *itr != "}") {
+    OT_LOGF("can't find sequential info group brace '}'");
+  }
+
+  return info;
 }
 
 // Function: _extract_lut_template
@@ -706,11 +759,15 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
   while(stack && ++itr != end) {
     if(*itr == "ff"){
       OT_LOGF_IF(++itr == end, "syntax error in ff");
+      cell.sequential_info = _extract_sequential_info(itr, end);
       cell.is_sequential = true;
+      cell.is_ff = true;
     }
     else if(*itr == "latch"){
       OT_LOGF_IF(++itr == end, "syntax error in latch");
+      cell.sequential_info = _extract_sequential_info(itr, end);
       cell.is_sequential = true;
+      cell.is_ff = false;
     }
     else if(*itr == "cell_leakage_power") {               // Read the leakage power.
       OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
@@ -832,7 +889,7 @@ void Celllib::read(const std::filesystem::path& path) {
   buffer[fsize] = 0;
 
   // get tokens
-  std::vector<std::string_view> tokens;
+  std::vector<std::string> tokens;
   tokens.reserve(buffer.size() / sizeof(std::string));
 
   _uncomment(buffer);
@@ -879,6 +936,18 @@ void Celllib::read(const std::filesystem::path& path) {
       else {
         OT_LOGW("unexpected delay model ", *itr);
       }
+    }
+    else if(*itr == "nom_process"){
+      OT_LOGF_IF(++itr == end, "syntax error in nom_process");
+      nom_process = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "nom_temperature"){
+      OT_LOGF_IF(++itr == end, "syntax error in nom_temperature");
+      nom_temperature = std::strtof(itr->data(), nullptr);
+    }
+    else if(*itr == "nom_voltage"){
+      OT_LOGF_IF(++itr == end, "syntax error in nom_voltage");
+      nom_voltage = std::strtof(itr->data(), nullptr);
     }
     else if(*itr == "default_cell_leakage_power") {
       OT_LOGF_IF(++itr == end, "syntax error in default_cell_leakage_power");

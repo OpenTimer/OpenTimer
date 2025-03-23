@@ -5,6 +5,15 @@
 
 namespace ot {
 
+// Class SequentialInfo
+struct SequentialInfo {
+  std::string clocked_on;
+  std::string next_state;
+  std::string data_in;
+  std::string enable;
+};
+
+
 // Class: Cell
 struct Cell {
 
@@ -15,6 +24,10 @@ struct Cell {
   std::optional<float> area;
   std::optional<bool> is_sequential;
   std::unordered_map<std::string, Cellpin> cellpins;
+
+  // Optional: Sequential information
+  std::optional<bool> is_ff;
+  std::optional<SequentialInfo> sequential_info;
 
   void scale_time(float s);
   void scale_capacitance(float s);

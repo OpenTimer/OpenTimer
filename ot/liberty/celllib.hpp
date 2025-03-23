@@ -38,7 +38,8 @@ std::string to_string(DelayModel);
 // Class: Celllib
 struct Celllib {
   
-  using token_iterator = std::vector<std::string_view>::iterator;
+  using token_iterator = std::vector<std::string>::iterator;
+
 
   std::string name {"OpenTimer"};
 
@@ -60,6 +61,10 @@ struct Celllib {
   std::optional<float> default_fanout_load;
   std::optional<float> default_max_fanout;
   std::optional<float> default_max_transition;
+
+  std::optional<float> nom_process;
+  std::optional<float> nom_temperature;
+  std::optional<float> nom_voltage;
 
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
@@ -89,10 +94,11 @@ struct Celllib {
     InternalPower _extract_internal_power(token_iterator&, const token_iterator);
     Timing        _extract_timing        (token_iterator&, const token_iterator);
     Wireload      _extract_wireload      (token_iterator&, const token_iterator);
+    SequentialInfo _extract_sequential_info(token_iterator&, const token_iterator);
 
     void _apply_default_values();
     void _uncomment(std::vector<char>&);
-    void _tokenize(const std::vector<char>&, std::vector<std::string_view>&);
+    void _tokenize(const std::vector<char>&, std::vector<std::string>&);
 };
 
 // Operator <<
