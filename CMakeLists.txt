@@ -141,6 +141,7 @@ set(OT_CPP
   ot/liberty/cellpin.cpp
   ot/liberty/lut.cpp
   ot/liberty/timing.cpp
+  ot/liberty/ccsn.hpp
   ot/liberty/power.cpp
   ot/verilog/verilog.cpp
   ot/sdc/tokenize.cpp

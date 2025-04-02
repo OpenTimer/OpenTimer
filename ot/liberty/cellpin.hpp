@@ -3,64 +3,67 @@
 
 #include <ot/liberty/timing.hpp>
 #include <ot/liberty/power.hpp>
+#include <ot/liberty/ccsn.hpp>
 
-namespace ot {
+namespace ot
+{
 
-// Struct: CellpinDirection
-enum class CellpinDirection {
-  INPUT,
-  OUTPUT,
-  INOUT,
-  INTERNAL
-};
+  // Struct: CellpinDirection
+  enum class CellpinDirection
+  {
+    INPUT,
+    OUTPUT,
+    INOUT,
+    INTERNAL
+  };
 
-inline const std::unordered_map<std::string_view, CellpinDirection> cellpin_directions {
-  {"input",    CellpinDirection::INPUT},
-  {"output",   CellpinDirection::OUTPUT},
-  {"inout",    CellpinDirection::INOUT},
-  {"internal", CellpinDirection::INTERNAL},
-  {"input;",    CellpinDirection::INPUT}, //Sus 
-  {"output;",   CellpinDirection::OUTPUT},
-  {"inout;",    CellpinDirection::INOUT},
-  {"internal;", CellpinDirection::INTERNAL}
-};
+  inline const std::unordered_map<std::string_view, CellpinDirection> cellpin_directions{
+      {"input", CellpinDirection::INPUT},
+      {"output", CellpinDirection::OUTPUT},
+      {"inout", CellpinDirection::INOUT},
+      {"internal", CellpinDirection::INTERNAL},
+      {"input;", CellpinDirection::INPUT}, // Sus
+      {"output;", CellpinDirection::OUTPUT},
+      {"inout;", CellpinDirection::INOUT},
+      {"internal;", CellpinDirection::INTERNAL}};
 
-// Class: Cellpin
-struct Cellpin {
+  // Class: Cellpin
+  struct Cellpin
+  {
 
-  std::string name;
-  std::string original_pin;
-  std::string function;
+    std::string name;
+    std::string original_pin;
+    std::string function;
 
+    std::optional<CellpinDirection> direction;
+    std::optional<float> capacitance;     // Pin capacitance
+    std::optional<float> max_capacitance; // Max pin capacitance (output pin).
+    std::optional<float> min_capacitance; // Min pin capacitance (output pin).
+    std::optional<float> max_transition;  // Max transition.
+    std::optional<float> min_transition;  // Min transition.
+    std::optional<float> fall_capacitance;
+    std::optional<float> rise_capacitance;
+    std::optional<float> fanout_load;
+    std::optional<float> max_fanout;
+    std::optional<float> min_fanout;
+    std::optional<bool> is_clock; // Is clock pin.
 
-  std::optional<CellpinDirection> direction;
-  std::optional<float> capacitance;      // Pin capacitance
-  std::optional<float> max_capacitance;  // Max pin capacitance (output pin).
-  std::optional<float> min_capacitance;  // Min pin capacitance (output pin).
-  std::optional<float> max_transition;   // Max transition.
-  std::optional<float> min_transition;   // Min transition.
-  std::optional<float> fall_capacitance; 
-  std::optional<float> rise_capacitance;
-  std::optional<float> fanout_load;
-  std::optional<float> max_fanout;
-  std::optional<float> min_fanout;
-  std::optional<bool> is_clock;          // Is clock pin.
+    std::vector<Timing> timings;
 
-  std::vector<Timing> timings;
+    std::optional<std::vector<CCSNStage>> ccsn_stages; // Optional list of CCSNStage objects
 
-  const Timing* isomorphic_timing(const Timing&) const;
+    const Timing *isomorphic_timing(const Timing &) const;
 
-  void scale_time(float);
-  void scale_capacitance(float);
-};
+    void scale_time(float);
+    void scale_capacitance(float);
+  };
 
-std::ostream& operator << (std::ostream&, const Cellpin&);
+  std::ostream &operator<<(std::ostream &, const Cellpin &);
 
-// ------------------------------------------------------------------------------------------------
+  // ------------------------------------------------------------------------------------------------
 
-using CellpinView = std::array<const Cellpin*, MAX_SPLIT>;
+  using CellpinView = std::array<const Cellpin *, MAX_SPLIT>;
 
-};  // end of namespace ot ------------------------------------------------------------------------
-
+}; // end of namespace ot ------------------------------------------------------------------------
 
 #endif
