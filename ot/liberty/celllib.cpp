@@ -630,7 +630,7 @@ namespace ot
   }
 
   // Function: _extract_timing
-  Timing Celllib::_extract_timing(token_iterator &itr, const token_iterator end)
+  Timing Celllib::_extract_timing(token_iterator &itr, const token_iterator end, std::string pin)
   {
 
     Timing timing;
@@ -731,6 +731,15 @@ namespace ot
         }
 
         timing.related_pin = *itr;
+        // If we find the related pin, update all of the found ccsn stages
+        // with the related pin, because this need not be in order unfortunately
+        if (timing.ccsn_stages)
+        {
+          for (auto &ccsn_stage : *timing.ccsn_stages)
+          {
+            ccsn_stage.related_pin = timing.related_pin;
+          }
+        }
       }
       else if (*itr == "ccsn_last_stage")
       {
@@ -741,6 +750,9 @@ namespace ot
           timing.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_LAST_STAGE;
+        ccsn_stage.related_pin = timing.related_pin;
+        ccsn_stage.pin = pin;
+
         timing.ccsn_stages->push_back(ccsn_stage);
       }
       else if (*itr == "ccsn_first_stage")
@@ -752,6 +764,9 @@ namespace ot
           timing.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_FIRST_STAGE;
+        ccsn_stage.related_pin = timing.related_pin;
+        ccsn_stage.pin = pin;
+
         timing.ccsn_stages->push_back(ccsn_stage);
       }
       else if (*itr == "ccsn_stage")
@@ -763,6 +778,9 @@ namespace ot
           timing.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_STAGE;
+        ccsn_stage.related_pin = timing.related_pin;
+        ccsn_stage.pin = pin;
+
         timing.ccsn_stages->push_back(ccsn_stage);
       }
       else if (*itr == "}")
@@ -938,6 +956,7 @@ namespace ot
           cellpin.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_LAST_STAGE;
+        ccsn_stage.pin = cellpin.name;
         cellpin.ccsn_stages->push_back(ccsn_stage);
       }
       else if (*itr == "ccsn_first_stage")
@@ -949,6 +968,7 @@ namespace ot
           cellpin.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_FIRST_STAGE;
+        ccsn_stage.pin = cellpin.name;
         cellpin.ccsn_stages->push_back(ccsn_stage);
       }
       else if (*itr == "ccsn_stage")
@@ -960,6 +980,7 @@ namespace ot
           cellpin.ccsn_stages = std::vector<CCSNStage>();
         }
         ccsn_stage.ccsn_stage_type = CCSNStageType::CCSN_STAGE;
+        ccsn_stage.pin = cellpin.name;
         cellpin.ccsn_stages->push_back(ccsn_stage);
       }
       // else if (*itr == "internal_power")
@@ -971,7 +992,7 @@ namespace ot
       else if (*itr == "timing")
       {
         // Extract timing information
-        auto ti = _extract_timing(itr, end);
+        auto ti = _extract_timing(itr, end, cellpin.name);
         // ot::printTiming(ti);
         cellpin.timings.push_back(ti);
         // std::cout << "Timing added, count: " << cellpin.timings.size() << std::endl;
