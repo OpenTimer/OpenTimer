@@ -299,21 +299,37 @@ namespace ot
           OT_LOGF("clocked_on error in sequential info ", info.clocked_on);
         }
 
-        info.clocked_on = *itr;
+        std::string value;
+        while (itr != end && *itr != ";")
+        {
+          if (!value.empty())
+          {
+            value += " ";
+          }
+          value += *itr++;
+        }
+        info.clocked_on = value;
       }
       else if (*itr == "next_state")
-      { // Read the variable.
-
+      {
         if (++itr == end)
         {
           OT_LOGF("next_state error in sequential info ", info.clocked_on);
         }
 
-        info.next_state = *itr;
+        std::string value;
+        while (itr != end && *itr != ";")
+        {
+          if (!value.empty())
+          {
+            value += " ";
+          }
+          value += *itr++;
+        }
+        info.next_state = value;
       }
       else if (*itr == "data_in")
-      { // Read the variable.
-
+      {
         if (++itr == end)
         {
           OT_LOGF("data_in error in sequential info ", info.clocked_on);
@@ -322,8 +338,7 @@ namespace ot
         info.data_in = *itr;
       }
       else if (*itr == "enable")
-      { // Read the variable.
-
+      {
         if (++itr == end)
         {
           OT_LOGF("enable error in sequential info ", info.clocked_on);
