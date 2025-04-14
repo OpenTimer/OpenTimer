@@ -17,6 +17,18 @@ namespace ot
     INTERNAL
   };
 
+  inline const std::unordered_map<CellpinDirection, std::string_view> cellpin_direction_to_string{
+      {CellpinDirection::INPUT, "input"},
+      {CellpinDirection::OUTPUT, "output"},
+      {CellpinDirection::INOUT, "inout"},
+      {CellpinDirection::INTERNAL, "internal"}};
+
+  // Function to get string from enum
+  inline std::string_view cpd_to_string(CellpinDirection direction)
+  {
+    return cellpin_direction_to_string.at(direction);
+  }
+
   inline const std::unordered_map<std::string_view, CellpinDirection> cellpin_directions{
       {"input", CellpinDirection::INPUT},
       {"output", CellpinDirection::OUTPUT},
