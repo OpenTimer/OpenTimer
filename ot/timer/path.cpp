@@ -1,5 +1,5 @@
 #include <ot/timer/timer.hpp>
-// #include <ot/taskflow/algorithm/reduce.hpp>
+#include <ot/taskflow/algorithm/reduce.hpp>
 
 namespace ot {
 
