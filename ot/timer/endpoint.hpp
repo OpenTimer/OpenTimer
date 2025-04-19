@@ -155,10 +155,6 @@ inline bool EndpointSplit::operator == (const EndpointSplit& rhs) const {
   return slack() == rhs.slack();
 }
 
-<<<<<<< endpoint__.hpp
-
-=======
->>>>>>> endpoint.hpp
 };  // end of namespace ot. -----------------------------------------------------------------------
 
 #endif 

@@ -1403,27 +1403,6 @@ std::optional<size_t> Timer::report_fep(std::optional<Split> el, std::optional<T
   return v;
 }
 
-// Function: tns with only the worst between RISE and FALL considered.
-// Update the total negative slack for any timing split.
-std::optional<float> Timer::report_tns_elw(std::optional<Split> el) {
-
-  std::scoped_lock lock(_mutex);
-
-  _update_endpoints_elw();
-
-  std::optional<float> v;
-
-  if(!el) {
-    FOR_EACH_EL_IF(s, _tns_elw[s]) {
-      v = !v ? _tns_elw[s] : *v + *(_tns_elw[s]);
-    }
-  } else {
-    v = _tns_elw[*el];
-  }
-
-  return v;
-}
-
 // Function: leakage_power
 std::optional<float> Timer::report_leakage_power() {
   std::scoped_lock lock(_mutex);

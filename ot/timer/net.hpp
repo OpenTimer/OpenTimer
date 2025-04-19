@@ -301,22 +301,8 @@ class Net {
     void _remove_pin(Pin&);
     void _scale_capacitance(float);
     void _scale_resistance(float);
-}; 
+};
 
-// Function: name
-inline const std::string& Net::name() const {
-  return _name;
-}
-
-// Function: num_pins
-inline size_t Net::num_pins() const {
-  return _pins.size();
-}
-
-// Function: rct
-inline const Rct* Net::rct() const {
-  return std::get_if<Rct>(&_rct);
-}
 
 };  // end of namespace ot. -----------------------------------------------------------------------
 

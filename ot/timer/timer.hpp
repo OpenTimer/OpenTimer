@@ -182,10 +182,6 @@ class Timer {
     TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _tns;
     TimingData<std::optional<size_t>, MAX_SPLIT, MAX_TRAN> _fep;
     TimingData<std::optional<float>,  MAX_SPLIT> _tns_elw;
-<<<<<<< ../../../../../OpenTimer/ot/timer/timer.hpp
-=======
-
->>>>>>> timer__.hpp
     
     std::optional<float> _area;
     std::optional<float> _leakage_power;

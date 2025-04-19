@@ -1,5 +1,5 @@
 #include <ot/timer/timer.hpp>
-#include <ot/taskflow/algorithm/reduce.hpp>
+// #include <ot/taskflow/algorithm/reduce.hpp>
 
 namespace ot {
 
@@ -427,21 +427,17 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
   // Generate the prefix tree
   PathHeap heap;
 
-  _taskflow.transform_reduce(epts.begin(), epts.end(), heap,
-    [&] (PathHeap l, PathHeap r) mutable {
-      l.merge_and_fit(std::move(r), K);
-      return l;
-    },
-    [&] (PathHeap heap, Endpoint* ept) {
-      _spur(*ept, K, heap);
-      return heap;
-    },
-    [&] (Endpoint* ept) {
-      PathHeap heap;
-      _spur(*ept, K, heap);
-      return heap;
-    }
-  );
+  _taskflow.transform_reduce(
+      epts.begin(), epts.end(), heap,
+      [&](PathHeap l, PathHeap r) mutable {
+          l.merge_and_fit(std::move(r), K);
+          return l;
+      },
+      [&](Endpoint* ept) {
+          PathHeap heap;
+          _spur(*ept, K, heap);
+          return heap;
+      });
 
   _executor.run(_taskflow).wait();
   _taskflow.clear();
