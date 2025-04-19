@@ -432,6 +432,10 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
       l.merge_and_fit(std::move(r), K);
       return l;
     },
+    [&] (PathHeap heap, Endpoint* ept) {
+      _spur(*ept, K, heap);
+      return heap;
+    },
     [&] (Endpoint* ept) {
       PathHeap heap;
       _spur(*ept, K, heap);
@@ -441,7 +445,6 @@ std::vector<Path> Timer::_report_timing(std::vector<Endpoint*>&& epts, size_t K)
 
   _executor.run(_taskflow).wait();
   _taskflow.clear();
-
   return heap.extract();
 }
 

@@ -1,5 +1,4 @@
 #include <ot/timer/timer.hpp>
-#include <limits>
 
 namespace ot {
 
@@ -623,12 +622,6 @@ void Timer::_insert_primary_output(const std::string& name) {
   _connect_pin(pin, net);
 }
 
-// Procedure: _insert_frontier
-Timer& Timer::insert_frontier(Pin& pin) {
-  _insert_frontier(pin);
-  return *this;
-}
-
 // Procedure: _insert_test
 Test& Timer::_insert_test(Arc& arc) {
   auto& test = _tests.emplace_front(arc);
@@ -998,11 +991,20 @@ void Timer::update_timing() {
   _update_timing();
 }
 
-void Timer::update_states() {
-  _update_states();
-}
+// Function: _update_timing
+void Timer::_update_timing() {
+  
+  // Timing is update-to-date
+  if(!_lineage) {
+    assert(_frontiers.size() == 0);
+    return;
+  }
 
-void Timer::_update_states() {
+  // materialize the lineage
+  _executor.run(_taskflow).wait();
+  _taskflow.clear();
+  _lineage.reset();
+  
   // Check if full update is required
   if(_has_state(FULL_TIMING)) {
     _insert_full_timing_frontiers();
@@ -1026,89 +1028,6 @@ void Timer::_update_states() {
 
   // clear the state
   _remove_state();
-}
-
-// Function: _update_timing
-void Timer::_update_timing() {
-  
-  // Timing is update-to-date
-  if(!_lineage) {
-    assert(_frontiers.size() == 0);
-    return;
-  }
-
-  // materialize the lineage
-  _executor.run(_taskflow).wait();
-  _taskflow.clear();
-  _lineage.reset();
-  
-  _update_states();
-}
-
-// Function: update_interface_timing
-// perform localized graph update within 2 hops
-// around a pin.
-void Timer::update_interface_timing(const std::string &name) {
-  std::scoped_lock lock(_mutex);
-  
-  // Timing is update-to-date
-  if(!_lineage) {
-    assert(_frontiers.size() == 0);
-    return;
-  }
-
-  // materialize the lineage
-  _executor.run(_taskflow).wait();
-  _taskflow.clear();
-  _lineage.reset();
-  
-  if(auto itr = _pins.find(name); itr != _pins.end()) {
-    _update_interface_timing(itr->second);
-  }
-  else {
-    OT_LOGE("can't update interface timing (PIN ", name, " not found). you might have to complete one FULL timing analysis before attempting this.");
-  }
-}
-
-// Function: _update_interface_timing
-void Timer::_update_interface_timing(Pin &pin) {
-  if(!pin.is_output()) {
-    OT_LOGE("only cell OUTPUT pins are supported in update_interface_timing.");
-    return;
-  }
-
-  // update nets 1 hop upstream of this pin
-  for(const Arc *arc: pin._fanin) {
-    Pin &p = arc->_from;
-    _fprop_rc_timing(p);
-    _fprop_slew(p);
-    _fprop_delay(p);
-    _fprop_at(p);
-  }
-
-  // update cell arcs to this pin
-  _fprop_slew(pin);
-  _fprop_delay(pin);
-  _fprop_at(pin);
-
-  // update the net at this pin,
-  // and all cell arcs 1 hop downstream of this pin
-  _fprop_rc_timing(pin);
-  for(const Arc *arc: pin._fanout) {
-    Pin &p = arc->_to;
-    _fprop_slew(p);
-    _fprop_delay(p);
-    _fprop_at(p);
-    
-    for(const Arc *a2: p._fanout) {
-      Pin &p2 = a2->_to;
-      
-      _fprop_slew(p2);
-      _fprop_delay(p2);
-      _fprop_at(p2);
-      // _fprop_rc_timing(p2); // out of scope, skipped.
-    }
-  }
 }
 
 // Procedure: _update_area
@@ -1221,23 +1140,8 @@ void Timer::_update_endpoints() {
     });
   }
 
-  // run tasks
-  _executor.run(_taskflow).wait();
-  _taskflow.clear();
 
-  _insert_state(EPTS_UPDATED);
-}
-
-// Procedure: _update_endpoints
-void Timer::_update_endpoints_elw() {
-
-  _update_timing();
-
-  if(_has_state(EPTSEL_UPDATED)) {
-    return;
-  }
-
-  // Add the following part to report a proper tns which only considers the
+// Add the following part to report a proper tns which only considers the
   // worst one between RISE and FALL instead of both or each.
   FOR_EACH_EL(el) {
     // reset the storage and build task
@@ -1259,6 +1163,7 @@ void Timer::_update_endpoints_elw() {
           _endpoints_elw[el].emplace_back(el, test);
         }
       }
+
       // sort endpoints
       std::sort(_endpoints_elw[el].begin(), _endpoints_elw[el].end());
 
@@ -1281,7 +1186,7 @@ void Timer::_update_endpoints_elw() {
   _executor.run(_taskflow).wait();
   _taskflow.clear();
 
-  _insert_state(EPTSEL_UPDATED);
+  _insert_state(EPTS_UPDATED);
 }
 
 // Function: tns
@@ -1403,27 +1308,6 @@ std::optional<size_t> Timer::report_fep(std::optional<Split> el, std::optional<T
   return v;
 }
 
-// Function: tns with only the worst between RISE and FALL considered.
-// Update the total negative slack for any timing split.
-std::optional<float> Timer::report_tns_elw(std::optional<Split> el) {
-
-  std::scoped_lock lock(_mutex);
-
-  _update_endpoints_elw();
-
-  std::optional<float> v;
-
-  if(!el) {
-    FOR_EACH_EL_IF(s, _tns_elw[s]) {
-      v = !v ? _tns_elw[s] : *v + *(_tns_elw[s]);
-    }
-  } else {
-    v = _tns_elw[*el];
-  }
-
-  return v;
-}
-
 // Function: leakage_power
 std::optional<float> Timer::report_leakage_power() {
   std::scoped_lock lock(_mutex);
@@ -1438,249 +1322,7 @@ std::optional<float> Timer::report_area() {
   _update_area();
   return _area;
 }
-
-// Function: report_interface_timing
-// reports fanin and fanout inter-cell delays, from output to output
-// the single value is the maximum over {RF, RF} transitions.
-std::vector<std::pair<const std::string&, float>> Timer::report_interface_timing(const std::string &name, Split el) {
-  Pin &pin = _pins.at(name); // throws if not matched
-
-  auto minmax = [el] (float a, float b) {
-    if(el == MIN) return std::min(a, b);
-    else return std::max(a, b);
-  };
-  float inf = (el == MIN ? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest());
-
-  //< <rr, rf>, <fr, ff> >
-  std::unordered_map<const Pin *, float> retmap;
-
-  // fanin output -> input (p) -> output (pin)
-  for(const Arc *arc: pin._fanin) {
-    Pin &p = arc->_from;
-    float rr_delay = *p._net->_delay(el, RISE, p) + arc->_delay[el][RISE][RISE].value_or(inf);
-    float rf_delay = *p._net->_delay(el, RISE, p) + arc->_delay[el][RISE][FALL].value_or(inf);
-
-    float fr_delay = *p._net->_delay(el, FALL, p) + arc->_delay[el][FALL][RISE].value_or(inf);
-    float ff_delay = *p._net->_delay(el, FALL, p) + arc->_delay[el][FALL][FALL].value_or(inf);
-
     
-    float delay = minmax(
-      *p._net->_delay(el, RISE, p) + minmax(
-        arc->_delay[el][RISE][RISE].value_or(inf),
-        arc->_delay[el][RISE][FALL].value_or(inf)),
-      *p._net->_delay(el, FALL, p) + minmax(
-        arc->_delay[el][FALL][RISE].value_or(inf),
-        arc->_delay[el][FALL][FALL].value_or(inf)));
-    
-    // OT_LOGW("fanin arc ", arc->_idx, ", p ", p._name, ", delay ", delay);
-    if(auto it = retmap.find(p._net->_root); it != retmap.end()) {
-      it->second = minmax(it->second, delay);
-    }
-    else retmap[p._net->_root] = delay;
-    // ret.emplace_back(std::ref(p._net->_root->_name), delay);
-  }
-
-  // fanout output -> input (p) -> output (q)
-  for(const Arc *arc: pin._fanout) {
-    Pin &p = arc->_to;
-    for(const Arc *a2: p._fanout) {
-      Pin &q = a2->_to;
-      float delay = minmax(
-        *p._net->_delay(el, RISE, p) + minmax(
-          a2->_delay[el][RISE][RISE].value_or(inf),
-          a2->_delay[el][RISE][FALL].value_or(inf)),
-        *p._net->_delay(el, FALL, p) + minmax(
-          a2->_delay[el][FALL][RISE].value_or(inf),
-          a2->_delay[el][FALL][FALL].value_or(inf)));
-      // OT_LOGW("fanout arc ", arc->_idx, ", p ", p._name, ", q ", q._name, ", delay ", delay);
-      if(auto it = retmap.find(&q); it != retmap.end()) {
-        it->second = minmax(it->second, delay);
-      }
-      else retmap[&q] = delay;
-      // ret.emplace_back(std::ref(q._name), delay);
-    }
-  }
-  
-  std::vector<std::pair<const std::string&, float>> ret;
-  for(const auto &[p, v]: retmap) {
-    ret.emplace_back(std::ref(p->_name), v);
-  }
-  return ret;
-}
-
-// Function: report_fi_interface_timing
-// reports fanin inter-cell delays only, from output to output
-// the single value is the maximum over {RF, RF} transitions.
-std::vector<std::pair<const std::string&, float>> Timer::report_fi_interface_timing(const std::string &name, Split el) {
-  Pin &pin = _pins.at(name); // throws if not matched
-  auto minmax = [el] (float a, float b) {
-    if(el == MIN) return std::min(a, b);
-    else return std::max(a, b);
-  };
-  float inf = (el == MIN ? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest());
-
-  std::unordered_map<const Pin *, float> retmap;
-  // fanin output -> input (p) -> output (pin)
-  for(const Arc *arc: pin._fanin) {
-    Pin &p = arc->_from;
-    float delay = minmax(
-      *p._net->_delay(el, RISE, p) + minmax(
-        arc->_delay[el][RISE][RISE].value_or(inf),
-        arc->_delay[el][RISE][FALL].value_or(inf)),
-      *p._net->_delay(el, FALL, p) + minmax(
-        arc->_delay[el][FALL][RISE].value_or(inf),
-        arc->_delay[el][FALL][FALL].value_or(inf)));
-    // OT_LOGW("fanin arc ", arc->_idx, ", p ", p._name, ", delay ", delay);
-    if(auto it = retmap.find(p._net->_root); it != retmap.end()) {
-      it->second = minmax(it->second, delay);
-    }
-    else retmap[p._net->_root] = delay;
-    // ret.emplace_back(std::ref(p._net->_root->_name), delay);
-  }
-  
-  std::vector<std::pair<const std::string&, float>> ret;
-  for(const auto &[p, v]: retmap) {
-    ret.emplace_back(std::ref(p->_name), v);
-  }
-  return ret;
-}
-
-// Function: report_fi_interface_timing
-// reports fanout inter-cell delays only, from output to output
-// the single value is the maximum over {RF, RF} transitions.
-std::vector<std::pair<const std::string&, float>> Timer::report_fo_interface_timing(const std::string &name, Split el) {
-  Pin &pin = _pins.at(name); // throws if not matched
-  auto minmax = [el] (float a, float b) {
-    if(el == MIN) return std::min(a, b);
-    else return std::max(a, b);
-  };
-  float inf = (el == MIN ? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest());
-
-  std::unordered_map<const Pin *, float> retmap;
-  // fanout output -> input (p) -> output (q)
-  for(const Arc *arc: pin._fanout) {
-    Pin &p = arc->_to;
-    for(const Arc *a2: p._fanout) {
-      Pin &q = a2->_to;
-      float delay = minmax(
-        *p._net->_delay(el, RISE, p) + minmax(
-          a2->_delay[el][RISE][RISE].value_or(inf),
-          a2->_delay[el][RISE][FALL].value_or(inf)),
-        *p._net->_delay(el, FALL, p) + minmax(
-          a2->_delay[el][FALL][RISE].value_or(inf),
-          a2->_delay[el][FALL][FALL].value_or(inf)));
-      // OT_LOGW("fanout arc ", arc->_idx, ", p ", p._name, ", q ", q._name, ", delay ", delay);
-      if(auto it = retmap.find(&q); it != retmap.end()) {
-        it->second = minmax(it->second, delay);
-      }
-      else retmap[&q] = delay;
-      // ret.emplace_back(std::ref(q._name), delay);
-    }
-  }
-  
-  std::vector<std::pair<const std::string&, float>> ret;
-  for(const auto &[p, v]: retmap) {
-    ret.emplace_back(std::ref(p->_name), v);
-  }
-  return ret;
-}
-
-// Function: report_fi_interface_timing
-// reports fanin inter-cell delays only, from output to output
-// the single value is the maximum over {RF, RF} transitions.
-std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float>>>> Timer::report_detailed_fi_interface_timing(const std::string &name, Split el) {
-  Pin &pin = _pins.at(name); // throws if not matched
-  auto minmax = [el] (float a, float b) {
-    if(el == MIN) return std::min(a, b);
-    else return std::max(a, b);
-  };
-  float inf = (el == MIN ? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest());
-
-  std::unordered_map<const Pin *, std::pair< std::pair<float, float>, std::pair<float, float>>> retmap;
-  // fanin output -> input (p) -> output (pin)
-  for(const Arc *arc: pin._fanin) {
-    Pin &p = arc->_from;
-    float rr_delay = *p._net->_delay(el, RISE, p) + arc->_delay[el][RISE][RISE].value_or(inf);
-    float rf_delay = *p._net->_delay(el, RISE, p) + arc->_delay[el][RISE][FALL].value_or(inf);
-    float fr_delay = *p._net->_delay(el, FALL, p) + arc->_delay[el][FALL][RISE].value_or(inf);
-    float ff_delay = *p._net->_delay(el, FALL, p) + arc->_delay[el][FALL][FALL].value_or(inf);
-
-    float delay = minmax(
-      *p._net->_delay(el, RISE, p) + minmax(
-        arc->_delay[el][RISE][RISE].value_or(inf),
-        arc->_delay[el][RISE][FALL].value_or(inf)),
-      *p._net->_delay(el, FALL, p) + minmax(
-        arc->_delay[el][FALL][RISE].value_or(inf),
-        arc->_delay[el][FALL][FALL].value_or(inf)));
-    // OT_LOGW("fanin arc ", arc->_idx, ", p ", p._name, ", delay ", delay);
-    if(auto it = retmap.find(p._net->_root); it != retmap.end()) {
-      //it->second = minmax(it->second, delay);
-      it->second.first.first = minmax(it->second.first.first, rr_delay);
-      it->second.first.second = minmax(it->second.first.second, rf_delay);
-      it->second.second.first = minmax(it->second.second.first, fr_delay);
-      it->second.second.second = minmax(it->second.second.second, ff_delay);
-    }
-    else retmap[p._net->_root] = std::make_pair(std::make_pair(rr_delay, rf_delay), std::make_pair(fr_delay, ff_delay));
-    // ret.emplace_back(std::ref(p._net->_root->_name), delay);
-  }
-  
-  std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float>>>> ret;
-  for(const auto &[p, v]: retmap) {
-    ret.emplace_back(std::ref(p->_name), v);
-  }
-  return ret;
-}
-
-// Function: report_fi_interface_timing
-// reports fanin inter-cell delays only, from output to output
-// the single value is the maximum over {RF, RF} transitions.
-std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float> > > > Timer::report_detailed_fo_interface_timing(const std::string &name, Split el) {
-  Pin &pin = _pins.at(name); // throws if not matched
-  auto minmax = [el] (float a, float b) {
-    if(el == MIN) return std::min(a, b);
-    else return std::max(a, b);
-  };
-  float inf = (el == MIN ? std::numeric_limits<float>::max() : std::numeric_limits<float>::lowest());
-
-  std::unordered_map<const Pin *, std::pair< std::pair<float, float>, std::pair<float, float>>> retmap;
-  // fanin output -> input (p) -> output (pin)
-  for(const Arc *arc: pin._fanout) {
-    Pin &p = arc->_to;
-    for(const Arc *a2: p._fanout) {
-      Pin &q = a2->_to;
-      float rr_delay = *p._net->_delay(el, RISE, p) + a2->_delay[el][RISE][RISE].value_or(inf);
-      float rf_delay = *p._net->_delay(el, RISE, p) + a2->_delay[el][RISE][FALL].value_or(inf);
-      float fr_delay = *p._net->_delay(el, FALL, p) + a2->_delay[el][FALL][RISE].value_or(inf);
-      float ff_delay = *p._net->_delay(el, FALL, p) + a2->_delay[el][FALL][FALL].value_or(inf);
-
-      float delay = minmax(
-        *p._net->_delay(el, RISE, p) + minmax(
-          a2->_delay[el][RISE][RISE].value_or(inf),
-          a2->_delay[el][RISE][FALL].value_or(inf)),
-        *p._net->_delay(el, FALL, p) + minmax(
-          a2->_delay[el][FALL][RISE].value_or(inf),
-          a2->_delay[el][FALL][FALL].value_or(inf)));
-      // OT_LOGW("fanout arc ", arc->_idx, ", p ", p._name, ", q ", q._name, ", delay ", delay);
-      if(auto it = retmap.find(&q); it != retmap.end()) {
-        //it->second = minmax(it->second, delay);
-        it->second.first.first = minmax(it->second.first.first, rr_delay);
-        it->second.first.second = minmax(it->second.first.second, rf_delay);
-        it->second.second.first = minmax(it->second.second.first, fr_delay);
-        it->second.second.second = minmax(it->second.second.second, ff_delay);
-      }
-      else retmap[&q] = std::make_pair(std::make_pair(rr_delay, rf_delay), std::make_pair(fr_delay, ff_delay));
-      // ret.emplace_back(std::ref(q._name), delay);
-    }
-  }
-  
-  
-  std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float>>>> ret;
-  for(const auto &[p, v]: retmap) {
-    ret.emplace_back(std::ref(p->_name), v);
-  }
-  return ret;
-}
-
 // Procedure: _enable_full_timing_update
 void Timer::_enable_full_timing_update() {
   _insert_state(FULL_TIMING);
@@ -1936,40 +1578,6 @@ void Timer::_set_load(PrimaryOutput& po, Split m, Tran t, std::optional<float> v
     _insert_frontier(arc->_from);
   }
   _insert_frontier(po._pin);
-}
-
-// Function: set_diffscale
-Timer& Timer::set_diffscale(std::string name, float diffscale) {
-
-  std::scoped_lock lock(_mutex);
-  
-  auto task = _taskflow.emplace([this, name=std::move(name), diffscale] () {
-    if(auto itr = _pins.find(name); itr != _pins.end()) {
-      _set_diffscale(itr->second, diffscale);
-    }
-    else {
-      OT_LOGE("can't set diffscale (PIN ", name, " not found)");
-    }
-  });
-
-  _add_to_lineage(task);
-
-  return *this;
-}
-
-// Procedure: _set_diffscale
-void Timer::_set_diffscale(Pin& pin, float diffscale) {
-  // Update the pin diffscale
-  // No need to recompute Elmore delay
-  pin._net->_diffscale(pin, diffscale);
-
-  // Enable the timing propagation.
-  _insert_frontier(pin);
-  if(pin.is_rct_root()) {  // load update influences upstream delay/slew
-    for(auto arc : pin._fanin) {
-      _insert_frontier(arc->_from);
-    }
-  }
 }
 
 

@@ -8,6 +8,7 @@
 #include <memory>
 #include <cstring>
 #include <pwd.h>
+#include <ot/headerdef.hpp>
 #include <filesystem>
 
 namespace ot {

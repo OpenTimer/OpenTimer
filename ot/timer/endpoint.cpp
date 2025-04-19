@@ -29,7 +29,26 @@ float Endpoint::slack() const {
 }
 
 // ------------------------------------------------------------------------------------------------
+// Constructor
+EndpointSplit::EndpointSplit(Split el, Test& test) : 
+  _el  {el},
+  _handle {&test} {
+  OT_LOGF_IF(!test.slack(el, ot::RISE) && !test.slack(el, ot::FALL), "test slack not defined");
+}
 
+// Constructor
+EndpointSplit::EndpointSplit(Split el, PrimaryOutput& po) :
+  _el {el},
+  _handle {&po} {
+  OT_LOGF_IF(!po.slack(el, ot::RISE) && !po.slack(el, ot::FALL), "PO slack not defined");
+}
+
+// Function: slack
+float EndpointSplit::slack() const {
+  return std::visit([this] (auto&& handle) {
+    return std::min(*(handle->slack(_el, ot::RISE)), *(handle->slack(_el, ot::FALL)));
+  }, _handle);
+}
 // Function: _worst_endpoints
 std::vector<Endpoint*> Timer::_worst_endpoints(size_t K, Split el, Tran rf) {
   _update_endpoints();

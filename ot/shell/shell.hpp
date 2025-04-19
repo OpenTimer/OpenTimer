@@ -54,6 +54,7 @@ class Shell {
     void _set_slew               ();
     void _set_load               ();
     void _set_rat                (); 
+    void _set_diffscale          (); 
     void _insert_gate            ();
     void _remove_gate            ();
     void _repower_gate           ();
@@ -133,6 +134,7 @@ class Shell {
       {"set_slew",                &Shell::_set_slew},
       {"set_load",                &Shell::_set_load},
       {"set_rat",                 &Shell::_set_rat},
+      {"set_diffscale",           &Shell::_set_diffscale},
       {"insert_gate",             &Shell::_insert_gate},
       {"remove_gate",             &Shell::_remove_gate},
       {"repower_gate",            &Shell::_repower_gate},

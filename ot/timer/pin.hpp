@@ -150,6 +150,9 @@ class Pin {
     inline size_t num_fanins() const;
     inline size_t idx() const;
 
+    inline Pin* net(Net& n) { _net = &n; return this; } // mutator
+    inline Pin* gate(Gate& g) { _gate = &g; return this; }
+
   private:
 
     std::string _name;
