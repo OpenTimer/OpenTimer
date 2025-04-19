@@ -6,8 +6,7 @@
 #include <ot/utility/utility.hpp>
 #include <ot/exception.hpp>
 
-namespace ot
-{
+namespace ot {
 
   // Enum: LutVar
   enum class LutVar

@@ -2,6 +2,13 @@
 
 namespace ot {
 
+static bool use_iccad2014_models = false;
+
+void set_use_iccad2014_models(bool use) {
+  use_iccad2014_models = use;
+  OT_LOGI("set use iccad2014 models: ", use);
+}
+
 // Function: is_time_lut_var
 bool is_time_lut_var(LutVar v) {
   switch(v) {
@@ -192,8 +199,14 @@ float Lut::operator()(float val1, float val2) const {
 
   int idx1[2], idx2[2];
 
-  idx1[1] = std::lower_bound(indices1.begin(), indices1.end(), val1) - indices1.begin();
-  idx2[1] = std::lower_bound(indices2.begin(), indices2.end(), val2) - indices2.begin();
+  if(use_iccad2014_models) {
+    idx1[1] = 0;
+    idx2[1] = 0;
+  }
+  else {
+    idx1[1] = std::lower_bound(indices1.begin(), indices1.end(), val1) - indices1.begin();
+    idx2[1] = std::lower_bound(indices2.begin(), indices2.end(), val2) - indices2.begin();
+  }
   
   // Case 2: linear inter/extra polation.
   idx1[1] = std::max(1, std::min(idx1[1], (int)(indices1.size() - 1)));

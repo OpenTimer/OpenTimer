@@ -279,6 +279,39 @@ void Shell::_set_load() {
   _timer.set_load(std::move(pin), el, rf, value ? *value : 0.0f);
 }
 
+// Procedure: set_diffscale
+void Shell::_set_diffscale() {
+
+  std::string token;
+  std::string pin;
+  std::optional<float> value;
+
+  while(_is >> token) {
+    if(token == "-pin") _is >> pin;
+    else {
+      try {
+        value = std::stof(token);
+      }
+      catch(...) {
+        _es << "failed to parse " << std::quoted(token) << '\n';
+        return;
+      }
+    }
+  }
+
+  if(pin.empty()) {
+    _es << "-pin <name> not given\n";
+    return;
+  }
+
+  if(!value) {
+    _es << "<value> not given\n";
+    return;
+  }
+
+  _timer.set_diffscale(std::move(pin), *value);
+}
+
 // ------------------------------------------------------------------------------------------------
 
 // Procedure: insert_gate

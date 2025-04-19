@@ -24,6 +24,7 @@ class Gate {
     inline const std::string& name() const;
 
     const std::string& cell_name() const;
+    inline Gate* append(Pin& pin) { _pins.emplace_back(&pin); return this; }
 
   private:
 

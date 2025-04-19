@@ -42,6 +42,7 @@
 #include <string_view>
 #include <filesystem>
 #include <cassert>
+#include <ot/headerdef.hpp>
 
 // ------------------------------------------------------------------------------------------------
 

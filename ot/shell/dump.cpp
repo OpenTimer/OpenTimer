@@ -59,6 +59,7 @@ List of commonly used commands:\n\
   set_at             -pin name [-min|-max] [-rise|-fall] <value>\n\
   set_rat            -pin name [-min|-max] [-rise|-fall] <value>\n\
   set_load           -pin name [-min|-max] [-rise|-fall] <value>\n\
+  set_diffscale      -pin name <value>\n\
   insert_gate        <gate> <cell>\n\
   repower_gate       <gate> <cell>\n\
   remove_gate        <gate>\n\

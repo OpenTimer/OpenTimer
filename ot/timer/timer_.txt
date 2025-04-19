@@ -1259,6 +1259,7 @@ void Timer::_update_endpoints_elw() {
           _endpoints_elw[el].emplace_back(el, test);
         }
       }
+      
       // sort endpoints
       std::sort(_endpoints_elw[el].begin(), _endpoints_elw[el].end());
 
@@ -1312,27 +1313,6 @@ std::optional<float> Timer::report_tns(std::optional<Split> el, std::optional<Tr
   }
   else {
     v = _tns[*el][*rf];
-  }
-
-  return v;
-}
-
-// Function: tns with only the worst between RISE and FALL considered.
-// Update the total negative slack for any timing split.
-std::optional<float> Timer::report_tns_elw(std::optional<Split> el) {
-
-  std::scoped_lock lock(_mutex);
-
-  _update_endpoints();
-
-  std::optional<float> v;
-
-  if(!el) {
-    FOR_EACH_EL_IF(s, _tns_elw[s]) {
-      v = !v ? _tns_elw[s] : *v + *(_tns_elw[s]);
-    }
-  } else {
-    v = _tns_elw[*el];
   }
 
   return v;
@@ -1398,6 +1378,27 @@ std::optional<size_t> Timer::report_fep(std::optional<Split> el, std::optional<T
   }
   else {
     v = _fep[*el][*rf];
+  }
+
+  return v;
+}
+
+// Function: tns with only the worst between RISE and FALL considered.
+// Update the total negative slack for any timing split.
+std::optional<float> Timer::report_tns_elw(std::optional<Split> el) {
+
+  std::scoped_lock lock(_mutex);
+
+  _update_endpoints_elw();
+
+  std::optional<float> v;
+
+  if(!el) {
+    FOR_EACH_EL_IF(s, _tns_elw[s]) {
+      v = !v ? _tns_elw[s] : *v + *(_tns_elw[s]);
+    }
+  } else {
+    v = _tns_elw[*el];
   }
 
   return v;

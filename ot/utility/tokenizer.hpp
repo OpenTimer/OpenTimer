@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm>
 #include <regex>
+#include <ot/headerdef.hpp>
 #include <filesystem>
 
 namespace ot {

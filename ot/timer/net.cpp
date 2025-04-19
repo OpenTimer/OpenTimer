@@ -15,7 +15,7 @@ void RctNode::_scale_capacitance(float s) {
 
 // Function: load
 float RctNode::load(Split el, Tran rf) const {
-  return _load[el][rf];
+  return _load[el][rf] * diffscale;
 }
 
 // Function: cap
@@ -25,12 +25,42 @@ float RctNode::cap(Split el, Tran rf) const {
   
 // Function: slew
 float RctNode::slew(Split m, Tran t, float si) const {  
-  return si < 0.0f ? -std::sqrt(si*si + _impulse[m][t]) : std::sqrt(si*si + _impulse[m][t]);
+  return si < 0.0f ? -std::sqrt(si*si + _impulse[m][t] * diffscale) : std::sqrt(si*si + _impulse[m][t] * diffscale);
 }
 
 // Function: delay
 float RctNode::delay(Split m, Tran t) const {
-  return _delay[m][t];
+  return _delay[m][t] * diffscale;
+}
+
+// Function: impulse
+float RctNode::impulse(Split m, Tran t) const {
+  return _impulse[m][t];
+}
+
+// Function: ldelay
+float RctNode::ldelay(Split m, Tran t) const {
+  return _ldelay[m][t];
+}
+
+// Funtion: load setter
+RctNode& RctNode::load(Split m, Tran t, float val) {
+  return _load[m][t] = val , *this;
+}
+
+// Funtion: delay setter
+RctNode& RctNode::delay(Split m, Tran t, float val) {
+  return _delay[m][t] = val , *this;
+}
+
+// Funtion: impulse setter
+RctNode& RctNode::impulse(Split m, Tran t, float val) {
+  return _impulse[m][t] = val , *this;
+}
+
+// Funtion: ldelay setter
+RctNode& RctNode::ldelay(Split m, Tran t, float val) {
+  return _ldelay[m][t] = val , *this;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -244,31 +274,46 @@ void Net::_attach(spef::Net&& spef_net) {
   _rc_timing_updated = false;
 }
 
+// Procedure: _diffscale
+void Net::_diffscale(Pin &to, float diffscale) {
+  assert(_rc_timing_updated && to._net == this);
+  // _diffscale_updated = true;
+  
+  std::visit(Functors{
+    [&] (EmptyRct&) {
+      OT_LOGW("diffscale applied to EmptyRct, which is not supported at this moment");
+    },
+    [&] (Rct& rct) {
+      auto node = rct._node(to._name);
+      assert(node);
+      node->diffscale = diffscale;
+    }
+  }, _rct);
+}
+
 // Procedure: _make_rct
 void Net::_make_rct() {
-  
+  // The spef net will be non-empty after the read_spef call.
+  // The new Spef will be attached to the net itself.
   if(!_spef_net) return;
 
   // Step 1: create a new rctree object
   auto& rct = _rct.emplace<Rct>();
-
   // Step 2: insert the node and capacitance (*CAP section).
   for(const auto& [node1, node2, cap] : _spef_net->caps) {
-    
     // ground capacitance
     if(node2.empty()) {
       rct.insert_node(node1, cap);
     }
     // TODO: coupling capacitance
   }
-
   // Step 3: insert the segment (*RES section).
   for(const auto& [node1, node2, res] : _spef_net->ress) {
     rct.insert_segment(node1, node2, res);
   }
-  
+  // Detach the spef net once the new rctree has been initialized
+  // from the spef net itself.
   _spef_net.reset();
-  
   _rc_timing_updated = false;
 }
 
@@ -304,6 +349,7 @@ void Net::_scale_resistance(float s) {
 
 // Procedure: _update_rc_timing
 void Net::_update_rc_timing() {
+  if (_rc_timing_updated) return;
 
   if(_rc_timing_updated) {
     return;
@@ -327,8 +373,7 @@ void Net::_update_rc_timing() {
       for(auto pin : _pins) {
         if(auto node = rct._node(pin->name()); node == nullptr) {
           OT_LOGE("pin ", pin->name(), " not found in rctree ", _name);
-        }
-        else {
+        } else {
           if(pin == _root) {
             rct._root = node;
           }
@@ -400,7 +445,7 @@ float Net::_load(Split m, Tran t) const {
       return rct.load[m][t];
     },
     [&] (const Rct& rct) {
-      return rct._root->_load[m][t];
+      return rct._root->load(m, t); // do not use _load, as diffscale is not applied to that.
     }
   }, _rct);
 }

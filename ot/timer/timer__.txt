@@ -26,11 +26,10 @@ class Timer {
 
   friend class Shell;
   
-  constexpr static int FULL_TIMING    = 0x01;
-  constexpr static int EPTS_UPDATED   = 0x02;
-  constexpr static int AREA_UPDATED   = 0x04;
-  constexpr static int POWER_UPDATED  = 0x08;
-  constexpr static int EPTSEL_UPDATED = 0x10;
+  constexpr static int FULL_TIMING   = 0x01;
+  constexpr static int EPTS_UPDATED  = 0x02;
+  constexpr static int AREA_UPDATED  = 0x04;
+  constexpr static int POWER_UPDATED = 0x08;
 
   public:
     
@@ -50,12 +49,10 @@ class Timer {
     Timer& connect_pin(std::string, std::string);
     Timer& insert_primary_input(std::string);
     Timer& insert_primary_output(std::string);
-    Timer& insert_frontier(Pin&);
     Timer& set_at(std::string, Split, Tran, std::optional<float>);
     Timer& set_rat(std::string, Split, Tran, std::optional<float>);
     Timer& set_slew(std::string, Split, Tran, std::optional<float>);
     Timer& set_load(std::string, Split, Tran, std::optional<float>);
-    Timer& set_diffscale(std::string, float);
     Timer& create_clock(std::string, float);
     Timer& create_clock(std::string, std::string, float);
     Timer& cppr(bool);
@@ -67,9 +64,7 @@ class Timer {
     Timer& set_current_unit(ampere_t);
 
     // Action.
-    void update_states();
     void update_timing();
-    void update_interface_timing(const std::string&);
 
     std::optional<float> report_at(const std::string&, Split, Tran);
     std::optional<float> report_rat(const std::string&, Split, Tran);
@@ -82,17 +77,12 @@ class Timer {
     std::optional<float> report_wns(std::optional<Split> = {}, std::optional<Tran> = {});
     std::optional<size_t> report_fep(std::optional<Split> = {}, std::optional<Tran> = {});
     std::optional<float> report_tns_elw(std::optional<Split> = {});
-    
+
     std::vector<Path> report_timing(size_t);
     std::vector<Path> report_timing(size_t, Split);
     std::vector<Path> report_timing(size_t, Tran);
     std::vector<Path> report_timing(size_t, Split, Tran);
     std::vector<Path> report_timing(PathGuide);
-    std::vector<std::pair<const std::string&, float>> report_interface_timing(const std::string&, Split);
-    std::vector<std::pair<const std::string&, float>> report_fi_interface_timing(const std::string&, Split);
-    std::vector<std::pair<const std::string&, float>> report_fo_interface_timing(const std::string&, Split);
-    std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float>>>> report_detailed_fi_interface_timing(const std::string &, Split);
-    std::vector<std::pair<const std::string&, std::pair< std::pair<float, float>, std::pair<float, float>>>> report_detailed_fo_interface_timing(const std::string &, Split);
 
     // Accessor
     void dump_graph(std::ostream&) const;
@@ -136,12 +126,6 @@ class Timer {
     inline const auto& tests() const;
     inline const auto& arcs() const;
 
-    inline auto& nets(); // Mutable accessor
-    inline auto& pins(); // Mutable accessor
-    inline auto& gates(); // Mutable accessor
-
-    inline auto num_worst_endpoints();
-
   private:
 
     mutable std::shared_mutex _mutex;
@@ -182,6 +166,7 @@ class Timer {
     TimingData<std::optional<float>,  MAX_SPLIT, MAX_TRAN> _tns;
     TimingData<std::optional<size_t>, MAX_SPLIT, MAX_TRAN> _fep;
     TimingData<std::optional<float>,  MAX_SPLIT> _tns_elw;
+
     
     std::optional<float> _area;
     std::optional<float> _leakage_power;
@@ -216,10 +201,7 @@ class Timer {
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
     void _update_timing();
-    void _update_states();
-    void _update_interface_timing(Pin&);
     void _update_endpoints();
-    void _update_endpoints_elw();
     void _update_area();
     void _update_power();
     void _fprop_rc_timing(Pin&);
@@ -263,7 +245,6 @@ class Timer {
     void _set_slew(PrimaryInput&, Split, Tran, std::optional<float>);
     void _set_rat(PrimaryOutput&, Split, Tran, std::optional<float>);
     void _set_load(PrimaryOutput&, Split, Tran, std::optional<float>);
-    void _set_diffscale(Pin&, float);
     void _cppr(bool);
     void _topologize(SfxtCache&, size_t) const;
     void _spfa(SfxtCache&) const;
@@ -528,35 +509,6 @@ inline auto Timer::_remove_state(int s) {
   else {
     _state &= ~s;
   }
-}
-
-// Function: pins
-// Expose the pin data structure to users
-inline auto& Timer::pins() {
-  return _pins;
-}
-
-// Function: nets
-// Expose the net data structure to users
-inline auto& Timer::nets() {
-  return _nets;
-}
-
-// Function: gates
-// Expose the gate data structure to users
-inline auto& Timer::gates() {
-  return _gates;
-}
-
-// Function: endpoints
-inline auto Timer::num_worst_endpoints() {
-  // std::size_t size = 0;
-  // FOR_EACH_EL_RF(el, rf) {
-  //   size = std::max(size, _endpoints[el][rf].size());
-  // }
-  // return size;
-  auto max = std::numeric_limits<size_t>::max();
-  return _worst_endpoints(max).size();
 }
 
 };  // end of namespace ot ------------------------------------------------------------------------
