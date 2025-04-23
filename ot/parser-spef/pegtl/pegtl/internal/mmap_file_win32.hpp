@@ -1,9 +1,11 @@
-// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_MMAP_FILE_WIN32_HPP
 #define TAO_PEGTL_INTERNAL_MMAP_FILE_WIN32_HPP
+
+#include "../config.hpp"
 
 #if !defined( NOMINMAX )
 #define NOMINMAX
@@ -32,13 +34,13 @@
 #include <exception>
 #endif
 
-#include "filesystem.hpp"
+#include <filesystem>
 
-namespace tao::pegtl::internal
+namespace TAO_PEGTL_NAMESPACE::internal
 {
    struct mmap_file_open
    {
-      explicit mmap_file_open( const internal::filesystem::path& path )
+      explicit mmap_file_open( const std::filesystem::path& path )
          : m_path( path ),
            m_handle( open() )
       {}
@@ -59,8 +61,8 @@ namespace tao::pegtl::internal
          LARGE_INTEGER size;
          if( !::GetFileSizeEx( m_handle, &size ) ) {
 #if defined( __cpp_exceptions )
-            internal::error_code ec( ::GetLastError(), internal::system_category() );
-            throw internal::filesystem::filesystem_error( "GetFileSizeEx() failed", m_path, ec );
+            std::error_code ec( ::GetLastError(), std::system_category() );
+            throw std::filesystem::filesystem_error( "GetFileSizeEx() failed", m_path, ec );
 #else
             std::perror( "GetFileSizeEx() failed" );
             std::terminate();
@@ -69,7 +71,7 @@ namespace tao::pegtl::internal
          return std::size_t( size.QuadPart );
       }
 
-      const internal::filesystem::path m_path;
+      const std::filesystem::path m_path;
       const HANDLE m_handle;
 
    private:
@@ -86,8 +88,8 @@ namespace tao::pegtl::internal
             return handle;
          }
 #if defined( __cpp_exceptions )
-         internal::error_code ec( ::GetLastError(), internal::system_category() );
-         throw internal::filesystem::filesystem_error( "CreateFile2() failed", m_path, ec );
+         std::error_code ec( ::GetLastError(), std::system_category() );
+         throw std::filesystem::filesystem_error( "CreateFile2() failed", m_path, ec );
 #else
          std::perror( "CreateFile2() failed" );
          std::terminate();
@@ -104,8 +106,8 @@ namespace tao::pegtl::internal
             return handle;
          }
 #if defined( __cpp_exceptions )
-         internal::error_code ec( ::GetLastError(), internal::system_category() );
-         throw internal::filesystem::filesystem_error( "CreateFileW()", m_path, ec );
+         std::error_code ec( ::GetLastError(), std::system_category() );
+         throw std::filesystem::filesystem_error( "CreateFileW()", m_path, ec );
 #else
          std::perror( "CreateFileW() failed" );
          std::terminate();
@@ -116,7 +118,7 @@ namespace tao::pegtl::internal
 
    struct mmap_file_mmap
    {
-      explicit mmap_file_mmap( const internal::filesystem::path& path )
+      explicit mmap_file_mmap( const std::filesystem::path& path )
          : mmap_file_mmap( mmap_file_open( path ) )
       {}
 
@@ -158,8 +160,8 @@ namespace tao::pegtl::internal
             return handle;
          }
 #if defined( __cpp_exceptions )
-         internal::error_code ec( ::GetLastError(), internal::system_category() );
-         throw internal::filesystem::filesystem_error( "CreateFileMappingW() failed", reader.m_path, ec );
+         std::error_code ec( ::GetLastError(), std::system_category() );
+         throw std::filesystem::filesystem_error( "CreateFileMappingW() failed", reader.m_path, ec );
 #else
          std::perror( "CreateFileMappingW() failed" );
          std::terminate();
@@ -170,7 +172,7 @@ namespace tao::pegtl::internal
    class mmap_file_win32
    {
    public:
-      explicit mmap_file_win32( const internal::filesystem::path& path )
+      explicit mmap_file_win32( const std::filesystem::path& path )
          : mmap_file_win32( mmap_file_mmap( path ) )
       {}
 
@@ -184,8 +186,8 @@ namespace tao::pegtl::internal
       {
          if( ( m_size != 0 ) && ( intptr_t( m_data ) == 0 ) ) {
 #if defined( __cpp_exceptions )
-            internal::error_code ec( ::GetLastError(), internal::system_category() );
-            throw internal::filesystem::filesystem_error( "MapViewOfFile() failed", ec );
+            std::error_code ec( ::GetLastError(), std::system_category() );
+            throw std::filesystem::filesystem_error( "MapViewOfFile() failed", ec );
 #else
             std::perror( "MapViewOfFile() failed" );
             std::terminate();
@@ -214,20 +216,17 @@ namespace tao::pegtl::internal
          return m_size;
       }
 
-      using iterator = const char*;
-      using const_iterator = const char*;
-
-      [[nodiscard]] iterator data() const noexcept
+      [[nodiscard]] const char* data() const noexcept
       {
          return m_data;
       }
 
-      [[nodiscard]] iterator begin() const noexcept
+      [[nodiscard]] const char* begin() const noexcept
       {
          return m_data;
       }
 
-      [[nodiscard]] iterator end() const noexcept
+      [[nodiscard]] const char* end() const noexcept
       {
          return m_data + m_size;
       }
@@ -239,6 +238,6 @@ namespace tao::pegtl::internal
 
    using mmap_file_impl = mmap_file_win32;
 
-}  // namespace tao::pegtl::internal
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

@@ -8,12 +8,13 @@
 #include <type_traits>
 
 #include "../ascii.hpp"
+#include "../config.hpp"
 #include "../rules.hpp"
 #include "../type_list.hpp"
 
 #include "forward.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    namespace internal
    {
@@ -282,11 +283,16 @@ namespace tao::pegtl
    {};
 
    template< typename Name, typename Exception, typename... Rules >
-   struct analyze_traits< Name, internal::try_catch_type< Exception, Rules... > >
+   struct analyze_traits< Name, internal::try_catch_raise_nested< Exception, Rules... > >
+      : analyze_traits< Name, typename seq< Rules... >::rule_t >
+   {};
+
+   template< typename Name, typename Exception, typename... Rules >
+   struct analyze_traits< Name, internal::try_catch_return_false< Exception, Rules... > >
       : analyze_traits< Name, typename seq< Rules... >::rule_t >
    {};
 #endif
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2016-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -20,6 +20,7 @@
 #include <exception>
 #endif
 
+#include "config.hpp"
 #include "eol.hpp"
 #include "memory_input.hpp"
 #include "position.hpp"
@@ -27,10 +28,10 @@
 
 #include "internal/action_input.hpp"
 #include "internal/bump.hpp"
-#include "internal/frobnicator.hpp"
+#include "internal/inputerator.hpp"
 #include "internal/rewind_guard.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    template< typename Reader, typename Eol = eol::lf_crlf, typename Source = std::string, std::size_t Chunk = 64 >
    class buffer_input
@@ -41,7 +42,7 @@ namespace tao::pegtl
       using eol_t = Eol;
       using source_t = Source;
 
-      using frobnicator_t = internal::frobnicator;
+      using inputerator_t = internal::inputerator;
 
       using action_t = internal::action_input< buffer_input >;
 
@@ -169,27 +170,32 @@ namespace tao::pegtl
          return internal::rewind_guard< M, buffer_input >( this );
       }
 
-      [[nodiscard]] const frobnicator_t& rewind_save() noexcept
+      [[nodiscard]] const inputerator_t& rewind_save() noexcept
       {
          return m_current;
       }
 
-      void rewind_restore( const frobnicator_t& data ) noexcept
+      void rewind_restore( const inputerator_t& data ) noexcept
       {
          m_current = data;
       }
 
-      [[nodiscard]] tao::pegtl::position position( const frobnicator_t& it ) const
+      [[nodiscard]] TAO_PEGTL_NAMESPACE::position position( const inputerator_t& it ) const
       {
-         return tao::pegtl::position( it, m_source );
+         return TAO_PEGTL_NAMESPACE::position( it, m_source );
       }
 
-      [[nodiscard]] tao::pegtl::position position() const
+      [[nodiscard]] TAO_PEGTL_NAMESPACE::position position() const
       {
          return position( m_current );
       }
 
-      [[nodiscard]] const frobnicator_t& frobnicator() const noexcept
+      [[nodiscard]] TAO_PEGTL_NAMESPACE::position current_position() const
+      {
+         return position( m_current );
+      }
+
+      [[nodiscard]] const inputerator_t& inputerator() const noexcept
       {
          return m_current;
       }
@@ -221,7 +227,7 @@ namespace tao::pegtl
       Reader m_reader;
       std::size_t m_maximum;
       std::unique_ptr< char[] > m_buffer;
-      frobnicator_t m_current;
+      inputerator_t m_current;
       char* m_end;
       const Source m_source;
 
@@ -229,6 +235,6 @@ namespace tao::pegtl
       std::size_t private_depth = 0;
    };
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

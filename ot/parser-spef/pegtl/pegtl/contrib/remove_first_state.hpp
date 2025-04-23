@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2019-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -7,14 +7,16 @@
 
 #include <type_traits>
 
+#include "../config.hpp"
+
 #include "../internal/has_unwind.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    // The first state is removed for most of the control functions forwarded to Base,
-   // start(), success(), failure(), unwind(), raise(), apply(), and apply0(). The call
-   // to match() is unchanged because it can call other grammar rules that require all
-   // states when starting their match to keep an even playing field.
+   // start(), success(), failure(), unwind(), raise(), raise_nested(), apply(), and apply0().
+   // The call to match() is unchanged because it can call other grammar rules that require
+   // all states when starting their match to keep an even playing field.
 
    template< typename Base >
    struct remove_first_state
@@ -44,6 +46,12 @@ namespace tao::pegtl
          Base::raise( in, st... );
       }
 
+      template< typename Ambient, typename State, typename... States >
+      [[noreturn]] static void raise_nested( const Ambient& am, State&& /*unused*/, States&&... st )
+      {
+         Base::raise_nested( am, st... );
+      }
+
       template< typename ParseInput, typename State, typename... States >
       static auto unwind( const ParseInput& in, State&& /*unused*/, States&&... st )
          -> std::enable_if_t< internal::has_unwind< Base, void, const ParseInput&, States... > >
@@ -51,8 +59,8 @@ namespace tao::pegtl
          Base::unwind( in, st... );
       }
 
-      template< template< typename... > class Action, typename Frobnicator, typename ParseInput, typename State, typename... States >
-      static auto apply( const Frobnicator& begin, const ParseInput& in, State&& /*unused*/, States&&... st ) noexcept( noexcept( Base::template apply< Action >( begin, in, st... ) ) )
+      template< template< typename... > class Action, typename Inputerator, typename ParseInput, typename State, typename... States >
+      static auto apply( const Inputerator& begin, const ParseInput& in, State&& /*unused*/, States&&... st ) noexcept( noexcept( Base::template apply< Action >( begin, in, st... ) ) )
          -> decltype( Base::template apply< Action >( begin, in, st... ) )
       {
          return Base::template apply< Action >( begin, in, st... );
@@ -66,6 +74,6 @@ namespace tao::pegtl
       }
    };
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

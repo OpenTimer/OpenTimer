@@ -7,11 +7,13 @@
 
 #include <cstddef>
 
+#include "config.hpp"
 #include "parse_error.hpp"
+#include "position.hpp"
 
 #include "internal/rules.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    // clang-format off
    template< template< typename... > class Action, typename... Rules > struct action : internal::action< Action, Rules... > {};
@@ -71,11 +73,17 @@ namespace tao::pegtl
       static constexpr const char error_message[] = { Cs..., 0 };
    };
    template< typename Cond, typename... Rules > struct star_must : internal::star_must< Cond, Rules... > {};
-   template< typename... Rules > struct try_catch : internal::try_catch_type< parse_error, Rules... > {};
-   template< typename Exception, typename... Rules > struct try_catch_type : internal::seq< internal::try_catch_type< Exception, Rules... > > {};
+   template< typename... Rules > struct try_catch_raise_nested : internal::try_catch_raise_nested< parse_error_base, Rules... > {};
+   template< typename... Rules > struct try_catch_return_false : internal::try_catch_return_false< parse_error_base, Rules... > {};
+   template< typename... Rules > struct try_catch_any_raise_nested : internal::try_catch_raise_nested< void, Rules... > {};
+   template< typename... Rules > struct try_catch_any_return_false : internal::try_catch_return_false< void, Rules... > {};
+   template< typename... Rules > struct try_catch_std_raise_nested : internal::try_catch_raise_nested< std::exception, Rules... > {};
+   template< typename... Rules > struct try_catch_std_return_false : internal::try_catch_return_false< std::exception, Rules... > {};
+   template< typename Exception, typename... Rules > struct try_catch_type_raise_nested : internal::try_catch_raise_nested< Exception, Rules... > {};
+   template< typename Exception, typename... Rules > struct try_catch_type_return_false : internal::try_catch_return_false< Exception, Rules... > {};
 #endif
    // clang-format on
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

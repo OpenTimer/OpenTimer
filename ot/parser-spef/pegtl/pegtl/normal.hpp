@@ -1,15 +1,17 @@
-// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_NORMAL_HPP
 #define TAO_PEGTL_NORMAL_HPP
 
+#include <exception>
 #include <string>
 #include <type_traits>
 #include <utility>
 
 #include "apply_mode.hpp"
+#include "config.hpp"
 #include "match.hpp"
 #include "parse_error.hpp"
 #include "rewind_mode.hpp"
@@ -22,10 +24,9 @@
 #include "demangle.hpp"
 #else
 #include "internal/dependent_false.hpp"
-#include <exception>
 #endif
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    template< typename Rule >
    struct normal
@@ -61,11 +62,28 @@ namespace tao::pegtl
 #endif
       }
 
+      template< typename Ambient, typename... States >
+      [[noreturn]] static void raise_nested( const Ambient& am, States&&... /*unused*/ )
+      {
+#if defined( __cpp_exceptions )
+         if constexpr( internal::has_error_message< Rule > ) {
+            std::throw_with_nested( parse_error( Rule::error_message, am ) );
+         }
+         else {
+            std::throw_with_nested( parse_error( "parse error matching " + std::string( demangle< Rule >() ), am ) );
+         }
+#else
+         static_assert( internal::dependent_false< Rule >, "exception support required for normal< Rule >::raise_nested()" );
+         (void)am;
+         std::terminate();
+#endif
+      }
+
       template< template< typename... > class Action,
-                typename Frobnicator,
+                typename Inputerator,
                 typename ParseInput,
                 typename... States >
-      static auto apply( const Frobnicator& begin, const ParseInput& in, States&&... st ) noexcept( noexcept( Action< Rule >::apply( std::declval< const typename ParseInput::action_t& >(), st... ) ) )
+      static auto apply( const Inputerator& begin, const ParseInput& in, States&&... st ) noexcept( noexcept( Action< Rule >::apply( std::declval< const typename ParseInput::action_t& >(), st... ) ) )
          -> decltype( Action< Rule >::apply( std::declval< const typename ParseInput::action_t& >(), st... ) )
       {
          const typename ParseInput::action_t action_input( begin, in );
@@ -95,11 +113,11 @@ namespace tao::pegtl
             return Action< Rule >::template match< Rule, A, M, Action, Control >( in, st... );
          }
          else {
-            return tao::pegtl::match< Rule, A, M, Action, Control >( in, st... );
+            return TAO_PEGTL_NAMESPACE::match< Rule, A, M, Action, Control >( in, st... );
          }
       }
    };
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

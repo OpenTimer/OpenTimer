@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2022-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -16,15 +16,17 @@
 #else
 #endif
 
-#include "filesystem.hpp"
+#include <filesystem>
 
-namespace tao::pegtl::internal
+#include "../config.hpp"
+
+namespace TAO_PEGTL_NAMESPACE::internal
 {
    struct mmap_file
    {
       const mmap_file_impl data;
 
-      explicit mmap_file( const internal::filesystem::path& path )
+      explicit mmap_file( const std::filesystem::path& path )
          : data( path )
       {}
 
@@ -37,6 +39,6 @@ namespace tao::pegtl::internal
       mmap_file& operator=( mmap_file&& ) = delete;
    };
 
-}  // namespace tao::pegtl::internal
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

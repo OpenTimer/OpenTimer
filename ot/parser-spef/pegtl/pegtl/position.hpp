@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -7,13 +7,13 @@
 
 #include <cstdlib>
 #include <ostream>
-#include <sstream>
 #include <string>
-#include <utility>
 
-#include "internal/frobnicator.hpp"
+#include "config.hpp"
 
-namespace tao::pegtl
+#include "internal/inputerator.hpp"
+
+namespace TAO_PEGTL_NAMESPACE
 {
    struct position
    {
@@ -26,7 +26,7 @@ namespace tao::pegtl
       position& operator=( const position& ) = default;
 
       template< typename T >
-      position( const internal::frobnicator& in_iter, T&& in_source )
+      position( const internal::inputerator& in_iter, T&& in_source )
          : byte( in_iter.byte ),
            line( in_iter.line ),
            column( in_iter.column ),
@@ -64,13 +64,6 @@ namespace tao::pegtl
       return os << p.source << ':' << p.line << ':' << p.column;
    }
 
-   [[nodiscard]] inline std::string to_string( const position& p )
-   {
-      std::ostringstream oss;
-      oss << p;
-      return std::move( oss ).str();
-   }
-
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

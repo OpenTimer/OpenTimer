@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2020-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -7,11 +7,13 @@
 
 #include <type_traits>
 
-#include "shuffle_states.hpp"
+#include "../config.hpp"
 
 #include "../internal/has_unwind.hpp"
 
-namespace tao::pegtl
+#include "shuffle_states.hpp"
+
+namespace TAO_PEGTL_NAMESPACE
 {
    template< template< typename... > class Control >
    struct state_control
@@ -76,6 +78,15 @@ namespace tao::pegtl
             Control< Rule >::raise( in, st... );
          }
 
+         template< typename Ambient, typename State, typename... States >
+         [[noreturn]] static void raise_nested( const Ambient& am, [[maybe_unused]] State& state, States&&... st )
+         {
+            if constexpr( State::template enable< Rule > ) {
+               state.template raise_nested< Rule >( am, st... );
+            }
+            Control< Rule >::raise_nested( am, st... );
+         }
+
          template< typename ParseInput, typename State, typename... States >
          static auto unwind( [[maybe_unused]] const ParseInput& in, [[maybe_unused]] State& state, [[maybe_unused]] States&&... st )
             -> std::enable_if_t< State::template enable< Rule > || ( Control< Rule >::enable && internal::has_unwind< Control< Rule >, void, const ParseInput&, States... > ) >
@@ -92,8 +103,8 @@ namespace tao::pegtl
 #endif
          }
 
-         template< template< typename... > class Action, typename Frobnicator, typename ParseInput, typename State, typename... States >
-         static auto apply( const Frobnicator& begin, const ParseInput& in, [[maybe_unused]] State& state, States&&... st )
+         template< template< typename... > class Action, typename Inputerator, typename ParseInput, typename State, typename... States >
+         static auto apply( const Inputerator& begin, const ParseInput& in, [[maybe_unused]] State& state, States&&... st )
             -> decltype( Control< Rule >::template apply< Action >( begin, in, st... ) )
          {
             if constexpr( State::template enable< Rule > ) {
@@ -117,6 +128,6 @@ namespace tao::pegtl
       using type = rotate_states_right< control< Rule > >;
    };
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2016-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2016-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -10,20 +10,21 @@
 #include <string>
 #include <string_view>
 
-#include "frobnicator.hpp"
+#include "inputerator.hpp"
 
+#include "../config.hpp"
 #include "../position.hpp"
 
-namespace tao::pegtl::internal
+namespace TAO_PEGTL_NAMESPACE::internal
 {
    template< typename ParseInput >
    class action_input
    {
    public:
       using input_t = ParseInput;
-      using frobnicator_t = typename ParseInput::frobnicator_t;
+      using inputerator_t = typename ParseInput::inputerator_t;
 
-      action_input( const frobnicator_t& in_begin, const ParseInput& in_input ) noexcept
+      action_input( const inputerator_t& in_begin, const ParseInput& in_input ) noexcept
          : m_begin( in_begin ),
            m_input( in_input )
       {}
@@ -36,7 +37,7 @@ namespace tao::pegtl::internal
       action_input& operator=( const action_input& ) = delete;
       action_input& operator=( action_input&& ) = delete;
 
-      [[nodiscard]] const frobnicator_t& frobnicator() const noexcept
+      [[nodiscard]] const inputerator_t& inputerator() const noexcept
       {
          return m_begin;
       }
@@ -46,13 +47,18 @@ namespace tao::pegtl::internal
          return m_input;
       }
 
+      [[nodiscard]] const char* current() const noexcept
+      {
+         return begin();
+      }
+
       [[nodiscard]] const char* begin() const noexcept
       {
-         if constexpr( std::is_same_v< frobnicator_t, const char* > ) {
-            return frobnicator();
+         if constexpr( std::is_same_v< inputerator_t, const char* > ) {
+            return inputerator();
          }
          else {
-            return frobnicator().data;
+            return inputerator().data;
          }
       }
 
@@ -91,16 +97,21 @@ namespace tao::pegtl::internal
          return static_cast< std::uint8_t >( peek_char( offset ) );
       }
 
-      [[nodiscard]] tao::pegtl::position position() const
+      [[nodiscard]] TAO_PEGTL_NAMESPACE::position position() const
       {
-         return input().position( frobnicator() );  // NOTE: Not efficient with lazy inputs.
+         return input().position( inputerator() );  // NOTE: Not efficient with lazy inputs.
+      }
+
+      [[nodiscard]] TAO_PEGTL_NAMESPACE::position current_position() const
+      {
+         return input().position( inputerator() );  // NOTE: Not efficient with lazy inputs.
       }
 
    protected:
-      const frobnicator_t m_begin;
+      const inputerator_t m_begin;
       const ParseInput& m_input;
    };
 
-}  // namespace tao::pegtl::internal
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2020-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -10,17 +10,19 @@
 #include <iostream>
 #include <string_view>
 #include <tuple>
+#include <vector>
 
 #include "state_control.hpp"
 
 #include "../apply_mode.hpp"
+#include "../config.hpp"
 #include "../demangle.hpp"
 #include "../normal.hpp"
 #include "../nothing.hpp"
 #include "../parse.hpp"
 #include "../rewind_mode.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    template< bool HideInternal = true,
              bool UseColor = true,
@@ -147,6 +149,12 @@ namespace tao::pegtl
          std::cerr << std::setw( indent() ) << ' ' << TracerTraits::ansi_raise << "raise" << TracerTraits::ansi_reset << ' ' << TracerTraits::ansi_rule << demangle< Rule >() << TracerTraits::ansi_reset << '\n';
       }
 
+      template< typename Rule, typename Ambient, typename... States >
+      void raise_nested( const Ambient& /*unused*/, States&&... /*unused*/ )
+      {
+         std::cerr << std::setw( indent() ) << ' ' << TracerTraits::ansi_raise << "raise_nested" << TracerTraits::ansi_reset << ' ' << TracerTraits::ansi_rule << demangle< Rule >() << TracerTraits::ansi_reset << '\n';
+      }
+
       template< typename Rule, typename ParseInput, typename... States >
       void unwind( const ParseInput& in, States&&... /*unused*/ )
       {
@@ -179,7 +187,7 @@ namespace tao::pegtl
                 typename... States >
       bool parse( ParseInput&& in, States&&... st )
       {
-         return tao::pegtl::parse< Rule, Action, state_control< Control >::template type >( in, st..., *this );
+         return TAO_PEGTL_NAMESPACE::parse< Rule, Action, state_control< Control >::template type >( in, st..., *this );
       }
    };
 
@@ -221,13 +229,13 @@ namespace tao::pegtl
       [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
          if constexpr( sizeof...( st ) == 0 ) {
-            return tao::pegtl::match< Rule, A, M, Action, state_control< Control >::template type >( in, st..., Tracer( in ) );
+            return TAO_PEGTL_NAMESPACE::match< Rule, A, M, Action, state_control< Control >::template type >( in, st..., Tracer( in ) );
          }
          else if constexpr( !std::is_same_v< std::tuple_element_t< sizeof...( st ) - 1, std::tuple< States... > >, Tracer& > ) {
-            return tao::pegtl::match< Rule, A, M, Action, state_control< Control >::template type >( in, st..., Tracer( in ) );
+            return TAO_PEGTL_NAMESPACE::match< Rule, A, M, Action, state_control< Control >::template type >( in, st..., Tracer( in ) );
          }
          else {
-            return tao::pegtl::match< Rule, A, M, Action, Control >( in, st... );
+            return TAO_PEGTL_NAMESPACE::match< Rule, A, M, Action, Control >( in, st... );
          }
       }
    };
@@ -235,6 +243,6 @@ namespace tao::pegtl
    using trace_standard = trace< tracer< standard_tracer_traits > >;
    using trace_complete = trace< tracer< complete_tracer_traits > >;
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

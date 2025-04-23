@@ -1,4 +1,4 @@
-// Copyright (c) 2019-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2019-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -8,6 +8,7 @@
 #include <type_traits>
 
 #include "apply_mode.hpp"
+#include "config.hpp"
 #include "nothing.hpp"
 #include "require_apply.hpp"
 #include "require_apply0.hpp"
@@ -26,7 +27,7 @@
 #pragma warning( disable : 4702 )
 #endif
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    namespace internal
    {
@@ -107,9 +108,9 @@ namespace tao::pegtl
       else {
          constexpr bool enable_action = ( A == apply_mode::action );
 
-         using frobnicator_t = typename ParseInput::frobnicator_t;
-         constexpr bool has_apply_void = enable_action && internal::has_apply< Control< Rule >, void, Action, const frobnicator_t&, const ParseInput&, States... >;
-         constexpr bool has_apply_bool = enable_action && internal::has_apply< Control< Rule >, bool, Action, const frobnicator_t&, const ParseInput&, States... >;
+         using inputerator_t = typename ParseInput::inputerator_t;
+         constexpr bool has_apply_void = enable_action && internal::has_apply< Control< Rule >, void, Action, const inputerator_t&, const ParseInput&, States... >;
+         constexpr bool has_apply_bool = enable_action && internal::has_apply< Control< Rule >, bool, Action, const inputerator_t&, const ParseInput&, States... >;
          constexpr bool has_apply = has_apply_void || has_apply_bool;
 
          constexpr bool has_apply0_void = enable_action && internal::has_apply0< Control< Rule >, void, Action, const ParseInput&, States... >;
@@ -136,15 +137,15 @@ namespace tao::pegtl
 
          constexpr bool use_guard = has_apply || has_apply0_bool;
 
-         auto m = in.template auto_rewind< ( use_guard ? rewind_mode::required : rewind_mode::dontcare ) >();
+         auto m = in.template auto_rewind< ( use_guard ? rewind_mode::required : rewind_mode::optional ) >();
          Control< Rule >::start( static_cast< const ParseInput& >( in ), st... );
-         auto result = internal::match_control_unwind< Rule, A, ( use_guard ? rewind_mode::active : M ), Action, Control >( in, st... );
+         auto result = internal::match_control_unwind< Rule, A, ( use_guard ? rewind_mode::optional : M ), Action, Control >( in, st... );
          if( result ) {
             if constexpr( has_apply_void ) {
-               Control< Rule >::template apply< Action >( m.frobnicator(), static_cast< const ParseInput& >( in ), st... );
+               Control< Rule >::template apply< Action >( m.inputerator(), static_cast< const ParseInput& >( in ), st... );
             }
             else if constexpr( has_apply_bool ) {
-               result = Control< Rule >::template apply< Action >( m.frobnicator(), static_cast< const ParseInput& >( in ), st... );
+               result = Control< Rule >::template apply< Action >( m.inputerator(), static_cast< const ParseInput& >( in ), st... );
             }
             else if constexpr( has_apply0_void ) {
                Control< Rule >::template apply0< Action >( static_cast< const ParseInput& >( in ), st... );
@@ -164,7 +165,7 @@ namespace tao::pegtl
       }
    }
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #if defined( _MSC_VER )
 #pragma warning( pop )

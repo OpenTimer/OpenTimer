@@ -1,4 +1,4 @@
-// Copyright (c) 2020-2022 Dr. Colin Hirsch and Daniel Frey
+// Copyright (c) 2020-2023 Dr. Colin Hirsch and Daniel Frey
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
@@ -9,9 +9,11 @@
 #include <type_traits>
 #include <utility>
 
+#include "../config.hpp"
+
 #include "../internal/has_unwind.hpp"
 
-namespace tao::pegtl
+namespace TAO_PEGTL_NAMESPACE
 {
    namespace internal
    {
@@ -37,7 +39,7 @@ namespace tao::pegtl
 
    }  // namespace internal
 
-   // Applies 'Shuffle' to the states of start(), success(), failure(), raise(), apply(), and apply0()
+   // Applies 'Shuffle' to the states of start(), success(), failure(), raise(), raise_nested(), apply(), and apply0()
    template< typename Base, typename Shuffle >
    struct shuffle_states
       : Base
@@ -114,6 +116,24 @@ namespace tao::pegtl
          Base::raise( in, st );
       }
 
+      template< typename Ambient, typename Tuple, std::size_t... Is >
+      [[noreturn]] static void raise_nested_impl( const Ambient& in, const Tuple& t, std::index_sequence< Is... > /*unused*/ )
+      {
+         Base::raise_nested( in, std::get< Shuffle::template value< Is, sizeof...( Is ) > >( t )... );
+      }
+
+      template< typename Ambient, typename... States >
+      [[noreturn]] static void raise_nested( const Ambient& in, States&&... st )
+      {
+         raise_nested_impl( in, std::tie( st... ), std::make_index_sequence< sizeof...( st ) >() );
+      }
+
+      template< typename Ambient, typename State >
+      [[noreturn]] static void raise_nested( const Ambient& in, State&& st )
+      {
+         Base::raise_nested( in, st );
+      }
+
       template< typename ParseInput, typename Tuple, std::size_t... Is >
       static auto unwind_impl( const ParseInput& in, const Tuple& t, std::index_sequence< Is... > /*unused*/ )
          -> std::enable_if_t< internal::has_unwind< Base, void, const ParseInput&, std::tuple_element_t< Shuffle::template value< Is, sizeof...( Is ) >, Tuple >... > >
@@ -135,22 +155,22 @@ namespace tao::pegtl
          Base::unwind( in, st );
       }
 
-      template< template< typename... > class Action, typename Frobnicator, typename ParseInput, typename Tuple, std::size_t... Is >
-      static auto apply_impl( const Frobnicator& begin, const ParseInput& in, const Tuple& t, std::index_sequence< Is... > /*unused*/ ) noexcept( noexcept( Base::template apply< Action >( begin, in, std::get< Shuffle::template value< Is, sizeof...( Is ) > >( t )... ) ) )
+      template< template< typename... > class Action, typename Inputerator, typename ParseInput, typename Tuple, std::size_t... Is >
+      static auto apply_impl( const Inputerator& begin, const ParseInput& in, const Tuple& t, std::index_sequence< Is... > /*unused*/ ) noexcept( noexcept( Base::template apply< Action >( begin, in, std::get< Shuffle::template value< Is, sizeof...( Is ) > >( t )... ) ) )
          -> decltype( Base::template apply< Action >( begin, in, std::get< Shuffle::template value< Is, sizeof...( Is ) > >( t )... ) )
       {
          return Base::template apply< Action >( begin, in, std::get< Shuffle::template value< Is, sizeof...( Is ) > >( t )... );
       }
 
-      template< template< typename... > class Action, typename Frobnicator, typename ParseInput, typename... States >
-      static auto apply( const Frobnicator& begin, const ParseInput& in, States&&... st ) noexcept( noexcept( apply_impl< Action >( begin, in, std::tie( st... ), std::make_index_sequence< sizeof...( st ) >() ) ) )
+      template< template< typename... > class Action, typename Inputerator, typename ParseInput, typename... States >
+      static auto apply( const Inputerator& begin, const ParseInput& in, States&&... st ) noexcept( noexcept( apply_impl< Action >( begin, in, std::tie( st... ), std::make_index_sequence< sizeof...( st ) >() ) ) )
          -> decltype( apply_impl< Action >( begin, in, std::tie( st... ), std::make_index_sequence< sizeof...( st ) >() ) )
       {
          return apply_impl< Action >( begin, in, std::tie( st... ), std::make_index_sequence< sizeof...( st ) >() );
       }
 
-      template< template< typename... > class Action, typename Frobnicator, typename ParseInput, typename State >
-      static auto apply( const Frobnicator& begin, const ParseInput& in, State&& st ) noexcept( noexcept( Base::template apply< Action >( begin, in, st ) ) )
+      template< template< typename... > class Action, typename Inputerator, typename ParseInput, typename State >
+      static auto apply( const Inputerator& begin, const ParseInput& in, State&& st ) noexcept( noexcept( Base::template apply< Action >( begin, in, st ) ) )
          -> decltype( Base::template apply< Action >( begin, in, st ) )
       {
          return Base::template apply< Action >( begin, in, st );
@@ -187,6 +207,6 @@ namespace tao::pegtl
    template< typename Base >
    using reverse_states = shuffle_states< Base, internal::reverse >;
 
-}  // namespace tao::pegtl
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif
