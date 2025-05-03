@@ -1,12 +1,3 @@
-// -----------------------------------------------------------------------------
-// Copyright (c) 2024 Partcl, Inc. All rights reserved.
-//
-// This software is proprietary and confidential. Unauthorized copying, sharing,
-// modification, or distribution of this file, via any medium, is strictly prohibited
-// without prior written permission from Partcl, Inc.
-//
-// For inquiries regarding licensing, please contact: contact@partcleda.com
-// -----------------------------------------------------------------------------
 
 #include <ot/liberty/celllib.hpp>
 
@@ -644,6 +635,48 @@ namespace ot
     return power;
   }
 
+// Function: _extract_cell
+  LeakagePower Celllib::_extract_leakage_power(token_iterator &itr, const token_iterator end)
+  {
+    LeakagePower leakage_power;
+
+    // Extract the lut template group
+    if (itr = std::find(itr, end, "{"); itr == end) {
+      OT_LOGF("can't find group brace '{' in leakage_power");
+    }
+
+    int stack = 1;
+
+    while (stack && ++itr != end)
+    {
+      if (*itr == "value")
+      {
+        OT_LOGF_IF(++itr == end, "can't get the value in leakage_power");
+        leakage_power.value = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "when")
+      {
+        OT_LOGF_IF(++itr == end, "can't get the when in leakage_power");
+        leakage_power.when = *itr;
+      }
+      else if (*itr == "related_pg_pin")
+      {
+        OT_LOGF_IF(++itr == end, "can't get the related_pg_pin in leakage_power");
+        leakage_power.related_pg_pin = *itr;
+      } else if (*itr == "}") {
+          stack--;
+      } else if (*itr == "{") {
+          stack++;
+      } else {
+      }
+    }
+
+    if (stack != 0 || *itr != "}") {
+        OT_LOGF("can't find group brace '}' in timing");
+    }
+    return leakage_power;
+  }
+
   // Function: _extract_timing
   Timing Celllib::_extract_timing(token_iterator &itr, const token_iterator end, std::string pin)
   {
@@ -1056,7 +1089,6 @@ namespace ot
     }
 
     int stack = 1;
-
     while (stack && ++itr != end)
     {
       if (*itr == "ff")
@@ -1077,6 +1109,10 @@ namespace ot
       { // Read the leakage power.
         OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
         cell.leakage_power = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "leakage_power")
+      {
+        cell.leakage_power_list.push_back(_extract_leakage_power(itr, end));
       }
       else if (*itr == "cell_footprint")
       { // Read the footprint.
