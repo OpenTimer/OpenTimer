@@ -92,6 +92,7 @@ namespace ot
     Cell _extract_cell(token_iterator &, const token_iterator);
     Cellpin _extract_cellpin(token_iterator &, const token_iterator);
     InternalPower _extract_internal_power(token_iterator &, const token_iterator);
+    LeakagePower _extract_leakage_power(token_iterator &, const token_iterator);
     Timing _extract_timing(token_iterator &, const token_iterator, std::string pin);
     Wireload _extract_wireload(token_iterator &, const token_iterator);
     SequentialInfo _extract_sequential_info(token_iterator &, const token_iterator);

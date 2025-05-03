@@ -21,6 +21,14 @@ struct InternalPower {
 
 std::ostream& operator << (std::ostream&, const InternalPower&);
 
+struct LeakagePower {
+
+  float value;
+  std::string when;
+  std::optional<std::string> related_pg_pin;
+
+};
+
 };  // end of namespace ot. -----------------------------------------------------------------------
 
 

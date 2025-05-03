@@ -2,7 +2,7 @@
 #define OT_LIBERTY_CELL_HPP_
 
 #include <ot/liberty/cellpin.hpp>
-
+#include <ot/liberty/power.hpp>
 namespace ot {
 
 // Class SequentialInfo
@@ -17,10 +17,11 @@ struct SequentialInfo {
 // Class: Cell
 struct Cell {
 
-  std::string name; 
+  std::string name;
   std::string cell_footprint;
 
   std::optional<float> leakage_power;
+  std::vector<LeakagePower> leakage_power_list;
   std::optional<float> area;
   std::optional<bool> is_sequential;
   std::unordered_map<std::string, Cellpin> cellpins;
