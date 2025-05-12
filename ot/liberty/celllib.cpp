@@ -64,7 +64,8 @@ namespace ot
   // Procedure: _tokenize
   void Celllib::_tokenize(const std::vector<char> &buf, std::vector<std::string> &tokens)
   {
-    static const std::string dels = "(),:/#[]{}*\"\\";
+    // static const std::string dels = "(),:/#[]{}*\"\\";
+    static const std::string dels = "(),/#{}*\"\\";
     const char *beg = buf.data();
     const char *end = buf.data() + buf.size();
     tokens.clear();
@@ -225,8 +226,8 @@ namespace ot
 
       // variable 1
       if (*itr == "voltage")
-      { // Read the variable.
-
+      {        // Read the variable.
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("volate error in operating_conditions template ", operating_condition_name);
@@ -285,6 +286,7 @@ namespace ot
     {
       if (*itr == "clocked_on")
       {
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("clocked_on error in sequential info ", info.clocked_on);
@@ -303,6 +305,7 @@ namespace ot
       }
       else if (*itr == "next_state")
       {
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("next_state error in sequential info ", info.clocked_on);
@@ -321,6 +324,7 @@ namespace ot
       }
       else if (*itr == "data_in")
       {
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("data_in error in sequential info ", info.clocked_on);
@@ -330,6 +334,7 @@ namespace ot
       }
       else if (*itr == "enable")
       {
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("enable error in sequential info ", info.clocked_on);
@@ -386,11 +391,10 @@ namespace ot
 
     while (stack && ++itr != end)
     {
-
       // variable 1
       if (*itr == "variable_1")
-      { // Read the variable.
-
+      {        // Read the variable.
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("variable_1 error in lut template ", lt.name);
@@ -408,7 +412,7 @@ namespace ot
       // variable 2
       else if (*itr == "variable_2")
       {
-
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("variable_2 error in lut template ", lt.name);
@@ -606,7 +610,7 @@ namespace ot
       }
       else if (*itr == "related_pin")
       {
-
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("syntax error in related_pin");
@@ -635,13 +639,14 @@ namespace ot
     return power;
   }
 
-// Function: _extract_cell
+  // Function: _extract_cell
   LeakagePower Celllib::_extract_leakage_power(token_iterator &itr, const token_iterator end)
   {
     LeakagePower leakage_power;
 
     // Extract the lut template group
-    if (itr = std::find(itr, end, "{"); itr == end) {
+    if (itr = std::find(itr, end, "{"); itr == end)
+    {
       OT_LOGF("can't find group brace '{' in leakage_power");
     }
 
@@ -651,28 +656,38 @@ namespace ot
     {
       if (*itr == "value")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the value in leakage_power");
         leakage_power.value = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "when")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the when in leakage_power");
         leakage_power.when = *itr;
       }
       else if (*itr == "related_pg_pin")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the related_pg_pin in leakage_power");
         leakage_power.related_pg_pin = *itr;
-      } else if (*itr == "}") {
-          stack--;
-      } else if (*itr == "{") {
-          stack++;
-      } else {
+      }
+      else if (*itr == "}")
+      {
+        stack--;
+      }
+      else if (*itr == "{")
+      {
+        stack++;
+      }
+      else
+      {
       }
     }
 
-    if (stack != 0 || *itr != "}") {
-        OT_LOGF("can't find group brace '}' in timing");
+    if (stack != 0 || *itr != "}")
+    {
+      OT_LOGF("can't find group brace '}' in timing");
     }
     return leakage_power;
   }
@@ -694,8 +709,10 @@ namespace ot
     while (stack && ++itr != end)
     {
       // std::cout << "timing: " << *itr << std::endl;
+      // std::cout << "timing: " << *itr << std::endl;
       if (*itr == "cell_fall")
       {
+
         timing.cell_fall = _extract_lut(itr, end);
       }
       else if (*itr == "cell_rise")
@@ -719,10 +736,14 @@ namespace ot
         timing.fall_constraint = _extract_lut(itr, end);
       }
       else if (*itr == "timing_sense")
-      { // Read the timing sense.
-
+      {        // Read the timing sense.
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntex error in timing_sense");
-
+        if (*itr == ":")
+        {
+          // Skip the colon
+          continue;
+        }
         if (*itr == "negative_unate")
         {
           timing.sense = TimingSense::NEGATIVE_UNATE; // Negative unate.
@@ -754,7 +775,7 @@ namespace ot
       }
       else if (*itr == "timing_type")
       {
-
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("syntax error in timing_type");
@@ -772,7 +793,7 @@ namespace ot
 
       else if (*itr == "related_pin")
       {
-
+        itr++; // Skip the colon
         if (++itr == end)
         {
           OT_LOGF("syntax error in related_pin");
@@ -867,7 +888,9 @@ namespace ot
     {
       OT_LOGF("can't find cellpin name");
     }
-
+    // Debug: Print all tokens
+    // std::cout << "whotf is printing this" << std::endl;
+    // std::cout << "extracting timing for " << cellpin.name << std::endl;
     // Extract the lut template group
     if (itr = std::find(itr, end, "{"); itr == end)
     {
@@ -884,10 +907,11 @@ namespace ot
     while (stack && ++itr != end)
     {
       // print itr
+      // std::cout << "cellpin: " << *itr << std::endl;
 
       if (*itr == "direction")
       {
-
+        itr++;
         if (++itr == end)
         {
           OT_LOGF("can't get the direction in cellpin ", cellpin.name);
@@ -904,11 +928,13 @@ namespace ot
       }
       else if (*itr == "capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the capacitance in cellpin ", cellpin.name);
         cellpin.capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "function")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the function in cellpin ", cellpin.name);
 
         std::string func_str;
@@ -938,56 +964,67 @@ namespace ot
 
       else if (*itr == "max_capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the max_capacitance in cellpin ", cellpin.name);
         cellpin.max_capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "min_capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the min_capacitance in cellpin ", cellpin.name);
         cellpin.min_capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "max_transition")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the max_transition in cellpin ", cellpin.name);
         cellpin.max_transition = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "min_transition")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the min_transition in cellpin ", cellpin.name);
         cellpin.min_transition = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "fall_capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get fall_capacitance in cellpin ", cellpin.name);
         cellpin.fall_capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "rise_capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get rise_capacitance in cellpin ", cellpin.name);
         cellpin.rise_capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "fanout_load")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get fanout_load in cellpin ", cellpin.name);
         cellpin.fanout_load = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "max_fanout")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get max_fanout in cellpin ", cellpin.name);
         cellpin.max_fanout = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "min_fanout")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get min_fanout in cellpin ", cellpin.name);
         cellpin.min_fanout = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "clock")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the clock status in cellpin ", cellpin.name);
         cellpin.is_clock = (*itr == "true") ? true : false;
       }
       else if (*itr == "original_pin")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
         cellpin.original_pin = *itr;
       }
@@ -1042,6 +1079,8 @@ namespace ot
         // Extract timing information
         auto ti = _extract_timing(itr, end, cellpin.name);
         // ot::printTiming(ti);
+        // std::cout << "extracted timing for cellpin: " << cellpin.name << std::endl;
+        // ot::printTiming(ti);
         cellpin.timings.push_back(ti);
         // std::cout << "Timing added, count: " << cellpin.timings.size() << std::endl;
       }
@@ -1081,18 +1120,21 @@ namespace ot
     {
       OT_LOGF("can't find cell name");
     }
-
+    // std::cout << "cell: " << cell.name << std::endl;
+    // std::cout << "hello?  " << std::endl;
+    // std::cout << "extracting cell " << cell.name << std::endl;
     // Extract the lut template group
     if (itr = std::find(itr, end, "{"); itr == end)
     {
       OT_LOGF("can't find group brace '{' in cell ", cell.name);
     }
-
     int stack = 1;
     while (stack && ++itr != end)
     {
+      // std::cout << stack << " " << *itr << std::endl;
       if (*itr == "ff")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in ff");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
@@ -1100,13 +1142,15 @@ namespace ot
       }
       else if (*itr == "latch")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in latch");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
         cell.is_ff = false;
       }
       else if (*itr == "cell_leakage_power")
-      { // Read the leakage power.
+      {        // Read the leakage power.
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get leakage power in cell ", cell.name);
         cell.leakage_power = std::strtof(itr->data(), nullptr);
       }
@@ -1115,17 +1159,20 @@ namespace ot
         cell.leakage_power_list.push_back(_extract_leakage_power(itr, end));
       }
       else if (*itr == "cell_footprint")
-      { // Read the footprint.
+      {        // Read the footprint.
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get footprint in cell ", cell.name);
         cell.cell_footprint = *itr;
       }
       else if (*itr == "area")
-      { // Read the area.
+      {        // Read the area.
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get area in cell ", cell.name);
         cell.area = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "pin")
       { // Read the cell pin group.
+        // std::cout << "extracting cellpin for cell " << cell.name << std::endl;
         auto pin = _extract_cellpin(itr, end);
 
         // Debug before insertion
@@ -1200,16 +1247,19 @@ namespace ot
     {
       if (*itr == "capacitance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get capacitance in wireload ", wl.name);
         wl.capacitance = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "slope")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get slope in wireload ", wl.name);
         wl.slope = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "resistance")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get resistance in wireload ", wl.name);
         wl.resistance = std::strtof(itr->data(), nullptr);
       }
@@ -1257,6 +1307,11 @@ namespace ot
     while (stack && ++itr != end)
     {
       // std::cout << "processing line " << itr->data() << std::endl;
+      if (*itr == ":")
+      {
+        // Skip the colon
+        continue;
+      }
       if (*itr == "dc_current")
       {
         ccsn_stage.dc_current.push_back(_extract_lut(itr, end));
@@ -1279,6 +1334,7 @@ namespace ot
       }
       else if (*itr == "is_inverting")
       {
+        itr++;
         OT_LOGF_IF(++itr == end, "can't get is_inverting in CCSN stage");
 
         if (*itr == "true")
@@ -1304,6 +1360,7 @@ namespace ot
       }
       else if (*itr == "is_needed")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get is_needed in CCSN stage");
         if (*itr == "true")
         {
@@ -1332,32 +1389,38 @@ namespace ot
       }
       else if (*itr == "miller_cap_fall")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get miller_cap_fall in CCSN stage");
         ccsn_stage.miller_cap_fall = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "miller_cap_rise")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get miller_cap_rise in CCSN stage");
         ccsn_stage.miller_cap_rise = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "pin")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get pin in CCSN stage");
         ccsn_stage.pin = *itr;
       }
       else if (*itr == "related_pin")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get related_pin in CCSN stage");
         ccsn_stage.related_pin = *itr;
       }
       else if (*itr == "when")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get when condition in CCSN stage");
         ccsn_stage.when = *itr;
       }
 
       else if (*itr == "stage_type")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get stage_type in CCSN stage");
         ccsn_stage.stage_type = *itr;
       }
@@ -1452,6 +1515,7 @@ namespace ot
       }
       else if (*itr == "delay_model")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in delay_model");
         if (auto ditr = delay_models.find(*itr); ditr != delay_models.end())
         {
@@ -1464,82 +1528,98 @@ namespace ot
       }
       else if (*itr == "nom_process")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in nom_process");
         nom_process = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "nom_temperature")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in nom_temperature");
         nom_temperature = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "nom_voltage")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in nom_voltage");
         nom_voltage = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_cell_leakage_power")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_cell_leakage_power");
         default_cell_leakage_power = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_inout_pin_cap")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_inout_pin_cap");
         default_inout_pin_cap = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_input_pin_cap")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_input_pin_cap");
         default_input_pin_cap = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_output_pin_cap")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_output_pin_cap");
         default_output_pin_cap = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_fanout_load")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_fanout_load");
         default_fanout_load = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_max_fanout")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_max_fanout");
         default_max_fanout = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "default_max_transition")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_max_transition");
         default_max_transition = std::strtof(itr->data(), nullptr);
       }
       else if (*itr == "operating_conditions")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in operating_conditions");
         voltage = _extract_operating_conditions(itr, end);
         // TODO: Unit field.
       }
       else if (*itr == "time_unit")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "time_unit syntax error");
         time_unit = make_time_unit(*itr);
       }
       else if (*itr == "voltage_unit")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "voltage_unit syntax error");
         voltage_unit = make_voltage_unit(*itr);
       }
       else if (*itr == "current_unit")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "current_unit syntax error");
         current_unit = make_current_unit(*itr);
       }
       else if (*itr == "pulling_resistance_unit")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "pulling_resistance_unit syntax error");
         resistance_unit = make_resistance_unit(*itr);
       }
       else if (*itr == "leakage_power_unit")
       {
+        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "leakage_power_unit syntax error");
         power_unit = make_power_unit(*itr);
       }

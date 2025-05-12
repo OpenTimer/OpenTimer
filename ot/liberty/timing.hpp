@@ -227,6 +227,16 @@ namespace ot
     std::cout << "  rise_constraint: " << (t.rise_constraint ? "present" : "N/A") << std::endl;
     std::cout << "  fall_constraint: " << (t.fall_constraint ? "present" : "N/A") << std::endl;
 
+    // If we have a fall constraint, print it.
+    if (t.fall_constraint)
+    {
+      std::cout << "  fall_constraint: " << t.fall_constraint.value() << std::endl;
+    }
+    else
+    {
+      std::cout << "  fall_constraint: N/A" << std::endl;
+    }
+
     // Instead of printing the member function, just indicate its existence.
     std::cout << "  internal_power: " << "[function pointer - not printed]" << std::endl;
   }

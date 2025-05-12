@@ -70,6 +70,13 @@ namespace ot
     void scale_capacitance(float);
   };
 
+  struct Cellbus
+  {
+    std::string name;
+    std::string bus_type;
+    std::optional<CellpinDirection> direction;
+  };
+
   std::ostream &operator<<(std::ostream &, const Cellpin &);
 
   // ------------------------------------------------------------------------------------------------
