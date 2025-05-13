@@ -97,6 +97,7 @@ namespace ot
     Wireload _extract_wireload(token_iterator &, const token_iterator);
     SequentialInfo _extract_sequential_info(token_iterator &, const token_iterator);
     CCSNStage _extract_ccsn(token_iterator &itr, const token_iterator end);
+    void _extract_test_cell(token_iterator &itr, const token_iterator end);
 
     void _apply_default_values();
     void _uncomment(std::vector<char> &);

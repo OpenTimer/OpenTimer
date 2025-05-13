@@ -1,6 +1,7 @@
 
 #include <ot/liberty/celllib.hpp>
 
+/*This parser is held together with duct tape and sticks -w */
 namespace ot
 {
 
@@ -1120,6 +1121,7 @@ namespace ot
     {
       OT_LOGF("can't find cell name");
     }
+
     // std::cout << "cell: " << cell.name << std::endl;
     // std::cout << "hello?  " << std::endl;
     // std::cout << "extracting cell " << cell.name << std::endl;
@@ -1134,7 +1136,6 @@ namespace ot
       // std::cout << stack << " " << *itr << std::endl;
       if (*itr == "ff")
       {
-        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in ff");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
@@ -1142,7 +1143,6 @@ namespace ot
       }
       else if (*itr == "latch")
       {
-        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in latch");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
@@ -1163,6 +1163,7 @@ namespace ot
         itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "can't get footprint in cell ", cell.name);
         cell.cell_footprint = *itr;
+        itr++; // Skip the semicolon I have no idea what tf is going on anymore.
       }
       else if (*itr == "area")
       {        // Read the area.
@@ -1170,6 +1171,70 @@ namespace ot
         OT_LOGF_IF(++itr == end, "can't get area in cell ", cell.name);
         cell.area = std::strtof(itr->data(), nullptr);
       }
+      else if (*itr == "pg_pin")
+      {
+        // Skip this by going to the next } and continuing
+        itr = std::find(itr, end, "}");
+        if (itr == end)
+        {
+          OT_LOGF("can't find group brace '}' in cell ", cell.name);
+        }
+      }
+      else if (*itr == "test_cell")
+      {
+        // Skip the test cell group
+        _extract_test_cell(itr, end);
+      }
+      else if (*itr == "dont_use")
+      {
+        // Skip the semicolon
+        itr++;
+        // Dont use flag in the library cell?????
+        // std::cout << "dont_use: " << *itr << std::endl;
+        itr++;
+        // std::cout << "dont_use: " << *itr << std::endl;
+        // Skips the dont_use, boolean, and semicolon
+      }
+      else if (*itr == "dont_touch")
+      {
+        // Skip the semicolon
+        itr++;
+        // std::cout << "dont_touch: " << *itr << std::endl;
+        itr++;
+        // std::cout << "dont_touch: " << *itr << std::endl;
+        // Dont touch flag in the library cell?????
+        // skips the dont_touch, boolean, and semicolon
+      }
+      else if (*itr == "driver_waveform_fall")
+      {
+        // Skip the semicolon
+        itr++;
+        // std::cout << "driver_waveform_fall: " << *itr << std::endl;
+        itr++;
+        // std::cout << "driver_waveform_fall: " << *itr << std::endl;
+      }
+      else if (*itr == "driver_waveform_rise")
+      {
+        // Skip the semicolon
+        itr++;
+        // std::cout << "driver_waveform_rise: " << *itr << std::endl;
+        itr++;
+        // std::cout << "driver_waveform_rise: " << *itr << std::endl;
+      }
+      else if (*itr == "clock_gating_integrated_cell")
+      {
+        // Skip the semicolon
+        itr++;
+        // std::cout << "clock_gating_integrated_cell: " << *itr << std::endl;
+        itr++;
+        // std::cout << "clock_gating_integrated_cell: " << *itr << std::endl;
+      }
+      else if (*itr == "statetable")
+      {
+        // Go until next } then continue, please
+        itr = std::find(itr, end, "}");
+      }
+
       else if (*itr == "pin")
       { // Read the cell pin group.
         // std::cout << "extracting cellpin for cell " << cell.name << std::endl;
@@ -1208,7 +1273,7 @@ namespace ot
       }
       else
       {
-        // OT_LOGW("unexpected token ", *itr);
+        OT_LOGW("unexpected token ", *itr);
       }
     }
 
@@ -1218,6 +1283,38 @@ namespace ot
     }
     // std::cout << "Cell added: " << cell.name << std::endl;
     return cell;
+  }
+
+  void Celllib::_extract_test_cell(token_iterator &itr, const token_iterator end)
+  {
+    // Skip the test cell group
+    if (itr = std::find(itr, end, "{"); itr == end)
+    {
+      OT_LOGF("can't find group brace '{' in test cell");
+    }
+
+    int stack = 1;
+
+    while (stack && ++itr != end)
+    {
+      if (*itr == "}")
+      {
+        stack--;
+      }
+      else if (*itr == "{")
+      {
+        stack++;
+      }
+      else
+      {
+        // Skip the test cell group
+      }
+    }
+
+    if (stack != 0 || *itr != "}")
+    {
+      OT_LOGF("can't find group brace '}' in test cell");
+    }
   }
 
   Wireload Celllib::_extract_wireload(token_iterator &itr, const token_iterator end)
@@ -1502,7 +1599,7 @@ namespace ot
 
     while (stack && ++itr != end)
     {
-
+      // std::cout << "itr: " << *itr << std::endl;
       if (*itr == "lu_table_template")
       {
         auto lut = _extract_lut_template(itr, end);
@@ -1570,6 +1667,8 @@ namespace ot
       }
       else if (*itr == "default_fanout_load")
       {
+        // std::cout << "default_fanout_load" << std::endl;
+
         itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in default_fanout_load");
         default_fanout_load = std::strtof(itr->data(), nullptr);
@@ -1588,7 +1687,6 @@ namespace ot
       }
       else if (*itr == "operating_conditions")
       {
-        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in operating_conditions");
         voltage = _extract_operating_conditions(itr, end);
         // TODO: Unit field.
@@ -1645,6 +1743,7 @@ namespace ot
       }
       else if (*itr == "cell")
       {
+        // std::cout << "cell" << std::endl;
         auto cell = _extract_cell(itr, end);
         cells[cell.name] = std::move(cell);
       }
@@ -1658,6 +1757,7 @@ namespace ot
       }
       else
       {
+        OT_LOGW("unexpected token ", *itr);
       }
     }
 
