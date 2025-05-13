@@ -1134,7 +1134,6 @@ namespace ot
       // std::cout << stack << " " << *itr << std::endl;
       if (*itr == "ff")
       {
-        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in ff");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
@@ -1142,7 +1141,6 @@ namespace ot
       }
       else if (*itr == "latch")
       {
-        itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in latch");
         cell.sequential_info = _extract_sequential_info(itr, end);
         cell.is_sequential = true;
