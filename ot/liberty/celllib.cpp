@@ -1273,7 +1273,7 @@ namespace ot
       }
       else
       {
-        OT_LOGW("unexpected token ", *itr);
+        // OT_LOGW("unexpected token ", *itr);
       }
     }
 
@@ -1599,7 +1599,7 @@ namespace ot
 
     while (stack && ++itr != end)
     {
-      // std::cout << "itr: " << *itr << std::endl;
+
       if (*itr == "lu_table_template")
       {
         auto lut = _extract_lut_template(itr, end);
@@ -1640,6 +1640,101 @@ namespace ot
         itr++; // Skip the colon
         OT_LOGF_IF(++itr == end, "syntax error in nom_voltage");
         nom_voltage = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "input_voltage")
+      {
+        // Find next } and continue
+        itr = std::find(itr, end, "}");
+        if (itr == end)
+        {
+          OT_LOGF("can't find group brace '}' in input_voltage");
+        }
+      }
+      else if (*itr == "output_voltage")
+      {
+        // Find next } and continue
+        itr = std::find(itr, end, "}");
+        if (itr == end)
+        {
+          OT_LOGF("can't find group brace '}' in output_voltage");
+        }
+      }
+      else if (*itr == "date")
+      {
+      }
+      else if (*itr == "comment")
+      {
+      }
+      else if (*itr == "revision")
+      {
+        // find ; and continue
+      }
+      else if (*itr == "simulation")
+      {
+      }
+      else if (*itr == "technology")
+      {
+        // Go to next ) and continue
+        itr = std::find(itr, end, ")");
+        if (itr == end)
+        {
+          OT_LOGF("can't find group brace ')' in technology");
+        }
+      }
+      else if (*itr == "voltage_map")
+      {
+      }
+      else if (*itr == "wire_load_from_area")
+      {
+      }
+      else if (*itr == "slew_upper_threshold_pct_fall")
+      {
+        itr++; // Skip the colon
+        OT_LOGF_IF(++itr == end, "syntax error in slew_upper_threshold_pct_fall");
+        float slew_upper_threshold_pct_fall = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "slew_upper_threshold_pct_rise")
+      {
+        itr++; // Skip the colon
+        OT_LOGF_IF(++itr == end, "syntax error in slew_upper_threshold_pct_rise");
+        float slew_upper_threshold_pct_rise = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "slew_lower_threshold_pct_fall")
+      {
+        itr++; // Skip the colon
+        OT_LOGF_IF(++itr == end, "syntax error in slew_lower_threshold_pct_fall");
+        float slew_lower_threshold_pct_fall = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "slew_lower_threshold_pct_rise")
+      {
+        itr++; // Skip the colon
+        OT_LOGF_IF(++itr == end, "syntax error in slew_lower_threshold_pct_rise");
+        float slew_lower_threshold_pct_rise = std::strtof(itr->data(), nullptr);
+      }
+      else if (*itr == "slew_derate_from_library")
+      {
+        itr++;
+        OT_LOGF_IF(++itr == end, "syntax error in slew_derate_from_library");
+      }
+      else if (*itr == "input_threshold_pct_fall")
+      {
+        itr++;
+        OT_LOGF_IF(++itr == end, "syntax error in input_threshold_pct_fall");
+      }
+      else if (*itr == "input_threshold_pct_rise")
+      {
+        itr++;
+        OT_LOGF_IF(++itr == end, "syntax error in input_threshold_pct_rise");
+      }
+      else if (*itr == "output_threshold_pct_fall")
+      {
+        itr++;
+        OT_LOGF_IF(++itr == end, "syntax error in output_threshold_pct_fall");
+      }
+      else if (*itr == "output_threshold_pct_rise")
+      {
+        itr++;
+        OT_LOGF_IF(++itr == end, "syntax error in output_threshold_pct_rise");
       }
       else if (*itr == "default_cell_leakage_power")
       {
@@ -1757,7 +1852,7 @@ namespace ot
       }
       else
       {
-        OT_LOGW("unexpected token ", *itr);
+        // OT_LOGW("unexpected token ", *itr);
       }
     }
 
