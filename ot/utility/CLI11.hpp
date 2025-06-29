@@ -3713,14 +3713,14 @@ struct AppFriend {
     /// Wrap _parse_short, perfectly forward arguments and return
     template <typename... Args>
     static auto parse_arg(App *app, Args &&... args) ->
-        typename std::result_of<decltype (&App::_parse_arg)(App, Args...)>::type {
+        typename std::invoke_result<decltype (&App::_parse_arg)(App, Args...)>::type {
         return app->_parse_arg(std::forward<Args>(args)...);
     }
 
     /// Wrap _parse_subcommand, perfectly forward arguments and return
     template <typename... Args>
     static auto parse_subcommand(App *app, Args &&... args) ->
-        typename std::result_of<decltype (&App::_parse_subcommand)(App, Args...)>::type {
+        typename std::invoke_result<decltype (&App::_parse_subcommand)(App, Args...)>::type {
         return app->_parse_subcommand(std::forward<Args>(args)...);
     }
 };

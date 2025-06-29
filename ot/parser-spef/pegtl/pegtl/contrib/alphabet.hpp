@@ -1,75 +1,68 @@
-// Copyright (c) 2015-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2015-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_CONTRIB_ALPHABET_HPP
 #define TAO_PEGTL_CONTRIB_ALPHABET_HPP
 
 #include "../config.hpp"
 
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::alphabet
 {
-   namespace TAO_PEGTL_NAMESPACE
-   {
-      namespace alphabet
-      {
-         static const int a = 'a';
-         static const int b = 'b';
-         static const int c = 'c';
-         static const int d = 'd';
-         static const int e = 'e';
-         static const int f = 'f';
-         static const int g = 'g';
-         static const int h = 'h';
-         static const int i = 'i';
-         static const int j = 'j';
-         static const int k = 'k';
-         static const int l = 'l';
-         static const int m = 'm';
-         static const int n = 'n';
-         static const int o = 'o';
-         static const int p = 'p';
-         static const int q = 'q';
-         static const int r = 'r';
-         static const int s = 's';
-         static const int t = 't';
-         static const int u = 'u';
-         static const int v = 'v';
-         static const int w = 'w';
-         static const int x = 'x';
-         static const int y = 'y';
-         static const int z = 'z';
+   static const char a = 'a';
+   static const char b = 'b';
+   static const char c = 'c';
+   static const char d = 'd';
+   static const char e = 'e';
+   static const char f = 'f';
+   static const char g = 'g';
+   static const char h = 'h';
+   static const char i = 'i';
+   static const char j = 'j';
+   static const char k = 'k';
+   static const char l = 'l';
+   static const char m = 'm';
+   static const char n = 'n';
+   static const char o = 'o';
+   static const char p = 'p';
+   static const char q = 'q';
+   static const char r = 'r';
+   static const char s = 's';
+   static const char t = 't';
+   static const char u = 'u';
+   static const char v = 'v';
+   static const char w = 'w';
+   static const char x = 'x';
+   static const char y = 'y';
+   static const char z = 'z';
 
-         static const int A = 'A';
-         static const int B = 'B';
-         static const int C = 'C';
-         static const int D = 'D';
-         static const int E = 'E';
-         static const int F = 'F';
-         static const int G = 'G';
-         static const int H = 'H';
-         static const int I = 'I';
-         static const int J = 'J';
-         static const int K = 'K';
-         static const int L = 'L';
-         static const int M = 'M';
-         static const int N = 'N';
-         static const int O = 'O';
-         static const int P = 'P';
-         static const int Q = 'Q';
-         static const int R = 'R';
-         static const int S = 'S';
-         static const int T = 'T';
-         static const int U = 'U';
-         static const int V = 'V';
-         static const int W = 'W';
-         static const int X = 'X';
-         static const int Y = 'Y';
-         static const int Z = 'Z';
+   static const char A = 'A';  // NOLINT(readability-identifier-naming)
+   static const char B = 'B';  // NOLINT(readability-identifier-naming)
+   static const char C = 'C';  // NOLINT(readability-identifier-naming)
+   static const char D = 'D';  // NOLINT(readability-identifier-naming)
+   static const char E = 'E';  // NOLINT(readability-identifier-naming)
+   static const char F = 'F';  // NOLINT(readability-identifier-naming)
+   static const char G = 'G';  // NOLINT(readability-identifier-naming)
+   static const char H = 'H';  // NOLINT(readability-identifier-naming)
+   static const char I = 'I';  // NOLINT(readability-identifier-naming,misc-confusable-identifiers)
+   static const char J = 'J';  // NOLINT(readability-identifier-naming)
+   static const char K = 'K';  // NOLINT(readability-identifier-naming)
+   static const char L = 'L';  // NOLINT(readability-identifier-naming)
+   static const char M = 'M';  // NOLINT(readability-identifier-naming)
+   static const char N = 'N';  // NOLINT(readability-identifier-naming)
+   static const char O = 'O';  // NOLINT(readability-identifier-naming)
+   static const char P = 'P';  // NOLINT(readability-identifier-naming)
+   static const char Q = 'Q';  // NOLINT(readability-identifier-naming)
+   static const char R = 'R';  // NOLINT(readability-identifier-naming)
+   static const char S = 'S';  // NOLINT(readability-identifier-naming)
+   static const char T = 'T';  // NOLINT(readability-identifier-naming)
+   static const char U = 'U';  // NOLINT(readability-identifier-naming)
+   static const char V = 'V';  // NOLINT(readability-identifier-naming)
+   static const char W = 'W';  // NOLINT(readability-identifier-naming)
+   static const char X = 'X';  // NOLINT(readability-identifier-naming)
+   static const char Y = 'Y';  // NOLINT(readability-identifier-naming)
+   static const char Z = 'Z';  // NOLINT(readability-identifier-naming)
 
-      }  // namespace alphabet
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::alphabet
 
 #endif

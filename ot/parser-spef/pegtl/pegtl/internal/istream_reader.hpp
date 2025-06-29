@@ -1,47 +1,51 @@
-// Copyright (c) 2016-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2016-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_ISTREAM_READER_HPP
 #define TAO_PEGTL_INTERNAL_ISTREAM_READER_HPP
 
 #include <istream>
 
+#if defined( __cpp_exceptions )
+#include <system_error>
+#else
+#include <cstdio>
+#include <exception>
+#endif
+
 #include "../config.hpp"
-#include "../input_error.hpp"
 
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   struct istream_reader
    {
-      namespace internal
+      explicit istream_reader( std::istream& s ) noexcept
+         : m_istream( s )
+      {}
+
+      [[nodiscard]] std::size_t operator()( char* buffer, const std::size_t length )
       {
-         struct istream_reader
-         {
-            explicit istream_reader( std::istream& s ) noexcept
-               : m_istream( s )
-            {
-            }
+         m_istream.read( buffer, static_cast< std::streamsize >( length ) );
 
-            std::size_t operator()( char* buffer, const std::size_t length )
-            {
-               m_istream.read( buffer, std::streamsize( length ) );
+         if( const auto r = m_istream.gcount() ) {
+            return static_cast< std::size_t >( r );
+         }
+         if( m_istream.eof() ) {
+            return 0;
+         }
+#if defined( __cpp_exceptions )
+         const auto ec = errno;
+         throw std::system_error( ec, std::system_category(), "std::istream::read() failed" );
+#else
+         std::fputs( "std::istream::read() failed\n", stderr );
+         std::terminate();
+#endif
+      }
 
-               if( const auto r = m_istream.gcount() ) {
-                  return std::size_t( r );
-               }
-               if( m_istream.eof() ) {
-                  return 0;
-               }
-               TAO_PEGTL_THROW_INPUT_ERROR( "error in istream.read()" );
-            }
+      std::istream& m_istream;
+   };
 
-            std::istream& m_istream;
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif
