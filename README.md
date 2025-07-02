@@ -163,7 +163,7 @@ The above figure shows an example
 lineage graph of a sequence of builder operations.
 The cyan path is the main lineage line 
 with additional tasks attached to enable parallel execution.
-OpenTimer use [Cpp-Taskflow][Cpp-Taskflow] to create dependency graphs.
+OpenTimer use [Taskflow][Taskflow] to create dependency graphs.
 
 ## Action: Update Timing
 
@@ -435,7 +435,7 @@ using several third-party tools and services. Thanks a lot!
 + [units][units]: a compile-time header-only dimensional analysis and unit conversion
 + [Parser-SPEF][Parser-SPEF]: a fast C++ header-only parser for standard parasitic exchange format (SPEF)
 + [PEGTL][PEGTL]: parsing expression grammar template library
-+ [Cpp-Taskflow][Cpp-Taskflow]: fast C++ parallel programming with task dependencies
++ [Taskflow][Taskflow]: fast C++ parallel programming with task dependencies
 + [NanGate 45nm Library][NanGate]: open-source standard-cell library for testing and exploring EDA flows
 + [OSU PDK][OSUPDK]: Oklahoma State University system on chip (SoC) design flows
 + [Synopsys TAP-in][Synopsys Tap-in]: Synopsys technology access program for liberty user guide and open-source SDC parser.
@@ -494,7 +494,7 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [units]:                 https://github.com/nholthaus/units
 [PEGTL]:                 https://github.com/taocpp/PEGTL
 [Parser-SPEF]:           https://github.com/OpenTimer/Parser-SPEF         
-[Cpp-Taskflow]:          https://github.com/cpp-taskflow/cpp-taskflow
+[Taskflow]:              https://github.com/taskflow/taskflow
 [NanGate]:               http://www.nangate.com/?page_id=22
 [OSUPDK]:                https://vlsiarch.ecen.okstate.edu/flow/
 [Synopsys TAP-in]:       https://www.synopsys.com/community/interoperability-programs/tap-in.html
