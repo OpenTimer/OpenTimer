@@ -1,5 +1,18 @@
 #pragma once
 
+// ============================================================================
+// C++ Versions
+// ============================================================================
+#define TF_CPP98 199711L
+#define TF_CPP11 201103L
+#define TF_CPP14 201402L
+#define TF_CPP17 201703L
+#define TF_CPP20 202002L
+
+// ============================================================================
+// inline and no-inline
+// ============================================================================
+
 #if defined(_MSC_VER)
   #define TF_FORCE_INLINE __forceinline
 #elif defined(__GNUC__) && __GNUC__ > 3
@@ -15,3 +28,31 @@
 #else
   #define TF_NO_INLINE
 #endif
+
+// ============================================================================
+// likely and unlikely
+// ============================================================================
+
+#if defined(__GNUC__)
+  #define TF_LIKELY(x) (__builtin_expect((x), 1))
+  #define TF_UNLIKELY(x) (__builtin_expect((x), 0))
+#else
+  #define TF_LIKELY(x) (x)
+  #define TF_UNLIKELY(x) (x)
+#endif
+
+
+
+// ----------------------------------------------------------------------------    
+
+#define TF_FWD(T, x) std::forward<T>(x)
+
+
+
+
+
+
+
+
+
+

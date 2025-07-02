@@ -961,7 +961,7 @@ void Timer::_build_prop_tasks() {
 
   // Connect with ftasks
   for(auto pin : _bprop_cands) {
-    if(pin->_btask->num_dependents() == 0 && pin->_ftask) {
+    if(pin->_btask->num_predecessors() == 0 && pin->_ftask) {
       pin->_ftask->precede(pin->_btask.value()); 
     }
   }

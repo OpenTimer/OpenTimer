@@ -1,6 +1,5 @@
 #pragma once
 
-#include "cuda_task.hpp"
 #include "cuda_optimizer.hpp"
 
 /**
@@ -49,7 +48,7 @@ That is, the callable that describes a %cudaFlowCapturer
 will be executed sequentially.
 Inside a %cudaFlow capturer task, different GPU tasks (tf::cudaTask) may run
 in parallel depending on the selected optimization algorithm.
-By default, we use tf::cudaRoundRobinCapturing to transform a user-level
+By default, we use tf::cudaFlowRoundRobinOptimizer to transform a user-level
 graph into a native CUDA graph.
 
 Please refer to @ref GPUTaskingcudaFlowCapturer for details.
@@ -61,42 +60,45 @@ class cudaFlowCapturer {
 
   // created by user
   struct External {
-    cudaGraph graph;
-  };
-  
-  // created from executor
-  struct Internal {
-    Internal(Executor& e) : executor{e} {}
-    Executor& executor;
+    cudaFlowGraph graph;
   };
   
   // created from cudaFlow
-  struct Proxy {
+  struct Internal {
   };
 
-  using handle_t = std::variant<External, Internal, Proxy>;
+  using handle_t = std::variant<External, Internal>;
 
   using Optimizer = std::variant<
-    cudaRoundRobinCapturing,
-    cudaSequentialCapturing,
-    cudaLinearCapturing
+    cudaFlowRoundRobinOptimizer,
+    cudaFlowSequentialOptimizer,
+    cudaFlowLinearOptimizer
   >;
 
   public:
 
     /**
-    @brief constrcts a standalone cudaFlowCapturer
+    @brief constructs a standalone cudaFlowCapturer
 
     A standalone %cudaFlow capturer does not go through any taskflow and
-    can be run by the caller thread using explicit offload methods
-    (e.g., tf::cudaFlow::offload).
+    can be run by the caller thread using tf::cudaFlowCapturer::run.
     */
-    cudaFlowCapturer();
+    cudaFlowCapturer() = default;
 
     /**
     @brief destructs the cudaFlowCapturer
     */
-    virtual ~cudaFlowCapturer();
+    ~cudaFlowCapturer() = default;
+    
+    /**
+    @brief default move constructor
+    */
+    cudaFlowCapturer(cudaFlowCapturer&&) = default;
+    
+    /**
+    @brief default move assignment operator
+    */
+    cudaFlowCapturer& operator = (cudaFlowCapturer&&) = default;
 
     /**
     @brief queries the emptiness of the graph
@@ -114,33 +116,16 @@ class cudaFlowCapturer {
     void clear();
 
     /**
-    @brief dumps the capture graph into a DOT format through an
+    @brief dumps the %cudaFlow graph into a DOT format through an
            output stream
     */
     void dump(std::ostream& os) const;
 
     /**
-    @brief selects a different optimization algorithm
-
-    @tparam OPT optimizer type
-    @tparam ArgsT arguments types
-
-    @param args arguments to forward to construct the optimizer
-
-    @return a reference to the optimizer
-
-    We currently supports the following optimization algorithms to capture
-    a user-described %cudaFlow:
-      + tf::cudaSequentialCapturing
-      + tf::cudaRoundRobinCapturing
-      + tf::cudaLinearCapturing
-
-    By default, tf::cudaFlowCapturer uses the round-robin optimization
-    algorithm with four streams to transform a user-level graph into
-    a native CUDA graph.
+    @brief dumps the native captured graph into a DOT format through 
+           an output stream
     */
-    template <typename OPT, typename... ArgsT>
-    OPT& make_optimizer(ArgsT&&... args);
+    void dump_native_graph(std::ostream& os) const;
 
     // ------------------------------------------------------------------------
     // basic methods
@@ -246,7 +231,7 @@ class cudaFlowCapturer {
     /**
     @brief initializes or sets GPU memory to the given value byte by byte
 
-    @param ptr pointer to GPU mempry
+    @param ptr pointer to GPU memory
     @param v value to set for each byte of the specified memory
     @param n size in bytes to set
 
@@ -463,637 +448,96 @@ class cudaFlowCapturer {
       cudaTask task, I1 first1, I1 last1, I2 first2, O output, C op
     );
 
+    // ------------------------------------------------------------------------
+    // Capturing methods
+    // ------------------------------------------------------------------------
+    
     /**
-    @brief captures kernels that perform parallel reduction over a range of items
+    @brief selects a different optimization algorithm
 
-    @tparam I input iterator type
-    @tparam T value type
-    @tparam C binary operator type
+    @tparam OPT optimizer type
+    @tparam ArgsT arguments types
 
-    @param first iterator to the beginning
-    @param last iterator to the end
-    @param result pointer to the result with an initialized value
-    @param op binary reduction operator
+    @param args arguments to forward to construct the optimizer
 
-    @return a tf::cudaTask handle
+    @return a reference to the optimizer
 
-    This method is equivalent to the parallel execution of the following loop on a GPU:
+    We currently supports the following optimization algorithms to capture
+    a user-described %cudaFlow:
+      + tf::cudaFlowSequentialOptimizer
+      + tf::cudaFlowRoundRobinOptimizer
+      + tf::cudaFlowLinearOptimizer
 
-    @code{.cpp}
-    while (first != last) {
-      *result = op(*result, *first++);
-    }
-    @endcode
+    By default, tf::cudaFlowCapturer uses the round-robin optimization
+    algorithm with four streams to transform a user-level graph into
+    a native CUDA graph.
     */
-    template <typename I, typename T, typename C>
-    cudaTask reduce(I first, I last, T* result, C op);
-
+    template <typename OPT, typename... ArgsT>
+    void make_optimizer(ArgsT&&... args);
+    
     /**
-    @brief updates a capture task to a reduction task
-
-    This method is similar to cudaFlowCapturer::reduce but operates
-    on an existing task.
+    @brief captures the cudaFlow and turns it into a CUDA Graph
     */
-    template <typename I, typename T, typename C>
-    void reduce(cudaTask task, I first, I last, T* result, C op);
-
-    /**
-    @brief similar to tf::cudaFlowCapturer::reduce but does not assume
-           any initial value to reduce
-
-    This method is equivalent to the parallel execution of the following loop
-    on a GPU:
-
-    @code{.cpp}
-    *result = *first++;  // initial value does not involve in the loop
-    while (first != last) {
-      *result = op(*result, *first++);
-    }
-    @endcode
-    */
-    template <typename I, typename T, typename C>
-    cudaTask uninitialized_reduce(I first, I last, T* result, C op);
-
-    /**
-    @brief updates a capture task to an uninitialized-reduction task
-
-    This method is similar to cudaFlowCapturer::uninitialized_reduce
-    but operates on an existing task.
-    */
-    template <typename I, typename T, typename C>
-    void uninitialized_reduce(
-      cudaTask task, I first, I last, T* result, C op
-    );
-
-    /**
-    @brief captures kernels that perform parallel reduction over a range of
-           transformed items
-
-    @tparam I input iterator type
-    @tparam T value type
-    @tparam C binary operator type
-    @tparam U unary operator type
-
-    @param first iterator to the beginning
-    @param last iterator to the end
-    @param result pointer to the result with an initialized value
-    @param bop binary reduce operator
-    @param uop unary transform operator
-
-    @return a tf::cudaTask handle
-
-    This method is equivalent to the parallel execution of the following loop on a GPU:
-
-    @code{.cpp}
-    while (first != last) {
-      *result = bop(*result, uop(*first++));
-    }
-    @endcode
-    */
-    template <typename I, typename T, typename C, typename U>
-    cudaTask transform_reduce(I first, I last, T* result, C bop, U uop);
-
-    /**
-    @brief updates a capture task to a transform-reduce task
-
-    This method is similar to cudaFlowCapturer::transform_reduce but
-    operates on an existing task.
-    */
-    template <typename I, typename T, typename C, typename U>
-    void transform_reduce(
-      cudaTask task, I first, I last, T* result, C bop, U uop
-    );
-
-    /**
-    @brief similar to tf::cudaFlowCapturer::transform_reduce but does not assume
-           any initial value to reduce
-
-    This method is equivalent to the parallel execution of the following loop
-    on a GPU:
-
-    @code{.cpp}
-    *result = uop(*first++);  // initial value does not involve in the loop
-    while (first != last) {
-      *result = bop(*result, uop(*first++));
-    }
-    @endcode
-    */
-    template <typename I, typename T, typename C, typename U>
-    cudaTask transform_uninitialized_reduce(I first, I last, T* result, C bop, U uop);
-
-    /**
-    @brief updates a capture task to a transform-reduce task of no initialized value
-
-    This method is similar to cudaFlowCapturer::transform_uninitialized_reduce
-    but operates on an existing task.
-    */
-    template <typename I, typename T, typename C, typename U>
-    void transform_uninitialized_reduce(
-      cudaTask task, I first, I last, T* result, C bop, U uop
-    );
-
-    /**
-    @brief captures kernels that perform parallel inclusive scan
-           over a range of items
-
-    @tparam I input iterator type
-    @tparam O output iterator type
-    @tparam C binary operator type
-
-    @param first iterator to the beginning
-    @param last iterator to the end
-    @param output iterator to the beginning of the output
-    @param op binary operator
-
-    @return a tf::cudaTask handle
-
-    This method is equivalent to the parallel execution of the following loop on a GPU:
-
-    @code{.cpp}
-    for(size_t i=0; i<std::distance(first, last); i++) {
-      *(output + i) = i ? op(*(first+i), *(output+i-1)) : *(first+i);
-    }
-    @endcode
-    */
-    template <typename I, typename O, typename C>
-    cudaTask inclusive_scan(I first, I last, O output, C op);
-
-    /**
-    @brief updates a capture task to an inclusive scan task
-
-    This method is similar to cudaFlowCapturer::inclusive_scan
-    but operates on an existing task.
-    */
-    template <typename I, typename O, typename C>
-    void inclusive_scan(cudaTask task, I first, I last, O output, C op);
-
-    /**
-    @brief similar to cudaFlowCapturer::inclusive_scan
-           but excludes the first value
-    */
-    template <typename I, typename O, typename C>
-    cudaTask exclusive_scan(I first, I last, O output, C op);
-
-    /**
-    @brief updates a capture task to an exclusive scan task
-
-    This method is similar to cudaFlowCapturer::exclusive_scan
-    but operates on an existing task.
-    */
-    template <typename I, typename O, typename C>
-    void exclusive_scan(cudaTask task, I first, I last, O output, C op);
-
-    /**
-    @brief captures kernels that perform parallel inclusive scan
-           over a range of transformed items
-
-    @tparam I input iterator type
-    @tparam O output iterator type
-    @tparam B binary operator type
-    @tparam U unary operator type
-
-    @param first iterator to the beginning
-    @param last iterator to the end
-    @param output iterator to the beginning of the output
-    @param bop binary operator
-    @param uop unary operator
-
-    @return a tf::cudaTask handle
-
-    This method is equivalent to the parallel execution of the following loop
-    on a GPU:
-
-    @code{.cpp}
-    for(size_t i=0; i<std::distance(first, last); i++) {
-      *(output + i) = i ? op(uop(*(first+i)), *(output+i-1)) : uop(*(first+i));
-    }
-    @endcode
-     */
-    template <typename I, typename O, typename B, typename U>
-    cudaTask transform_inclusive_scan(I first, I last, O output, B bop, U uop);
-
-    /**
-    @brief updates a capture task to a transform-inclusive scan task
-
-    This method is similar to cudaFlowCapturer::transform_inclusive_scan
-    but operates on an existing task.
-    */
-    template <typename I, typename O, typename B, typename U>
-    void transform_inclusive_scan(
-      cudaTask task, I first, I last, O output, B bop, U uop
-    );
-
-    /**
-    @brief similar to cudaFlowCapturer::transform_inclusive_scan but
-           excludes the first value
-    */
-    template <typename I, typename O, typename B, typename U>
-    cudaTask transform_exclusive_scan(I first, I last, O output, B bop, U uop);
-
-    /**
-    @brief updates a capture task to a transform-exclusive scan task
-
-    This method is similar to cudaFlowCapturer::transform_exclusive_scan
-    but operates on an existing task.
-    */
-    template <typename I, typename O, typename B, typename U>
-    void transform_exclusive_scan(
-      cudaTask task, I first, I last, O output, B bop, U uop
-    );
-
-    /**
-    @brief captures kernels that perform parallel merge on two sorted arrays
-
-    @tparam A iterator type of the first input array
-    @tparam B iterator type of the second input array
-    @tparam C iterator type of the output array
-    @tparam Comp comparator type
-
-    @param a_first iterator to the beginning of the first input array
-    @param a_last iterator to the end of the first input array
-    @param b_first iterator to the beginning of the second input array
-    @param b_last iterator to the end of the second input array
-    @param c_first iterator to the beginning of the output array
-    @param comp binary comparator
-
-    @return a tf::cudaTask handle
-
-    Merges two sorted ranges <tt>[a_first, a_last)</tt> and
-    <tt>[b_first, b_last)</tt> into one sorted range beginning at @c c_first.
-
-    A sequence is said to be sorted with respect to a comparator @c comp
-    if for any iterator it pointing to the sequence and
-    any non-negative integer @c n such that <tt>it + n</tt> is a valid iterator
-    pointing to an element of the sequence, <tt>comp(*(it + n), *it)</tt>
-    evaluates to @c false.
-     */
-    template <typename A, typename B, typename C, typename Comp>
-    cudaTask merge(A a_first, A a_last, B b_first, B b_last, C c_first, Comp comp);
-
-    /**
-    @brief updates a capture task to a merge task
-
-    This method is similar to cudaFlowCapturer::merge but operates
-    on an existing task.
-     */
-    template <typename A, typename B, typename C, typename Comp>
-    void merge(
-      cudaTask task, A a_first, A a_last, B b_first, B b_last, C c_first, Comp comp
-    );
-
-    /**
-    @brief captures kernels that perform parallel key-value merge
-
-    @tparam a_keys_it first key iterator type
-    @tparam a_vals_it first value iterator type
-    @tparam b_keys_it second key iterator type
-    @tparam b_vals_it second value iterator type
-    @tparam c_keys_it output key iterator type
-    @tparam c_vals_it output value iterator type
-    @tparam C comparator type
-
-    @param a_keys_first iterator to the beginning of the first key range
-    @param a_keys_last iterator to the end of the first key range
-    @param a_vals_first iterator to the beginning of the first value range
-    @param b_keys_first iterator to the beginning of the second key range
-    @param b_keys_last iterator to the end of the second key range
-    @param b_vals_first iterator to the beginning of the second value range
-    @param c_keys_first iterator to the beginning of the output key range
-    @param c_vals_first iterator to the beginning of the output value range
-    @param comp comparator
-
-    Performs a key-value merge that copies elements from
-    <tt>[a_keys_first, a_keys_last)</tt> and <tt>[b_keys_first, b_keys_last)</tt>
-    into a single range, <tt>[c_keys_first, c_keys_last + (a_keys_last - a_keys_first) + (b_keys_last - b_keys_first))</tt>
-    such that the resulting range is in ascending key order.
-
-    At the same time, the merge copies elements from the two associated ranges
-    <tt>[a_vals_first + (a_keys_last - a_keys_first))</tt> and
-    <tt>[b_vals_first + (b_keys_last - b_keys_first))</tt> into a single range,
-    <tt>[c_vals_first, c_vals_first + (a_keys_last - a_keys_first) + (b_keys_last - b_keys_first))</tt>
-    such that the resulting range is in ascending order
-    implied by each input element's associated key.
-
-    For example, assume:
-      + @c a_keys = <tt>{8, 1}</tt>
-      + @c a_vals = <tt>{1, 2}</tt>
-      + @c b_keys = <tt>{3, 7}</tt>
-      + @c b_vals = <tt>{3, 4}</tt>
-
-    After the merge, we have:
-      + @c c_keys = <tt>{1, 3, 7, 8}</tt>
-      + @c c_vals = <tt>{2, 3, 4, 1}</tt>
-    */
-    template<
-      typename a_keys_it, typename a_vals_it,
-      typename b_keys_it, typename b_vals_it,
-      typename c_keys_it, typename c_vals_it,
-      typename C
-    >
-    cudaTask merge_by_key(
-      a_keys_it a_keys_first, a_keys_it a_keys_last, a_vals_it a_vals_first,
-      b_keys_it b_keys_first, b_keys_it b_keys_last, b_vals_it b_vals_first,
-      c_keys_it c_keys_first, c_vals_it c_vals_first, C comp
-    );
-
-    /**
-    @brief updates a capture task to a key-value merge task
-
-    This method is similar to tf::cudaFlowCapturer::merge_by_key but operates
-    on an existing task.
-    */
-    template<
-      typename a_keys_it, typename a_vals_it,
-      typename b_keys_it, typename b_vals_it,
-      typename c_keys_it, typename c_vals_it,
-      typename C
-    >
-    void merge_by_key(
-      cudaTask task,
-      a_keys_it a_keys_first, a_keys_it a_keys_last, a_vals_it a_vals_first,
-      b_keys_it b_keys_first, b_keys_it b_keys_last, b_vals_it b_vals_first,
-      c_keys_it c_keys_first, c_vals_it c_vals_first, C comp
-    );
-
-    /**
-    @brief captures kernels that sort the given array
-
-    @tparam I iterator type of the first input array
-    @tparam C comparator type
-
-    @param first iterator to the beginning of the input array
-    @param last iterator to the end of the input array
-    @param comp binary comparator
-
-    @return a tf::cudaTask handle
-
-    Sorts elements in the range <tt>[first, last)</tt>
-    with the given comparator.
-    */
-    template <typename I, typename C>
-    cudaTask sort(I first, I last, C comp);
-
-    /**
-    @brief updates a capture task to a sort task
-
-    This method is similar to cudaFlowCapturer::sort but operates on
-    an existing task.
-    */
-    template <typename I, typename C>
-    void sort(cudaTask task, I first, I last, C comp);
-
-    /**
-    @brief captures kernels that sort the given array
-
-    @tparam K_it iterator type of the key
-    @tparam V_it iterator type of the value
-    @tparam C comparator type
-
-    @param k_first iterator to the beginning of the key array
-    @param k_last iterator to the end of the key array
-    @param v_first iterator to the beginning of the value array
-    @param comp binary comparator
-
-    @return a tf::cudaTask handle
-
-    Sorts key-value elements in <tt>[k_first, k_last)</tt> and
-    <tt>[v_first, v_first + (k_last - k_first))</tt> into ascending key order
-    using the given comparator @c comp.
-    If @c i and @c j are any two valid iterators in <tt>[k_first, k_last)</tt>
-    such that @c i precedes @c j, and @c p and @c q are iterators in
-    <tt>[v_first, v_first + (k_last - k_first))</tt> corresponding to
-    @c i and @c j respectively, then <tt>comp(*j, *i)</tt> evaluates to @c false.
-
-    For example, assume:
-      + @c keys are <tt>{1, 4, 2, 8, 5, 7}</tt>
-      + @c values are <tt>{'a', 'b', 'c', 'd', 'e', 'f'}</tt>
-
-    After sort:
-      + @c keys are <tt>{1, 2, 4, 5, 7, 8}</tt>
-      + @c values are <tt>{'a', 'c', 'b', 'e', 'f', 'd'}</tt>
-    */
-    template <typename K_it, typename V_it, typename C>
-    cudaTask sort_by_key(K_it k_first, K_it k_last, V_it v_first, C comp);
-
-    /**
-    @brief updates a capture task to a key-value sort task
-
-    This method is similar to tf::cudaFlowCapturer::sort_by_key
-    but operates on an existing task.
-    */
-    template <typename K_it, typename V_it, typename C>
-    void sort_by_key(
-      cudaTask task, K_it k_first, K_it k_last, V_it v_first, C comp
-    );
-
-    /**
-    @brief creates a task to find the index of the first element in a range
-
-    @tparam I input iterator type
-    @tparam U unary operator type
-
-    @param first iterator to the beginning of the range
-    @param last iterator to the end of the range
-    @param idx pointer to the index of the found element
-    @param op unary operator which returns @c true for the required element
-
-    Finds the index @c idx of the first element in the range
-    <tt>[first, last)</tt> such that <tt>op(*(first+idx))</tt> is true.
-    This is equivalent to the parallel execution of the following loop:
-
-    @code{.cpp}
-    unsigned idx = 0;
-    for(; first != last; ++first, ++idx) {
-      if (p(*first)) {
-        return idx;
-      }
-    }
-    return idx;
-    @endcode
-    */
-    template <typename I, typename U>
-    cudaTask find_if(I first, I last, unsigned* idx, U op);
-
-    /**
-    @brief updates the parameters of a find-if task
-
-    This method is similar to tf::cudaFlowCapturer::find_if but operates
-    on an existing task.
-    */
-    template <typename I, typename U>
-    void find_if(cudaTask task, I first, I last, unsigned* idx, U op);
-
-    /**
-    @brief finds the index of the minimum element in a range
-
-    @tparam I input iterator type
-    @tparam O comparator type
-
-    @param first iterator to the beginning of the range
-    @param last iterator to the end of the range
-    @param idx solution index of the minimum element
-    @param op comparison function object
-
-    The function launches kernels asynchronously to find
-    the smallest element in the range <tt>[first, last)</tt>
-    using the given comparator @c op.
-    The function is equivalent to a parallel execution of the following loop:
-
-    @code{.cpp}
-    if(first == last) {
-      return 0;
-    }
-    auto smallest = first;
-    for (++first; first != last; ++first) {
-      if (op(*first, *smallest)) {
-        smallest = first;
-      }
-    }
-    return std::distance(first, smallest);
-    @endcode
-    */
-    template <typename I, typename O>
-    cudaTask min_element(I first, I last, unsigned* idx, O op);
-
-    /**
-    @brief updates the parameters of a min-element task
-
-    This method is similar to cudaFlowCapturer::min_element but operates
-    on an existing task.
-    */
-    template <typename I, typename O>
-    void min_element(cudaTask task, I first, I last, unsigned* idx, O op);
-
-    /**
-    @brief finds the index of the maximum element in a range
-
-    @tparam I input iterator type
-    @tparam O comparator type
-
-    @param first iterator to the beginning of the range
-    @param last iterator to the end of the range
-    @param idx solution index of the maximum element
-    @param op comparison function object
-
-    The function launches kernels asynchronously to find
-    the largest element in the range <tt>[first, last)</tt>
-    using the given comparator @c op.
-    The function is equivalent to a parallel execution of the following loop:
-
-    @code{.cpp}
-    if(first == last) {
-      return 0;
-    }
-    auto largest = first;
-    for (++first; first != last; ++first) {
-      if (op(*largest, *first)) {
-        largest = first;
-      }
-    }
-    return std::distance(first, largest);
-    @endcode
-    */
-    template <typename I, typename O>
-    cudaTask max_element(I first, I last, unsigned* idx, O op);
-
-    /**
-    @brief updates the parameters of a max-element task
-
-    This method is similar to cudaFlowCapturer::max_element but operates
-    on an existing task.
-     */
-    template <typename I, typename O>
-    void max_element(cudaTask task, I first, I last, unsigned* idx, O op);
+    cudaGraph_t capture();
 
     // ------------------------------------------------------------------------
     // offload methods
     // ------------------------------------------------------------------------
 
     /**
-    @brief offloads the captured %cudaFlow onto a GPU and repeatedly runs it until
-    the predicate becomes true
+    @brief offloads the %cudaFlowCapturer onto a GPU asynchronously via a stream
 
-    @tparam P predicate type (a binary callable)
+    @param stream stream for performing this operation
 
-    @param predicate a binary predicate (returns @c true for stop)
+    Offloads the present %cudaFlowCapturer onto a GPU asynchronously via
+    the given stream.
 
-    Immediately offloads the %cudaFlow captured so far onto a GPU and
-    repeatedly runs it until the predicate returns @c true.
-
-    By default, if users do not offload the %cudaFlow capturer,
-    the executor will offload it once.
+    An offloaded %cudaFlowCapturer forces the underlying graph to be instantiated.
+    After the instantiation, you should not modify the graph topology
+    but update node parameters.
     */
-    template <typename P>
-    void offload_until(P&& predicate);
+    void run(cudaStream_t stream);
+    
+    /**
+    @brief acquires a reference to the underlying CUDA graph
+    */
+    cudaGraph_t native_graph();
 
     /**
-    @brief offloads the captured %cudaFlow and executes it by the given times
-
-    @param n number of executions
+    @brief instantiates an executable graph from this cudaflow capturer
     */
-    void offload_n(size_t n);
-
-    /**
-    @brief offloads the captured %cudaFlow and executes it once
-    */
-    void offload();
+    cudaGraphExec instantiate();
 
   private:
 
-    handle_t _handle;
-
-    cudaGraph& _graph;
+    cudaFlowGraph _cfg;
 
     Optimizer _optimizer;
-
-    cudaGraphExec _exec {nullptr};
-
-    cudaFlowCapturer(cudaGraph&, Executor& executor);
-    cudaFlowCapturer(cudaGraph&);
-
-    cudaGraph_t _capture();
 };
-
-// constructs a cudaFlow capturer from a taskflow
-inline cudaFlowCapturer::cudaFlowCapturer(cudaGraph& g) :
-  _handle {std::in_place_type_t<Proxy>{}},
-  _graph  {g} {
-}
-
-// constructs a cudaFlow capturer from a taskflow
-inline cudaFlowCapturer::cudaFlowCapturer(cudaGraph& g, Executor& e) :
-  _handle {std::in_place_type_t<Internal>{}, e},
-  _graph  {g} {
-}
-
-// constructs a standalone cudaFlow capturer
-inline cudaFlowCapturer::cudaFlowCapturer() :
-  _handle {std::in_place_type_t<External>{}},
-  _graph  {std::get_if<External>(&_handle)->graph} {
-}
-
-inline cudaFlowCapturer::~cudaFlowCapturer() {
-}
 
 // Function: empty
 inline bool cudaFlowCapturer::empty() const {
-  return _graph.empty();
+  return _cfg.empty();
 }
 
 // Function: num_tasks
 inline size_t cudaFlowCapturer::num_tasks() const {
-  return _graph._nodes.size();
+  return _cfg._nodes.size();
 }
 
 // Procedure: clear
 inline void cudaFlowCapturer::clear() {
-  _exec.clear();
-  _graph._nodes.clear();
+  _cfg.clear();
 }
 
 // Procedure: dump
 inline void cudaFlowCapturer::dump(std::ostream& os) const {
-  _graph.dump(os, nullptr, "");
+  _cfg.dump(os, nullptr, "");
+}
+
+// Procedure: dump_native_graph
+inline void cudaFlowCapturer::dump_native_graph(std::ostream& os) const {
+  cuda_dump_graph(os, _cfg._native_handle);
 }
 
 // Function: capture
@@ -1101,8 +545,8 @@ template <typename C, std::enable_if_t<
   std::is_invocable_r_v<void, C, cudaStream_t>, void>*
 >
 cudaTask cudaFlowCapturer::on(C&& callable) {
-  auto node = _graph.emplace_back(_graph,
-    std::in_place_type_t<cudaNode::Capture>{}, std::forward<C>(callable)
+  auto node = _cfg.emplace_back(_cfg,
+    std::in_place_type_t<cudaFlowNode::Capture>{}, std::forward<C>(callable)
   );
   return cudaTask(node);
 }
@@ -1112,10 +556,6 @@ inline cudaTask cudaFlowCapturer::noop() {
   return on([](cudaStream_t){});
 }
 
-// Function: noop
-inline void cudaFlowCapturer::noop(cudaTask task) {
-  on(task, [](cudaStream_t){});
-}
 
 // Function: memcpy
 inline cudaTask cudaFlowCapturer::memcpy(
@@ -1159,127 +599,134 @@ cudaTask cudaFlowCapturer::kernel(
   });
 }
 
-// Function: _capture
-inline cudaGraph_t cudaFlowCapturer::_capture() {
+// Function: make_optimizer
+template <typename OPT, typename ...ArgsT>
+void cudaFlowCapturer::make_optimizer(ArgsT&&... args) {
+  return _optimizer.emplace<OPT>(std::forward<ArgsT>(args)...);
+}
+
+// Function: capture
+inline cudaGraph_t cudaFlowCapturer::capture() {
   return std::visit(
-    [this](auto&& opt){ return opt._optimize(_graph); }, _optimizer
+    [this](auto&& opt){ return opt._optimize(_cfg); }, _optimizer
   );
 }
 
-// Procedure: offload_until
-template <typename P>
-void cudaFlowCapturer::offload_until(P&& predicate) {
+// Function: instantiate
+inline cudaGraphExec cudaFlowCapturer::instantiate() {
 
-  // If the topology got changed, we need to destroy the executable
-  // and create a new one
-  if(_graph._state & cudaGraph::CHANGED) {
-    // TODO: store the native graph?
-    cudaGraphNative g(_capture());
-    _exec.instantiate(g);
-  }
-  // if the graph is just updated (i.e., topology does not change),
-  // we can skip part of the optimization and just update the executable
-  // with the new captured graph
-  else if(_graph._state & cudaGraph::UPDATED) {
-    // TODO: skip part of the optimization (e.g., levelization)
-    cudaGraphNative g(_capture());
-    if(_exec.update(g) != cudaGraphExecUpdateSuccess) {
-      _exec.instantiate(g);
-    }
-    // TODO: store the native graph?
-  }
+  _cfg._native_handle.reset(capture());
 
-  // offload the executable
-  if(_exec) {
-    cudaStream s;
-    while(!predicate()) {
-      _exec.launch(s);
-      s.synchronize();
-    }
-  }
+  cudaGraphExec_t exec;
+  TF_CHECK_CUDA(
+    cudaGraphInstantiate(&exec, _cfg._native_handle, nullptr, nullptr, 0),
+    "failed to create an executable graph"
+  );
 
-  _graph._state = cudaGraph::OFFLOADED;
+  return cudaGraphExec(exec);
 }
 
-// Procedure: offload_n
-inline void cudaFlowCapturer::offload_n(size_t n) {
-  offload_until([repeat=n] () mutable { return repeat-- == 0; });
+//// Procedure: run
+//inline void cudaFlowCapturer::run(cudaStream_t stream) {
+//
+//  // If the topology got changed, we need to destroy the executable
+//  // and create a new one
+//  if(_cfg._state & cudaFlowGraph::CHANGED) {
+//    _cfg._native_handle.reset(capture());
+//    _exe.instantiate(_cfg._native_handle);
+//  }
+//  // if the graph is just updated (i.e., topology does not change),
+//  // we can skip part of the optimization and just update the executable
+//  // with the new captured graph
+//  else if(_cfg._state & cudaFlowGraph::UPDATED) {
+//    // TODO: skip part of the optimization (e.g., levelization)
+//    _cfg._native_handle.reset(capture());
+//    if(_exe.update(_cfg._native_handle) != cudaGraphExecUpdateSuccess) {
+//      _exe.instantiate(_cfg._native_handle);
+//    }
+//  }
+//
+//  // run the executable (should exist)
+//  _exe.run(stream);
+//
+//  _cfg._state = cudaFlowGraph::OFFLOADED;
+//}
+
+// Function: native_graph
+inline cudaGraph_t cudaFlowCapturer::native_graph() {
+  return _cfg._native_handle;
 }
 
-// Procedure: offload
-inline void cudaFlowCapturer::offload() {
-  offload_until([repeat=1] () mutable { return repeat-- == 0; });
-}
+//// Function: on
+//template <typename C, std::enable_if_t<
+//  std::is_invocable_r_v<void, C, cudaStream_t>, void>*
+//>
+//void cudaFlowCapturer::on(cudaTask task, C&& callable) {
+//
+//  if(task.type() != cudaTaskType::CAPTURE) {
+//    TF_THROW("invalid cudaTask type (must be CAPTURE)");
+//  }
+//
+//  _cfg._state |= cudaFlowGraph::UPDATED;
+//
+//  std::get_if<cudaFlowNode::Capture>(&task._node->_handle)->work =
+//    std::forward<C>(callable);
+//}
+//
+//// Function: noop
+//inline void cudaFlowCapturer::noop(cudaTask task) {
+//  on(task, [](cudaStream_t){});
+//}
+////
+//// Function: memcpy
+//inline void cudaFlowCapturer::memcpy(
+//  cudaTask task, void* dst, const void* src, size_t count
+//) {
+//  on(task, [dst, src, count](cudaStream_t stream) mutable {
+//    TF_CHECK_CUDA(
+//      cudaMemcpyAsync(dst, src, count, cudaMemcpyDefault, stream),
+//      "failed to capture memcpy"
+//    );
+//  });
+//}
+//
+//// Function: copy
+//template <typename T,
+//  std::enable_if_t<!std::is_same_v<T, void>, void>*
+//>
+//void cudaFlowCapturer::copy(
+//  cudaTask task, T* tgt, const T* src, size_t num
+//) {
+//  on(task, [tgt, src, num] (cudaStream_t stream) mutable {
+//    TF_CHECK_CUDA(
+//      cudaMemcpyAsync(tgt, src, sizeof(T)*num, cudaMemcpyDefault, stream),
+//      "failed to capture copy"
+//    );
+//  });
+//}
+//
+//// Function: memset
+//inline void cudaFlowCapturer::memset(
+//  cudaTask task, void* ptr, int v, size_t n
+//) {
+//  on(task, [ptr, v, n] (cudaStream_t stream) mutable {
+//    TF_CHECK_CUDA(
+//      cudaMemsetAsync(ptr, v, n, stream), "failed to capture memset"
+//    );
+//  });
+//}
+//
+//// Function: kernel
+//template <typename F, typename... ArgsT>
+//void cudaFlowCapturer::kernel(
+//  cudaTask task, dim3 g, dim3 b, size_t s, F f, ArgsT&&... args
+//) {
+//  on(task, [g, b, s, f, args...] (cudaStream_t stream) mutable {
+//    f<<<g, b, s, stream>>>(args...);
+//  });
+//}
+//
 
-// Function: on
-template <typename C, std::enable_if_t<
-  std::is_invocable_r_v<void, C, cudaStream_t>, void>*
->
-void cudaFlowCapturer::on(cudaTask task, C&& callable) {
-
-  if(task.type() != cudaTaskType::CAPTURE) {
-    TF_THROW("invalid cudaTask type (must be CAPTURE)");
-  }
-
-  _graph._state |= cudaGraph::UPDATED;
-
-  std::get_if<cudaNode::Capture>(&task._node->_handle)->work =
-    std::forward<C>(callable);
-}
-
-// Function: memcpy
-inline void cudaFlowCapturer::memcpy(
-  cudaTask task, void* dst, const void* src, size_t count
-) {
-  on(task, [dst, src, count](cudaStream_t stream) mutable {
-    TF_CHECK_CUDA(
-      cudaMemcpyAsync(dst, src, count, cudaMemcpyDefault, stream),
-      "failed to capture memcpy"
-    );
-  });
-}
-
-// Function: copy
-template <typename T,
-  std::enable_if_t<!std::is_same_v<T, void>, void>*
->
-void cudaFlowCapturer::copy(
-  cudaTask task, T* tgt, const T* src, size_t num
-) {
-  on(task, [tgt, src, num] (cudaStream_t stream) mutable {
-    TF_CHECK_CUDA(
-      cudaMemcpyAsync(tgt, src, sizeof(T)*num, cudaMemcpyDefault, stream),
-      "failed to capture copy"
-    );
-  });
-}
-
-// Function: memset
-inline void cudaFlowCapturer::memset(
-  cudaTask task, void* ptr, int v, size_t n
-) {
-  on(task, [ptr, v, n] (cudaStream_t stream) mutable {
-    TF_CHECK_CUDA(
-      cudaMemsetAsync(ptr, v, n, stream), "failed to capture memset"
-    );
-  });
-}
-
-// Function: kernel
-template <typename F, typename... ArgsT>
-void cudaFlowCapturer::kernel(
-  cudaTask task, dim3 g, dim3 b, size_t s, F f, ArgsT&&... args
-) {
-  on(task, [g, b, s, f, args...] (cudaStream_t stream) mutable {
-    f<<<g, b, s, stream>>>(args...);
-  });
-}
-
-// Function: make_optimizer
-template <typename OPT, typename ...ArgsT>
-OPT& cudaFlowCapturer::make_optimizer(ArgsT&&... args) {
-  return _optimizer.emplace<OPT>(std::forward<ArgsT>(args)...);
-}
 
 }  // end of namespace tf -----------------------------------------------------
 

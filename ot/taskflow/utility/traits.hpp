@@ -1,5 +1,13 @@
 #pragma once
 
+#if __has_include(<version>)
+#include <version>
+#endif
+
+#if __has_include(<latch>)
+#include <latch>
+#endif
+
 #include <type_traits>
 #include <iterator>
 #include <iostream>
@@ -266,8 +274,43 @@ template <typename T>
 using unique_variant_t = typename unique_variant<T>::type;
 
 
+// ----------------------------------------------------------------------------
+// check if it is default compare
+// ----------------------------------------------------------------------------
+template <typename T> struct is_std_compare : std::false_type { };
+template <typename T> struct is_std_compare<std::less<T>> : std::true_type { };
+template <typename T> struct is_std_compare<std::greater<T>> : std::true_type { };
 
+template <typename T>
+constexpr static bool is_std_compare_v = is_std_compare<T>::value;
 
+// ----------------------------------------------------------------------------
+// check if all types are the same
+// ----------------------------------------------------------------------------
+
+template<bool...> 
+struct bool_pack;
+
+template<bool... bs>
+using all_true = std::is_same<bool_pack<bs..., true>, bool_pack<true, bs...>>;
+
+template <typename T, typename... Ts>
+using all_same = all_true<std::is_same_v<T, Ts>...>;
+
+template <typename T, typename... Ts>
+constexpr bool all_same_v = all_same<T, Ts...>::value;
+
+// ----------------------------------------------------------------------------
+// Iterator
+// ----------------------------------------------------------------------------
+
+template <typename I>
+using deref_t = std::decay_t<decltype(*std::declval<I>())>;
+
+template <typename I>
+constexpr auto is_random_access_iterator = std::is_same_v<
+  typename std::iterator_traits<I>::iterator_category, std::random_access_iterator_tag
+>;
 
 }  // end of namespace tf. ----------------------------------------------------
 
