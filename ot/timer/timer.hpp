@@ -99,6 +99,7 @@ class Timer {
     void dump_verilog(std::ostream&, const std::string&) const;
     void dump_spef(std::ostream&) const;
     void dump_rctree(std::ostream&) const;
+    void dump_fcpc25(std::ostream&) const;
     
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;
