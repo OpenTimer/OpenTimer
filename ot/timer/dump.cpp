@@ -687,6 +687,12 @@ void Timer::_dump_spef(std::ostream& os) const {
       os << "*END\n";
     }
   }
+}
+
+// Function: _dump_fcpc26
+void Timer::_dump_fcpc26() const {
+
+  // timing graph
 
 }
 
