@@ -61,6 +61,7 @@ namespace ot
     std::optional<bool> is_clock; // Is clock pin.
 
     std::vector<Timing> timings;
+    std::vector<InternalPower> internal_powers;
 
     std::optional<std::vector<CCSNStage>> ccsn_stages; // Optional list of CCSNStage objects
 

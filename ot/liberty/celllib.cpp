@@ -1069,12 +1069,12 @@ namespace ot
         ccsn_stage.pin = cellpin.name;
         cellpin.ccsn_stages->push_back(ccsn_stage);
       }
-      // else if (*itr == "internal_power")
-      // {
-      //   // Extract internal power information
-      //   auto ip = _extract_internal_power(itr, end);
-      //   cellpin.internal_power.push_back(ip);
-      // }
+      else if (*itr == "internal_power")
+      {
+        // Extract internal power information
+        auto ip = _extract_internal_power(itr, end);
+        cellpin.internal_powers.push_back(ip);
+      }
       else if (*itr == "timing")
       {
         // Extract timing information
