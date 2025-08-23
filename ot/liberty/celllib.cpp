@@ -520,8 +520,9 @@ namespace ot
       }
       else if (*itr == "index_3")
       {
+        lut.indices3 = std::vector<float>{};
         itr = on_next_parentheses(itr, end, [&](auto &v) mutable
-                                  { lut.indices3 = std::vector<float>{std::strtof(v.data(), nullptr)}; });
+                                  { lut.indices3->push_back(std::strtof(v.data(), nullptr)); });
         if (lut.indices3->size() == 0)
         {
           OT_LOGF("syntax error in ", lut.name, " index_3");
@@ -529,8 +530,9 @@ namespace ot
       }
       else if (*itr == "index_4")
       {
+        lut.indices4 = std::vector<float>{};
         itr = on_next_parentheses(itr, end, [&](auto &v) mutable
-                                  { lut.indices4 = std::vector<float>{std::strtof(v.data(), nullptr)}; });
+                                  { lut.indices4->push_back(std::strtof(v.data(), nullptr)); });
         if (lut.indices4->size() == 0)
         {
           OT_LOGF("syntax error in ", lut.name, " index_4");
