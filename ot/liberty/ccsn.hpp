@@ -31,6 +31,8 @@ namespace ot
         std::vector<Lut> dc_current;
         std::vector<Lut> output_voltage_fall;
         std::vector<Lut> output_voltage_rise;
+        std::vector<Lut> output_current_fall;
+        std::vector<Lut> output_current_rise;
         std::vector<Lut> propagated_noise_high;
         std::vector<Lut> propagated_noise_low;
 

@@ -35,3 +35,5 @@ unittest/utility
 *.exe
 *.out
 *.app
+test_ccs_100cells.lib
+test_ccs_500cells.lib

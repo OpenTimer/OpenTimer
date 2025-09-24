@@ -20,7 +20,8 @@ namespace ot {
     OUTPUT_VOLTAGE,
     INPUT_NOISE_HEIGHT,
     INPUT_NOISE_WIDTH,
-    NORMALIZED_VOLTAGE
+    NORMALIZED_VOLTAGE,
+    TIME
   };
 
   // Variable mapping
@@ -44,7 +45,11 @@ namespace ot {
       {"output_voltage", LutVar::OUTPUT_VOLTAGE},
       {"input_noise_height;", LutVar::INPUT_NOISE_HEIGHT},
       {"input_noise_width;", LutVar::INPUT_NOISE_WIDTH},
-      {"normalized_voltage;", LutVar::NORMALIZED_VOLTAGE}};
+      {"normalized_voltage;", LutVar::NORMALIZED_VOLTAGE},
+      {"input_voltage;", LutVar::INPUT_VOLTAGE},
+      {"output_voltage;", LutVar::OUTPUT_VOLTAGE},
+      {"time", LutVar::TIME},
+      {"time;", LutVar::TIME}};
 
   // Function: is_time_lut_var
   bool is_time_lut_var(LutVar);

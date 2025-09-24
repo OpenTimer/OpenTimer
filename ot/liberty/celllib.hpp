@@ -36,6 +36,16 @@ namespace ot
   // Function: to_string
   std::string to_string(DelayModel);
 
+  // Struct: NormalizedDriverWaveform
+  struct NormalizedDriverWaveform
+  {
+    std::string template_name;
+    std::string driver_waveform_name;
+    std::vector<float> index_1;
+    std::vector<float> index_2;
+    std::vector<float> values;
+  };
+
   // Class: Celllib
   struct Celllib
   {
@@ -70,6 +80,7 @@ namespace ot
     std::unordered_map<std::string, LutTemplate> lut_templates;
     std::unordered_map<std::string, Cell> cells;
     std::unordered_map<std::string, Wireload> wireloads;
+    std::vector<NormalizedDriverWaveform> normalized_driver_waveforms;
 
     void read(const std::filesystem::path &);
     void scale_time(float);
@@ -89,6 +100,7 @@ namespace ot
     std::optional<float> _extract_operating_conditions(token_iterator &itr, const token_iterator end);
     LutTemplate _extract_lut_template(token_iterator &, const token_iterator);
     Lut _extract_lut(token_iterator &, const token_iterator);
+    std::pair<Lut, token_iterator> _extract_lut_safe(token_iterator, const token_iterator);
     Cell _extract_cell(token_iterator &, const token_iterator);
     Cellpin _extract_cellpin(token_iterator &, const token_iterator);
     InternalPower _extract_internal_power(token_iterator &, const token_iterator);
@@ -96,7 +108,10 @@ namespace ot
     Timing _extract_timing(token_iterator &, const token_iterator, std::string pin);
     Wireload _extract_wireload(token_iterator &, const token_iterator);
     SequentialInfo _extract_sequential_info(token_iterator &, const token_iterator);
+    std::vector<Lut> _extract_vector_group(token_iterator &itr, const token_iterator end);
+    std::vector<Lut> _extract_timing_output_current_group(token_iterator &itr, const token_iterator end);
     CCSNStage _extract_ccsn(token_iterator &itr, const token_iterator end);
+    NormalizedDriverWaveform _extract_normalized_driver_waveform(token_iterator &itr, const token_iterator end);
     void _extract_test_cell(token_iterator &itr, const token_iterator end);
 
     void _apply_default_values();

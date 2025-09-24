@@ -145,9 +145,27 @@ namespace ot
     std::optional<Lut> rise_constraint;
     std::optional<Lut> fall_constraint;
 
+    std::vector<Lut> output_current_rise;
+    std::vector<Lut> output_current_fall;
+
     std::optional<std::vector<CCSNStage>> ccsn_stages; // Optional list of CCSNStage objects
 
     // InternalPower internal_power;
+
+    // Default constructor
+    Timing() = default;
+
+    // Copy constructor
+    Timing(const Timing&) = default;
+
+    // Move constructor
+    Timing(Timing&&) = default;
+
+    // Copy assignment
+    Timing& operator=(const Timing&) = default;
+
+    // Move assignment
+    Timing& operator=(Timing&&) = default;
 
     bool is_combinational() const;
     bool is_constraint() const;

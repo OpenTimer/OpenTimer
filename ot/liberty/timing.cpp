@@ -375,6 +375,14 @@ void Timing::scale_time(float s) {
     fall_constraint->scale_time(s);
   }
 
+  for(auto& lut : output_current_rise) {
+    lut.scale_time(s);
+  }
+
+  for(auto& lut : output_current_fall) {
+    lut.scale_time(s);
+  }
+
   //internal_power.scale_time(s);
 }
 
@@ -403,6 +411,14 @@ void Timing::scale_capacitance(float s) {
 
   if(fall_constraint) {
     fall_constraint->scale_capacitance(s);
+  }
+
+  for(auto& lut : output_current_rise) {
+    lut.scale_capacitance(s);
+  }
+
+  for(auto& lut : output_current_fall) {
+    lut.scale_capacitance(s);
   }
 
   //internal_power.scale_capacitance(s);
@@ -691,11 +707,25 @@ std::ostream& operator << (std::ostream& os, const Timing& timing) {
   
   // Write fall_constraint
   if(timing.fall_constraint) {
-    os << "      fall_constraint (\"" << timing.fall_constraint->name << "\") {\n"; 
+    os << "      fall_constraint (\"" << timing.fall_constraint->name << "\") {\n";
     os << *(timing.fall_constraint);
     os << "      }\n";
   }
-  
+
+  // Write output_current_rise
+  for(const auto& lut : timing.output_current_rise) {
+    os << "      output_current_rise () {\n";
+    os << lut;
+    os << "      }\n";
+  }
+
+  // Write output_current_fall
+  for(const auto& lut : timing.output_current_fall) {
+    os << "      output_current_fall () {\n";
+    os << lut;
+    os << "      }\n";
+  }
+
   // Write the ending group symbol.
   os << "    }\n";
 
