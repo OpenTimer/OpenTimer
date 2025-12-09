@@ -36,7 +36,6 @@ class Timer {
     // Builder
     Timer& set_num_threads(unsigned);
     Timer& read_celllib(std::filesystem::path, std::optional<Split> = {});
-    Timer& read_celllibs(std::filesystem::path, std::optional<Split> = {});
     Timer& read_verilog(std::filesystem::path);
     Timer& read_spef(std::filesystem::path);
     Timer& read_sdc(std::filesystem::path);
