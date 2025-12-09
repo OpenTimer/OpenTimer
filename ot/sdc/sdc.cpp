@@ -321,7 +321,16 @@ CreateClock::CreateClock(const Json& json) {
       name = itr.value();
     }
     else if(key == "-waveform") {
-      // TODO
+      auto waveform_str = unquoted(itr.value());
+      auto tokens = ot::split(waveform_str);
+      if(tokens.size() == 2) {
+        waveform.emplace(); //here because waveform is an optional<array<float, MAX_TRAN>>
+        (*waveform)[0] = std::stof(tokens[0]);
+        (*waveform)[1] = std::stof(tokens[1]);
+      }
+      else {
+        OT_LOGE(command, ": waveform must contain exactly 2 values, got ", tokens.size());
+      }
     }
     else if(key == "port_pin_list") {
       port_pin_list = parse_port(unquoted(itr.value()));

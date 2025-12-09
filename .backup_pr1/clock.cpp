@@ -18,34 +18,18 @@ Clock::Clock(const std::string& name, Pin& source, float period) :
   _waveform {0.0f, period / 2.0f} {
 }
 
-
-
-
-
-// Constructor (virtual clock with waveform)
-Clock::Clock(
- const std::string& name, 
- float period, 
- std::array<float, MAX_TRAN> waveform
-) : 
- _name     {name},
- _source   {nullptr},
- _period   {period},
- _waveform {waveform} {
-}
-
-// Constructor
-Clock::Clock(
-  const std::string& name, 
-  Pin& root, 
-  float period, 
-  std::array<float, MAX_TRAN> waveform
- ) : 
-  _name     {name},
-  _source   {&root},
-  _period   {period},
-  _waveform {waveform} {
- }
+//// Constructor
+//Clock::Clock(
+//  const std::string& name, 
+//  Pin& root, 
+//  float period, 
+//  std::array<float, MAX_TRAN> waveform
+//) : 
+//  _name     {name},
+//  _root     {root},
+//  _period   {period},
+//  _waveform {waveform} {
+//}
 
 // Procedure: _scale_time
 void Clock::_scale_time(float s) {

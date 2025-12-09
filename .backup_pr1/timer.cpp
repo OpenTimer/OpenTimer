@@ -540,27 +540,6 @@ Clock& Timer::_create_clock(const std::string& name, float period) {
   return clock;
 }
 
-// Procedure: _create_clock (with waveform)
-Clock& Timer::_create_clock(const std::string& name, Pin& pin, float period, std::array<float, MAX_TRAN> waveform) {
-  auto& clock = _clocks.try_emplace(name, name, pin, period, waveform).first->second;
-  _insert_frontier(pin);
-  if(auto itr = _pis.find(pin.name()); itr != _pis.end()) {
-    _set_at(itr->second, MIN, RISE, waveform[0]);
-    _set_at(itr->second, MAX, RISE, waveform[0]);
-    _set_at(itr->second, MIN, FALL, waveform[1]);
-    _set_at(itr->second, MAX, FALL, waveform[1]);
-  }
-  return clock;
-}
-
-// Procedure: _create_clock (virtual clock with waveform)
-Clock& Timer::_create_clock(const std::string& name, float period, std::array<float, MAX_TRAN> waveform) {
-  auto& clock = _clocks.try_emplace(name, name, period, waveform).first->second;
-  return clock;
-}
-
-
-
 // Function: insert_primary_input
 Timer& Timer::insert_primary_input(std::string name) {
 
