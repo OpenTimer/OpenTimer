@@ -74,7 +74,6 @@ struct Celllib {
   private:
 
     std::optional<float> _extract_operating_conditions(token_iterator& itr, const token_iterator end);
-    void        _extract_bus         (token_iterator&, const token_iterator, Cell&);
     LutTemplate   _extract_lut_template  (token_iterator&, const token_iterator);
     Lut           _extract_lut           (token_iterator&, const token_iterator);
     Cell          _extract_cell          (token_iterator&, const token_iterator);
