@@ -396,7 +396,7 @@ OpenTimer is being actively developed and contributed by the following people:
 - [Pao-I Chen][Pao-I Chen] helped design the logo of OpenTimer.
 - [Leslie Hwang][Leslie Hwang] reviewed the documentation and README.
 - [Song Chen][Song Chen] shared his opinion about command designs to avoid naming conflicts and litigation.
-- [Che Chang][Che Chang] designed parallelization strategies and performance optimizations to accelerate critical path generation.
+- [Che Chang](https://randy1005.github.io/) designed parallelization strategies and performance optimizations to accelerate critical path generation.
 
 <!--
 
