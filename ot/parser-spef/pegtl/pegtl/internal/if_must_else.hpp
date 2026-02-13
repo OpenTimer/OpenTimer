@@ -1,27 +1,25 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_IF_MUST_ELSE_HPP
 #define TAO_PEGTL_INTERNAL_IF_MUST_ELSE_HPP
 
-#include "../config.hpp"
+#if !defined( __cpp_exceptions )
+#error "Exception support required for tao/pegtl/internal/if_must_else.hpp"
+#else
 
 #include "if_then_else.hpp"
 #include "must.hpp"
 
-namespace tao
+#include "../config.hpp"
+
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
-   {
-      namespace internal
-      {
-         template< typename Cond, typename Then, typename Else >
-         using if_must_else = if_then_else< Cond, must< Then >, must< Else > >;
+   template< typename Cond, typename Then, typename Else >
+   using if_must_else = if_then_else< Cond, must< Then >, must< Else > >;
 
-      }  // namespace internal
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
-
+#endif
 #endif

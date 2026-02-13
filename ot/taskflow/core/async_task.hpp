@@ -155,6 +155,34 @@ class AsyncTask {
 
     */
     bool is_done() const; 
+    
+    /**
+    @brief retrieves the exception pointer of this task
+   
+    This method retrieves the exception pointer of the task, if any, that was silently caught by the executor. 
+    For example, the code below retrieves the exception pointer of a dependent-async task that does not have 
+    a shared state to propagate its exception. 
+
+    @code{.cpp}
+    tf::AsyncTask task = executor.silent_dependent_async([&](){
+      throw std::runtime_error("oops"); 
+    });
+    executor.wait_for_all();
+    
+    // propagate the exception to the outer caller
+    assert(task.exception_ptr() != nullptr);
+    std::rethrow_exception(task.exception_ptr());
+    @endcode
+
+    */
+    std::exception_ptr exception_ptr() const;
+    
+    /**
+    @brief queries if the task has an exception pointer
+
+    The method checks whether the task holds a pointer to a silently caught exception.
+    */
+    bool has_exception_ptr() const;
 
   private:
 
@@ -222,6 +250,16 @@ inline AsyncTask& AsyncTask::operator = (AsyncTask&& rhs) {
   return *this;
 }
 
+// Function: exception
+inline std::exception_ptr AsyncTask::exception_ptr() const {
+  return _node ? _node->_exception_ptr : nullptr;
+}
+
+// Function: has_exception
+inline bool AsyncTask::has_exception_ptr() const {
+  return _node ? (_node->_exception_ptr != nullptr) : false;
+}
+
 // Function: empty
 inline bool AsyncTask::empty() const {
   return _node == nullptr;
@@ -248,10 +286,7 @@ inline size_t AsyncTask::use_count() const {
 
 // Function: is_done
 inline bool AsyncTask::is_done() const {
-  return _node == nullptr ? true:
-  std::get_if<Node::DependentAsync>(&(_node->_handle))->state.load(
-    std::memory_order_acquire
-  ) == ASTATE::FINISHED;
+  return _node == nullptr ? true: (_node->_estate.load(std::memory_order_acquire) & ESTATE::FINISHED);
 }
 
 }  // end of namespace tf ----------------------------------------------------

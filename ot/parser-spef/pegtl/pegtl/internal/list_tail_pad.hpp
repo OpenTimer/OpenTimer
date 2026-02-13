@@ -1,30 +1,21 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_LIST_TAIL_PAD_HPP
 #define TAO_PEGTL_INTERNAL_LIST_TAIL_PAD_HPP
 
-#include "../config.hpp"
-
-#include "list.hpp"
-#include "opt.hpp"
 #include "pad.hpp"
 #include "seq.hpp"
-#include "star.hpp"
+#include "star_partial.hpp"
 
-namespace tao
+#include "../config.hpp"
+
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
-   {
-      namespace internal
-      {
-         template< typename Rule, typename Sep, typename Pad >
-         using list_tail_pad = seq< list< Rule, pad< Sep, Pad > >, opt< star< Pad >, Sep > >;
+   template< typename Rule, typename Sep, typename Pad >
+   using list_tail_pad = seq< Rule, star_partial< lpad< Sep, Pad >, lpad< Rule, Pad > > >;
 
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

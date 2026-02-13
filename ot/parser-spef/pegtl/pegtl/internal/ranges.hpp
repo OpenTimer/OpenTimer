@@ -1,102 +1,92 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_RANGES_HPP
 #define TAO_PEGTL_INTERNAL_RANGES_HPP
 
-#include "../config.hpp"
+#include <utility>
 
 #include "bump_help.hpp"
+#include "enable_control.hpp"
+#include "failure.hpp"
+#include "one.hpp"
 #include "range.hpp"
-#include "skip_control.hpp"
 
-#include "../analysis/generic.hpp"
+#include "../config.hpp"
+#include "../type_list.hpp"
 
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename Char, Char Lo, Char Hi >
+   constexpr bool validate_range( Char c ) noexcept
    {
-      namespace internal
+      static_assert( Lo <= Hi, "invalid range" );
+      return ( Lo <= c ) && ( c <= Hi );
+   }
+
+   template< typename Peek, typename Peek::data_t... Cs >
+   struct ranges
+   {
+      using peek_t = Peek;
+      using data_t = typename Peek::data_t;
+
+      using rule_t = ranges;
+      using subs_t = empty_list;
+
+      template< std::size_t... Is >
+      [[nodiscard]] static constexpr bool test_impl( std::index_sequence< Is... > /*unused*/, const data_t c ) noexcept
       {
-         template< int Eol, typename Char, Char... Cs >
-         struct ranges_impl;
+         constexpr const data_t cs[] = { Cs... };
+         if constexpr( sizeof...( Cs ) % 2 == 0 ) {
+            return ( validate_range< data_t, cs[ 2 * Is ], cs[ 2 * Is + 1 ] >( c ) || ... );
+         }
+         else {
+            return ( validate_range< data_t, cs[ 2 * Is ], cs[ 2 * Is + 1 ] >( c ) || ... ) || ( c == cs[ sizeof...( Cs ) - 1 ] );
+         }
+      }
 
-         template< int Eol, typename Char >
-         struct ranges_impl< Eol, Char >
-         {
-            static constexpr bool can_match_eol = false;
+      [[nodiscard]] static constexpr bool test_one( const data_t c ) noexcept
+      {
+         return test_impl( std::make_index_sequence< sizeof...( Cs ) / 2 >(), c );
+      }
 
-            static bool match( const Char /*unused*/ ) noexcept
-            {
-               return false;
+      [[nodiscard]] static constexpr bool test_any( const data_t c ) noexcept
+      {
+         return test_impl( std::make_index_sequence< sizeof...( Cs ) / 2 >(), c );
+      }
+
+      template< typename ParseInput >
+      [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( Peek::peek( in ) ) )
+      {
+         if( const auto t = Peek::peek( in ) ) {
+            if( test_one( t.data ) ) {
+               bump_help< ranges >( in, t.size );
+               return true;
             }
-         };
+         }
+         return false;
+      }
+   };
 
-         template< int Eol, typename Char, Char Eq >
-         struct ranges_impl< Eol, Char, Eq >
-         {
-            static constexpr bool can_match_eol = ( Eq == Eol );
+   template< typename Peek, typename Peek::data_t Lo, typename Peek::data_t Hi >
+   struct ranges< Peek, Lo, Hi >
+      : range< result_on_found::success, Peek, Lo, Hi >
+   {};
 
-            static bool match( const Char c ) noexcept
-            {
-               return c == Eq;
-            }
-         };
+   template< typename Peek, typename Peek::data_t C >
+   struct ranges< Peek, C >
+      : one< result_on_found::success, Peek, C >
+   {};
 
-         template< int Eol, typename Char, Char Lo, Char Hi, Char... Cs >
-         struct ranges_impl< Eol, Char, Lo, Hi, Cs... >
-         {
-            static_assert( Lo <= Hi, "invalid range detected" );
+   template< typename Peek >
+   struct ranges< Peek >
+      : failure
+   {};
 
-            static constexpr bool can_match_eol = ( ( ( Lo <= Eol ) && ( Eol <= Hi ) ) || ranges_impl< Eol, Char, Cs... >::can_match_eol );
+   template< typename Peek, typename Peek::data_t... Cs >
+   inline constexpr bool enable_control< ranges< Peek, Cs... > > = false;
 
-            static bool match( const Char c ) noexcept
-            {
-               return ( ( Lo <= c ) && ( c <= Hi ) ) || ranges_impl< Eol, Char, Cs... >::match( c );
-            }
-         };
-
-         template< typename Peek, typename Peek::data_t... Cs >
-         struct ranges
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::ANY >;
-
-            template< int Eol >
-            struct can_match_eol
-            {
-               static constexpr bool value = ranges_impl< Eol, typename Peek::data_t, Cs... >::can_match_eol;
-            };
-
-            template< typename Input >
-            static bool match( Input& in )
-            {
-               if( !in.empty() ) {
-                  if( const auto t = Peek::peek( in ) ) {
-                     if( ranges_impl< Input::eol_t::ch, typename Peek::data_t, Cs... >::match( t.data ) ) {
-                        bump_impl< can_match_eol< Input::eol_t::ch >::value >::bump( in, t.size );
-                        return true;
-                     }
-                  }
-               }
-               return false;
-            }
-         };
-
-         template< typename Peek, typename Peek::data_t Lo, typename Peek::data_t Hi >
-         struct ranges< Peek, Lo, Hi >
-            : range< result_on_found::SUCCESS, Peek, Lo, Hi >
-         {
-         };
-
-         template< typename Peek, typename Peek::data_t... Cs >
-         struct skip_control< ranges< Peek, Cs... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

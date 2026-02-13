@@ -1,62 +1,55 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_NOT_AT_HPP
 #define TAO_PEGTL_INTERNAL_NOT_AT_HPP
 
-#include "../config.hpp"
-
-#include "rule_conjunction.hpp"
-#include "skip_control.hpp"
-#include "trivial.hpp"
+#include "enable_control.hpp"
+#include "failure.hpp"
+#include "seq.hpp"
 
 #include "../apply_mode.hpp"
+#include "../config.hpp"
 #include "../rewind_mode.hpp"
+#include "../type_list.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename... Rules >
+   struct not_at
+      : not_at< seq< Rules... > >
+   {};
+
+   template<>
+   struct not_at<>
+      : failure
+   {};
+
+   template< typename Rule >
+   struct not_at< Rule >
    {
-      namespace internal
+      using rule_t = not_at;
+      using subs_t = type_list< Rule >;
+
+      template< apply_mode,
+                rewind_mode,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
-         template< typename... Rules >
-         struct not_at;
+         const auto m = in.template auto_rewind< rewind_mode::required >();
+         return !Control< Rule >::template match< apply_mode::nothing, rewind_mode::optional, Action, Control >( in, st... );
+      }
+   };
 
-         template<>
-         struct not_at<>
-            : trivial< false >
-         {
-         };
+   template< typename... Rules >
+   inline constexpr bool enable_control< not_at< Rules... > > = false;
 
-         template< typename... Rules >
-         struct not_at
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::OPT, Rules... >;
-
-            template< apply_mode,
-                      rewind_mode,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               const auto m = in.template mark< rewind_mode::REQUIRED >();
-               return !rule_conjunction< Rules... >::template match< apply_mode::NOTHING, rewind_mode::ACTIVE, Action, Control >( in, st... );
-            }
-         };
-
-         template< typename... Rules >
-         struct skip_control< not_at< Rules... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

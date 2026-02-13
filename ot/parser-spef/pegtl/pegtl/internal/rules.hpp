@@ -1,12 +1,11 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_RULES_HPP
 #define TAO_PEGTL_INTERNAL_RULES_HPP
 
 #include "action.hpp"
-#include "alnum.hpp"
-#include "alpha.hpp"
 #include "any.hpp"
 #include "apply.hpp"
 #include "apply0.hpp"
@@ -18,46 +17,55 @@
 #include "disable.hpp"
 #include "discard.hpp"
 #include "enable.hpp"
+#include "enable_control.hpp"
 #include "eof.hpp"
 #include "eol.hpp"
 #include "eolf.hpp"
+#include "everything.hpp"
+#include "failure.hpp"
 #include "identifier.hpp"
 #include "if_apply.hpp"
-#include "if_must.hpp"
-#include "if_must_else.hpp"
 #include "if_then_else.hpp"
 #include "istring.hpp"
 #include "list.hpp"
-#include "list_must.hpp"
 #include "list_tail.hpp"
 #include "list_tail_pad.hpp"
 #include "minus.hpp"
-#include "must.hpp"
 #include "not_at.hpp"
 #include "one.hpp"
 #include "opt.hpp"
 #include "pad.hpp"
 #include "pad_opt.hpp"
+#include "partial.hpp"
 #include "plus.hpp"
-#include "raise.hpp"
 #include "range.hpp"
 #include "ranges.hpp"
+#include "rematch.hpp"
 #include "rep.hpp"
 #include "rep_min.hpp"
 #include "rep_min_max.hpp"
 #include "rep_opt.hpp"
 #include "require.hpp"
 #include "seq.hpp"
-#include "skip_control.hpp"
 #include "sor.hpp"
 #include "star.hpp"
-#include "star_must.hpp"
+#include "star_partial.hpp"
+#include "star_strict.hpp"
 #include "state.hpp"
+#include "strict.hpp"
 #include "string.hpp"
-#include "three.hpp"
-#include "trivial.hpp"
-#include "try_catch_type.hpp"
-#include "two.hpp"
+#include "success.hpp"
 #include "until.hpp"
+
+#if defined( __cpp_exceptions )
+#include "if_must.hpp"
+#include "if_must_else.hpp"
+#include "list_must.hpp"
+#include "must.hpp"
+#include "raise.hpp"
+#include "star_must.hpp"
+#include "try_catch_raise_nested.hpp"
+#include "try_catch_return_false.hpp"
+#endif
 
 #endif

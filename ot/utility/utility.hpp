@@ -1,11 +1,15 @@
 #ifndef OT_UTILITY_UTILITY_HPP_
 #define OT_UTILITY_UTILITY_HPP_
 
+#include <type_traits>
+
 #include <ot/utility/lambda.hpp>
 #include <ot/utility/logger.hpp>
 #include <ot/utility/tokenizer.hpp>
 #include <ot/utility/index.hpp>
 #include <ot/utility/os.hpp>
+#include <ot/utility/scope_guard.hpp>
+#include <ot/utility/unique_guard.hpp>
 #include <ot/utility/CLI11.hpp>
 
 // Miscellaneous

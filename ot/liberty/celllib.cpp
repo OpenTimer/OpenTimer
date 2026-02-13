@@ -609,38 +609,10 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       cellpin.original_pin = *itr;
     }
     else if(*itr == "internal_power") {
-      auto ipower = _extract_internal_power(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ipower.related_pin)
-          continue;
-
-        t.internal_power = ipower;
-        found = true;
-        break;
+      cellpin.internal_power.emplace_back(_extract_internal_power(itr, end));
       }
-      if (!found) {
-        Timing t;
-        t.related_pin    = ipower.related_pin;
-        t.internal_power = ipower;
-        cellpin.timings.emplace_back(t);
-      }
-    }
     else if(*itr == "timing") {
-      auto ti = _extract_timing(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ti.related_pin)
-          continue;
-        auto ipower_copy = t.internal_power;
-        t = ti;
-        t.internal_power = ipower_copy;
-        found = true;
-        break;
-      }
-      if (!found) {
-        cellpin.timings.push_back(ti);
-      }
+      cellpin.timings.emplace_back(_extract_timing(itr, end));
     }
     else if(*itr == "}") {
       stack--;
@@ -658,76 +630,6 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
 
   return cellpin;
 }
-
-
-// Function: _extract_bus
-// Extract a bus group and its pins, applying bus-level direction to all pins
-void Celllib::_extract_bus(token_iterator& itr, const token_iterator end, Cell& cell) {
-  
-  std::string bus_name;
-  std::optional<CellpinDirection> bus_direction;
-  
-  // Extract bus name from parentheses
-  if(itr=on_next_parentheses(
-    itr, 
-    end, 
-    [&] (auto& name) mutable { bus_name = name; }); itr == end) {
-    OT_LOGF("can't find bus name");
-  }
-  
-  // Find the opening brace
-  if(itr = std::find(itr, end, "{"); itr == end) {
-    OT_LOGF("can't find group brace '{' in bus ", bus_name);
-  }
-  
-  int stack = 1;
-  
-  // Parse bus attributes and contained pins
-  while(stack && ++itr != end) {
-    
-    if(*itr == "direction") {
-      // Extract bus-level direction
-      if(++itr == end) {
-        OT_LOGF("can't get the direction in bus ", bus_name);
-      }
-      
-      if(auto ditr = cellpin_directions.find(*itr); ditr != cellpin_directions.end()) {
-        bus_direction = ditr->second;
-      }
-    }
-    else if(*itr == "pin") {
-      // Extract pin using existing function
-      auto pin = _extract_cellpin(itr, end);
-
-      // If pin doesn't have a direction, inherit from bus
-      if(!pin.direction && bus_direction) {
-        pin.direction = bus_direction;
-      }
-      else if (pin.direction && bus_direction && pin.direction != bus_direction) {
-        OT_LOGE("pin ", pin.name, " has different direction from bus ", bus_name);
-      }
-      else if (!pin.direction && !bus_direction) {
-        OT_LOGE("pin ", pin.name, " has no direction and bus ", bus_name, " has no direction");
-      }
-      
-      cell.cellpins[pin.name] = std::move(pin);
-    }
-    else if(*itr == "}") {
-      stack--;
-    }
-    else if(*itr == "{") {
-      stack++;
-    }
-    else {
-      // Skip other bus attributes
-    }
-  }
-  
-  if(stack != 0 || *itr != "}") {
-    OT_LOGF("can't find group brace '}' in bus ", bus_name);
-  }
-}
-
 
 // Function: _extract_cell
 Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
@@ -765,9 +667,6 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
     else if(*itr == "pin") {                         // Read the cell pin group.
       auto pin = _extract_cellpin(itr, end);
       cell.cellpins[pin.name] = std::move(pin);
-    }
-    else if(*itr == "bus") {                         // Read the bus group.
-      _extract_bus(itr, end, cell);
     }
     else if(*itr == "}") {
       stack--;
