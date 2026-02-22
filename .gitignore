@@ -21,7 +21,25 @@
 *.la
 *.a
 
+# Compiled python modules
+/*.pyc
+
 # Executables
 *.exe
 *.out
 *.app
+
+# Build items
+/ot/config.hpp
+/build
+/example/incremental/incremental
+/example/optimizer/optimizer
+/example/simple/simple
+/example/sizer/sizer
+/example/unit/unit
+/unittest/path
+/unittest/utility
+/bin
+
+# Unittest artifacts
+*.output
