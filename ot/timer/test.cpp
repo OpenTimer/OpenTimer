@@ -113,7 +113,28 @@ void Test::_fprop_rat(float period) {
       _related_at[el][rf] = *_arc._from._at[fel][frf];
     }
     else {
-      _related_at[el][rf] = *_arc._from._at[fel][frf] + period;
+      // Trace source edges so clock-path delays do not select the capture cycle.
+      auto source = [] (Pin* pin, Split el, Tran rf) {
+        while(pin->_at[el][rf] && pin->_at[el][rf]->pi_arc) {
+          auto [arc, pel, prf] = pin->_at[el][rf]->pi();
+          pin = &arc->_from;
+          el = pel;
+          rf = prf;
+        }
+        return std::make_pair(pin, rf);
+      };
+
+      auto [launch, lrf] = source(&_arc._to, el, rf);
+      auto [capture, crf] = source(&_arc._from, fel, frf);
+      auto shift = period;
+
+      // A later edge of the same source clock captures in the current cycle.
+      if(launch == capture && capture->_at[fel][lrf] && capture->_at[fel][crf] &&
+         *capture->_at[fel][crf] > *capture->_at[fel][lrf]) {
+        shift = 0.0f;
+      }
+
+      _related_at[el][rf] = *_arc._from._at[fel][frf] + shift;
     }
 
     _constraint[el][rf] = tv[el]->constraint(
