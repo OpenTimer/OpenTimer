@@ -102,7 +102,7 @@ constexpr size_t floor_log2(T n) {
 /**
 @brief returns the floor of `log2(N)` at compile time 
 */
-template<size_t N>
+template <size_t N>
 constexpr size_t static_floor_log2() {
   return (N < 2) ? 0 : 1 + static_floor_log2<N / 2>();
   //auto log = 0;
@@ -111,6 +111,7 @@ constexpr size_t static_floor_log2() {
   //}
   //return log;
 }
+
 
 /**
  * @brief finds the median of three numbers pointed to by iterators using the given comparator
@@ -287,46 +288,6 @@ inline T seed() noexcept {
   return std::chrono::system_clock::now().time_since_epoch().count();
 }
 
-/**
- * @brief counts the number of trailing zeros in an integer.
- *
- * This function provides a portable implementation for counting the number of 
- * trailing zeros across different platforms and integer sizes (32-bit and 64-bit).
- *
- * @tparam T integer type (32-bit or 64-bit).
- * @param x non-zero integer to count trailing zeros from
- * @return the number of trailing zeros in @c x
- *
- * @attention
- * The behavior is undefined when @c x is 0.
- */
-template <typename T, typename = std::enable_if_t<std::is_unsigned_v<T>>>
-auto ctz(T x) {
-
-  #if defined(_MSC_VER)
-    unsigned long index;
-    if constexpr (sizeof(T) == 8) {
-      _BitScanForward64(&index, x);
-    } else {
-      _BitScanForward(&index, (unsigned long)x);
-    }
-    return index;
-  #elif defined(__GNUC__) || defined(__clang__)
-    if constexpr (sizeof(T) == 8) {
-      return __builtin_ctzll(x);
-    } else {
-      return __builtin_ctz(x);
-    }
-  #else 
-    size_t r = 0;
-    while ((x & 1) == 0) {
-      x >>= 1;
-      r++;
-    }
-    return r;
-  #endif
-}
-
 // ------------------------------------------------------------------------------------------------
 // coprime
 // ------------------------------------------------------------------------------------------------
@@ -371,66 +332,101 @@ constexpr std::array<size_t, N> make_coprime_lut() {
   return coprimes;
 }
 
-
-//class XorShift64 {
-//
-//  public:
-//  
-//  explicit XorShift64(uint64_t seed) : _state(seed) {}
-//
-//  uint64_t next() {
-//    _state ^= _state >> 12;
-//    _state ^= _state << 25;
-//    _state ^= _state >> 27;
-//    return _state * 0x2545F4914F6CDD1DULL; // Scramble for better randomness
-//  }
-//
-//  size_t random_range(size_t min, size_t max) {
-//    return min + (next() % (max - min + 1));
-//  }
-//
-//  private:
-//
-//  uint64_t _state;
-//};
-
-//inline int generate_random_excluding(int worker_id, int W, XorShift64& rng) {
-//    int random_number = rng.random_range(0, 2 * W - 2); // Range: [0, 2W-2]
-//    return random_number + (random_number >= worker_id); // Skip worker_id
+//template <typename T>
+//constexpr T lemire_range(T x, T range) {
+//  return (uint32_t)(((uint64_t)x * (uint64_t)range) >> 32);
 //}
-//
-//
-//class Xoroshiro128Plus {
-//
-//  public:
-//
-//    explicit Xoroshiro128Plus(uint64_t seed1, uint64_t seed2) : _state{seed1, seed2} {}
-//
-//    uint64_t next() {
-//      uint64_t s0 = _state[0];
-//      uint64_t s1 = _state[1];
-//      uint64_t result = s0 + s1;
-//
-//      s1 ^= s0;
-//      _state[0] = _rotl(s0, 55) ^ s1 ^ (s1 << 14); // Scramble _state
-//      _state[1] = _rotl(s1, 36);
-//
-//      return result;
-//    }
-//
-//    int random_range(int min, int max) {
-//      return min + (next() % (max - min + 1));
-//    }
-//
-//  private:
-//
-//    std::array<uint64_t, 2> _state;
-//
-//    static uint64_t _rotl(uint64_t x, int k) {
-//      return (x << k) | (x >> (64 - k));
-//    }
-//};
 
+
+/**
+@class Xorshift
+
+@brief class to create a fast xorshift-based pseudo-random number generator
+
+@tparam T unsigned integral type used as the internal state (supported uint32_t and uint64_t)
+
+This class implements a lightweight xorshift pseudo-random number generator
+suitable for performance-critical paths such as schedulers, work-stealing victim selection, 
+and randomized backoff.
+The implementation is branchless on the hot path and has a very small state
+footprint (one machine word). All operations are integer-only.
+
+@attention
+The internal state must be seeded with a non-zero value.
+This class is not thread-safe. Each thread should maintain its own instance.
+*/
+template <typename T>
+class Xorshift {
+  static_assert(std::is_unsigned<T>::value, "Xorshift requires an unsigned integral type.");
+
+  public:
+
+  /**
+  @brief constructs an uninitialized Xorshift generator
+  
+  The internal state is not initialized. The user must call `seed()`
+  with a non-zero value before generating numbers.
+  */
+  Xorshift() = default;
+
+  /**
+  @brief constructs a Xorshift generator with the given seed
+  
+  @param value the new seed value to use
+  
+  The seed value must be non-zero.
+  */
+  Xorshift(T value) : _state(value) {}
+
+  /**
+  @brief seeds the generator with a new value
+  
+  @param value the new seed value
+  
+  The seed value must be non-zero. A zero seed results in a degenerated
+  generator that always returns zero.
+  */
+  void seed(T value) {
+    _state = value;
+  }
+  
+  /**
+  @brief generates the next pseudo-random value
+  
+  @return a pseudo-random value of type `T`
+  
+  For 32-bit state, this function implements the Xorshift32 algorithm.
+  For 64-bit state, this function implements the Xorshift64 algorithm with
+  a multiplicative output transformation to improve distribution.
+  
+  @warning
+  Calling this function before seeding the generator with a non-zero value
+  results in undefined behavior.
+  */
+  T operator()() {
+    if constexpr (sizeof(T) == 8) {
+      // Xorshift64 constants
+      _state ^= _state << 13;
+      _state ^= _state >> 7;
+      _state ^= _state << 17;
+      return _state * 0x2545F4914F6CDD1DULL;
+    }
+    else if constexpr (sizeof(T) == 4) {
+      // Xorshift32 constants
+      _state ^= _state << 13;
+      _state ^= _state >> 17;
+      _state ^= _state << 5;
+      return _state;
+    }
+    else {
+      static_assert(sizeof(T) == 0, "Unsupported bit-width for Xorshift. Use uint32_t or uint64_t.");
+    }
+  }
+
+  private:
+
+  T _state;  // must be initialized with non-zero
+};
 
 }  // end of namespace tf -----------------------------------------------------
 

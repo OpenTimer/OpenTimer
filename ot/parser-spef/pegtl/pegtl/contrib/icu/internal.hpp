@@ -1,76 +1,99 @@
-// Copyright (c) 2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2018-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_CONTRIB_ICU_INTERNAL_HPP
 #define TAO_PEGTL_CONTRIB_ICU_INTERNAL_HPP
 
 #include <unicode/uchar.h>
 
+#include "../analyze_traits.hpp"
+
 #include "../../config.hpp"
+#include "../../type_list.hpp"
 
-#include "../../analysis/generic.hpp"
-#include "../../internal/skip_control.hpp"
+#include "../../internal/enable_control.hpp"
 
-namespace tao
+namespace TAO_PEGTL_NAMESPACE
 {
-   namespace TAO_PEGTL_NAMESPACE
+   namespace internal
    {
-      namespace internal
+      namespace icu
       {
-         namespace icu
+         template< typename Peek, UProperty P, bool V = true >
+         struct binary_property
          {
-            template< typename Peek, UProperty P, bool V = true >
-            struct binary_property
+            using peek_t = Peek;
+            using data_t = typename Peek::data_t;
+
+            using rule_t = binary_property;
+            using subs_t = empty_list;
+
+            [[nodiscard]] static bool test_one( const data_t c ) noexcept
             {
-               using analyze_t = analysis::generic< analysis::rule_type::ANY >;
+               return u_hasBinaryProperty( c, P ) == V;
+            }
 
-               template< typename Input >
-               static bool match( Input& in ) noexcept( noexcept( Peek::peek( in ) ) )
-               {
-                  if( const auto r = Peek::peek( in ) ) {
-                     if( u_hasBinaryProperty( r.data, P ) == V ) {
-                        in.bump( r.size );
-                        return true;
-                     }
-                  }
-                  return false;
-               }
-            };
-
-            template< typename Peek, UProperty P, int V >
-            struct property_value
+            template< typename ParseInput >
+            [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( Peek::peek( in ) ) )
             {
-               using analyze_t = analysis::generic< analysis::rule_type::ANY >;
-
-               template< typename Input >
-               static bool match( Input& in ) noexcept( noexcept( Peek::peek( in ) ) )
-               {
-                  if( const auto r = Peek::peek( in ) ) {
-                     if( u_getIntPropertyValue( r.data, P ) == V ) {
-                        in.bump( r.size );
-                        return true;
-                     }
+               if( const auto t = Peek::peek( in ) ) {
+                  if( test_one( t.data ) ) {
+                     in.bump( t.size );
+                     return true;
                   }
-                  return false;
                }
-            };
-
-         }  // namespace icu
-
-         template< typename Peek, UProperty P, bool V >
-         struct skip_control< icu::binary_property< Peek, P, V > > : std::true_type
-         {
+               return false;
+            }
          };
 
          template< typename Peek, UProperty P, int V >
-         struct skip_control< icu::property_value< Peek, P, V > > : std::true_type
+         struct property_value
          {
+            using peek_t = Peek;
+            using data_t = typename Peek::data_t;
+
+            using rule_t = property_value;
+            using subs_t = empty_list;
+
+            [[nodiscard]] static bool test_one( const data_t c ) noexcept
+            {
+               return u_getIntPropertyValue( c, P ) == V;
+            }
+
+            template< typename ParseInput >
+            [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( Peek::peek( in ) ) )
+            {
+               if( const auto t = Peek::peek( in ) ) {
+                  if( test_one( t.data ) ) {
+                     in.bump( t.size );
+                     return true;
+                  }
+               }
+               return false;
+            }
          };
 
-      }  // namespace internal
+      }  // namespace icu
 
-   }  // namespace TAO_PEGTL_NAMESPACE
+      template< typename Peek, UProperty P, bool V >
+      inline constexpr bool enable_control< icu::binary_property< Peek, P, V > > = false;
 
-}  // namespace tao
+      template< typename Peek, UProperty P, int V >
+      inline constexpr bool enable_control< icu::property_value< Peek, P, V > > = false;
+
+   }  // namespace internal
+
+   template< typename Name, typename Peek, UProperty P, bool V >
+   struct analyze_traits< Name, internal::icu::binary_property< Peek, P, V > >
+      : analyze_any_traits<>
+   {};
+
+   template< typename Name, typename Peek, UProperty P, int V >
+   struct analyze_traits< Name, internal::icu::property_value< Peek, P, V > >
+      : analyze_any_traits<>
+   {};
+
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

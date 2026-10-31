@@ -34,6 +34,7 @@ struct Celllib {
   using token_iterator = std::vector<std::string_view>::iterator;
 
   std::string name {"OpenTimer"};
+  SlewThresholds thresholds;
 
   std::optional<DelayModel> delay_model;
 
@@ -57,6 +58,7 @@ struct Celllib {
   std::unordered_map<std::string, LutTemplate> lut_templates;
   std::unordered_map<std::string, Cell> cells;
 
+  static std::vector<Celllib> read_all(const std::filesystem::path&);
   void read(const std::filesystem::path&);
   void scale_time(float);
   void scale_resistance(float);
@@ -73,14 +75,18 @@ struct Celllib {
 
   private:
 
+    std::unordered_map<std::string, std::pair<int, int>> _bus_ranges;
+
     std::optional<float> _extract_operating_conditions(token_iterator& itr, const token_iterator end);
     void        _extract_bus         (token_iterator&, const token_iterator, Cell&);
     LutTemplate   _extract_lut_template  (token_iterator&, const token_iterator);
     Lut           _extract_lut           (token_iterator&, const token_iterator);
     Cell          _extract_cell          (token_iterator&, const token_iterator);
-    Cellpin       _extract_cellpin       (token_iterator&, const token_iterator);
+    Cellpin       _extract_cellpin       (token_iterator&, const token_iterator,
+                                         const Cellpin* = nullptr, std::vector<Cellpin>* = nullptr);
     InternalPower _extract_internal_power(token_iterator&, const token_iterator);
     Timing        _extract_timing        (token_iterator&, const token_iterator);
+    void _read_group(token_iterator&, const token_iterator);
 
     void _apply_default_values();
     void _uncomment(std::vector<char>&);

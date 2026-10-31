@@ -25,3 +25,14 @@
 *.exe
 *.out
 *.app
+
+# Bazel output symlinks (MODULE.bazel.lock is intentionally kept).
+/bazel-*
+
+bin
+build
+
+*.lock
+
+# Python
+**/__pycache__/*

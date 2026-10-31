@@ -5,6 +5,13 @@
 
 namespace ot {
 
+const SlewThresholds& Pin::thresholds(Split el) const {
+  if(const auto* cp = cellpin(el)) return cp->thresholds;
+  static const SlewThresholds defaults;
+  return _default_thresholds[el] ? *_default_thresholds[el] : defaults;
+}
+
+
 // Constructor
 PrimaryOutput::PrimaryOutput(Pin& pin) : _pin {pin} {
 }
@@ -62,7 +69,8 @@ void PrimaryInput::_scale_time(float s) {
 Pin::At::At(Arc* a, Split el, Tran rf, float v) : 
   pi_arc {a}, 
   pi_el  {el}, 
-  pi_rf  {rf}, 
+  pi_rf  {rf},
+  valid {true},
   numeric  {v} {
 }
 
@@ -72,7 +80,8 @@ Pin::At::At(Arc* a, Split el, Tran rf, float v) :
 Pin::Slew::Slew(Arc* a, Split el, Tran rf, float v) : 
   pi_arc {a}, 
   pi_el  {el}, 
-  pi_rf  {rf}, 
+  pi_rf  {rf},
+  valid {true},
   numeric  {v} {
 }
 
@@ -82,18 +91,27 @@ Pin::Slew::Slew(Arc* a, Split el, Tran rf, float v) :
 Pin::Rat::Rat(Arc* a, Split el, Tran rf, float v) : 
   pi_arc  {a}, 
   pi_el   {el}, 
-  pi_rf   {rf}, 
+  pi_rf   {rf},
+  valid {true},
   numeric {v} {
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Constructor
-Pin::Pin(const std::string& name) : _name {name} {
-}
+Pin::Pin(const std::string& name)
+    : _owned_name(std::make_unique<std::string>(name)),
+      _name_ref(_owned_name.get()) {}
+
+Pin::Pin(const std::string& name, Borrowed_name) : _name_ref(&name) {}
 
 // Procedure: _reset_slew
 void Pin::_reset_slew() {
+  if (_net && _net->_root == this) {
+    _net->_driver = {};
+    _net->_effective_cap = {};
+    _net->_elmore_fallback = {};
+  }
   FOR_EACH_EL_RF(el, rf) {
     _slew[el][rf].reset();
   }
@@ -193,27 +211,25 @@ bool Pin::is_datapath_source() const {
 // Insert an arc into the fanin list of the pin.
 void Pin::_insert_fanin(Arc& arc) {
   assert(&arc._to == this);
-  arc._fanin_satellite = _fanin.insert(_fanin.end(), &arc);
+  _fanin.push_back(arc._fanin_link, arc);
 }
 
 // Procedure: _insert_fanout
 void Pin::_insert_fanout(Arc& arc) {
   assert(&arc._from == this);
-  arc._fanout_satellite = _fanout.insert(_fanout.end(), &arc);
+  _fanout.push_back(arc._fanout_link, arc);
 }
 
 // Procedure: _remove_fanout
 void Pin::_remove_fanout(Arc& arc) {
-  assert(arc._fanout_satellite && &arc._from == this);
-  _fanout.erase(*(arc._fanout_satellite));
-  arc._fanout_satellite.reset();
+  assert(&arc._from == this);
+  _fanout.erase(arc._fanout_link);
 }
 
 // Procedure: _remove_fanin
 void Pin::_remove_fanin(Arc& arc) {
-  assert(arc._fanin_satellite && &arc._to == this);
-  _fanin.erase(*(arc._fanin_satellite));
-  arc._fanin_satellite.reset();
+  assert(&arc._to == this);
+  _fanin.erase(arc._fanin_link);
 }
 
 // Function: _find_fanin
@@ -249,29 +265,47 @@ std::optional<float> Pin::slew(Split el, Tran rf) const {
 
 std::pair<float,float> Pin::power() const {
 
-  float pin_total_cap=0.0;
-  FOR_EACH_EL_RF(el, rf) {
-    pin_total_cap += cap(el, rf);
-  }
-  pin_total_cap /= 4; // EL_RF
+  float net_total_cap=0.0;
+  float ipwr_total =0;
+  float n_computations = 0;
 
-  float pin_total_ipower=0.0;
-  int   pin_total_num = 0;
-  for(const auto& arc : _fanout) {
+  bool req_related = is_output();
 
     FOR_EACH_EL_RF(el, rf) {
-      if (arc->_ipower[el][rf][rf] ) {
-        auto pw = *arc->_ipower[el][rf][rf];
-        // os << "  \"" << arc->_from._name << "\" -> \"" << arc->_to._name << " power:" << pw << "\n";
-        pin_total_ipower += pw;
-        pin_total_num++;
+    const auto *cp = cellpin(el);
+    if (!cp)
+      continue;
+
+
+    auto s = slew(el, rf);
+    auto sc = s?*s:0.0f;
+    auto lc = net() ? net()->load(el, rf) : 0.0f;
+    net_total_cap += lc;
+
+    for(const auto &p:cp->internal_power) {
+      auto ip = p.power(rf, sc, lc);
+      if (!ip) {
+        continue;
       }
+      ipwr_total += *ip;
+      n_computations += 1;
     }
   }
-  if (pin_total_num)
-    pin_total_ipower /= pin_total_num;
 
-  return std::pair(pin_total_cap, pin_total_ipower);
+  //std::cout << "name:" << _name <<  ":" << name();
+  //std::cout << " ipwr_total:" << ipwr_total;
+  //std::cout << " net_cap   :" << net_total_cap;
+  //std::cout << "\n";
+
+  if (n_computations>1) {
+    ipwr_total    /= n_computations;
+    net_total_cap /= n_computations;
+  }
+
+  if (is_output())
+    return std::pair(net_total_cap, ipwr_total);
+  else
+    return std::pair(0, ipwr_total);
 }
 
 // Function: slack
@@ -320,6 +354,8 @@ float Pin::cap(Split el, Tran rf) const {
       return po->_load[el][rf];
     },
     [&] (CellpinView cp) {
+      const auto& range = rf == RISE ? cp[el]->rise_capacitance_range : cp[el]->fall_capacitance_range;
+      if(range[el]) return *range[el];
       if(rf == RISE && cp[el]->rise_capacitance) {
         return cp[el]->rise_capacitance.value();
       }

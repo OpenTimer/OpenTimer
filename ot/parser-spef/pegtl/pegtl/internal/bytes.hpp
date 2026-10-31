@@ -1,46 +1,43 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_BYTES_HPP
 #define TAO_PEGTL_INTERNAL_BYTES_HPP
 
+#include "enable_control.hpp"
+#include "success.hpp"
+
 #include "../config.hpp"
+#include "../type_list.hpp"
 
-#include "skip_control.hpp"
-
-#include "../analysis/counted.hpp"
-
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< unsigned Cnt >
+   struct bytes
    {
-      namespace internal
+      using rule_t = bytes;
+      using subs_t = empty_list;
+
+      template< typename ParseInput >
+      [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( in.size( 0 ) ) )
       {
-         template< unsigned Num >
-         struct bytes
-         {
-            using analyze_t = analysis::counted< analysis::rule_type::ANY, Num >;
+         if( in.size( Cnt ) >= Cnt ) {
+            in.bump( Cnt );
+            return true;
+         }
+         return false;
+      }
+   };
 
-            template< typename Input >
-            static bool match( Input& in ) noexcept( noexcept( in.size( 0 ) ) )
-            {
-               if( in.size( Num ) >= Num ) {
-                  in.bump( Num );
-                  return true;
-               }
-               return false;
-            }
-         };
+   template<>
+   struct bytes< 0 >
+      : success
+   {};
 
-         template< unsigned Num >
-         struct skip_control< bytes< Num > > : std::true_type
-         {
-         };
+   template< unsigned Cnt >
+   inline constexpr bool enable_control< bytes< Cnt > > = false;
 
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

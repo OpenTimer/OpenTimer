@@ -96,6 +96,7 @@ std::string to_string(TimingType);
 struct Timing {
   
   std::string related_pin;
+  std::optional<std::string> when;
 
   std::optional<TimingSense> sense;         
   std::optional<TimingType> type;           
@@ -105,8 +106,6 @@ struct Timing {
   std::optional<Lut> fall_transition;       
   std::optional<Lut> rise_constraint;       
   std::optional<Lut> fall_constraint;       
-
-  InternalPower internal_power;
 
   bool is_combinational() const;
   bool is_constraint() const; 

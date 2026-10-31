@@ -1,72 +1,111 @@
-// Copyright (c) 2017-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2017-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_CONTRIB_REP_ONE_MIN_MAX_HPP
 #define TAO_PEGTL_CONTRIB_REP_ONE_MIN_MAX_HPP
 
 #include <algorithm>
+#include <type_traits>
 
 #include "../config.hpp"
-
-#include "../analysis/counted.hpp"
+#include "../type_list.hpp"
 
 #include "../internal/bump_help.hpp"
-#include "../internal/skip_control.hpp"
+#include "../internal/bytes.hpp"
+#include "../internal/enable_control.hpp"
+#include "../internal/opt.hpp"
 
-namespace tao
+#include "analyze_traits.hpp"
+
+namespace TAO_PEGTL_NAMESPACE
 {
-   namespace TAO_PEGTL_NAMESPACE
+   namespace internal
    {
-      namespace internal
+      template< unsigned Min, unsigned Max, char C >
+      struct rep_one_min_max
       {
-         template< unsigned Min, unsigned Max, char C >
-         struct rep_one_min_max
+         using rule_t = rep_one_min_max;
+         using subs_t = empty_list;
+
+         static_assert( Min <= Max );
+
+         [[nodiscard]] static constexpr bool test_one( const char c ) noexcept
          {
-            using analyze_t = analysis::counted< analysis::rule_type::ANY, Min >;
+            static_assert( ( Min == 1 ) && ( Max == 1 ) );
+            return C == c;
+         }
 
-            static_assert( Min <= Max, "invalid rep_one_min_max rule (maximum number of repetitions smaller than minimum)" );
+         [[nodiscard]] static constexpr bool test_any( const char c ) noexcept
+         {
+            return C == c;
+         }
 
-            template< typename Input >
-            static bool match( Input& in )
-            {
-               const auto size = in.size( Max + 1 );
-               if( size < Min ) {
-                  return false;
-               }
-               std::size_t i = 0;
-               while( ( i < size ) && ( in.peek_char( i ) == C ) ) {
-                  ++i;
-               }
-               if( ( Min <= i ) && ( i <= Max ) ) {
-                  bump_help< result_on_found::SUCCESS, Input, char, C >( in, i );
-                  return true;
-               }
+         template< typename ParseInput >
+         [[nodiscard]] static bool match( ParseInput& in )
+         {
+            const auto size = in.size( Max + 1 );
+            if( size < Min ) {
                return false;
             }
-         };
+            std::size_t i = 0;
+            while( ( i < size ) && ( in.peek_char( i ) == C ) ) {
+               ++i;
+            }
+            if( ( Min <= i ) && ( i <= Max ) ) {
+               bump_help< rep_one_min_max >( in, i );
+               return true;
+            }
+            return false;
+         }
+      };
 
-         template< unsigned Min, unsigned Max, char C >
-         struct skip_control< rep_one_min_max< Min, Max, C > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-      inline namespace ascii
+      template< unsigned Max, char C >
+      struct rep_one_min_max< 0, Max, C >
       {
-         template< unsigned Min, unsigned Max, char C >
-         struct rep_one_min_max : internal::rep_one_min_max< Min, Max, C >
+         using rule_t = rep_one_min_max;
+         using subs_t = empty_list;
+
+         [[nodiscard]] static constexpr bool test_any( const char c ) noexcept
          {
-         };
+            return C == c;
+         }
 
-         struct ellipsis : internal::rep_one_min_max< 3, 3, '.' >
+         template< typename ParseInput >
+         [[nodiscard]] static bool match( ParseInput& in )
          {
-         };
+            const auto size = in.size( Max + 1 );
+            std::size_t i = 0;
+            while( ( i < size ) && ( in.peek_char( i ) == C ) ) {
+               ++i;
+            }
+            if( i <= Max ) {
+               bump_help< rep_one_min_max >( in, i );
+               return true;
+            }
+            return false;
+         }
+      };
 
-      }  // namespace ascii
+      template< unsigned Min, unsigned Max, char C >
+      inline constexpr bool enable_control< rep_one_min_max< Min, Max, C > > = false;
 
-   }  // namespace TAO_PEGTL_NAMESPACE
+   }  // namespace internal
 
-}  // namespace tao
+   inline namespace ascii
+   {
+      template< unsigned Min, unsigned Max, char C >
+      struct rep_one_min_max
+         : internal::rep_one_min_max< Min, Max, C >
+      {};
+
+   }  // namespace ascii
+
+   template< typename Name, unsigned Min, unsigned Max, char C >
+   struct analyze_traits< Name, internal::rep_one_min_max< Min, Max, C > >
+      : std::conditional_t< ( Min != 0 ), analyze_any_traits<>, analyze_opt_traits<> >
+   {};
+
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

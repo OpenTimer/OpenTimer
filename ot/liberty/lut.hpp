@@ -59,7 +59,7 @@ struct Lut {
   std::vector<float> indices2;
   std::vector<float> table;
 
-  const LutTemplate* lut_template {nullptr};
+  std::shared_ptr<const LutTemplate> lut_template;
   
   float operator() (float, float) const;
 

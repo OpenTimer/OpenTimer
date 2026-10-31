@@ -1,81 +1,68 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_ONE_HPP
 #define TAO_PEGTL_INTERNAL_ONE_HPP
 
-#include <algorithm>
-#include <utility>
+#include <cstddef>
+
+#include "any.hpp"
+#include "bump_help.hpp"
+#include "enable_control.hpp"
+#include "failure.hpp"
+#include "result_on_found.hpp"
 
 #include "../config.hpp"
+#include "../type_list.hpp"
 
-#include "bump_help.hpp"
-#include "result_on_found.hpp"
-#include "skip_control.hpp"
-
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< result_on_found R, typename Peek, typename Peek::data_t... Cs >
+   struct one
    {
-      namespace internal
+      using peek_t = Peek;
+      using data_t = typename Peek::data_t;
+
+      using rule_t = one;
+      using subs_t = empty_list;
+
+      [[nodiscard]] static constexpr bool test_one( const data_t c ) noexcept
       {
-         template< typename Char >
-         bool contains( const Char c, const std::initializer_list< Char >& l ) noexcept
-         {
-            return std::find( l.begin(), l.end(), c ) != l.end();
+         return ( ( c == Cs ) || ... ) == static_cast< bool >( R );
+      }
+
+      [[nodiscard]] static constexpr bool test_any( const data_t c ) noexcept
+      {
+         return test_one( c );
+      }
+
+      template< typename ParseInput >
+      [[nodiscard]] static bool match( ParseInput& in ) noexcept( noexcept( Peek::peek( in ) ) )
+      {
+         if( const auto t = Peek::peek( in ) ) {
+            if( test_one( t.data ) ) {
+               bump_help< one >( in, t.size );
+               return true;
+            }
          }
+         return false;
+      }
+   };
 
-         template< result_on_found R, typename Peek, typename Peek::data_t... Cs >
-         struct one
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::ANY >;
+   template< typename Peek >
+   struct one< result_on_found::success, Peek >
+      : failure
+   {};
 
-            template< typename Input >
-            static bool match( Input& in ) noexcept( noexcept( in.empty() ) )
-            {
-               if( !in.empty() ) {
-                  if( const auto t = Peek::peek( in ) ) {
-                     if( contains( t.data, { Cs... } ) == bool( R ) ) {
-                        bump_help< R, Input, typename Peek::data_t, Cs... >( in, t.size );
-                        return true;
-                     }
-                  }
-               }
-               return false;
-            }
-         };
+   template< typename Peek >
+   struct one< result_on_found::failure, Peek >
+      : any< Peek >
+   {};
 
-         template< result_on_found R, typename Peek, typename Peek::data_t C >
-         struct one< R, Peek, C >
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::ANY >;
+   template< result_on_found R, typename Peek, typename Peek::data_t... Cs >
+   inline constexpr bool enable_control< one< R, Peek, Cs... > > = false;
 
-            template< typename Input >
-            static bool match( Input& in ) noexcept( noexcept( in.empty() ) )
-            {
-               if( !in.empty() ) {
-                  if( const auto t = Peek::peek( in ) ) {
-                     if( ( t.data == C ) == bool( R ) ) {
-                        bump_help< R, Input, typename Peek::data_t, C >( in, t.size );
-                        return true;
-                     }
-                  }
-               }
-               return false;
-            }
-         };
-
-         template< result_on_found R, typename Peek, typename Peek::data_t... Cs >
-         struct skip_control< one< R, Peek, Cs... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

@@ -4,16 +4,15 @@ namespace tf {
 
 // ----------------------------------------------------------------------------
 
-class TopologyBase {
-
-};
-
-// class: Topology
+/**
+@private
+*/
 class Topology {
 
   friend class Executor;
   friend class Subflow;
   friend class Runtime;
+  friend class NonpreemptiveRuntime;
   friend class Node;
 
   template <typename T>
@@ -21,34 +20,32 @@ class Topology {
   
   public:
 
-    template <typename P, typename C>
-    Topology(Taskflow&, P&&, C&&);
+  Topology(Taskflow&);
 
-    bool cancelled() const;
+  virtual ~Topology() = default;
+
+  bool cancelled() const;
+
+  virtual bool predicate() = 0;
+  virtual void on_finish() = 0;
 
   private:
 
-    Taskflow& _taskflow;
+  Taskflow& _taskflow;
 
-    std::promise<void> _promise;
-    
-    std::function<bool()> _pred;
-    std::function<void()> _call;
+  std::promise<void> _promise;
+  
+  std::atomic<size_t> _join_counter {0};
+  std::atomic<ESTATE::underlying_type> _estate {ESTATE::NONE};
 
-    std::atomic<size_t> _join_counter {0};
-    std::atomic<ESTATE::underlying_type> _estate {ESTATE::NONE};
+  std::exception_ptr _exception_ptr {nullptr};
 
-    std::exception_ptr _exception_ptr {nullptr};
-
-    void _carry_out_promise();
+  void _carry_out_promise();
 };
 
 // Constructor
-template <typename P, typename C>
-Topology::Topology(Taskflow& tf, P&& p, C&& c):
-  _taskflow(tf),
-  _pred {std::forward<P>(p)},
-  _call {std::forward<C>(c)} {
+inline Topology::Topology(Taskflow& tf):
+  _taskflow(tf) {
 }
 
 // Procedure
@@ -68,4 +65,39 @@ inline bool Topology::cancelled() const {
   return _estate.load(std::memory_order_relaxed) & ESTATE::CANCELLED;
 }
 
+// ----------------------------------------------------------------------------
+
+
+/**
+@private
+*/
+template <typename P, typename C>
+class DerivedTopology : public Topology {
+
+  using PredicateType = std::decay_t<P>;
+  using CallbackType  = std::decay_t<C>;
+  
+  public:
+
+  DerivedTopology(Taskflow& tf, P&& pred, C&& clbk) :
+    Topology(tf), _pred(std::forward<P>(pred)), _clbk(std::forward<C>(clbk)) {
+  }
+    
+  bool predicate() override final { return _pred(); }
+  void on_finish() override final { _clbk(); }   
+
+  private:
+
+  PredicateType _pred;       // predicate, of type bool()
+  CallbackType  _clbk;       // callback, of type void()
+};
+
 }  // end of namespace tf. ----------------------------------------------------
+
+
+
+
+
+
+
+

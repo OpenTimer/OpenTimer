@@ -1,15 +1,9 @@
 #pragma once
 
-// Feature macros for fine-tuning the performance of Taskflow at compile time
-// 
-// Disabled features by default:
-// + TF_ENABLE_TASK_POOL       : enable task pool optimization
-// + TF_ENABLE_ATOMIC_NOTIFIER : enable atomic notifier (required C++20)
-//
-
 #include "core/executor.hpp"
 #include "core/runtime.hpp"
 #include "core/async.hpp"
+#include "core/task_group.hpp"
 #include "algorithm/algorithm.hpp"
 
 /**
@@ -42,7 +36,7 @@
 /**
 @def TF_VERSION 
 
-@brief version of the %Taskflow (currently 3.11.0)
+@brief version of the %Taskflow (currently 4.0.0)
 
 The version system is made of a major version number, a minor version number,
 and a patch number:
@@ -50,7 +44,7 @@ and a patch number:
   + TF_VERSION / 100 % 1000 is the minor version
   + TF_VERSION / 100000 is the major version
 */
-#define TF_VERSION 301000
+#define TF_VERSION 400000
 
 /**
 @def TF_MAJOR_VERSION
@@ -92,7 +86,7 @@ namespace detail { }
 Release notes are available here: https://taskflow.github.io/taskflow/Releases.html
 */
 constexpr const char* version() {
-  return "3.11.0";
+  return "4.0.0";
 }
 
 

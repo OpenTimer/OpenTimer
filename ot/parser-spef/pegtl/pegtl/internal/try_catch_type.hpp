@@ -1,72 +1,68 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2022 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_TRY_CATCH_TYPE_HPP
 #define TAO_PEGTL_INTERNAL_TRY_CATCH_TYPE_HPP
 
+#if !defined( __cpp_exceptions )
+#error "Exception support required for tao/pegtl/internal/try_catch_type.hpp"
+#else
+
 #include <type_traits>
 
-#include "../config.hpp"
-
-#include "duseltronik.hpp"
+#include "enable_control.hpp"
 #include "seq.hpp"
-#include "skip_control.hpp"
-#include "trivial.hpp"
+#include "success.hpp"
 
 #include "../apply_mode.hpp"
 #include "../rewind_mode.hpp"
+#include "../type_list.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace tao::pegtl::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename Exception, typename... Rules >
+   struct try_catch_type
+      : try_catch_type< Exception, seq< Rules... > >
+   {};
+
+   template< typename Exception >
+   struct try_catch_type< Exception >
+      : success
+   {};
+
+   template< typename Exception, typename Rule >
+   struct try_catch_type< Exception, Rule >
    {
-      namespace internal
+      using rule_t = try_catch_type;
+      using subs_t = type_list< Rule >;
+
+      template< apply_mode A,
+                rewind_mode M,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
-         template< typename Exception, typename... Rules >
-         struct try_catch_type;
+         auto m = in.template auto_rewind< M >();
+         using m_t = decltype( m );
 
-         template< typename Exception >
-         struct try_catch_type< Exception >
-            : trivial< true >
-         {
-         };
+         try {
+            return m( Control< Rule >::template match< A, m_t::next_rewind_mode, Action, Control >( in, st... ) );
+         }
+         catch( const Exception& ) {
+            return false;
+         }
+      }
+   };
 
-         template< typename Exception, typename... Rules >
-         struct try_catch_type
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::SEQ, Rules... >;
+   template< typename Exception, typename... Rules >
+   inline constexpr bool enable_control< try_catch_type< Exception, Rules... > > = false;
 
-            template< apply_mode A,
-                      rewind_mode M,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               auto m = in.template mark< M >();
-               using m_t = decltype( m );
+}  // namespace tao::pegtl::internal
 
-               try {
-                  return m( duseltronik< seq< Rules... >, A, m_t::next_rewind_mode, Action, Control >::match( in, st... ) );
-               }
-               catch( const Exception& ) {
-                  return false;
-               }
-            }
-         };
-
-         template< typename Exception, typename... Rules >
-         struct skip_control< try_catch_type< Exception, Rules... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
-
+#endif
 #endif

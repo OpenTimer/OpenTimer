@@ -60,7 +60,7 @@ void Timer::_topologize(SfxtCache& sfxt, size_t v) const {
   // Stop at the data source
   if(!pin->is_datapath_source()) {
     for(auto arc : pin->_fanin) {
-      FOR_EACH_RF_IF(urf, arc->_delay[sfxt._el][urf][vrf]) {
+      FOR_EACH_RF_IF(urf, arc->delay(sfxt._el, urf, vrf)) {
         auto u = _encode_pin(arc->_from, urf);
         if(!sfxt.__spfa[u]) {
           _topologize(sfxt, u);
@@ -98,9 +98,10 @@ void Timer::_spdp(SfxtCache& sfxt) const {
 
     // Relax on fanin
     for(auto arc : pin->_fanin) {
-      FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
+      FOR_EACH_RF_IF(urf, arc->delay(el, urf, vrf)) {
         auto u = _encode_pin(arc->_from, urf);
-        auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        auto d = (el == MIN) ? *arc->delay(el, urf, vrf)
+                             : -(*arc->delay(el, urf, vrf));
         sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d);
       }
     }
@@ -134,9 +135,10 @@ void Timer::_spfa(SfxtCache& sfxt) const {
 
     // Relax on fanin
     for(auto arc : pin->_fanin) {
-      FOR_EACH_RF_IF(urf, arc->_delay[el][urf][vrf]) {
+      FOR_EACH_RF_IF(urf, arc->delay(el, urf, vrf)) {
         auto u = _encode_pin(arc->_from, urf);
-        auto d = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        auto d = (el == MIN) ? *arc->delay(el, urf, vrf)
+                             : -(*arc->delay(el, urf, vrf));
         if(sfxt._relax(u, v, _encode_arc(*arc, urf, vrf), d)) {
           if(!sfxt.__spfa[u] || *sfxt.__spfa[u] == false) {
             queue.push(u);

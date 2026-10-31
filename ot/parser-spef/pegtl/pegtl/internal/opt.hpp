@@ -1,65 +1,39 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_OPT_HPP
 #define TAO_PEGTL_INTERNAL_OPT_HPP
 
-#include <type_traits>
+#include "enable_control.hpp"
+#include "partial.hpp"
+#include "seq.hpp"
+#include "success.hpp"
 
 #include "../config.hpp"
 
-#include "duseltronik.hpp"
-#include "seq.hpp"
-#include "skip_control.hpp"
-#include "trivial.hpp"
-
-#include "../apply_mode.hpp"
-#include "../rewind_mode.hpp"
-
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename... Rules >
+   struct opt
+      : opt< seq< Rules... > >
+   {};
+
+   template<>
+   struct opt<>
+      : success
+   {};
+
+   template< typename Rule >
+   struct opt< Rule >
+      : partial< Rule >
    {
-      namespace internal
-      {
-         template< typename... Rules >
-         struct opt;
+      using rule_t = opt;
+   };
 
-         template<>
-         struct opt<>
-            : trivial< true >
-         {
-         };
+   template< typename... Rules >
+   inline constexpr bool enable_control< opt< Rules... > > = false;
 
-         template< typename... Rules >
-         struct opt
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::OPT, Rules... >;
-
-            template< apply_mode A,
-                      rewind_mode,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               duseltronik< seq< Rules... >, A, rewind_mode::REQUIRED, Action, Control >::match( in, st... );
-               return true;
-            }
-         };
-
-         template< typename... Rules >
-         struct skip_control< opt< Rules... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

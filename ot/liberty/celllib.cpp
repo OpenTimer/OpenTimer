@@ -58,13 +58,18 @@ void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string_vi
   // Parse the token.
   const char *token {nullptr};
   size_t len {0};
+  int bracket_depth = 0;
 
   tokens.clear();
 
   for(const char* itr = beg; itr != end && *itr != 0; ++itr) {
     
     // extract the entire quoted string as a token
-    bool is_del = (dels.find(*itr) != std::string_view::npos);
+    if(*itr == '[') ++bracket_depth;
+    bool is_del = (dels.find(*itr) != std::string_view::npos)
+                  && *itr != '[' && *itr != ']'
+                  && !(*itr == ':' && bracket_depth);
+    if(*itr == ']') --bracket_depth;
 
     if(std::isspace(*itr) || is_del) {
       if(len > 0) {                            // Add the current token.
@@ -76,6 +81,14 @@ void Celllib::_tokenize(const std::vector<char>& buf, std::vector<std::string_vi
       if(*itr == '(' || *itr == ')' || *itr == '{' || *itr == '}') {
         tokens.push_back({itr, 1});
       }
+      // Keep every related pin in a grouped Liberty timing arc.
+      else if(*itr == '"' && !tokens.empty() && (tokens.back() == "related_pin" || tokens.back() == "function" || tokens.back() == "when")) {
+        const char* first = ++itr;
+        while(itr != end && *itr != '"' && *itr != 0) ++itr;
+        OT_LOGF_IF(itr == end || *itr != '"', "unterminated related_pin");
+        tokens.push_back({first, static_cast<size_t>(itr - first)});
+      }
+      // Other quoted values retain the existing tokenizer behavior.
       // extract the entire quoted string (this is buggy now...)
       //else if(*itr == '"') {
       //  for(++itr; itr != end && *itr != '"'; ++itr, ++len) ;
@@ -216,7 +229,7 @@ std::optional<float> Celllib::_extract_operating_conditions(token_iterator& itr,
     }
   }
   
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find operating_conditions template group brace '}'");
   }
 
@@ -296,7 +309,7 @@ LutTemplate Celllib::_extract_lut_template(token_iterator& itr, const token_iter
     }
   }
   
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find lut template group brace '}'");
   }
 
@@ -316,7 +329,11 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
   }
   
   // Set up the template
-  lut.lut_template = lut_template(lut.name);
+  if(const auto* source = lut_template(lut.name)) {
+    // A table owns its library-scoped axes. Library copies and merges must
+    // not retain pointers into a temporary or a same-named template.
+    lut.lut_template = std::make_shared<LutTemplate>(*source);
+  }
   
   // Extract the lut group
   if(itr = std::find(itr, end, "{"); itr == end) {
@@ -354,6 +371,15 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
     }
     else if(*itr == "values") {
 
+      // Liberty permits axes to be inherited from the named template.
+      if(lut.indices1.empty() && lut.lut_template) {
+        lut.indices1 = lut.lut_template->indices1;
+        size1 = std::max(size_t{1}, lut.indices1.size());
+      }
+      if(lut.indices2.empty() && lut.lut_template) {
+        lut.indices2 = lut.lut_template->indices2;
+        size2 = std::max(size_t{1}, lut.indices2.size());
+      }
       if(lut.indices1.empty()) {
         if(size1 != 1) {
           OT_LOGF("empty indices1 in non-scalar lut ", lut.name);
@@ -370,10 +396,12 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
 
       lut.table.resize(size1*size2);
 
-      int id {0};
+      size_t id {0};
       itr = on_next_parentheses(itr, end, [&] (auto& v) mutable {
+        OT_LOGF_IF(id >= lut.table.size(), "too many values in lut ", lut.name);
         lut.table[id++] = std::strtof(v.data(), nullptr);
       });
+      OT_LOGF_IF(id != lut.table.size(), "too few values in lut ", lut.name);
     }
     else if(*itr == "}") {
       stack--;
@@ -385,7 +413,7 @@ Lut Celllib::_extract_lut(token_iterator& itr, const token_iterator end) {
     }
   }
 
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("group brace '}' error in lut ", lut.name);
   }
 
@@ -430,7 +458,7 @@ InternalPower Celllib::_extract_internal_power(token_iterator& itr, const token_
     }
   }
 
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find group brace '}' in internal_power");
   }
 
@@ -468,6 +496,10 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
     }
     else if(*itr == "fall_constraint") {             // FF fall constraint.
       timing.fall_constraint = _extract_lut(itr, end);
+    }
+    else if(*itr == "when") {
+      OT_LOGF_IF(++itr == end, "missing timing condition");
+      timing.when = std::string(*itr);
     }
     else if(*itr == "timing_sense") {               // Read the timing sense.
 
@@ -517,7 +549,7 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
     }
   }
 
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find group brace '}' in timing");
   }
 
@@ -525,9 +557,11 @@ Timing Celllib::_extract_timing(token_iterator& itr, const token_iterator end) {
 }
 
 // Functoin: _extract_cellpin
-Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end) {
+Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end,
+                                const Cellpin* defaults, std::vector<Cellpin>* children) {
 
-  Cellpin cellpin;
+  Cellpin cellpin = defaults ? *defaults : Cellpin{};
+  std::vector<token_iterator> nested_pins;
   
   if(itr=on_next_parentheses(
     itr, 
@@ -547,7 +581,18 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
   
   while(stack && ++itr != end) {
     
-    if(*itr == "direction") {
+    if(*itr == "pin") {
+      nested_pins.push_back(itr);
+      itr = std::find(itr, end, "{");
+      OT_LOGF_IF(itr == end, "missing nested pin group");
+      int nesting = 1;
+      while(nesting && ++itr != end) {
+        if(*itr == "{") ++nesting;
+        if(*itr == "}") --nesting;
+      }
+      OT_LOGF_IF(itr == end, "unterminated nested pin group");
+    }
+    else if(*itr == "direction") {
 
       if(++itr == end) {
         OT_LOGF("can't get the direction in cellpin ", cellpin.name);
@@ -588,6 +633,15 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get rise_capacitance in cellpin ", cellpin.name);
       cellpin.rise_capacitance = std::strtof(itr->data(), nullptr);
     }
+    else if(*itr == "rise_capacitance_range" || *itr == "fall_capacitance_range") {
+      auto& range = *itr == "rise_capacitance_range" ? cellpin.rise_capacitance_range : cellpin.fall_capacitance_range;
+      size_t count = 0;
+      itr = on_next_parentheses(itr, end, [&] (auto& value) {
+        OT_LOGF_IF(count >= 2, "too many capacitance range values");
+        range[count++] = std::strtof(value.data(), nullptr);
+      });
+      OT_LOGF_IF(count != 2 || !(*range[MIN] >= 0 && *range[MAX] >= *range[MIN]), "invalid capacitance range");
+    }
     else if(*itr == "fanout_load") {
       OT_LOGF_IF(++itr == end, "can't get fanout_load in cellpin ", cellpin.name);
       cellpin.fanout_load = std::strtof(itr->data(), nullptr);
@@ -604,42 +658,33 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
       OT_LOGF_IF(++itr == end, "can't get the clock status in cellpin ", cellpin.name);
       cellpin.is_clock = (*itr == "true") ? true : false;
     }
+    else if(*itr == "function") {
+      OT_LOGF_IF(++itr == end, "missing pin function");
+      cellpin.function = std::string(*itr);
+    }
+    else if(*itr == "three_state") {
+      cellpin.three_state = true;
+    }
     else if(*itr == "original_pin") {
       OT_LOGF_IF(++itr == end, "can't get the original pin in cellpin ", cellpin.name);
       cellpin.original_pin = *itr;
     }
     else if(*itr == "internal_power") {
-      auto ipower = _extract_internal_power(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ipower.related_pin)
-          continue;
-
-        t.internal_power = ipower;
-        found = true;
-        break;
+      cellpin.internal_power.emplace_back(_extract_internal_power(itr, end));
       }
-      if (!found) {
-        Timing t;
-        t.related_pin    = ipower.related_pin;
-        t.internal_power = ipower;
-        cellpin.timings.emplace_back(t);
-      }
-    }
     else if(*itr == "timing") {
-      auto ti = _extract_timing(itr, end);
-      bool found = false;
-      for(auto &t:cellpin.timings) {
-        if (t.related_pin != ti.related_pin)
-          continue;
-        auto ipower_copy = t.internal_power;
-        t = ti;
-        t.internal_power = ipower_copy;
-        found = true;
-        break;
+      auto timing = _extract_timing(itr, end);
+      const std::string related = timing.related_pin;
+      size_t start = related.find_first_not_of(" \t\r\n");
+      while(start != std::string::npos) {
+        const auto stop = related.find_first_of(" \t\r\n", start);
+        timing.related_pin = related.substr(start, stop - start);
+        cellpin.timings.emplace_back(timing);
+        start = stop == std::string::npos ? stop : related.find_first_not_of(" \t\r\n", stop);
       }
-      if (!found) {
-        cellpin.timings.push_back(ti);
+      // No related pin at all (absent or ""): keep the arc as parsed, never drop it.
+      if(related.find_first_not_of(" \t\r\n") == std::string::npos) {
+        cellpin.timings.emplace_back(std::move(timing));
       }
     }
     else if(*itr == "}") {
@@ -652,82 +697,52 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     }
   }
   
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find group brace '}' in cellpin ", cellpin.name);
   }
 
+  if(children) {
+    for(auto nested : nested_pins) {
+      children->push_back(_extract_cellpin(nested, end, &cellpin));
+    }
+  }
   return cellpin;
 }
 
-
-// Function: _extract_bus
-// Extract a bus group and its pins, applying bus-level direction to all pins
-void Celllib::_extract_bus(token_iterator& itr, const token_iterator end, Cell& cell) {
-  
-  std::string bus_name;
-  std::optional<CellpinDirection> bus_direction;
-  
-  // Extract bus name from parentheses
-  if(itr=on_next_parentheses(
-    itr, 
-    end, 
-    [&] (auto& name) mutable { bus_name = name; }); itr == end) {
-    OT_LOGF("can't find bus name");
+// Expand Liberty pin ranges without losing bus-level attributes and arcs.
+static void insert_bus_pin(Cell& cell, Cellpin pin) {
+  const auto left = pin.name.find('[');
+  const auto colon = pin.name.find(':', left);
+  const auto right = pin.name.find(']', left);
+  if(left == std::string::npos || colon == std::string::npos || right == std::string::npos) {
+    cell.cellpins[pin.name] = std::move(pin);
+    return;
   }
-  
-  // Find the opening brace
-  if(itr = std::find(itr, end, "{"); itr == end) {
-    OT_LOGF("can't find group brace '{' in bus ", bus_name);
-  }
-  
-  int stack = 1;
-  
-  // Parse bus attributes and contained pins
-  while(stack && ++itr != end) {
-    
-    if(*itr == "direction") {
-      // Extract bus-level direction
-      if(++itr == end) {
-        OT_LOGF("can't get the direction in bus ", bus_name);
-      }
-      
-      if(auto ditr = cellpin_directions.find(*itr); ditr != cellpin_directions.end()) {
-        bus_direction = ditr->second;
-      }
-    }
-    else if(*itr == "pin") {
-      // Extract pin using existing function
-      auto pin = _extract_cellpin(itr, end);
-
-      // If pin doesn't have a direction, inherit from bus
-      if(!pin.direction && bus_direction) {
-        pin.direction = bus_direction;
-      }
-      else if (pin.direction && bus_direction && pin.direction != bus_direction) {
-        OT_LOGE("pin ", pin.name, " has different direction from bus ", bus_name);
-      }
-      else if (!pin.direction && !bus_direction) {
-        OT_LOGE("pin ", pin.name, " has no direction and bus ", bus_name, " has no direction");
-      }
-      
-      cell.cellpins[pin.name] = std::move(pin);
-    }
-    else if(*itr == "}") {
-      stack--;
-    }
-    else if(*itr == "{") {
-      stack++;
-    }
-    else {
-      // Skip other bus attributes
-    }
-  }
-  
-  if(stack != 0 || *itr != "}") {
-    OT_LOGF("can't find group brace '}' in bus ", bus_name);
+  const int first = std::stoi(pin.name.substr(left + 1, colon - left - 1));
+  const int last = std::stoi(pin.name.substr(colon + 1, right - colon - 1));
+  const auto base = pin.name.substr(0, left);
+  for(int bit = std::min(first, last); bit <= std::max(first, last); ++bit) {
+    pin.name = base + "[" + std::to_string(bit) + "]";
+    cell.cellpins[pin.name] = pin;
   }
 }
 
+void Celllib::_extract_bus(token_iterator& itr, const token_iterator end, Cell& cell) {
+  auto start = itr;
+  std::vector<Cellpin> children;
+  auto bus = _extract_cellpin(itr, end, nullptr, &children);
+  if(!children.empty()) {
+    for(auto& pin : children) insert_bus_pin(cell, std::move(pin));
+    return;
+  }
+  auto type = std::find(start, itr, "bus_type");
+  OT_LOGF_IF(type == itr || ++type == itr, "missing bus_type for ", bus.name);
+  auto range = _bus_ranges.find(std::string{*type});
+  OT_LOGF_IF(range == _bus_ranges.end(), "unknown bus_type ", *type);
+  bus.name += "[" + std::to_string(range->second.first) + ":"
+                  + std::to_string(range->second.second) + "]";
+  insert_bus_pin(cell, std::move(bus));
+}
 
 // Function: _extract_cell
 Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
@@ -764,9 +779,9 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
     }
     else if(*itr == "pin") {                         // Read the cell pin group.
       auto pin = _extract_cellpin(itr, end);
-      cell.cellpins[pin.name] = std::move(pin);
+      insert_bus_pin(cell, std::move(pin));
     }
-    else if(*itr == "bus") {                         // Read the bus group.
+    else if(*itr == "bus") {
       _extract_bus(itr, end, cell);
     }
     else if(*itr == "}") {
@@ -780,7 +795,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
     }
   }
 
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find group brace '}' in cell ", cell.name);
   }
 
@@ -788,7 +803,7 @@ Cell Celllib::_extract_cell(token_iterator& itr, const token_iterator end) {
 }
 
 // Procedure: read
-void Celllib::read(const std::filesystem::path& path) {
+std::vector<Celllib> Celllib::read_all(const std::filesystem::path& path) {
   
   std::ifstream ifs(path, std::ios::ate);
   
@@ -805,12 +820,29 @@ void Celllib::read(const std::filesystem::path& path) {
   std::vector<std::string_view> tokens;
   tokens.reserve(buffer.size() / sizeof(std::string));
 
-  _uncomment(buffer);
-  _tokenize (buffer, tokens);
+  Celllib parser;
+  parser._uncomment(buffer);
+  parser._tokenize(buffer, tokens);
 
   // Set up the iterator
   auto itr = tokens.begin();
   auto end = tokens.end();
+  std::vector<Celllib> libraries;
+  while((itr = std::find(itr, end, "library")) != end) {
+    libraries.emplace_back();
+    libraries.back()._read_group(itr, end);
+    if(itr != end) ++itr;
+  }
+  OT_LOGF_IF(libraries.empty(), "no library group in ", path);
+  return libraries;
+}
+
+void Celllib::read(const std::filesystem::path& path) {
+  auto libraries = read_all(path);
+  *this = std::move(libraries.front());
+}
+
+void Celllib::_read_group(token_iterator& itr, const token_iterator end) {
 
   // Read the library name.
   if(itr = std::find(itr, end, "library"); itr == end) {
@@ -825,7 +857,7 @@ void Celllib::read(const std::filesystem::path& path) {
   }
 
   // Extract the library group
-  if(itr = std::find(itr, tokens.end(), "{"); itr == tokens.end()) {
+  if(itr = std::find(itr, end, "{"); itr == end) {
     OT_LOGF("can't find library group symbol '{'");
   }
 
@@ -833,13 +865,71 @@ void Celllib::read(const std::filesystem::path& path) {
   
   while(stack && ++itr != end) {
     
-    if(*itr == "lu_table_template") {
+    if(*itr == "type") {
+      std::string name;
+      itr = on_next_parentheses(itr, end, [&](auto& v) { name = v; });
+      itr = std::find(itr, end, "{");
+      OT_LOGF_IF(itr == end, "missing bus type group");
+      int depth = 1, first = 0, last = 0;
+      while(depth && ++itr != end) {
+        if(*itr == "{") ++depth;
+        else if(*itr == "}") --depth;
+        else if(*itr == "bit_from") {
+          OT_LOGF_IF(++itr == end, "missing bit_from");
+          first = std::stoi(std::string{*itr});
+        }
+        else if(*itr == "bit_to") {
+          OT_LOGF_IF(++itr == end, "missing bit_to");
+          last = std::stoi(std::string{*itr});
+        }
+      }
+      OT_LOGF_IF(itr == end, "unterminated bus type group");
+      _bus_ranges[name] = {first, last};
+    }
+    else if(*itr == "lu_table_template") {
       auto lut = _extract_lut_template(itr, end);
       lut_templates[lut.name] = lut;
     }
     else if(*itr == "power_lut_template") {
       auto lut = _extract_lut_template(itr, end);
       lut_templates[lut.name] = lut;
+    }
+    else if(*itr == "slew_lower_threshold_pct_rise") {
+      OT_LOGF_IF(++itr == end, "missing slew_lower_threshold_pct_rise");
+      thresholds.lower[RISE] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "slew_lower_threshold_pct_fall") {
+      OT_LOGF_IF(++itr == end, "missing slew_lower_threshold_pct_fall");
+      thresholds.lower[FALL] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "slew_upper_threshold_pct_rise") {
+      OT_LOGF_IF(++itr == end, "missing slew_upper_threshold_pct_rise");
+      thresholds.upper[RISE] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "slew_upper_threshold_pct_fall") {
+      OT_LOGF_IF(++itr == end, "missing slew_upper_threshold_pct_fall");
+      thresholds.upper[FALL] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "input_threshold_pct_rise") {
+      OT_LOGF_IF(++itr == end, "missing input_threshold_pct_rise");
+      thresholds.input[RISE] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "input_threshold_pct_fall") {
+      OT_LOGF_IF(++itr == end, "missing input_threshold_pct_fall");
+      thresholds.input[FALL] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "output_threshold_pct_rise") {
+      OT_LOGF_IF(++itr == end, "missing output_threshold_pct_rise");
+      thresholds.output[RISE] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "output_threshold_pct_fall") {
+      OT_LOGF_IF(++itr == end, "missing output_threshold_pct_fall");
+      thresholds.output[FALL] = std::strtof(itr->data(), nullptr) / 100.0f;
+    }
+    else if(*itr == "slew_derate_from_library") {
+      OT_LOGF_IF(++itr == end, "missing slew_derate_from_library");
+      thresholds.derate = std::strtof(itr->data(), nullptr);
+      OT_LOGF_IF(!(thresholds.derate > 0), "invalid slew derate");
     }
     else if(*itr == "delay_model") {
       OT_LOGF_IF(++itr == end, "syntax error in delay_model");
@@ -926,7 +1016,7 @@ void Celllib::read(const std::filesystem::path& path) {
     }
   }
 
-  if(stack != 0 || *itr != "}") {
+  if(stack != 0 || itr == end || *itr != "}") {
     OT_LOGF("can't find library group brace '}'");
   }
 
@@ -948,6 +1038,10 @@ void Celllib::_apply_default_values() {
     for(auto& pkvp : cell.cellpins) {
 
       auto& cpin = pkvp.second;
+      cpin.thresholds = thresholds;
+      for(auto rf : {RISE, FALL}) {
+        OT_LOGF_IF(!(thresholds.lower[rf] >= 0 && thresholds.upper[rf] <= 1 && thresholds.span(rf) > 0), "invalid slew thresholds");
+      }
 
       // direction-specific default values
       if(!cpin.direction) {

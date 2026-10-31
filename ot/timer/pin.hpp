@@ -1,7 +1,11 @@
 #ifndef OT_TIMER_PIN_HPP_
 #define OT_TIMER_PIN_HPP_
 
+#include <cstdint>
+#include <limits>
+#include <memory>
 #include <ot/liberty/celllib.hpp>
+#include <ot/timer/arc_list.hpp>
 
 namespace ot {
 
@@ -14,6 +18,7 @@ class Arc;
 class Pin;
 class Test;
 class SCC;
+class Clock;
 
 // ------------------------------------------------------------------------------------------------
 
@@ -30,6 +35,12 @@ class PrimaryInput {
   private:
 
     Pin& _pin;
+    struct InputDriver {
+      std::string cell, from, to;
+      std::array<float, 2> input_slew;
+    };
+    TimingData<std::optional<InputDriver>, MAX_SPLIT, MAX_TRAN> _driver;
+    TimingData<float, MAX_SPLIT, MAX_TRAN> _driver_delay {{{0, 0}, {0, 0}}};
 
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _slew;
     TimingData<std::optional<float>, MAX_SPLIT, MAX_TRAN> _at;
@@ -68,13 +79,21 @@ class PrimaryOutput {
 
 // Class: Pin
 class Pin {
+  class Borrowed_name {
+    friend class Timer;
+    Borrowed_name() = default;
+  };
   
+  // Keep the two-valued provenance enums compact inside each optional record.
+  // Public Split/Tran types and all float values retain their representation.
   // At storage
   struct At {
     Arc*  pi_arc {nullptr}; 
-    Split pi_el;
-    Tran  pi_rf;
-    float numeric;
+    Split pi_el : 8 {MIN};
+    Tran  pi_rf : 8 {RISE};
+    bool  valid {false};
+    float numeric {0};
+    At() = default;
     At(Arc*, Split, Tran, float);
     inline operator float () const;
     inline auto pi() const;
@@ -83,9 +102,11 @@ class Pin {
   // Slew storage.
   struct Slew {
     Arc*  pi_arc {nullptr};
-    Split pi_el;
-    Tran  pi_rf;
-    float numeric;
+    Split pi_el : 8 {MIN};
+    Tran  pi_rf : 8 {RISE};
+    bool  valid {false};
+    float numeric {0};
+    Slew() = default;
     Slew(Arc*, Split, Tran, float);
     inline operator float () const;
     inline auto pi() const;
@@ -94,12 +115,40 @@ class Pin {
   // Rat storage
   struct Rat {
     Arc*  pi_arc {nullptr};
-    Split pi_el;
-    Tran  pi_rf;
-    float numeric;
+    Split pi_el : 8 {MIN};
+    Tran  pi_rf : 8 {RISE};
+    bool  valid {false};
+    float numeric {0};
+    Rat() = default;
     Rat(Arc*, Split, Tran, float);
     inline operator float () const;
     inline auto pi() const;
+  };
+
+  // Each payload has room for its engagement bit beside the provenance enums.
+  // std::optional otherwise adds an aligned 8-byte flag to every 16-byte
+  // record. Keep all float representations (including NaN) independent of
+  // validity; a missing record is never encoded in its numeric value.
+  template <typename T>
+  class Propagation_optional {
+    T _value;
+
+    public:
+      explicit operator bool() const { return _value.valid; }
+      bool has_value() const { return _value.valid; }
+      void reset() { _value.valid = false; }
+      template <typename... Args>
+      T& emplace(Args&&... args) {
+        _value = T(std::forward<Args>(args)...);
+        return _value;
+      }
+      T& operator*() { return _value; }
+      const T& operator*() const { return _value; }
+      T* operator->() { return &_value; }
+      const T* operator->() const { return &_value; }
+      operator std::optional<float>() const {
+        return _value.valid ? std::optional<float>(_value.numeric) : std::nullopt;
+      }
   };
 
   friend class Timer;
@@ -120,10 +169,14 @@ class Pin {
   constexpr static int IN_BPROP_STACK   = 0x08;
   constexpr static int UNLOOP_CAND      = 0x10;
   constexpr static int IN_UNLOOP_STACK  = 0x20;
+  constexpr static int SERIAL_VISITED   = 0x40;
 
   public:
     
     Pin(const std::string&);
+    // Only Timer can create this tag. Its unordered-map key owns the name;
+    // rehash preserves the key's address, and the pin dies before that key.
+    Pin(const std::string&, Borrowed_name);
 
     inline const std::string& name() const;
     inline const PrimaryInput* primary_input() const;
@@ -132,6 +185,7 @@ class Pin {
     inline const Net* net() const;
     inline const Gate* gate() const;
     
+    bool is_ideal_clock() const { return _ideal_clock; }
     bool is_input() const;
     bool is_output() const;
     bool is_rct_root() const;
@@ -146,13 +200,22 @@ class Pin {
 
     float cap(Split, Tran) const;
 
+    const SlewThresholds& thresholds(Split) const;
     inline size_t num_fanouts() const;
     inline size_t num_fanins() const;
     inline size_t idx() const;
 
   private:
 
-    std::string _name;
+    std::unique_ptr<std::string> _owned_name;
+    const std::string* _name_ref;
+    std::array<const SlewThresholds*, 2> _default_thresholds {nullptr, nullptr};
+    uint32_t _rc_index{std::numeric_limits<uint32_t>::max()};
+    bool _ideal_clock {false};
+    Clock* _ideal_clock_source {nullptr};
+    // Ideal clock reaching this clock sink (the fastest one when several do);
+    // setup checks at the sink use its period.
+    Clock* _ideal_clock_domain {nullptr};
 
     size_t _idx;
 
@@ -162,16 +225,16 @@ class Pin {
 
     std::variant<PrimaryInput*, PrimaryOutput*, CellpinView> _handle;
 
-    std::list<Arc*> _fanout;
-    std::list<Arc*> _fanin;
+    detail::Arc_list _fanout;
+    detail::Arc_list _fanin;
     std::list<Test*> _tests;
 
     std::optional<std::list<Pin*>::iterator> _frontier_satellite;
     std::optional<std::list<Pin*>::iterator> _net_satellite;
 
-    TimingData<std::optional<Slew>, MAX_SPLIT, MAX_TRAN> _slew;
-    TimingData<std::optional<Rat >, MAX_SPLIT, MAX_TRAN> _rat;
-    TimingData<std::optional<At  >, MAX_SPLIT, MAX_TRAN> _at;
+    TimingData<Propagation_optional<Slew>, MAX_SPLIT, MAX_TRAN> _slew;
+    TimingData<Propagation_optional<Rat>, MAX_SPLIT, MAX_TRAN> _rat;
+    TimingData<Propagation_optional<At>, MAX_SPLIT, MAX_TRAN> _at;
 
     int _state {0};
 
@@ -216,7 +279,7 @@ inline Pin::At::operator float () const {
 
 // Function: pi
 inline auto Pin::At::pi() const {
-  return std::make_tuple(pi_arc, pi_el, pi_rf);
+  return std::make_tuple(pi_arc, static_cast<Split>(pi_el), static_cast<Tran>(pi_rf));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -228,7 +291,7 @@ inline Pin::Slew::operator float () const {
 
 // Function: pi
 inline auto Pin::Slew::pi() const {
-  return std::make_tuple(pi_arc, pi_el, pi_rf);
+  return std::make_tuple(pi_arc, static_cast<Split>(pi_el), static_cast<Tran>(pi_rf));
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -240,14 +303,14 @@ inline Pin::Rat::operator float () const {
 
 // Function: pi
 inline auto Pin::Rat::pi() const {
-  return std::make_tuple(pi_arc, pi_el, pi_rf);
+  return std::make_tuple(pi_arc, static_cast<Split>(pi_el), static_cast<Tran>(pi_rf));
 }
 
 // ------------------------------------------------------------------------------------------------
 
 // Function: name
 inline const std::string& Pin::name() const {
-  return _name;
+  return *_name_ref;
 }
 
 // Function: idx

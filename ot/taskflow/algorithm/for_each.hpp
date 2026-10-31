@@ -26,8 +26,6 @@ auto make_for_each_task(B b, E e, C c, P part = P()) {
       return;
     }
     
-    PreemptionGuard preemption_guard(rt);
-    
     // use no more workers than the iteration count
     if(N < W) {
       W = N;
@@ -106,14 +104,12 @@ auto make_for_each_index_task(B b, E e, S s, C c, P part = P()){
       return;
     }
 
-    PreemptionGuard preemption_guard(rt);
-    
     if(N < W) {
       W = N;
     }
     
     // static partitioner
-    if constexpr(part.type() == PartitionerType::STATIC) {
+    if constexpr(P::type() == PartitionerType::STATIC) {
       for(size_t w=0, curr_b=0; w<W && curr_b < N;) {
         auto chunk_size = part.adjusted_chunk_size(N, W, w);
         auto task = part([=] () mutable {
@@ -170,8 +166,6 @@ auto make_for_each_by_index_task(R range, C c, P part = P()){
       return;
     }
 
-    PreemptionGuard preemption_guard(rt);
-    
     if(N < W) {
       W = N;
     }
