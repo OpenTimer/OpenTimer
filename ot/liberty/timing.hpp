@@ -111,6 +111,7 @@ struct Timing {
   bool is_constraint() const; 
   bool is_min_constraint() const;
   bool is_max_constraint() const;
+  bool is_non_sequential() const;
   bool is_rising_edge_triggered() const;
   bool is_falling_edge_triggered() const;
   bool is_input_transition_defined() const;

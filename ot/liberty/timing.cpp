@@ -305,7 +305,33 @@ bool Timing::is_max_constraint() const {
   }
 }
 
+// Function: is_non_sequential
+// A check between two data pins (ASAP7 DFFASRHQN: RESETN against SETN). Its
+// related pin is not a clock: the check is against that pin's transition in
+// the same cycle.
+bool Timing::is_non_sequential() const {
+  if(type) {
+    switch (*type) {
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::NON_SEQ_HOLD_RISING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
+        return true;
+      break;
+
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
+}
+
 // Function: is_falling_edge_triggered
+// The transition of the related pin a check or a clocked arc refers to. A
+// non-sequential check names it the same way a setup or hold check does.
 bool Timing::is_falling_edge_triggered() const {
   if(type) {
     switch (*type) {
@@ -313,6 +339,8 @@ bool Timing::is_falling_edge_triggered() const {
       case TimingType::HOLD_FALLING:
       case TimingType::REMOVAL_FALLING:
       case TimingType::RECOVERY_FALLING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
       case TimingType::FALLING_EDGE:
         return true;
       break;
@@ -335,6 +363,8 @@ bool Timing::is_rising_edge_triggered() const {
       case TimingType::HOLD_RISING:
       case TimingType::REMOVAL_RISING:
       case TimingType::RECOVERY_RISING:
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_HOLD_RISING:
       case TimingType::RISING_EDGE:
         return true;
       break;

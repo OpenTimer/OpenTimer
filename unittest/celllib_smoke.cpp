@@ -174,6 +174,76 @@ void build_threshold_chain(ot::Timer& timer) {
   }
 }
 
+// ASAP7's DFFASRHQN checks RESETN against SETN (non_seq_setup/hold_rising). The related pin is a data pin: the
+// check is against its transition of the same cycle, and a tied related pin (no arrival) is no check at all.
+TEST_F(CelllibSmoke, NonSequentialChecksUseTheRelatedPinTransitionOfTheSameCycle) {
+  write(R"lib(library(async) {
+    time_unit : "1ps"; capacitive_load_unit(1,ff);
+    lu_table_template(check) {
+      variable_1 : related_pin_transition; variable_2 : constrained_pin_transition;
+      index_1("0,100"); index_2("0,100");
+    }
+    cell(DFFSR) {
+      pin(CLK) { direction : input; clock : true; capacitance : 1; }
+      pin(SETN) { direction : input; capacitance : 1; }
+      pin(RESETN) { direction : input; capacitance : 1;
+        timing() { related_pin : "SETN"; timing_type : non_seq_setup_rising;
+          rise_constraint(check) { values("7,7", "7,7"); }
+        }
+        timing() { related_pin : "SETN"; timing_type : non_seq_hold_rising;
+          rise_constraint(check) { values("3,3", "3,3"); }
+        }
+      }
+    }
+  })lib");
+  ot::Celllib lib;
+  lib.read(path);
+  const auto* reset = lib.cell("DFFSR")->cellpin("RESETN");
+  ASSERT_NE(reset, nullptr);
+  ASSERT_EQ(reset->timings.size(), 2u);
+  for (const auto& timing : reset->timings) {
+    EXPECT_TRUE(timing.is_constraint());
+    EXPECT_TRUE(timing.is_non_sequential());
+    EXPECT_TRUE(timing.is_rising_edge_triggered());
+    EXPECT_FALSE(timing.is_falling_edge_triggered());
+  }
+  ot::Timer timer;
+  timer.set_num_threads(1);
+  timer.read_celllib(path).update_timing();
+  timer.insert_primary_input("clk").insert_primary_input("s").insert_primary_input("r");
+  timer.insert_gate("f", "DFFSR");
+  for (const auto* net : {"nclk", "ns", "nr"}) {
+    timer.insert_net(net);
+  }
+  timer.disconnect_pin("clk").disconnect_pin("s").disconnect_pin("r");
+  timer.connect_pin("clk", "nclk").connect_pin("f:CLK", "nclk");
+  timer.connect_pin("s", "ns").connect_pin("f:SETN", "ns");
+  timer.connect_pin("r", "nr").connect_pin("f:RESETN", "nr");
+  timer.create_clock("clk", "clk", 1000);
+  for (auto split : {ot::MIN, ot::MAX}) {
+    for (auto tran : {ot::RISE, ot::FALL}) {
+      timer.set_at("s", split, tran, 100).set_slew("s", split, tran, 10);
+      timer.set_at("r", split, tran, 60).set_slew("r", split, tran, 10);
+    }
+  }
+  timer.update_timing();
+  // Setup: RESETN rises 7 before SETN rises, in the same cycle: required 100 - 7, not 1100 - 7.
+  EXPECT_NEAR(timer.report_rat("f:RESETN", ot::MAX, ot::RISE).value(), 93, 1e-3);
+  EXPECT_NEAR(timer.report_slack("f:RESETN", ot::MAX, ot::RISE).value(), 33, 1e-3);
+  // Hold: RESETN stays 3 after SETN rises: 60 against 103.
+  EXPECT_NEAR(timer.report_rat("f:RESETN", ot::MIN, ot::RISE).value(), 103, 1e-3);
+  EXPECT_NEAR(timer.report_slack("f:RESETN", ot::MIN, ot::RISE).value(), -43, 1e-3);
+  // A related pin with no arrival (tied off): nothing is checked.
+  for (auto split : {ot::MIN, ot::MAX}) {
+    for (auto tran : {ot::RISE, ot::FALL}) {
+      timer.set_at("s", split, tran, std::nullopt);
+    }
+  }
+  timer.update_timing();
+  EXPECT_FALSE(timer.report_rat("f:RESETN", ot::MAX, ot::RISE));
+  EXPECT_FALSE(timer.report_rat("f:RESETN", ot::MIN, ot::RISE));
+}
+
 TEST_F(CelllibSmoke, TimingPathRecoveryAllowsMissingInternalPower) {
   write(threshold_libraries());
   ot::Timer timer;

@@ -119,7 +119,12 @@ void Test::_fprop_rat(float period, bool falling_same_cycle) {
     const bool  late   = _arc._from._at[fel][other] ? *_arc._from._at[fel][frf] > *_arc._from._at[fel][other]
                                                     : frf == FALL;
     const float shift = (falling_same_cycle && late) ? period : 0.0f;
-    if(el == MIN) {
+    if(tv[el]->is_non_sequential()) {
+      // A data-to-data check: the related pin's transition of this cycle,
+      // no capture edge one period later and no half-cycle shift.
+      _related_at[el][rf] = *_arc._from._at[fel][frf];
+    }
+    else if(el == MIN) {
       _related_at[el][rf] = *_arc._from._at[fel][frf] - shift;
     }
     else {
