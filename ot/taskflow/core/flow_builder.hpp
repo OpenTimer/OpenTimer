@@ -1290,9 +1290,19 @@ Task FlowBuilder::emplace(C&& c) {
 // Function: emplace
 template <typename C, std::enable_if_t<is_runtime_task_v<C>, void>*>
 Task FlowBuilder::emplace(C&& c) {
-  return Task(_graph._emplace_back(NSTATE::NONE, ESTATE::NONE, DefaultTaskParams{}, nullptr, nullptr, 0,
-    std::in_place_type_t<Node::Runtime>{}, std::forward<C>(c)
-  ));
+  if constexpr (std::is_invocable_v<C, tf::Runtime&>) {
+    return Task(_graph._emplace_back(NSTATE::NONE, ESTATE::NONE, DefaultTaskParams{}, nullptr, nullptr, 0,
+      std::in_place_type_t<Node::Runtime>{}, std::forward<C>(c)
+    ));
+  }
+  else if constexpr (std::is_invocable_v<C, tf::NonpreemptiveRuntime&>) {
+    return Task(_graph._emplace_back(NSTATE::NONE, ESTATE::NONE, DefaultTaskParams{}, nullptr, nullptr, 0,
+      std::in_place_type_t<Node::NonpreemptiveRuntime>{}, std::forward<C>(c)
+    ));
+  }
+  else {
+    static_assert(dependent_false_v<C>, "invalid runtime task callable");
+  }
 }
 
 // Function: emplace
@@ -1494,6 +1504,9 @@ class Subflow : public FlowBuilder {
     /**
     @brief queries if the subflow will be retained after it is joined
     @return `true` if the subflow will be retained after it is joined; `false` otherwise
+
+    By default, the runtime automatically clears a spawned subflow once it is joined.
+    Users can disable this before by explicitly calling tf::Subflow::retain.
     */
     bool retain() const;
 
@@ -1507,18 +1520,18 @@ class Subflow : public FlowBuilder {
 
     Executor& _executor;
     Worker& _worker;
-    Node* _parent;
+    Node* _node;
 };
 
 // Constructor
-inline Subflow::Subflow(Executor& executor, Worker& worker, Node* parent, Graph& graph) :
+inline Subflow::Subflow(Executor& executor, Worker& worker, Node* node, Graph& graph) :
   FlowBuilder {graph}, 
   _executor   {executor}, 
   _worker     {worker}, 
-  _parent     {parent} {
+  _node       {node} {
   
   // need to reset since there could have iterative control flow
-  _parent->_nstate &= ~(NSTATE::JOINED_SUBFLOW | NSTATE::RETAIN_SUBFLOW);
+  _node->_nstate &= ~(NSTATE::JOINED_SUBFLOW | NSTATE::RETAIN_SUBFLOW);
 
   // clear the graph
   graph.clear();
@@ -1526,7 +1539,7 @@ inline Subflow::Subflow(Executor& executor, Worker& worker, Node* parent, Graph&
 
 // Function: joinable
 inline bool Subflow::joinable() const noexcept {
-  return !(_parent->_nstate & NSTATE::JOINED_SUBFLOW);
+  return !(_node->_nstate & NSTATE::JOINED_SUBFLOW);
 }
 
 // Function: executor
@@ -1537,20 +1550,20 @@ inline Executor& Subflow::executor() noexcept {
 // Function: retain
 inline void Subflow::retain(bool flag) noexcept {
   // default value is not to retain 
-  if TF_LIKELY(flag == true) {
-    _parent->_nstate |= NSTATE::RETAIN_SUBFLOW;
+  if(flag == true) {
+    _node->_nstate |= NSTATE::RETAIN_SUBFLOW;
   }
   else {
-    _parent->_nstate &= ~NSTATE::RETAIN_SUBFLOW;
+    _node->_nstate &= ~NSTATE::RETAIN_SUBFLOW;
   }
 
-  //_parent->_nstate = (_parent->_nstate & ~NSTATE::RETAIN_SUBFLOW) | 
-  //                   (-static_cast<int>(flag) & NSTATE::RETAIN_SUBFLOW);
+  //_node->_nstate = (_node->_nstate & ~NSTATE::RETAIN_SUBFLOW) | 
+  //                 (-static_cast<int>(flag) & NSTATE::RETAIN_SUBFLOW);
 }
 
 // Function: retain
 inline bool Subflow::retain() const {
-  return _parent->_nstate & NSTATE::RETAIN_SUBFLOW;
+  return _node->_nstate & NSTATE::RETAIN_SUBFLOW;
 }
 
 }  // end of namespace tf. ---------------------------------------------------

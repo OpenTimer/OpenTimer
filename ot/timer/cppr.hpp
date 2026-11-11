@@ -27,10 +27,10 @@ struct Cppr {
 };
 
 // Constructor
-inline Cppr::Cppr(Pin& pin, Tran rf, float c) :
-  pin    {pin},
-  rf     {rf},
-  credit {c} {
+inline Cppr::Cppr(Pin& pin_ref, Tran rf_edge, float cppr_credit) :
+  pin    {pin_ref},
+  rf     {rf_edge},
+  credit {cppr_credit} {
 }
 
 // operator

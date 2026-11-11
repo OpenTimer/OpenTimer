@@ -182,6 +182,7 @@ std::string to_string(TimingType t) {
 bool Timing::isomorphic(const Timing& rhs) const {
   
   if(related_pin != rhs.related_pin) return false;
+  if(when != rhs.when)               return false;
   if(sense != rhs.sense)             return false;
   if(type != rhs.type)               return false;
   if(cell_rise.has_value() != rhs.cell_rise.has_value()) return false;
@@ -304,7 +305,33 @@ bool Timing::is_max_constraint() const {
   }
 }
 
+// Function: is_non_sequential
+// A check between two data pins (ASAP7 DFFASRHQN: RESETN against SETN). Its
+// related pin is not a clock: the check is against that pin's transition in
+// the same cycle.
+bool Timing::is_non_sequential() const {
+  if(type) {
+    switch (*type) {
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::NON_SEQ_HOLD_RISING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
+        return true;
+      break;
+
+      default:
+        return false;
+      break;
+    };
+  }
+  else {
+    return false;
+  }
+}
+
 // Function: is_falling_edge_triggered
+// The transition of the related pin a check or a clocked arc refers to. A
+// non-sequential check names it the same way a setup or hold check does.
 bool Timing::is_falling_edge_triggered() const {
   if(type) {
     switch (*type) {
@@ -312,6 +339,8 @@ bool Timing::is_falling_edge_triggered() const {
       case TimingType::HOLD_FALLING:
       case TimingType::REMOVAL_FALLING:
       case TimingType::RECOVERY_FALLING:
+      case TimingType::NON_SEQ_SETUP_FALLING:
+      case TimingType::NON_SEQ_HOLD_FALLING:
       case TimingType::FALLING_EDGE:
         return true;
       break;
@@ -334,6 +363,8 @@ bool Timing::is_rising_edge_triggered() const {
       case TimingType::HOLD_RISING:
       case TimingType::REMOVAL_RISING:
       case TimingType::RECOVERY_RISING:
+      case TimingType::NON_SEQ_SETUP_RISING:
+      case TimingType::NON_SEQ_HOLD_RISING:
       case TimingType::RISING_EDGE:
         return true;
       break;
@@ -374,8 +405,6 @@ void Timing::scale_time(float s) {
   if(fall_constraint) {
     fall_constraint->scale_time(s);
   }
-
-  internal_power.scale_time(s);
 }
 
 // Procedure: scale_capacitance
@@ -404,8 +433,6 @@ void Timing::scale_capacitance(float s) {
   if(fall_constraint) {
     fall_constraint->scale_capacitance(s);
   }
-
-  internal_power.scale_capacitance(s);
 }
 
 // Function: delay
@@ -698,10 +725,6 @@ std::ostream& operator << (std::ostream& os, const Timing& timing) {
   
   // Write the ending group symbol.
   os << "    }\n";
-
-  if (!timing.internal_power.related_pin.empty()) {
-    os << timing.internal_power;
-  }
 
   return os;
 }

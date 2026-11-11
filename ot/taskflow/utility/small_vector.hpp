@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "macros.hpp"
-
 #include <algorithm>
 #include <cassert>
 #include <cstddef>
@@ -88,11 +86,17 @@ protected:
 
 public:
   /// This returns size()*sizeof(T).
+  /**
+  @private
+  */
   size_t size_in_bytes() const {
     return size_t((char*)EndX - (char*)BeginX);
   }
 
   /// capacity_in_bytes - This returns capacity()*sizeof(T).
+  /**
+  @private
+  */
   size_t capacity_in_bytes() const {
     return size_t((char*)CapacityX - (char*)BeginX);
   }
@@ -270,14 +274,14 @@ protected:
 
 public:
   void push_back(const T &Elt) {
-    if (TF_UNLIKELY(this->EndX >= this->CapacityX))
+    if ((this->EndX >= this->CapacityX)) [[unlikely]]
       this->grow();
     ::new ((void*) this->end()) T(Elt);
     this->setEnd(this->end()+1);
   }
 
   void push_back(T &&Elt) {
-    if (TF_UNLIKELY(this->EndX >= this->CapacityX))
+    if ((this->EndX >= this->CapacityX)) [[unlikely]]
       this->grow();
     ::new ((void*) this->end()) T(::std::move(Elt));
     this->setEnd(this->end()+1);
@@ -366,7 +370,7 @@ protected:
   }
 public:
   void push_back(const T &Elt) {
-    if (TF_UNLIKELY(this->EndX >= this->CapacityX))
+    if ((this->EndX >= this->CapacityX)) [[unlikely]]
       this->grow();
     memcpy(this->end(), &Elt, sizeof(T));
     this->setEnd(this->end()+1);
@@ -697,7 +701,7 @@ public:
   }
 
   template <typename... ArgTypes> void emplace_back(ArgTypes &&... Args) {
-    if (TF_UNLIKELY(this->EndX >= this->CapacityX))
+    if ((this->EndX >= this->CapacityX)) [[unlikely]]
       this->grow();
     ::new ((void *)this->end()) T(std::forward<ArgTypes>(Args)...);
     this->setEnd(this->end() + 1);
@@ -1023,8 +1027,11 @@ public:
   }
 };
 
+/**
+@private
+*/
 template<typename T, unsigned N>
-static inline size_t capacity_in_bytes(const SmallVector<T, N> &X) {
+inline size_t capacity_in_bytes(const SmallVector<T, N> &X) {
   return X.capacity_in_bytes();
 }
 

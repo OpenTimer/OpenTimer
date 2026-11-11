@@ -94,13 +94,10 @@ feed into the data pin `f1:D` of the flip-flop `DFFNEGX1`.
 ## System Requirements
 
 OpenTimer is very self-contained and has very few dependencies.
-To compile OpenTimer, you need a [C++17][C++17] compiler. 
-We currently support:
+This fork requires GCC or Clang with a C++20 standard library, including
+atomic wait/notify support used by the bundled Taskflow.
 
-+ GNU C++ Compiler v7.3 with -std=c++1z
-+ Clang C++ Compiler v6.0 with -std=c++17
-
-In addition, you need a tcl shell interpreter:
+The CMake build and Tcl-based SDC reader also require a Tcl shell interpreter:
 
 + [tclsh](https://www.tcl.tk/about/language.html) 
 (most Unix/Linux/OSX distributions already include tclsh)
@@ -117,12 +114,47 @@ We recommend using out-of-source build.
 ~$ cd OpenTimer
 ~$ mkdir build
 ~$ cd build
-~$ cmake ../ -DCMAKE_CXX_STANDARD=17
+~$ cmake ../ -DCMAKE_CXX_STANDARD=20
 ~$ make 
 ```
 
 After successful build, you can find binaries and libraries in the folders `bin` 
 and `lib`, respectively.
+
+## Build and test the library through Bazel
+
+The fork also supports standalone Bazel builds on macOS and Linux, using a
+C++20 compiler (required by the bundled Taskflow). Bazelisk selects the version
+in `.bazelversion`; dependencies are pinned in `MODULE.bazel`.
+
+```bash
+bazel build -c opt //:opentimer //:taskflow
+bazel test -c opt //...
+bazel test -c dbg //...
+# Run only the Liberty parsing and timing regressions:
+bazel test -c opt //unittest:celllib_smoke
+```
+
+The small suite covers tokenization, path heaps, Liberty buses and lookup
+tables, mixed library units and slew thresholds, input drivers, ideal clocks,
+and using OpenTimer alongside the bundled Taskflow executor. Each local Bazel
+test has a 30-second timeout. The old `unittest/unit.cpp` contains only disabled
+tests and is not registered. CMake remains the build for the shell, examples,
+and TAU benchmark suite.
+
+Bazel uses `packages/ot/config.hpp`, independently of CMake's generated
+`ot/config.hpp`. It does not require running CMake first. On macOS the local
+configuration selects Apple Command Line Tools.
+
+LiveHD can continue using
+`local_repository(name = "opentimer", path = "../OpenTimer")` with the same
+public labels: `@opentimer//:opentimer`, `@opentimer//:taskflow`, and
+`@opentimer//:srcs`. Consumers select C++20 or newer in their own configuration;
+dependency `.bazelrc` files are not inherited. Code linked with OpenTimer must
+use `@opentimer//:taskflow` for `<taskflow/taskflow.hpp>` to avoid mixing
+incompatible Taskflow implementations in one binary. The OpenTimer-only
+regressions from LiveHD are also available here as
+`@opentimer//unittest:celllib_smoke` (requiring the consumer's `@googletest`).
 
 ## Run Tests
 OpenTimer uses [Doctest](https://github.com/onqtam/doctest) for unit tests and
@@ -302,6 +334,41 @@ The table below summarizes a list of commonly used methods.
 
 
 *All public methods are thread-safe* as a result of OpenTimer lineage.
+
+`timer.set_num_threads(n)` sets the Taskflow worker count; zero requests one
+worker. The calling thread waits for each timing action. Without an explicit
+budget, the timer uses hardware concurrency (at least one worker). The pool is
+created on the first action and can be resized between actions without losing
+queued builders or incremental timing state. `timer.num_threads()` reports the
+configured worker count, or the actual pool size once created.
+
+With one worker, timing propagation executes directly in topological candidate
+order, avoiding per-pin task and dependency allocations. Cones containing new
+or retained strongly connected components are reordered after the existing
+loop breakers are applied. Multiple workers keep the task-graph schedule.
+Builder execution and incremental candidate discovery are unchanged.
+
+`timer.update_parasitics(spef)` applies an in-memory RC batch synchronously.
+It first materializes pending builders, replaces the affected RC trees and
+releases the SPEF payload. It retains all timing frontiers without propagating
+arrival, required time or slew; call `update_timing()` after the last batch.
+This lets placement hosts bound temporary RC storage while updating large
+designs. `read_parasitics` and `read_spef` retain their deferred behavior.
+
+Pin timing provenance uses compact private corner/transition fields while
+keeping the public enum types and timing values unchanged. Arc objects do not
+reserve an internal-power array: that array was never populated, and path
+points continue to report zero internal power. Pin power reporting is unchanged.
+On the supported 64-bit build this reduces `sizeof(Arc)` from 264 to 200 bytes
+and `sizeof(Pin)` from 656 to 560 bytes.
+
+RC-tree nodes use their owning map's labels instead of keeping another string
+per node. Adjacency stores indices into a contiguous edge vector, preserving
+insertion order across vector growth. Nodes retain only outgoing edges; the
+unused incoming lists and their per-edge allocations are omitted. Tree/SPEF
+exporters resolve those labels while writing the report;
+timing propagation does not allocate a second name table.
+
 The example below shows an OpenTimer application and the use of builder, action, and accessor API.
 
 ```cpp
@@ -500,3 +567,57 @@ You can find a copy of these licenses under the folder [licenses](licenses).
 [OSUPDK]:                https://vlsiarch.ecen.okstate.edu/flow/
 [Synopsys TAP-in]:       https://www.synopsys.com/community/interoperability-programs/tap-in.html
  
+
+
+## Native RC timing model
+
+The timer reduces an annotated RC tree to a driving-point Pi network using
+its first three admittance moments. Characterized cell drivers and SDC driving
+cells use a bounded effective-capacitance fit: the ramp/Thevenin driver matches
+Liberty timing and the charge drawn by that Pi network. This follows the
+[Dartu, Menezes, Qian and Pillage gate-delay model](https://doi.org/10.1145/196244.196562),
+with an independently implemented scalar fit. Uncharacterized or failed fits
+keep full-load NLDM timing and Elmore wire delay, preserving the characterized
+transition (with sink-library threshold conversion). This includes constant-delay
+SRAM tables, which cannot supply a driver-resistance fit.
+
+Wire delay and slew are voltage crossings of the driver/RC waveform, using
+library-specific rise/fall thresholds and slew derate. A single-pole step has
+50-percent delay `tau * ln(2)` and 20-to-80-percent slew `tau * ln(4)`; its
+Elmore time constant alone is not a voltage-threshold delay. Zero-RC nets retain
+normal Liberty timing. Physical load remains available through `Net::load`;
+`Net::effective_load` separately exposes the selected driver model's load.
+
+RC annotations describe a particular connectivity. A pin insertion or removal
+invalidates that net's old RC tree, including old pin references. Reattach its
+parasitics after editing connectivity. Repowering with unchanged connectivity
+retains wire RC and recalculates the driver response. The model does not call
+OpenROAD or OpenSTA.
+
+Single-pole threshold queries reuse the ramp ratio, tail coefficient and lazy
+logarithm within one wire response or fitting iteration. Each prepared ramp
+is local to that evaluation and keeps immutable input parameters; no mutable
+cache is shared across pins or threads. The scalar crossing API and solver
+arithmetic remain unchanged. This reduces repeated transcendental work without
+changing the circuit model.
+
+Ramp fitting uses a reduced scalar equation to seed the duration when both
+characterized thresholds cross before the ramp ends. This removes repeated
+nested crossing solves for the initial estimate. The original bounded solver
+still validates the waveform interval at its existing tolerance; mixed/tail
+crossings retain its original seed. Long ramps already have an accurate linear
+estimate and skip the extra solve. Independent voltage-bisection regressions
+cover the ramp/tail boundary, feasibility limit and consistent time scales.
+
+Each normal wire arc evaluates its response once per forward-propagation task:
+slew propagation also stores the response's delay for the immediately following
+delay pass. Arc delays are cleared before the pair runs. Ideal clocks bypass
+fanin slew propagation and retain their separate delay evaluation and masking;
+a missing source transition still supplies the existing zero-slew delay fallback
+without creating a sink slew. This reuse adds no persistent cache or per-arc
+storage. RC/model changes and ideal-clock/mask transitions are covered by
+`unittest/rc_propagation.cpp`.
+
+Analytic waveform, Pi-circuit integration, shielding, failure fallback and
+incremental replacement checks are in `unittest/rc_waveform.cpp` and
+`unittest/rc_ceff.cpp`.

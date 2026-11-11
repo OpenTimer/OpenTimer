@@ -41,10 +41,17 @@ void Cellpin::scale_time(float s) {
   for(auto& timing : timings) {
     timing.scale_time(s);
   }
+
+  for(auto &p:internal_power) {
+    p.scale_time(s);
+  }
 }
 
 // Procedure: scale_capacitance
 void Cellpin::scale_capacitance(float s) {
+  for(auto* range : {&rise_capacitance_range, &fall_capacitance_range}) {
+    for(auto& cap : *range) if(cap) *cap *= s;
+  }
   
   if(capacitance) {
     capacitance = capacitance.value() * s;
@@ -68,6 +75,10 @@ void Cellpin::scale_capacitance(float s) {
 
   for(auto& timing : timings) {
     timing.scale_capacitance(s);
+  }
+
+  for(auto &p:internal_power) {
+    p.scale_capacitance(s);
   }
 }
 
@@ -141,6 +152,10 @@ std::ostream& operator << (std::ostream& os, const Cellpin& p) {
   // Write the timing.
   for(const auto& timing : p.timings) {
     os << timing;
+  }
+
+  for(const auto &ipwr:p.internal_power) {
+    os << ipwr;
   }
 
   // Write the ending group symbol.

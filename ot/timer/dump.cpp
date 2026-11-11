@@ -19,11 +19,11 @@ void Timer::_dump_graph(std::ostream& os) const {
 
   os << "digraph TimingGraph {\n";
   for(const auto& pin : _pins) {
-    os << "  \"" << pin.second._name << "\";\n";
+    os << "  \"" << pin.second.name() << "\";\n";
   }
 
   for(const auto& arc : _arcs) {
-    os << "  \"" << arc._from._name << "\" -> \"" << arc._to._name << "\";\n";
+    os << "  \"" << arc._from.name() << "\" -> \"" << arc._to.name() << "\";\n";
   }
   os << "}\n";
 }
@@ -52,7 +52,7 @@ void Timer::_dump_power(std::ostream& os) const {
 
     total_ipower += pin_total_ipower;
 
-    os << std::setw(plen) << pin._name << '\n';
+    os << std::setw(plen) << pin.name() << '\n';
 
     total_cap    += pin_total_cap;
   }
@@ -208,7 +208,7 @@ void Timer::_dump_pin_cap(std::ostream& os) const {
         os << std::setw(10) << pin.cap(el, rf) << "  ";
       }
 
-      os << std::setw(plen) << pin._name << '\n';
+      os << std::setw(plen) << pin.name() << '\n';
     }
     os << std::setfill('-') << std::setw(49 + plen) << '\n';
   }
@@ -250,7 +250,7 @@ void Timer::_dump_slew(std::ostream& os) const {
         os << "  ";
       }
 
-      os << std::setw(plen) << pin._name << '\n';
+      os << std::setw(plen) << pin.name() << '\n';
     }
     os << std::setfill('-') << std::setw(49 + plen) << '\n';
   }
@@ -292,7 +292,7 @@ void Timer::_dump_slack(std::ostream& os) const {
         os << "  ";
       }
 
-      os << std::setw(plen) << pin._name << '\n';
+      os << std::setw(plen) << pin.name() << '\n';
     }
     os << std::setfill('-') << std::setw(49 + plen) << '\n';
   }
@@ -334,7 +334,7 @@ void Timer::_dump_at(std::ostream& os) const {
         os << "  ";
       }
 
-      os << std::setw(plen) << pin._name << '\n';
+      os << std::setw(plen) << pin.name() << '\n';
 
 #if 0
       auto sr = pin.slew(MAX, RISE);
@@ -346,7 +346,7 @@ void Timer::_dump_at(std::ostream& os) const {
         slew_max = *sf;
       }
       if (slew_max>0) {
-        os << std::setw(plen) << slew_max << " " << pin._name << '\n';
+        os << std::setw(plen) << slew_max << " " << pin.name() << '\n';
       }
 #endif
     }
@@ -391,7 +391,7 @@ void Timer::_dump_rat(std::ostream& os) const {
         os << "  ";
       }
 
-      os << std::setw(plen) << pin._name << '\n';
+      os << std::setw(plen) << pin.name() << '\n';
     }
     os << std::setfill('-') << std::setw(49 + plen) << '\n';
   }
@@ -526,52 +526,21 @@ void Timer::_dump_rctree(std::ostream& os) const {
       continue;
     }
 
-    os << rct->_nodes.size() << ' '
-       << rct->_edges.size() << ' '
-       << rct->_root->_name  << '\n';
+    // Resolve labels only when exporting. Keeping one on every RC node would
+    // duplicate the owning map's strings throughout timing/placement.
+    std::unordered_map<const RctNode*, const std::string*> names;
+    const auto labels = rct->_node_names(net_name);
+    for (const auto &[node, name] : labels)
+      names.emplace(node, &name);
+    os << rct->num_nodes() << ' ' << rct->_edges.size() << ' '
+       << (rct->_root ? *names.at(rct->_root) : "nil") << '\n';
 
-    for(const auto& [node_name, node] : rct->_nodes) {
-      os << node_name << ' ' << node._ncap[MIN][RISE] << '\n';
-
-      //os << "ures:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._ures[el][rf];
-      //}
-      //os << '\n';
-      //
-      //os << "load:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._load[el][rf];
-      //}
-      //os << '\n';
-      //
-      //os << "beta:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._beta[el][rf];
-      //}
-      //os << '\n';
-      //
-      //os << "delay:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._delay[el][rf];
-      //}
-      //os << '\n';
-      //
-      //os << "ldelay:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._ldelay[el][rf];
-      //}
-      //os << '\n';
-
-      //os << "impulse:";
-      //FOR_EACH_EL_RF(el, rf) {
-      //  os << ' ' << node._impulse[el][rf];
-      //}
-      //os << '\n';
+    for (const auto &[node, node_name] : labels) {
+      os << node_name << ' ' << node->_ncap << '\n';
     }
 
     for(const auto& edge : rct->_edges) {
-      os << edge._from._name << ' ' << edge._to._name << ' ' << edge._res << '\n';
+      os << *names.at(&edge._from) << ' ' << *names.at(&edge._to) << ' ' << edge._res << '\n';
     }
   }
 
@@ -653,7 +622,7 @@ void Timer::_dump_spef(std::ostream& os) const {
         else {
           os << "*I ";
         }
-        os << pin->_name << ' ';
+        os << pin->name() << ' ';
 
         if(pin->is_input()) {
           os << "I\n";
@@ -667,8 +636,11 @@ void Timer::_dump_spef(std::ostream& os) const {
 
       // *CAP section
       os << "*CAP\n";
-      for(const auto& node : rct->_nodes) {
-        os << ++idx << ' ' << node.first << ' ' << node.second._ncap[MIN][RISE] << '\n';
+      std::unordered_map<const RctNode*, const std::string*> names;
+      const auto labels = rct->_node_names(net.name());
+      for (const auto &[node, name] : labels) {
+        names.emplace(node, &name);
+        os << ++idx << ' ' << name << ' ' << node->_ncap << '\n';
       }
 
       // *RES section
@@ -678,85 +650,14 @@ void Timer::_dump_spef(std::ostream& os) const {
         ++idx;
         if(idx & 1) {
           os << idx << ' '
-             << edge._from._name << ' '
-             << edge._to._name << ' '
+             << *names.at(&edge._from) << ' '
+             << *names.at(&edge._to) << ' '
              << edge._res << '\n';
         }
       }
 
       os << "*END\n";
     }
-  }
-}
-
-// Function: dump_fcpc26
-void Timer::dump_fcpc26(std::ostream& ckt, size_t num_phases) const {
-  
-
-
-  // gate and its pins
-  ckt << "num_gates: " << _gates.size() << '\n';
-  for(const auto& [name, gate] : _gates) {
-    ckt << name << ' ' << gate._cell[ot::MIN]->name << ' ' << gate._pins.size() << '\n';
-    for(const auto pin : gate._pins) {
-      ckt << pin->_name << ' '; 
-    }
-    ckt << '\n';
-  }
-
-  // cells
-  std::vector<int> phases(num_phases);
-  
-  // Fill the vector with 0 to N-1
-  for(int i = 0; i < num_phases; ++i) {
-    phases[i] = i;
-  }
-
-  // Random number generator
-  std::random_device rd;   // seed
-  std::mt19937 gen(rd());    // Mersenne Twister engine
-
-  const auto& celllib = _celllib[MIN] ? *_celllib[MIN] : *_celllib[MAX];
-  ckt << "num_cells/_phases: " << celllib.cells.size() << ' ' << num_phases << '\n';
-  for(const auto& [name, cell] : celllib.cells) {
-    ckt << name;
-  
-    // Shuffle the phase vector - trying to mimic the behavior of transformation matrix
-    std::shuffle(phases.begin(), phases.end(), gen);
-    for(auto p : phases) {
-      ckt << ' ' << p;
-    }
-    ckt << '\n';
-  }
-
-  // pins
-  std::uniform_real_distribution<> dis(0.0, 50); 
-  ckt << "num_pins " << _pins.size() << '\n';
-  for(const auto& [name, pin] : _pins) {
-    ckt << name << ' ' << pin.num_fanins();
-    // zero-fanin inputs need to be filled with arbitrary value
-    if(pin.num_fanins() == 0) {
-      for(size_t i=0; i<num_phases; ++i) {
-        ckt << ' ' << dis(gen);
-      }
-    }
-    ckt << '\n';
-  }
-  
-  // arcs
-  ckt << "num_edges: " << _arcs.size() << '\n';
-  for(const auto& arc : _arcs) {
-
-    // find the maximum delay
-    float delay = 0.0f;
-    FOR_EACH_EL_RF_RF(el, rf1, rf2) {
-      if(arc._delay[el][rf1][rf2]) {
-        delay = std::max(delay, *arc._delay[el][rf1][rf2]);
-      }
-    }
-    
-    ckt << arc._from._name << ' ' << arc._to._name << ' '
-        << delay << '\n';
   }
 
 }

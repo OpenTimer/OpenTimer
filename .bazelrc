@@ -1,0 +1,18 @@
+# The bundled Taskflow uses C++20 atomics. Dependency .bazelrc files are not
+# inherited, so consumers such as LiveHD select their own C++20-or-newer mode.
+build --cxxopt=-std=c++20
+build --host_cxxopt=-std=c++20
+build --enable_platform_specific_config
+
+# Match LiveHD's Command Line Tools selection without depending on LiveHD.
+build:macos --xcode_version_config=//packages:command_line_tools
+build:macos --features=-layering_check
+build:macos --host_features=-layering_check
+# std::filesystem and Taskflow's atomic wait/notify need a modern deployment
+# target; Bazel's legacy macOS default predates these library APIs.
+build:macos --macos_minimum_os=11.0
+build:macos --host_macos_minimum_os=11.0
+build:darwin --config=macos
+
+test --test_output=errors
+test --test_timeout=30

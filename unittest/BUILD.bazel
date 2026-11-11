@@ -1,0 +1,84 @@
+load("@rules_cc//cc:defs.bzl", "cc_library", "cc_test")
+
+cc_library(
+    name = "doctest",
+    testonly = True,
+    hdrs = ["doctest.h"],
+)
+
+# unit.cpp contains only commented-out tests for an obsolete API. Do not
+# register an empty test binary as passing coverage.
+[
+    cc_test(
+        name = name,
+        size = "small",
+        timeout = "short",
+        srcs = [name + ".cpp"],
+        deps = [
+            ":doctest",
+            "//:opentimer",
+        ],
+    )
+    for name in [
+        "path",
+        "utility",
+        "taskflow_smoke",
+    ]
+]
+
+cc_test(
+    name = "celllib_smoke",
+    size = "small",
+    timeout = "short",
+    srcs = ["celllib_smoke.cpp"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//:opentimer",
+        "@googletest//:gtest_main",
+    ],
+)
+
+cc_test(
+    name = "arc_adjacency",
+    size = "small",
+    timeout = "short",
+    srcs = ["arc_adjacency.cpp"],
+    visibility = ["//visibility:public"],
+    deps = ["//:opentimer", "@googletest//:gtest_main"],
+)
+
+cc_test(
+    name = "path_report",
+    size = "small",
+    timeout = "short",
+    srcs = ["path_report.cpp"],
+    visibility = ["//visibility:public"],
+    deps = ["//:opentimer", "@googletest//:gtest_main"],
+)
+
+cc_test(
+    name = "rc_propagation",
+    size = "small",
+    timeout = "short",
+    srcs = ["rc_propagation.cpp"],
+    visibility = ["//visibility:public"],
+    deps = ["//:opentimer", "@googletest//:gtest_main"],
+)
+
+cc_test(
+    name = "rc_waveform",
+    size = "small",
+    timeout = "short",
+    srcs = ["rc_waveform.cpp"],
+    visibility = ["//visibility:public"],
+    deps = ["//:opentimer", "@googletest//:gtest_main"],
+)
+
+cc_test(
+    name = "rc_ceff",
+    size = "small",
+    timeout = "short",
+    srcs = ["rc_ceff.cpp"],
+    visibility = ["//visibility:public"],
+    deps = ["//:opentimer", "@googletest//:gtest_main"],
+)

@@ -128,28 +128,6 @@ void Shell::_read_celllib() {
   _timer.read_celllib(std::move(path), el);
 }
 
-// Procedure: read_celllibs
-void Shell::_read_celllibs() {
-
-  std::string token;
-  std::filesystem::path path;
-  std::optional<Split> el;
-
-  while(_is >> token) {
-    if(token == "-min" || token == "-early") {
-      el = MIN;
-    }
-    else if(token == "-max" || token == "-late") {
-      el = MAX;
-    }
-    else {
-      path = std::move(token);
-    }
-  }
-
-  _timer.read_celllibs(std::move(path), el);
-}
-
 // Procedure: read_sdc
 void Shell::_read_sdc() {
   if(std::filesystem::path path; _is >> path) {

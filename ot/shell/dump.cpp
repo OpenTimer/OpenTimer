@@ -569,46 +569,6 @@ void Shell::_dump_rctree() {
   _timer.dump_rctree(*tgt);
 }
 
-// Procedure: _dump_fcpc26
-void Shell::_dump_fcpc26() {
-
-  std::string token;
-  std::filesystem::path output;
-  size_t num_phases = 1;  // default to 1
-
-  while(_is >> token) {
-    if(token == "-o") {
-      if(!(_is >> output)){
-        _es << "output file not given\n";
-        return;
-      }
-    }
-    else if(token == "-p") {
-      if(!(_is >> num_phases)) {
-        _es << "num phases not given\n";
-        return;
-      }
-    }
-    else {
-      _es << "unexpected token " << token << '\n';
-    }
-  }
-
-  std::ostream* tgt = &_os;
-  std::ofstream ofs;
-  
-  if(!output.empty()) {
-    if(ofs.open(output); ofs) {
-      tgt = &ofs;
-    }
-    else {
-      _es << "failed to open " << output << '\n';
-    }
-  }
-
-  _timer.dump_fcpc26(*tgt, num_phases);
-}
-
 };  // end of namespace ot. ---------------------------------------------------
 
 

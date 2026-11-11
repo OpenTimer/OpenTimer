@@ -1,20 +1,12 @@
-// Copyright (c) 2017-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2017-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_CONFIG_HPP
 #define TAO_PEGTL_CONFIG_HPP
 
-// Compatibility, remove with 3.0
-#ifdef TAOCPP_PEGTL_NAMESPACE
-#define TAO_PEGTL_NAMESPACE TAOCPP_PEGTL_NAMESPACE
+#if !defined( TAO_PEGTL_NAMESPACE )
+#define TAO_PEGTL_NAMESPACE tao::pegtl
 #endif
-
-#ifndef TAO_PEGTL_NAMESPACE
-#define TAO_PEGTL_NAMESPACE pegtl
-#endif
-
-// Enable some improvements to the readability of
-// demangled type names under some circumstances.
-// #define TAO_PEGTL_PRETTY_DEMANGLE
 
 #endif

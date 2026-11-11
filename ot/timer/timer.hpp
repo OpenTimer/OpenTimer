@@ -34,13 +34,42 @@ class Timer {
   public:
     
     // Builder
+    // Number of Taskflow workers. Zero requests the minimum of one worker;
+    // an unset budget retains hardware concurrency. Changes preserve builders.
     Timer& set_num_threads(unsigned);
+    unsigned num_threads() const;
+    // Cheap total-load/Elmore estimates for optimization ranking. Switching
+    // back restores the detailed waveform model and invalidates prior timing.
+    Timer &set_rc_model(RcModel);
     Timer& read_celllib(std::filesystem::path, std::optional<Split> = {});
-    Timer& read_celllibs(std::filesystem::path, std::optional<Split> = {});
     Timer& read_verilog(std::filesystem::path);
     Timer& read_spef(std::filesystem::path);
+    // In-memory placement parasitics, with fully expanded names and R/C units.
+    Timer& read_parasitics(spef::Spef value) {
+      auto data = std::make_shared<spef::Spef>(std::move(value));
+      std::scoped_lock lock(_mutex);
+      auto reader = _taskflow.emplace([this, data] () {
+        _rebase_unit(*data);
+        _read_spef(*data);
+      });
+      _add_to_lineage(reader);
+      return *this;
+    }
+    // Apply a bounded batch to a materialized netlist. Replace RC storage now,
+    // retaining timing frontiers for one later propagation across all batches.
+    // Unlike read_parasitics, no SPEF payload survives this call.
+    void update_parasitics(spef::Spef);
+    // Indexed in-memory equivalent; units describe the float payload values.
+    // Ground capacitors only. Like the SPEF overload, batches materialize RC
+    // immediately but preserve frontiers for one later timing propagation.
+    void update_parasitics(std::vector<IndexedRc>, farad_t, ohm_t);
+    // Dense placement RC, with no retained node labels or per-arc name lookup.
+    void update_bound_parasitics(std::vector<BoundRc>, farad_t, ohm_t);
     Timer& read_sdc(std::filesystem::path);
     Timer& read_timing(std::filesystem::path);
+    // Explicit analysis annotation. Existing create_clock behavior is unchanged.
+    // Reapply after topology changes; an empty clock list restores propagation.
+    Timer& set_ideal_clocks(std::vector<std::string>, std::vector<std::string> = {});
     Timer& insert_net(std::string);
     Timer& insert_gate(std::string, std::string);
     Timer& repower_gate(std::string, std::string);
@@ -53,10 +82,27 @@ class Timer {
     Timer& set_at(std::string, Split, Tran, std::optional<float>);
     Timer& set_rat(std::string, Split, Tran, std::optional<float>);
     Timer& set_slew(std::string, Split, Tran, std::optional<float>);
+    // Replace combinational case-analysis masks. Bits are RR, RF, FR, FF.
+    // Reapply after connectivity changes; an empty list restores all arcs.
+    Timer& set_case_masks(std::vector<std::tuple<std::string, std::string, std::uint8_t>>);
+    // Further restrict individual materialized arcs (for Liberty when clauses).
+    Timer& refine_case_masks(std::vector<std::pair<size_t, std::uint8_t>>);
+    // SDC driving-cell model: loaded-minus-unloaded delay plus loaded slew.
+    Timer& set_input_driver(std::string, std::string, std::string, std::string,
+                            Split, Tran, std::array<float, 2>);
     Timer& set_load(std::string, Split, Tran, std::optional<float>);
     Timer& create_clock(std::string, float);
     Timer& create_clock(std::string, std::string, float);
+    Timer& create_clock(std::string, std::string, float, std::array<float, MAX_TRAN>);
     Timer& cppr(bool);
+    // Async preset/clear -> output arcs (Liberty timing_type preset/clear).
+    // Enabled by default; disable before building gates to match OpenSTA's
+    // default (sta_preset_clear_arcs_enabled false). Recovery/removal checks stay.
+    Timer& preset_clear_arcs(bool);
+    // Falling-edge checks capture rising-edge launches in the same cycle
+    // (half-cycle paths, e.g. a negative-edge clock-gate enable flop); default
+    // keeps the full-period capture.
+    Timer& falling_edge_same_cycle(bool);
     Timer& set_time_unit(second_t);
     Timer& set_capacitance_unit(farad_t);
     Timer& set_resistance_unit(ohm_t);
@@ -65,6 +111,11 @@ class Timer {
     Timer& set_current_unit(ampere_t);
 
     // Action.
+    // Apply queued library, topology, RC and constraint edits without timing
+    // propagation. Structural accessors are current afterward; timing remains
+    // dirty until update_timing or a report query. Multiple edits can therefore
+    // be materialized before paying for one final propagation.
+    void update_netlist();
     void update_timing();
 
     std::optional<float> report_at(const std::string&, Split, Tran);
@@ -100,7 +151,6 @@ class Timer {
     void dump_verilog(std::ostream&, const std::string&) const;
     void dump_spef(std::ostream&) const;
     void dump_rctree(std::ostream&) const;
-    void dump_fcpc26(std::ostream&, size_t) const;
     
     inline auto num_primary_inputs() const;
     inline auto num_primary_outputs() const;
@@ -123,6 +173,7 @@ class Timer {
     inline const auto& pins() const;
     inline const auto& nets() const;
     inline const auto& gates() const;
+    inline const auto& celllib(Split el) const;
     inline const auto& clocks() const;
     inline const auto& tests() const;
     inline const auto& arcs() const;
@@ -132,11 +183,17 @@ class Timer {
     mutable std::shared_mutex _mutex;
 
     tf::Taskflow _taskflow;
-    tf::Executor _executor;
+    // Construct lazily so an explicit budget does not first start a full pool.
+    std::unique_ptr<tf::Executor> _executor;
+    unsigned _num_threads {std::max(1u, std::thread::hardware_concurrency())};
+    void _run_taskflow();
 
     int _state {0};
     
     bool _scc_analysis {false};
+    bool _preset_clear_arcs {true};
+    bool _falling_same_cycle {false};
+    RcModel _rc_model{RcModel::effective_capacitance};
 
     std::optional<tf::Task> _lineage;
     std::optional<CpprAnalysis> _cppr_analysis;
@@ -198,6 +255,7 @@ class Timer {
     void _add_to_lineage(tf::Task);
     void _rebase_unit(Celllib&);
     void _rebase_unit(spef::Spef&);
+    void _update_netlist();
     void _update_timing();
     void _update_endpoints();
     void _update_area();
@@ -213,7 +271,7 @@ class Timer {
     void _build_bprop_cands(Pin&);
     void _build_prop_tasks();
     void _clear_prop_tasks();
-    void _read_spef(spef::Spef&);;
+    void _read_spef(spef::Spef &, bool materialize = false);
     void _verilog(vlog::Module&);
     void _timing(tau15::Timing&);
     void _read_sdc(sdc::SDC&);
@@ -289,9 +347,8 @@ class Timer {
     SCC& _insert_scc(std::vector<Pin*>&);
     Test& _insert_test(Arc&);
     Clock& _create_clock(const std::string&, Pin&, float);
-    Clock& _create_clock(const std::string&, float);
     Clock& _create_clock(const std::string&, Pin&, float, std::array<float, MAX_TRAN>);
-    Clock& _create_clock(const std::string&, float, std::array<float, MAX_TRAN>);
+    Clock& _create_clock(const std::string&, float);
 
     std::optional<float> _report_at(const std::string&, Split, Tran);
     std::optional<float> _report_rat(const std::string&, Split, Tran);
@@ -437,6 +494,12 @@ inline const auto& Timer::nets() const {
 // Expose the gate data structure to users
 inline const auto& Timer::gates() const {
   return _gates;
+}
+
+// Function: celllib
+// Expose the celllib data structure to users
+inline const auto& Timer::celllib(Split el) const {
+  return _celllib[el];
 }
 
 // Function: clocks

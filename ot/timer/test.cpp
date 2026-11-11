@@ -85,7 +85,7 @@ void Test::_reset() {
 }
 
 // Procedure: _fprop_rat
-void Test::_fprop_rat(float period) {
+void Test::_fprop_rat(float period, bool falling_same_cycle) {
 
   auto tv = _arc.timing_view();
 
@@ -109,11 +109,26 @@ void Test::_fprop_rat(float period) {
       continue;
     }
     
-    if(el == MIN) {
+    // A check whose clock edge derives from the source clock's falling edge
+    // captures data launched by the rising edge in the same cycle (setup at
+    // that fall, hold against the previous fall), as OpenSTA does for a
+    // posedge -> negedge half-cycle path. That edge is the later of the two
+    // clock-pin transitions: the falling one of a negative-edge check, or the
+    // rising one behind an odd number of clock-path inversions.
+    const auto  other  = frf == RISE ? FALL : RISE;
+    const bool  late   = _arc._from._at[fel][other] ? *_arc._from._at[fel][frf] > *_arc._from._at[fel][other]
+                                                    : frf == FALL;
+    const float shift = (falling_same_cycle && late) ? period : 0.0f;
+    if(tv[el]->is_non_sequential()) {
+      // A data-to-data check: the related pin's transition of this cycle,
+      // no capture edge one period later and no half-cycle shift.
       _related_at[el][rf] = *_arc._from._at[fel][frf];
     }
+    else if(el == MIN) {
+      _related_at[el][rf] = *_arc._from._at[fel][frf] - shift;
+    }
     else {
-      _related_at[el][rf] = *_arc._from._at[fel][frf] + period;
+      _related_at[el][rf] = *_arc._from._at[fel][frf] + period - shift;
     }
 
     _constraint[el][rf] = tv[el]->constraint(

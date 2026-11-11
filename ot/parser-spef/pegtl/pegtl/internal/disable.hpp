@@ -1,52 +1,54 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_INTERNAL_DISABLE_HPP
 #define TAO_PEGTL_INTERNAL_DISABLE_HPP
 
-#include "../config.hpp"
-
-#include "duseltronik.hpp"
+#include "enable_control.hpp"
 #include "seq.hpp"
-#include "skip_control.hpp"
+#include "success.hpp"
 
 #include "../apply_mode.hpp"
+#include "../config.hpp"
 #include "../rewind_mode.hpp"
+#include "../type_list.hpp"
 
-#include "../analysis/generic.hpp"
-
-namespace tao
+namespace TAO_PEGTL_NAMESPACE::internal
 {
-   namespace TAO_PEGTL_NAMESPACE
+   template< typename... Rules >
+   struct disable
+      : disable< seq< Rules... > >
+   {};
+
+   template<>
+   struct disable<>
+      : success
+   {};
+
+   template< typename Rule >
+   struct disable< Rule >
    {
-      namespace internal
+      using rule_t = disable;
+      using subs_t = type_list< Rule >;
+
+      template< apply_mode,
+                rewind_mode M,
+                template< typename... >
+                class Action,
+                template< typename... >
+                class Control,
+                typename ParseInput,
+                typename... States >
+      [[nodiscard]] static bool match( ParseInput& in, States&&... st )
       {
-         template< typename... Rules >
-         struct disable
-         {
-            using analyze_t = analysis::generic< analysis::rule_type::SEQ, Rules... >;
+         return Control< Rule >::template match< apply_mode::nothing, M, Action, Control >( in, st... );
+      }
+   };
 
-            template< apply_mode,
-                      rewind_mode M,
-                      template< typename... > class Action,
-                      template< typename... > class Control,
-                      typename Input,
-                      typename... States >
-            static bool match( Input& in, States&&... st )
-            {
-               return duseltronik< seq< Rules... >, apply_mode::NOTHING, M, Action, Control >::match( in, st... );
-            }
-         };
+   template< typename... Rules >
+   inline constexpr bool enable_control< disable< Rules... > > = false;
 
-         template< typename... Rules >
-         struct skip_control< disable< Rules... > > : std::true_type
-         {
-         };
-
-      }  // namespace internal
-
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE::internal
 
 #endif

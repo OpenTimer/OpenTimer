@@ -1,0 +1,12 @@
+module(
+    name = "opentimer",
+    version = "2.1.0",
+)
+
+# Keep these compatible with LiveHD's root module. local_repository consumers
+# use their own dependency mapping; standalone builds resolve these directly.
+bazel_dep(name = "rules_cc", version = "0.2.27")
+bazel_dep(name = "platforms", version = "1.1.0")
+bazel_dep(name = "apple_support", version = "2.11.0", repo_name = "build_bazel_apple_support")
+
+bazel_dep(name = "googletest", version = "1.18.0.bcr.1", dev_dependency = True)

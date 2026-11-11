@@ -5,6 +5,10 @@ namespace ot {
 // Function: _is_redundant_timing
 bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 
+  if(!_preset_clear_arcs && timing.type && (*timing.type == TimingType::PRESET || *timing.type == TimingType::CLEAR)) {
+    return true;
+  }
+
   switch(el) {
     case MIN:
       if(timing.is_max_constraint()) {
@@ -25,25 +29,29 @@ bool Timer::_is_redundant_timing(const Timing& timing, Split el) const {
 // Function: read_celllib
 Timer& Timer::read_celllib(std::filesystem::path path, std::optional<Split> el) {
   
-  auto lib = std::make_shared<Celllib>();
+  auto libraries = std::make_shared<std::vector<Celllib>>();
   
   std::scoped_lock lock(_mutex);
   
   // Library parser
-  auto parser = _taskflow.emplace([path=std::move(path), lib] () {
+  auto parser = _taskflow.emplace([path=std::move(path), libraries] () {
     OT_LOGI("loading celllib ", path);
-    lib->read(path);
+    *libraries = Celllib::read_all(path);
   });
 
   // Placeholder to add_lineage
-  auto reader = _taskflow.emplace([this, lib, el] () {
-    if(el) {
-      _merge_celllib(*lib, *el);
-    }
-    else {
-      auto cpy = *lib;
-      _merge_celllib(cpy, MIN);
-      _merge_celllib(*lib, MAX);
+  auto reader = _taskflow.emplace([this, libraries, el] () {
+    for(auto& lib : *libraries) {
+      // Rebase each library independently before merging. Concatenated SRAM
+      // and standard-cell libraries can have different time/capacitance units.
+      if(el) {
+        _merge_celllib(lib, *el);
+      }
+      else {
+        auto cpy = lib;
+        _merge_celllib(cpy, MIN);
+        _merge_celllib(lib, MAX);
+      }
     }
   });
 
@@ -63,6 +71,7 @@ void Timer::_merge_celllib(Celllib& lib, Split el) {
   // initialize a library
   if(!_celllib[el]) {
     _celllib[el] = std::move(lib);
+    for(auto& [name, pin] : _pins) pin._default_thresholds[el] = &_celllib[el]->thresholds;
     OT_LOGI(
       "added ", to_string(el), " celllib ", std::quoted(_celllib[el]->name), 
       " [cells:", _celllib[el]->cells.size(), ']'

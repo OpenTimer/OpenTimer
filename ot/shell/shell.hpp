@@ -48,7 +48,6 @@ class Shell {
     void _read_verilog           ();      
     void _read_spef              ();         
     void _read_celllib           ();
-    void _read_celllibs          ();
     void _read_sdc               ();
     void _read_timing            ();
     void _set_at                 (); 
@@ -98,7 +97,6 @@ class Shell {
     void _dump_verilog           ();
     void _dump_spef              ();
     void _dump_rctree            ();
-    void _dump_fcpc26            ();
     
     // Obselete
     void _exec_ops               ();
@@ -129,7 +127,6 @@ class Shell {
       {"read_verilog",            &Shell::_read_verilog},
       {"read_spef",               &Shell::_read_spef},
       {"read_celllib",            &Shell::_read_celllib},
-      {"read_celllibs",           &Shell::_read_celllibs},
       {"read_sdc",                &Shell::_read_sdc},
       {"read_timing",             &Shell::_read_timing},
       {"set_at",                  &Shell::_set_at},
@@ -179,7 +176,6 @@ class Shell {
       {"dump_verilog",            &Shell::_dump_verilog},
       {"dump_spef",               &Shell::_dump_spef},
       {"dump_rctree",             &Shell::_dump_rctree},
-      {"dump_fcpc26",             &Shell::_dump_fcpc26},
 
       // obselete
       {"exec_ops",                &Shell::_exec_ops},

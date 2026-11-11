@@ -1,0 +1,20 @@
+load("@build_bazel_apple_support//xcode:xcode_config.bzl", "xcode_config")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+# An empty version list selects Command Line Tools instead of an unrelated
+# Xcode installation. This target is only selected by the standalone .bazelrc.
+xcode_config(
+    name = "command_line_tools",
+    visibility = ["//visibility:public"],
+)
+
+# Expose a reproducible ot/config.hpp without running CMake or reading its
+# generated header from the source tree.
+cc_library(
+    name = "config",
+    hdrs = ["ot/config.hpp"],
+    strip_include_prefix = ".",
+    visibility = ["//visibility:public"],
+)
+
+exports_files(["ot/config.hpp"])

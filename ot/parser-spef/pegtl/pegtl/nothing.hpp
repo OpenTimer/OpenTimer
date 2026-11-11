@@ -1,27 +1,20 @@
-// Copyright (c) 2014-2018 Dr. Colin Hirsch and Daniel Frey
-// Please see LICENSE for license or visit https://github.com/taocpp/PEGTL/
+// Copyright (c) 2014-2023 Dr. Colin Hirsch and Daniel Frey
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef TAO_PEGTL_NOTHING_HPP
 #define TAO_PEGTL_NOTHING_HPP
 
-#include <type_traits>
-
 #include "config.hpp"
 
-namespace tao
+namespace TAO_PEGTL_NAMESPACE
 {
-   namespace TAO_PEGTL_NAMESPACE
-   {
-      template< typename Rule >
-      struct nothing
-      {
-      };
+   template< typename Rule >
+   struct nothing
+   {};
 
-      template< template< typename... > class Action, typename Rule >
-      using is_nothing = std::is_base_of< nothing< Rule >, Action< Rule > >;
+   using maybe_nothing = nothing< void >;
 
-   }  // namespace TAO_PEGTL_NAMESPACE
-
-}  // namespace tao
+}  // namespace TAO_PEGTL_NAMESPACE
 
 #endif

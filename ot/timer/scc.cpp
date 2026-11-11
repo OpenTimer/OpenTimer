@@ -1,3 +1,6 @@
+#include <algorithm>
+#include <tuple>
+#include <vector>
 #include <ot/timer/pin.hpp>
 #include <ot/timer/arc.hpp>
 #include <ot/timer/scc.hpp>
@@ -48,12 +51,12 @@ std::string SCC::_dump() const {
 
   os << "digraph SCC {\n";
   for(auto from : _pins) {
-    os << "  \"" << from->_name << "\";\n";
+    os << "  \"" << from->name() << "\";\n";
 
     for(auto& arc : from->_fanout) {
       if(from->_scc == arc->_to._scc) {
         os << "  \"" 
-           << from->_name << "\" -> \"" << arc->_to._name 
+           << from->name() << "\" -> \"" << arc->_to.name()
            << "\";\n";  
       }
     }
@@ -95,7 +98,16 @@ void SCC::_unloop(Pin& from) {
 
   from._insert_state(Pin::UNLOOP_CAND | Pin::IN_UNLOOP_STACK);
 
-  for(auto arc : from._fanout) {
+  // Visit fanouts in pin-index order: the loop breakers must not depend on
+  // arc insertion order (repowered gates re-insert their arcs), so a full and
+  // an incremental update break the same loop at the same arcs.
+  std::vector<Arc*> fanout(from._fanout.begin(), from._fanout.end());
+  std::sort(fanout.begin(), fanout.end(), [] (const Arc* a, const Arc* b) {
+    const auto ka = std::pair{a->to().idx(), a->idx()}, kb = std::pair{b->to().idx(), b->idx()};
+    return ka < kb;
+  });
+
+  for(auto arc : fanout) {
 
     if(auto& to = arc->_to; to._scc != this) {
       continue;
@@ -118,17 +130,24 @@ void SCC::_unloop() {
 
   assert(!_pins.empty());
 
+  // Deterministic entry, independent of the discovery order of the SCC: the
+  // lowest-index entry input pin, else the lowest-index entry, else the
+  // lowest-index pin.
   Pin* entry {nullptr};
-  
+  const auto better = [] (const Pin* a, const Pin* b) {
+    if(!b) return true;
+    if(a->is_input() != b->is_input()) return a->is_input();
+    return a->_idx < b->_idx;
+  };
+
   for(auto pin : _pins) {
-    if(!_is_entry(*pin)) continue;
-    if(!entry || pin->is_input()) { 
+    if(_is_entry(*pin) && better(pin, entry)) {
       entry = pin;
     }
   }
 
   if(entry == nullptr) {
-    entry = _pins[0];
+    entry = *std::min_element(_pins.begin(), _pins.end(), [] (const Pin* a, const Pin* b) { return a->_idx < b->_idx; });
   }
   _unloop(*entry);
 }

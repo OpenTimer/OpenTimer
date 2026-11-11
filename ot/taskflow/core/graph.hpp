@@ -18,7 +18,7 @@
 #include "semaphore.hpp"
 #include "environment.hpp"
 #include "topology.hpp"
-#include "tsq.hpp"
+#include "wsq.hpp"
 
 
 /**
@@ -32,7 +32,6 @@ namespace tf {
 // Class: Graph
 // ----------------------------------------------------------------------------
 
-
 /**
 @class Graph
 
@@ -40,15 +39,12 @@ namespace tf {
 
 A graph is the ultimate storage for a task dependency graph and is the main
 gateway to interact with an executor.
-A graph manages a set of nodes in a global object pool that animates and
-recycles node objects efficiently without going through repetitive and
-expensive memory allocations and deallocations.
 This class is mainly used for creating an opaque graph object in a custom
 class to interact with the executor through taskflow composition.
 
 A graph object is move-only.
 */
-class Graph : public std::vector<std::unique_ptr<Node>> {
+class Graph {
 
   friend class Node;
   friend class FlowBuilder;
@@ -59,9 +55,14 @@ class Graph : public std::vector<std::unique_ptr<Node>> {
   public:
 
   /**
-  @brief constructs a graph object
+  @brief constructs the graph object
   */
   Graph() = default;
+
+  /**
+  @brief destroys the graph object
+  */
+  ~Graph();
 
   /**
   @brief disabled copy constructor
@@ -71,7 +72,7 @@ class Graph : public std::vector<std::unique_ptr<Node>> {
   /**
   @brief constructs a graph using move semantics
   */
-  Graph(Graph&&) = default;
+  Graph(Graph&&);
 
   /**
   @brief disabled copy assignment operator
@@ -81,10 +82,46 @@ class Graph : public std::vector<std::unique_ptr<Node>> {
   /**
   @brief assigns a graph using move semantics
   */
-  Graph& operator = (Graph&&) = default;
+  Graph& operator = (Graph&&);
+
+  /**
+  @brief clears the graph
+  */
+  void clear();
+
+  /**
+  @brief returns the number of nodes in the graph
+  */
+  size_t size() const;
   
+  /**
+  @brief queries the emptiness of the graph
+  */
+  bool empty() const;
+  
+  /**
+  @brief returns an iterator to the first node of this graph
+  */
+  auto begin();
+
+  /**
+  @brief returns an iterator past the last element of this graph
+  */
+  auto end();
+
+  /**
+  @brief returns an iterator to the first node of this graph
+  */
+  auto begin() const;
+  
+  /**
+  @brief returns an iterator past the last element of this graph
+  */
+  auto end() const;
 
   private:
+
+  std::vector<Node*> _nodes;
 
   void _erase(Node*);
   
@@ -103,6 +140,8 @@ class Graph : public std::vector<std::unique_ptr<Node>> {
 @class TaskParams
 
 @brief class to create a task parameter object 
+
+tf::TaskParams is primarily used by asynchronous tasking.
 */
 class TaskParams {
 
@@ -147,7 +186,56 @@ constexpr bool is_task_params_v =
 /**
 @private
 */
-class Node {
+class NodeBase {
+
+  friend class Node;
+  friend class Graph;
+  friend class Task;
+  friend class AsyncTask;
+  friend class TaskView;
+  friend class Taskflow;
+  friend class Executor;
+  friend class FlowBuilder;
+  friend class Subflow;
+  friend class Runtime;
+  friend class NonpreemptiveRuntime;
+  friend class ExplicitAnchorGuard;
+  friend class TaskGroup;
+  friend class Algorithm;
+  
+  protected:
+  
+  nstate_t _nstate              {NSTATE::NONE};
+  std::atomic<estate_t> _estate {ESTATE::NONE};
+
+  NodeBase* _parent {nullptr};
+  std::atomic<size_t> _join_counter {0};
+  
+  std::exception_ptr _exception_ptr {nullptr};
+
+  NodeBase() = default;
+
+  NodeBase(nstate_t nstate, estate_t estate, NodeBase* parent, size_t join_counter) :
+    _nstate {nstate}, 
+    _estate {estate},
+    _parent {parent},
+    _join_counter {join_counter} {
+  }
+  
+  void _rethrow_exception() {
+    if(_exception_ptr) {
+      auto e = _exception_ptr;
+      _exception_ptr = nullptr;
+      _estate.fetch_and(~(ESTATE::EXCEPTION | ESTATE::CAUGHT), std::memory_order_relaxed);
+      std::rethrow_exception(e);
+    }
+  }
+};
+
+/**
+@private
+*/
+class Node : public NodeBase {
 
   friend class Graph;
   friend class Task;
@@ -158,11 +246,10 @@ class Node {
   friend class FlowBuilder;
   friend class Subflow;
   friend class Runtime;
-  friend class AnchorGuard;
-  friend class PreemptionGuard;
-
-  //template <typename T>
-  //friend class Freelist;
+  friend class NonpreemptiveRuntime;
+  friend class ExplicitAnchorGuard;
+  friend class TaskGroup;
+  friend class Algorithm;
 
 #ifdef TF_ENABLE_TASK_POOL
   TF_ENABLE_POOLABLE_ON_THIS;
@@ -178,7 +265,7 @@ class Node {
 
     std::function<void()> work;
   };
-  
+
   // runtime work handle
   struct Runtime {
 
@@ -186,6 +273,14 @@ class Node {
     Runtime(C&&);
 
     std::function<void(tf::Runtime&)> work;
+  };
+  
+  struct NonpreemptiveRuntime {
+    
+    template <typename C>
+    NonpreemptiveRuntime(C&&);
+
+    std::function<void(tf::NonpreemptiveRuntime&)> work;
   };
 
   // subflow work handle
@@ -251,19 +346,19 @@ class Node {
     > work;
    
     std::atomic<size_t> use_count {1};
-    std::atomic<ASTATE::underlying_type> state {ASTATE::UNFINISHED};
   };
 
   using handle_t = std::variant<
-    Placeholder,      // placeholder
-    Static,           // static tasking
-    Runtime,          // runtime tasking
-    Subflow,          // subflow tasking
-    Condition,        // conditional tasking
-    MultiCondition,   // multi-conditional tasking
-    Module,           // composable tasking
-    Async,            // async tasking
-    DependentAsync    // dependent async tasking
+    Placeholder,          // placeholder
+    Static,               // static tasking
+    Runtime,              // runtime tasking
+    NonpreemptiveRuntime, // runtime (non-preemptive) tasking
+    Subflow,              // subflow tasking
+    Condition,            // conditional tasking
+    MultiCondition,       // multi-conditional tasking
+    Module,               // composable tasking
+    Async,                // async tasking
+    DependentAsync        // dependent async tasking
   >;
 
   struct Semaphores {
@@ -274,23 +369,24 @@ class Node {
   public:
 
   // variant index
-  constexpr static auto PLACEHOLDER     = get_index_v<Placeholder, handle_t>;
-  constexpr static auto STATIC          = get_index_v<Static, handle_t>;
-  constexpr static auto RUNTIME         = get_index_v<Runtime, handle_t>;
-  constexpr static auto SUBFLOW         = get_index_v<Subflow, handle_t>;
-  constexpr static auto CONDITION       = get_index_v<Condition, handle_t>;
-  constexpr static auto MULTI_CONDITION = get_index_v<MultiCondition, handle_t>;
-  constexpr static auto MODULE          = get_index_v<Module, handle_t>;
-  constexpr static auto ASYNC           = get_index_v<Async, handle_t>;
-  constexpr static auto DEPENDENT_ASYNC = get_index_v<DependentAsync, handle_t>;
+  constexpr static auto PLACEHOLDER           = get_index_v<Placeholder, handle_t>;
+  constexpr static auto STATIC                = get_index_v<Static, handle_t>;
+  constexpr static auto RUNTIME               = get_index_v<Runtime, handle_t>;
+  constexpr static auto NONPREEMPTIVE_RUNTIME = get_index_v<NonpreemptiveRuntime, handle_t>;
+  constexpr static auto SUBFLOW               = get_index_v<Subflow, handle_t>;
+  constexpr static auto CONDITION             = get_index_v<Condition, handle_t>;
+  constexpr static auto MULTI_CONDITION       = get_index_v<MultiCondition, handle_t>;
+  constexpr static auto MODULE                = get_index_v<Module, handle_t>;
+  constexpr static auto ASYNC                 = get_index_v<Async, handle_t>;
+  constexpr static auto DEPENDENT_ASYNC       = get_index_v<DependentAsync, handle_t>;
 
   Node() = default;
   
   template <typename... Args>
-  Node(nstate_t, estate_t, const TaskParams&, Topology*, Node*, size_t, Args&&...);
+  Node(nstate_t, estate_t, const TaskParams&, Topology*, NodeBase*, size_t, Args&&...);
   
   template <typename... Args>
-  Node(nstate_t, estate_t, const DefaultTaskParams&, Topology*, Node*, size_t, Args&&...);
+  Node(nstate_t, estate_t, const DefaultTaskParams&, Topology*, NodeBase*, size_t, Args&&...);
 
   size_t num_successors() const;
   size_t num_predecessors() const;
@@ -301,37 +397,30 @@ class Node {
 
   private:
   
-  nstate_t _nstate              {NSTATE::NONE};
-  std::atomic<estate_t> _estate {ESTATE::NONE};
-
   std::string _name;
   
   void* _data {nullptr};
   
   Topology* _topology {nullptr};
-  Node* _parent {nullptr};
 
   size_t _num_successors {0};
   SmallVector<Node*, 4> _edges;
 
-  std::atomic<size_t> _join_counter {0};
-  
   handle_t _handle;
   
   std::unique_ptr<Semaphores> _semaphores;
   
-  std::exception_ptr _exception_ptr {nullptr};
-
-  bool _is_cancelled() const;
+  bool _is_parent_cancelled() const;
   bool _is_conditioner() const;
-  bool _is_preempted() const;
   bool _acquire_all(SmallVector<Node*>&);
   void _release_all(SmallVector<Node*>&);
   void _precede(Node*);
   void _set_up_join_counter();
-  void _rethrow_exception();
+
   void _remove_successors(Node*);
   void _remove_predecessors(Node*);
+
+  std::atomic<size_t>& _root_join_counter();
 };
 
 // ----------------------------------------------------------------------------
@@ -384,6 +473,11 @@ Node::Static::Static(C&& c) : work {std::forward<C>(c)} {
 // Constructor
 template <typename C>
 Node::Runtime::Runtime(C&& c) : work {std::forward<C>(c)} {
+}
+
+// Constructor
+template <typename C>
+Node::NonpreemptiveRuntime::NonpreemptiveRuntime(C&& c) : work {std::forward<C>(c)} {
 }
 
 // ----------------------------------------------------------------------------
@@ -451,17 +545,14 @@ Node::Node(
   estate_t estate,
   const TaskParams& params,
   Topology* topology, 
-  Node* parent, 
+  NodeBase* parent, 
   size_t join_counter,
   Args&&... args
 ) :
-  _nstate       {nstate},
-  _estate       {estate},
+  NodeBase(nstate, estate, parent, join_counter),
   _name         {params.name},
   _data         {params.data},
   _topology     {topology},
-  _parent       {parent},
-  _join_counter {join_counter},
   _handle       {std::forward<Args>(args)...} {
 }
 
@@ -472,15 +563,12 @@ Node::Node(
   estate_t estate,
   const DefaultTaskParams&,
   Topology* topology, 
-  Node* parent, 
+  NodeBase* parent, 
   size_t join_counter,
   Args&&... args
 ) :
-  _nstate       {nstate},
-  _estate       {estate},
+  NodeBase(nstate, estate, parent, join_counter),
   _topology     {topology},
-  _parent       {parent},
-  _join_counter {join_counter},
   _handle       {std::forward<Args>(args)...} {
 }
 
@@ -537,6 +625,12 @@ inline size_t Node::num_weak_dependencies() const {
   return n;
 }
 
+// Function: _root_join_counter
+// not supposed to be called by async task
+TF_FORCE_INLINE std::atomic<size_t>& Node::_root_join_counter() {
+  return (_parent) ? _parent->_join_counter : _topology->_join_counter; 
+}
+
 // Function: num_strong_dependencies
 inline size_t Node::num_strong_dependencies() const {
   size_t n = 0;
@@ -557,17 +651,11 @@ inline bool Node::_is_conditioner() const {
          _handle.index() == Node::MULTI_CONDITION;
 }
 
-// Function: _is_preempted
-inline bool Node::_is_preempted() const {
-  return _nstate & NSTATE::PREEMPTED;
-}
-
-// Function: _is_cancelled
-// we currently only support cancellation of taskflow (no async task)
-inline bool Node::_is_cancelled() const {
-  return (_topology && (_topology->_estate.load(std::memory_order_relaxed) & ESTATE::CANCELLED)) 
+// Function: _is_parent_cancelled
+inline bool Node::_is_parent_cancelled() const {
+  return (_topology && (_topology->_estate.load(std::memory_order_relaxed) & (ESTATE::CANCELLED | ESTATE::EXCEPTION))) 
          ||
-         (_parent && (_parent->_estate.load(std::memory_order_relaxed) & ESTATE::CANCELLED));
+         (_parent && (_parent->_estate.load(std::memory_order_relaxed) & (ESTATE::CANCELLED | ESTATE::EXCEPTION)));
 }
 
 // Procedure: _set_up_join_counter
@@ -582,14 +670,6 @@ inline void Node::_set_up_join_counter() {
   _join_counter.store(c, std::memory_order_relaxed);
 }
 
-// Procedure: _rethrow_exception
-inline void Node::_rethrow_exception() {
-  if(_exception_ptr) {
-    auto e = _exception_ptr;
-    _exception_ptr = nullptr;
-    std::rethrow_exception(e);
-  }
-}
 
 // Function: _acquire_all
 inline bool Node::_acquire_all(SmallVector<Node*>& nodes) {
@@ -618,29 +698,29 @@ inline void Node::_release_all(SmallVector<Node*>& nodes) {
 
 
 // ----------------------------------------------------------------------------
-// AnchorGuard
+// ExplicitAnchorGuard
 // ----------------------------------------------------------------------------
 
 /**
 @private
 */
-class AnchorGuard {
+class ExplicitAnchorGuard {
 
   public:
   
-  // anchor is at estate as it may be accessed by multiple threads (e.g., corun's
-  // parent with tear_down_async's parent).
-  AnchorGuard(Node* node) : _node{node} { 
-    _node->_estate.fetch_or(ESTATE::ANCHORED, std::memory_order_relaxed);
+  // Explicit anchor must sit in estate as it may be accessed by multiple threads 
+  // (e.g., corun's parent with tear_down_async's parent).
+  ExplicitAnchorGuard(NodeBase* node_base) : _node_base{node_base} { 
+    _node_base->_estate.fetch_or(ESTATE::EXPLICITLY_ANCHORED, std::memory_order_relaxed);
   }
 
-  ~AnchorGuard() {
-    _node->_estate.fetch_and(~ESTATE::ANCHORED, std::memory_order_relaxed);
+  ~ExplicitAnchorGuard() {
+    _node_base->_estate.fetch_and(~ESTATE::EXPLICITLY_ANCHORED, std::memory_order_relaxed);
   }
   
   private:
 
-  Node* _node;
+  NodeBase* _node_base;
 };
 
 
@@ -648,11 +728,76 @@ class AnchorGuard {
 // Graph definition
 // ----------------------------------------------------------------------------
 
+// Destructor
+inline Graph::~Graph() {
+  clear();
+}
+
+// Move constructor
+inline Graph::Graph(Graph&& other) :
+  _nodes {std::move(other._nodes)} {
+}
+
+// Move assignment
+inline Graph& Graph::operator = (Graph&& other) {
+  clear();
+  _nodes = std::move(other._nodes);
+  return *this;
+}
+
+// Procedure: clear
+inline void Graph::clear() {
+  for(auto node : _nodes) {
+    recycle(node);
+  }
+  _nodes.clear();
+}
+
+// Function: size
+inline size_t Graph::size() const {
+  return _nodes.size();
+}
+
+// Function: empty
+inline bool Graph::empty() const {
+  return _nodes.empty();
+}
+
+// Function: begin
+inline auto Graph::begin() {
+  return _nodes.begin();
+}
+
+// Function: end
+inline auto Graph::end() {
+  return _nodes.end();
+}
+
+// Function: begin
+inline auto Graph::begin() const {
+  return _nodes.begin();
+}
+
+// Function: end
+inline auto Graph::end() const {
+  return _nodes.end();
+}
+
 // Function: erase
 inline void Graph::_erase(Node* node) {
-  erase(
-    std::remove_if(begin(), end(), [&](auto& p){ return p.get() == node; }),
-    end()
+  //erase(
+  //  std::remove_if(begin(), end(), [&](auto& p){ return p.get() == node; }),
+  //  end()
+  //);
+  _nodes.erase(
+    std::remove_if(_nodes.begin(), _nodes.end(), [&](auto& p){ 
+      if(p == node) {
+        recycle(p);
+        return true;
+      }
+      return false; 
+    }),
+    _nodes.end()
   );
 }
 
@@ -661,8 +806,8 @@ inline void Graph::_erase(Node* node) {
 */
 template <typename ...ArgsT>
 Node* Graph::_emplace_back(ArgsT&&... args) {
-  push_back(std::make_unique<Node>(std::forward<ArgsT>(args)...));
-  return back().get();
+  _nodes.push_back(animate(std::forward<ArgsT>(args)...));
+  return _nodes.back();
 }
 
 // ----------------------------------------------------------------------------
@@ -711,32 +856,6 @@ struct has_graph<T, std::void_t<decltype(std::declval<T>().graph())>>
  */
 template <typename T>
 constexpr bool has_graph_v = has_graph<T>::value;
-
-// ----------------------------------------------------------------------------
-// detailed helper functions
-// ----------------------------------------------------------------------------
-
-namespace detail {
-
-/**
-@private
-*/
-template <typename T>
-TF_FORCE_INLINE Node* get_node_ptr(T& node) {
-  using U = std::decay_t<T>;
-  if constexpr (std::is_same_v<U, Node*>) {
-    return node;
-  } 
-  else if constexpr (std::is_same_v<U, std::unique_ptr<Node>>) {
-    return node.get();
-  } 
-  else {
-    static_assert(dependent_false_v<T>, "Unsupported type for get_node_ptr");
-  }
-} 
-
-}  // end of namespace tf::detail ---------------------------------------------
-
 
 }  // end of namespace tf. ----------------------------------------------------
 

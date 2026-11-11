@@ -1,4 +1,7 @@
 #include <ot/timer/timer.hpp>
+#include <map>
+#include <stdexcept>
+#include <tuple>
 
 namespace ot {
 
@@ -7,17 +10,88 @@ namespace ot {
 // Function: set_num_threads
 Timer& Timer::set_num_threads(unsigned n) {
   std::scoped_lock lock(_mutex);
-  unsigned w = (n == 0) ? 0 : n-1;
-  OT_LOGI("using ", n, " threads (", w, " worker)");
-  // TODO
-  //_taskflow.num_workers(w);
+  n = std::max(1u, n);
+  if(n != _num_threads) {
+    // Actions wait for their taskflow while holding this same mutex. The old
+    // executor is idle here; pending builders belong to _taskflow, not it.
+    _executor.reset();
+    _num_threads = n;
+  }
+  OT_LOGI("using ", n, " timing worker(s)");
   return *this;
+}
+
+unsigned Timer::num_threads() const {
+  std::shared_lock lock(_mutex);
+  return _executor ? _executor->num_workers() : _num_threads;
+}
+
+void Timer::_run_taskflow() {
+  if(!_executor) _executor = std::make_unique<tf::Executor>(_num_threads);
+  _executor->run(_taskflow).wait();
 }
 
 // Procedure: _add_to_lineage
 void Timer::_add_to_lineage(tf::Task task) {
   _lineage | [&] (auto& p) { p.precede(task); };
   _lineage = task;
+}
+
+// Only arcs on paths from a clock source to actual clock sinks are ideal.
+// In particular, do not mark ICG enables or propagate through clock-to-Q arcs.
+Timer& Timer::set_ideal_clocks(std::vector<std::string> names, std::vector<std::string> extra_sinks) {
+  std::scoped_lock lock(_mutex);
+  auto task = _taskflow.emplace([this, names=std::move(names), extra_sinks=std::move(extra_sinks)] () {
+    for(auto& [name, pin] : _pins) {
+      if(pin._ideal_clock) _insert_frontier(pin);
+      pin._ideal_clock = false;
+      pin._ideal_clock_source = nullptr;
+      if(pin._ideal_clock_domain) {
+        pin._ideal_clock_domain = nullptr;
+        _insert_frontier(pin);
+      }
+    }
+    const auto combinational = [] (const Arc* arc) {
+      if(arc->is_net_arc()) return true;
+      for(auto split : {MIN, MAX}) {
+        const auto* timing = arc->timing_view()[split];
+        if(timing && (timing->is_constraint() || timing->is_rising_edge_triggered() || timing->is_falling_edge_triggered())) return false;
+      }
+      return true;
+    };
+    for(const auto& name : names) {
+      const auto clock = _clocks.find(name);
+      if(clock == _clocks.end() || !clock->second._source) continue;
+      auto* source = clock->second._source;
+      std::unordered_set<Pin*> reached{source};
+      std::vector<Pin*> forward{source}, sinks;
+      for(size_t i=0; i<forward.size(); ++i) {
+        auto* pin = forward[i];
+        bool sink = false;
+        for(auto split : {MIN, MAX}) if(auto* cp = pin->cellpin(split); cp && cp->is_clock.value_or(false)) sink = true;
+        if(sink) sinks.push_back(pin);
+        for(auto* arc : pin->_fanout) if(combinational(arc) && reached.insert(&arc->_to).second) forward.push_back(&arc->_to);
+      }
+      for(const auto& name : extra_sinks) {
+        const auto pin = _pins.find(name);
+        if(pin != _pins.end() && reached.count(&pin->second)) sinks.push_back(&pin->second);
+      }
+      std::unordered_set<Pin*> marked;
+      for(size_t i=0; i<sinks.size(); ++i) {
+        auto* pin = sinks[i];
+        if(!marked.insert(pin).second) continue;
+        pin->_ideal_clock = true;
+        if(pin == source) pin->_ideal_clock_source = &clock->second;
+        if(!pin->_ideal_clock_domain || clock->second._period < pin->_ideal_clock_domain->_period) {
+          pin->_ideal_clock_domain = &clock->second;
+        }
+        _insert_frontier(*pin);
+        for(auto* arc : pin->_fanin) if(combinational(arc) && reached.count(&arc->_from)) sinks.push_back(&arc->_from);
+      }
+    }
+  });
+  _add_to_lineage(task);
+  return *this;
 }
 
 // Function: _max_pin_name_size
@@ -28,9 +102,9 @@ size_t Timer::_max_pin_name_size() const {
   else {
     return std::max_element(_pins.begin(), _pins.end(), 
       [] (const auto& l, const auto& r) {
-        return l.second._name.size() < r.second._name.size();
+        return l.second.name().size() < r.second.name().size();
       }
-    )->second._name.size();
+    )->second.name().size();
   }
 }
 
@@ -101,9 +175,37 @@ void Timer::_repower_gate(const std::string& gname, const std::string& cname) {
     
     gate._cell = cell;
 
+    // Case-analysis masks belong to the gate's pins and function, not to the
+    // drive strength: carry them over to the rebuilt arcs (same from/to pins and
+    // the same `when` condition), as a full analysis of the new cell would.
+    std::map<std::tuple<const Pin*, const Pin*, std::string>, std::uint8_t> masks;
+    const auto key = [] (const Arc& arc) {
+      std::string when;
+      for(auto el : {MAX, MIN}) {
+        if(const auto* tm = arc.timing_view()[el]; tm && tm->when) {
+          when = *tm->when;
+          break;
+        }
+      }
+      return std::tuple<const Pin*, const Pin*, std::string>{&arc._from, &arc._to, when};
+    };
+    for(auto arc : gate._arcs) {
+      if(arc->_case_mask != 15) {
+        masks[key(*arc)] = arc->_case_mask;
+      }
+    }
+
     // reconstruct the timing and tests
     _remove_gate_arcs(gate);
     _insert_gate_arcs(gate);
+
+    if(!masks.empty()) {
+      for(auto arc : gate._arcs) {
+        if(const auto it = masks.find(key(*arc)); it != masks.end()) {
+          arc->_case_mask = it->second;
+        }
+      }
+    }
 
     // Insert the gate to the frontier
     for(auto pin : gate._pins) {
@@ -239,24 +341,44 @@ void Timer::_insert_gate_arcs(Gate& gate) {
 
   assert(gate._tests.empty() && gate._arcs.empty());
 
+  // Share a propagation arc only when the complete authored sequence agrees
+  // across corners. Matching by endpoint alone could reorder conditional
+  // alternatives and change equal-delay path provenance. Constraints retain
+  // their separate setup/hold records and corner-specific filtering.
+  const auto shared_sequence = [&](const Cellpin *early, const Cellpin *late) {
+    if (!early || !late || early->timings.size() != late->timings.size())
+      return false;
+    for (size_t i = 0; i < early->timings.size(); ++i) {
+      const auto &a = early->timings[i];
+      const auto &b = late->timings[i];
+      if (a.is_constraint() || b.is_constraint() ||
+          _is_redundant_timing(a, MIN) || _is_redundant_timing(b, MAX) ||
+          a.related_pin != b.related_pin || a.type != b.type ||
+          a.sense != b.sense || a.when != b.when)
+        return false;
+    }
+    return true;
+  };
   FOR_EACH_EL(el) {
-    for(const auto& [cpname, cp] : gate._cell[el]->cellpins) {
+    for (const auto &[cpname, cp] : gate._cell[el]->cellpins) {
+      const auto *early = gate._cell[MIN]->cellpin(cpname);
+      const auto *late = gate._cell[MAX]->cellpin(cpname);
+      const bool shared = shared_sequence(early, late);
+      if (shared && el == MAX)
+        continue;
       auto& to_pin = _insert_pin(gate._name + ':' + cpname);
-
-      for(const auto& tm : cp.timings) {
-
-        if(_is_redundant_timing(tm, el)) {
+      for (size_t i = 0; i < cp.timings.size(); ++i) {
+        const auto &tm = cp.timings[i];
+        if (_is_redundant_timing(tm, el))
           continue;
-        }
-
         TimingView tv{nullptr, nullptr};
         tv[el] = &tm;
-
+        if (shared)
+          tv[MAX] = &late->timings[i];
         auto& from_pin = _insert_pin(gate._name + ':' + tm.related_pin);
         auto& arc = _insert_arc(from_pin, to_pin, tv);
-        
         gate._arcs.push_back(&arc);
-        if(tm.is_constraint()) {
+        if (tm.is_constraint()) {
           auto& test = _insert_test(arc);
           gate._tests.push_back(&test);
         }
@@ -384,7 +506,27 @@ Timer& Timer::insert_net(std::string name) {
 
 // Function: _insert_net
 Net& Timer::_insert_net(const std::string& name) {
-  return _nets.try_emplace(name, name).first->second;
+  auto &net = _nets.try_emplace(name, name).first->second;
+  net._rc_model = _rc_model;
+  return net;
+}
+
+Timer &Timer::set_rc_model(RcModel model) {
+  std::scoped_lock lock(_mutex);
+  auto op = _taskflow.emplace([this, model]() {
+    if (_rc_model == model)
+      return;
+    _rc_model = model;
+    for (auto &[name, net] : _nets) {
+      net._rc_model = model;
+      net._driver = {};
+      net._effective_cap = {};
+      net._elmore_fallback = {};
+    }
+    _enable_full_timing_update();
+  });
+  _add_to_lineage(op);
+  return *this;
 }
 
 // Procedure: remove_net
@@ -421,7 +563,7 @@ void Timer::_remove_net(Net& net) {
 Pin& Timer::_insert_pin(const std::string& name) {
   
   // pin already exists
-  if(auto [itr, inserted] = _pins.try_emplace(name, name); !inserted) {
+  if(auto [itr, inserted] = _pins.try_emplace(name, name, Pin::Borrowed_name{}); !inserted) {
     return itr->second;
   }
   // inserted a new pon
@@ -429,6 +571,8 @@ Pin& Timer::_insert_pin(const std::string& name) {
     
     // Generate the pin idx
     auto& pin = itr->second;
+    pin._name_ref = &itr->first;
+    for(auto el : {MIN, MAX}) if(_celllib[el]) pin._default_thresholds[el] = &_celllib[el]->thresholds;
     
     // Assign the idx mapping
     pin._idx = _pin_idx_gen.get();
@@ -454,7 +598,7 @@ void Timer::_remove_pin(Pin& pin) {
   _pin_idx_gen.recycle(pin._idx);
 
   // remove the pin
-  _pins.erase(pin._name);
+  _pins.erase(pin.name());
 }
 
 // Function: cppr
@@ -464,6 +608,39 @@ Timer& Timer::cppr(bool flag) {
 
   auto op = _taskflow.emplace([this, flag] () {
     _cppr(flag);
+  });
+
+  _add_to_lineage(op);
+
+  return *this;
+}
+
+// Function: falling_edge_same_cycle
+Timer& Timer::falling_edge_same_cycle(bool flag) {
+
+  std::scoped_lock lock(_mutex);
+
+  auto op = _taskflow.emplace([this, flag] () {
+    _falling_same_cycle = flag;
+    for(auto& test : _tests) {
+      _insert_frontier(test._constrained_pin());
+    }
+  });
+
+  _add_to_lineage(op);
+
+  return *this;
+}
+
+// Function: preset_clear_arcs
+// Gates inserted after this call (in lineage order) include or skip their
+// async preset/clear -> output arcs.
+Timer& Timer::preset_clear_arcs(bool flag) {
+
+  std::scoped_lock lock(_mutex);
+
+  auto op = _taskflow.emplace([this, flag] () {
+    _preset_clear_arcs = flag;
   });
 
   _add_to_lineage(op);
@@ -514,6 +691,26 @@ Timer& Timer::create_clock(std::string c, std::string s, float p) {
 }
 
 // Function: create_clock
+// Clock on a source pin with an explicit {rise, fall} waveform (SDC -waveform).
+Timer& Timer::create_clock(std::string c, std::string s, float p, std::array<float, MAX_TRAN> w) {
+
+  std::scoped_lock lock(_mutex);
+
+  auto op = _taskflow.emplace([this, c=std::move(c), s=std::move(s), p, w] () {
+    if(auto itr = _pins.find(s); itr != _pins.end()) {
+      _create_clock(c, itr->second, p, w);
+    }
+    else {
+      OT_LOGE("can't create clock ", c, " on source ", s, " (pin not found)");
+    }
+  });
+
+  _add_to_lineage(op);
+
+  return *this;
+}
+
+// Function: create_clock
 Timer& Timer::create_clock(std::string c, float p) {
   
   std::scoped_lock lock(_mutex);
@@ -535,31 +732,17 @@ Clock& Timer::_create_clock(const std::string& name, Pin& pin, float period) {
 }
 
 // Procedure: _create_clock
+Clock& Timer::_create_clock(const std::string& name, Pin& pin, float period, std::array<float, MAX_TRAN> waveform) {
+  auto& clock = _clocks.try_emplace(name, name, pin, period, waveform).first->second;
+  _insert_frontier(pin);
+  return clock;
+}
+
+// Procedure: _create_clock
 Clock& Timer::_create_clock(const std::string& name, float period) {
   auto& clock = _clocks.try_emplace(name, name, period).first->second;
   return clock;
 }
-
-// Procedure: _create_clock (with waveform)
-Clock& Timer::_create_clock(const std::string& name, Pin& pin, float period, std::array<float, MAX_TRAN> waveform) {
-  auto& clock = _clocks.try_emplace(name, name, pin, period, waveform).first->second;
-  _insert_frontier(pin);
-  if(auto itr = _pis.find(pin.name()); itr != _pis.end()) {
-    _set_at(itr->second, MIN, RISE, waveform[0]);
-    _set_at(itr->second, MAX, RISE, waveform[0]);
-    _set_at(itr->second, MIN, FALL, waveform[1]);
-    _set_at(itr->second, MAX, FALL, waveform[1]);
-  }
-  return clock;
-}
-
-// Procedure: _create_clock (virtual clock with waveform)
-Clock& Timer::_create_clock(const std::string& name, float period, std::array<float, MAX_TRAN> waveform) {
-  auto& clock = _clocks.try_emplace(name, name, period, waveform).first->second;
-  return clock;
-}
-
-
 
 // Function: insert_primary_input
 Timer& Timer::insert_primary_input(std::string name) {
@@ -686,7 +869,7 @@ void Timer::_remove_arc(Arc& arc) {
 // Insert an net arc to the timer.
 Arc& Timer::_insert_arc(Pin& from, Pin& to, Net& net) {
 
-  OT_LOGF_IF(&from == &to, "net arc is a self loop at ", to._name);
+  OT_LOGF_IF(&from == &to, "net arc is a self loop at ", to.name());
 
   // Create a new arc
   auto& arc = _arcs.emplace_front(from, to, net);
@@ -729,6 +912,56 @@ Arc& Timer::_insert_arc(Pin& from, Pin& to, TimingView tv) {
   return arc;
 }
 
+// Function: set_case_masks
+Timer& Timer::set_case_masks(std::vector<std::tuple<std::string, std::string, std::uint8_t>> masks) {
+  std::scoped_lock lock(_mutex);
+  auto task = _taskflow.emplace([this, masks=std::move(masks)] () {
+    for(auto& arc : _arcs) if(arc._case_mask != 15) {
+      arc._case_mask = 15;
+      _insert_frontier(arc._from, arc._to);
+    }
+    for(const auto& [from, to, mask] : masks) {
+      const auto it = _pins.find(from);
+      OT_LOGF_IF(it == _pins.end() || mask > 15, "invalid case-analysis arc: ", from);
+      for(auto* arc : it->second._fanout) if(arc->is_cell_arc() && arc->_to.name() == to) {
+        arc->_case_mask = mask;
+        _insert_frontier(arc->_from, arc->_to);
+      }
+    }
+  });
+  _add_to_lineage(task);
+  return *this;
+}
+
+Timer& Timer::refine_case_masks(std::vector<std::pair<size_t, std::uint8_t>> masks) {
+  std::scoped_lock lock(_mutex);
+  auto task = _taskflow.emplace([this, masks=std::move(masks)] () {
+    for(const auto& [index, mask] : masks) {
+      OT_LOGF_IF(index >= _idx2arc.size() || !_idx2arc[index] || mask > 15, "invalid case arc index");
+      auto& arc = *_idx2arc[index];
+      arc._case_mask &= mask;
+      _insert_frontier(arc._from, arc._to);
+    }
+  });
+  _add_to_lineage(task);
+  return *this;
+}
+
+// Function: set_input_driver
+Timer& Timer::set_input_driver(std::string port, std::string cell, std::string from,
+                               std::string to, Split el, Tran rf, std::array<float, 2> slew) {
+  std::scoped_lock lock(_mutex);
+  auto task = _taskflow.emplace([this, port=std::move(port), cell=std::move(cell),
+                                from=std::move(from), to=std::move(to), el, rf, slew] () {
+    const auto it = _pis.find(port);
+    OT_LOGF_IF(it == _pis.end(), "driving-cell port does not exist: ", port);
+    it->second._driver[el][rf] = PrimaryInput::InputDriver {cell, from, to, slew};
+    _insert_frontier(it->second._pin);
+  });
+  _add_to_lineage(task);
+  return *this;
+}
+
 // Procedure: _fprop_rc_timing
 void Timer::_fprop_rc_timing(Pin& pin) {
   if(auto net = pin._net; net) {
@@ -738,14 +971,73 @@ void Timer::_fprop_rc_timing(Pin& pin) {
 
 // Procedure: _fprop_slew
 void Timer::_fprop_slew(Pin& pin) {
-  
+  // Clear both parts before the paired slew/delay propagation. Each arc
+  // consumes its fitted load and saves its delay while propagating slew.
+  for(auto arc : pin._fanin) {
+    arc->_reset_delay();
+  }
+
   // clear slew  
   pin._reset_slew();
+  if(pin._ideal_clock) {
+    for(auto el : {MIN, MAX}) for(auto rf : {RISE, FALL}) pin._relax_slew(nullptr, el, rf, el, rf, 0.0f);
+    return;
+  }
 
   // PI
-  if(auto pi = pin.primary_input(); pi) {
-    FOR_EACH_EL_RF_IF(el, rf, pi->_slew[el][rf]) {
-      pin._relax_slew(nullptr, el, rf, el, rf, *(pi->_slew[el][rf]));
+  if(pin.primary_input()) {
+    auto* pi = &_pis.at(pin.name());
+    FOR_EACH_EL_RF(el, rf) {
+      pi->_driver_delay[el][rf] = 0;
+      if(const auto& driver = pi->_driver[el][rf]) {
+        const auto* cell = _celllib[el] ? _celllib[el]->cell(driver->cell) : nullptr;
+        const auto* out = cell ? cell->cellpin(driver->to) : nullptr;
+        OT_LOGF_IF(!out, "driving-cell output does not exist: ", driver->cell, ':', driver->to);
+        const float load = pin._net ? pin._net->_load(el, rf) : 0;
+        std::optional<float> best_delay, best_slew;
+        std::optional<RcGateResult> best_model;
+        float best_delta = 0;
+        for(const auto& timing : out->timings) {
+          if(timing.is_constraint() || (!driver->from.empty() && timing.related_pin != driver->from)) continue;
+          for(auto input_rf : {RISE, FALL}) {
+            const auto si = driver->input_slew[input_rf];
+            const auto model = pin._net ? pin._net->_gate_response(timing, el, input_rf, rf, si, &out->thresholds)
+                                        : std::nullopt;
+            const auto delay = model ? std::optional<float>(model->delay) : timing.delay(input_rf, rf, si, load);
+            const auto unloaded = timing.delay(input_rf, rf, si, 0);
+            const auto slew = model ? std::optional<float>(model->slew) : timing.slew(input_rf, rf, si, load);
+            if(delay && unloaded && slew && (!best_delay || (el == MAX ? *delay > *best_delay : *delay < *best_delay))) {
+              best_delay = delay;
+              best_slew = slew;
+              best_model = model;
+              best_delta = *delay - *unloaded;
+            }
+          }
+        }
+        OT_LOGF_IF(!best_slew, "driving cell has no characterized arc: ", driver->cell, ':', driver->to);
+        const auto& source = out->thresholds;
+        const auto& target = pin.thresholds(el);
+        float slew;
+        if (best_model && pin._net) {
+          auto model = best_model->driver;
+          const auto progress = [rf](double v) {return rf == RISE ? v : 1-v;};
+          const double logic = model.crossing(progress(target.input[rf]));
+          pi->_driver_delay[el][rf] = best_delta + logic-model.logic_time;
+          model.logic_time = logic;
+          slew = std::abs(model.crossing(progress(target.upper[rf]))
+                         - model.crossing(progress(target.lower[rf]))) / target.derate;
+          pin._net->_driver[el][rf] = model;
+          pin._net->_effective_cap[el][rf] = best_model->capacitance;
+        } else {
+          if (pin._net) pin._net->_elmore_fallback[el][rf] = pin._net->rct() != nullptr;
+          const float shift = *best_slew * (target.input[rf] - source.output[rf]) / source.span(rf);
+          pi->_driver_delay[el][rf] = best_delta + (rf == RISE ? shift : -shift);
+          slew = *best_slew * (target.span(rf) / target.derate) / (source.span(rf) / source.derate);
+        }
+        pin._relax_slew(nullptr, el, rf, el, rf, slew);
+      } else if(pi->_slew[el][rf]) {
+        pin._relax_slew(nullptr, el, rf, el, rf, *(pi->_slew[el][rf]));
+      }
     }
   }
   
@@ -758,14 +1050,20 @@ void Timer::_fprop_slew(Pin& pin) {
 // Procedure: _fprop_delay
 void Timer::_fprop_delay(Pin& pin) {
 
-  // clear delay
-  for(auto arc : pin._fanin) {
-    arc->_reset_delay();
-  }
-
   // Compute the delay from its fanin.
   for(auto arc : pin._fanin) {
-    arc->_fprop_delay();
+    // Ideal-clock pins bypass fanin slew propagation, so their arc delays
+    // still need evaluation before the existing ideal-edge masking below.
+    arc->_fprop_delay(!pin._ideal_clock);
+    if(pin._ideal_clock) {
+      // A clock gate's enable is data, not a second clock source. Its setup/
+      // hold tests remain timed, but its data arc must not move the ideal edge.
+      if(!arc->_from._ideal_clock) { arc->_reset_delay(); continue; }
+      // Preserve valid transition pairs and timing sense (including inversion).
+      for(auto el : {MIN, MAX}) for(auto frf : {RISE, FALL}) for(auto trf : {RISE, FALL})
+            if (arc->delay(el, frf, trf))
+              arc->_set_delay(el, frf, trf, 0.0f);
+    }
   }
 }
 
@@ -774,11 +1072,16 @@ void Timer::_fprop_at(Pin& pin) {
   
   // clear at
   pin._reset_at();
+  if(pin._ideal_clock_source) {
+    for(auto el : {MIN, MAX}) for(auto rf : {RISE, FALL})
+      pin._relax_at(nullptr, el, rf, el, rf, pin._ideal_clock_source->_waveform[rf]);
+    return;
+  }
 
   // PI
   if(auto pi = pin.primary_input(); pi) {
     FOR_EACH_EL_RF_IF(el, rf, pi->_at[el][rf]) {
-      pin._relax_at(nullptr, el, rf, el, rf, *(pi->_at[el][rf]));
+      pin._relax_at(nullptr, el, rf, el, rf, *(pi->_at[el][rf]) + pi->_driver_delay[el][rf]);
     }
   }
 
@@ -801,8 +1104,10 @@ void Timer::_fprop_test(Pin& pin) {
 
     // Update the rat
     for(auto test : pin._tests) {
-      // TODO: currently we assume a single clock...
-      test->_fprop_rat(_clocks.begin()->second._period);
+      // The capture clock is the ideal clock reaching the related (clock) pin;
+      // without one (no ideal clock marking) fall back to the first clock.
+      const auto* domain = test->_arc._from._ideal_clock_domain;
+      test->_fprop_rat(domain ? domain->_period : _clocks.begin()->second._period, _falling_same_cycle);
       
       // compute the cppr credit if any
       if(_cppr_analysis) {
@@ -927,9 +1232,6 @@ void Timer::_build_prop_cands() {
 
 // Procedure: _build_prop_tasks
 void Timer::_build_prop_tasks() {
-  
-  // explore propagation candidates
-  _build_prop_cands();
 
   // Emplace the fprop task
   // (1) propagate the rc timing
@@ -1003,6 +1305,22 @@ void Timer::_clear_prop_tasks() {
   _bprop_cands.clear();
 }
 
+void Timer::update_netlist() {
+  std::scoped_lock lock(_mutex);
+  _update_netlist();
+}
+
+void Timer::_update_netlist() {
+  if (!_lineage)
+    return;
+  _run_taskflow();
+  _taskflow.clear();
+  _lineage.reset();
+  _remove_state(EPTS_UPDATED | AREA_UPDATED | POWER_UPDATED);
+  // Keep frontiers and FULL_TIMING: materializing builders does not evaluate
+  // any affected pin, even when no more builders are queued before a query.
+}
+
 // Function: update_timing
 // Perform comprehensive timing update: 
 // (1) grpah-based timing (GBA)
@@ -1016,30 +1334,71 @@ void Timer::update_timing() {
 void Timer::_update_timing() {
   
   // Timing is update-to-date
-  if(!_lineage) {
-    assert(_frontiers.size() == 0);
+  if (!_lineage && _frontiers.empty() && !_has_state(FULL_TIMING)) {
     return;
   }
 
   // materialize the lineage
-  _executor.run(_taskflow).wait();
-  _taskflow.clear();
-  _lineage.reset();
-  
+  _update_netlist();
+
   // Check if full update is required
   if(_has_state(FULL_TIMING)) {
     _insert_full_timing_frontiers();
   }
 
-  // build propagation tasks
-  _build_prop_tasks();
+  _build_prop_cands();
 
-  // debug the graph
-  //_taskflow.dump(std::cout);
-
-  // Execute the task
-  _executor.run(_taskflow).wait();
-  _taskflow.clear();
+  // Acyclic candidate lists already have topological order. SCC loop breaking
+  // can change that order, including retained SCCs outside the forward cone.
+  // Reorder those cones against the same LOOP_BREAKER arcs used by Taskflow.
+  // One worker needs only an order, not two tasks and dependencies per pin.
+  if(_num_threads == 1) {
+    const bool loops = _scc_analysis ||
+      std::any_of(_bprop_cands.begin(), _bprop_cands.end(), [] (const Pin* pin) {
+        return pin->_scc != nullptr;
+      });
+    if(loops) {
+      const auto reorder = [] (auto& candidates, bool forward) {
+        std::vector<Pin*> ordered;
+        ordered.reserve(candidates.size());
+        const int candidate = forward ? Pin::FPROP_CAND : Pin::BPROP_CAND;
+        const int active = forward ? Pin::IN_FPROP_STACK : Pin::IN_BPROP_STACK;
+        const auto visit = [&] (auto&& self, Pin& pin) -> void {
+          if(pin._has_state(active)) {
+            throw std::runtime_error("cycle remains after timing loop breaking");
+          }
+          if(pin._has_state(Pin::SERIAL_VISITED)) return;
+          pin._insert_state(Pin::SERIAL_VISITED | active);
+          for(auto arc : forward ? pin._fanin : pin._fanout) {
+            if(arc->_has_state(Arc::LOOP_BREAKER)) continue;
+            auto& dependency = forward ? arc->_from : arc->_to;
+            if(dependency._has_state(candidate)) self(self, dependency);
+          }
+          pin._remove_state(active);
+          ordered.push_back(&pin);
+        };
+        for(auto pin : candidates) visit(visit, *pin);
+        assert(ordered.size() == candidates.size());
+        std::copy(ordered.begin(), ordered.end(), candidates.begin());
+        for(auto pin : candidates) pin->_remove_state(Pin::SERIAL_VISITED);
+      };
+      reorder(_fprop_cands, true);
+      reorder(_bprop_cands, false);
+    }
+    for(auto pin : _fprop_cands) {
+      _fprop_rc_timing(*pin);
+      _fprop_slew(*pin);
+      _fprop_delay(*pin);
+      _fprop_at(*pin);
+      _fprop_test(*pin);
+    }
+    for(auto pin : _bprop_cands) _bprop_rat(*pin);
+  }
+  else {
+    _build_prop_tasks();
+    _run_taskflow();
+    _taskflow.clear();
+  }
   
   // Clear the propagation tasks.
   _clear_prop_tasks();
@@ -1162,7 +1521,7 @@ void Timer::_update_endpoints() {
   }
 
   // run tasks
-  _executor.run(_taskflow).wait();
+  _run_taskflow();
   _taskflow.clear();
 
   _insert_state(EPTS_UPDATED);
@@ -1499,6 +1858,7 @@ Timer& Timer::set_slew(std::string name, Split m, Tran t, std::optional<float> v
 // Procedure: _set_slew
 void Timer::_set_slew(PrimaryInput& pi, Split m, Tran t, std::optional<float> v) {
   pi._slew[m][t] = v;
+  pi._driver[m][t].reset();
   _insert_frontier(pi._pin);
 }
 

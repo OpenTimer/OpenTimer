@@ -120,8 +120,8 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
     auto [upin, urf] = _decode_pin(u);
 
     for(auto arc : upin->_fanout) {
-        
-      FOR_EACH_RF_IF(vrf, arc->_delay[el][urf][vrf]) {
+
+      FOR_EACH_RF_IF(vrf, arc->delay(el, urf, vrf)) {
 
         // skip if the edge goes outside the sfxt
         auto v = _encode_pin(arc->_to, vrf);
@@ -134,7 +134,8 @@ void Timer::_spur(PfxtCache& pfxt, const PfxtNode& pfx) const {
           continue;
         }
 
-        auto w = (el == MIN) ? *arc->_delay[el][urf][vrf] : -(*arc->_delay[el][urf][vrf]);
+        auto w = (el == MIN) ? *arc->delay(el, urf, vrf)
+                             : -(*arc->delay(el, urf, vrf));
         auto s = *pfxt._sfxt.__dist[v] + w - *pfxt._sfxt.__dist[u] + pfx.slack;
 
         if(s < 0.0f) {

@@ -18,7 +18,7 @@ namespace ot {
 
 // Enum: LogType
 enum class LogType {
-  DEBUG   = 0,
+  DEBUG_LEVEL = 0,
   INFO    = 1,
   WARNING = 2,
   ERROR   = 3,
@@ -182,7 +182,7 @@ void Logger::_write(const char* fpath, const int line, ArgsT&&... args) {
 
   std::ostringstream oss;
 
-  if constexpr(severity == LogType::DEBUG) {
+  if constexpr(severity == LogType::DEBUG_LEVEL) {
     if(_is_tty) oss << DEBUG_COLOR;
     oss << "D ";
   }
@@ -252,7 +252,7 @@ void Logger::raw(ArgsT&&... args) {
 // Procedure: debug
 template <typename... ArgsT>
 void Logger::debug(const char* fpath, const int line, ArgsT&&... args) {
-  _write<LogType::DEBUG>(fpath, line, std::forward<ArgsT>(args)...);
+  _write<LogType::DEBUG_LEVEL>(fpath, line, std::forward<ArgsT>(args)...);
 }
 
 // Procedure: info
