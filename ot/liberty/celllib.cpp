@@ -629,9 +629,7 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     else if(*itr == "timing") {
       auto ti = _extract_timing(itr, end);
       bool found = false;
-      // A cellpin may have several timing groups with the same related pin (e.g., the
-      // positive and negative unate groups of a non-unate arc, or setup and hold). Only an
-      // entry created by an earlier internal_power group (no timing data yet) is filled in.
+      // Only an entry made by an earlier internal_power group (no timing data yet) is reused.
       for(auto &t:cellpin.timings) {
         if (t.related_pin != ti.related_pin || t.sense || t.type ||
             t.cell_rise || t.cell_fall || t.rise_transition || t.fall_transition ||

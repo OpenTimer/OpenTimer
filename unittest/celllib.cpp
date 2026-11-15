@@ -6,7 +6,6 @@
 #include <fstream>
 
 // Function: write_celllib
-// Write a small library to a file. Timing tables are scalars (no template).
 static std::filesystem::path write_celllib(const std::string& name, const std::string& body) {
   auto path = std::filesystem::temp_directory_path() / name;
   std::ofstream ofs(path);
@@ -34,7 +33,7 @@ static std::string timing(
 // Testcase: MultipleTimingGroups
 TEST_CASE("MultipleTimingGroups") {
 
-  // Subcase: positive and negative unate groups of the same related pin are both kept.
+  // Subcase: both unate groups of the same related pin are kept.
   SUBCASE("NonUnate") {
     auto path = write_celllib("ot_celllib_non_unate.lib",
       "    pin (A) { direction : input; }\n"
@@ -61,7 +60,7 @@ TEST_CASE("MultipleTimingGroups") {
     REQUIRE(timings[1].cell_rise->table[0] == doctest::Approx(0.3f));
   }
 
-  // Subcase: groups of different related pins stay separate and keep their order.
+  // Subcase: groups of different related pins stay separate, in order.
   SUBCASE("TwoRelatedPins") {
     auto path = write_celllib("ot_celllib_two_pins.lib",
       "    pin (A) { direction : input; }\n"
@@ -86,8 +85,7 @@ TEST_CASE("MultipleTimingGroups") {
     REQUIRE(timings[3].cell_fall->table[0] == doctest::Approx(0.8f));
   }
 
-  // Subcase: an internal_power group read before the timing groups still gets one timing entry
-  // filled in, and the other timing group of the same related pin is added.
+  // Subcase: an earlier internal_power entry is filled in by the first timing group only.
   SUBCASE("InternalPowerFirst") {
     auto path = write_celllib("ot_celllib_power_first.lib",
       "    pin (A) { direction : input; }\n"
