@@ -629,8 +629,11 @@ Cellpin Celllib::_extract_cellpin(token_iterator& itr, const token_iterator end)
     else if(*itr == "timing") {
       auto ti = _extract_timing(itr, end);
       bool found = false;
+      // Only an entry made by an earlier internal_power group (no timing data yet) is reused.
       for(auto &t:cellpin.timings) {
-        if (t.related_pin != ti.related_pin)
+        if (t.related_pin != ti.related_pin || t.sense || t.type ||
+            t.cell_rise || t.cell_fall || t.rise_transition || t.fall_transition ||
+            t.rise_constraint || t.fall_constraint)
           continue;
         auto ipower_copy = t.internal_power;
         t = ti;
